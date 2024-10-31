@@ -25,7 +25,7 @@ class RspInterceptor extends Interceptor {
             //需要登录
             handler.reject(DioException(requestOptions: response.requestOptions));
             showToast(baseData.message ?? "系统错误");
-            RouteUtils.pushForNamed(RouteUtils.context, RoutePath.auth);
+            RouteUtils.pushForNamed(RouteUtils.context, RoutePath.startPage);
           } else {
             //其他错误
             if (response.requestOptions.path.contains("getAppInfo") == false) {
