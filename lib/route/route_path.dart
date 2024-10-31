@@ -1,13 +1,16 @@
-///路由地址
+//路由地址
 class RoutePath {
-  //首页tab
-  static const String tab = "/";
+  //启动页
+  static const String startPage = "/";
 
-  //登录/注册
-  static const String auth = "/auth";
+  //账号密码登录页
+  static const String loginPage = "/loginPage";
 
-  //注册
-  static const String register = "/register";
+  //手机号验证码登录页
+  static const String phoneLoginPage = "/phoneLoginPage";
+
+  //邮箱验证码登录页
+  static const String emailLoginPage = "/emailLoginPage";
 
   //搜索页
   static const String search = "/search";
