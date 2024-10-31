@@ -26,7 +26,7 @@ _initializeDio : 初始化Dio，添加会话管理
 |  account  | password  |  capcha   |
 | TextField | TextField | TextField |
 
-- **captchaImageUrl : ** 图形验证码获取接口
+- **captchaImageUrl :** 图形验证码获取接口
 - **accountLoginUrl :**  账号密码登录接口
 - **_captchaController :** 验证码输入框控制器
 - **_passwordController :**  密码输入框控制器
@@ -48,7 +48,7 @@ _initializeDio : 初始化Dio，添加会话管理
 |   email   | emailCode |
 | TextField | TextField |
 
-- **getEmailCodeUrl : ** 邮箱验证码获取接口
+- **getEmailCodeUrl :** 邮箱验证码获取接口
 
 - **loginWithEmailCodeUrl :** 邮箱验证码登录接口
 - **_emailController**、**_codeController** : 输入框控制器
@@ -69,7 +69,7 @@ _initializeDio : 初始化Dio，添加会话管理
 |   phone   | phoneCode |
 | TextField | TextField |
 
-- **getPhoneCodeUrl : ** 邮箱验证码获取接口
+- **getPhoneCodeUrl :** 邮箱验证码获取接口
 
 - **loginWithPhoneCodeUrl :** 邮箱验证码登录接口
 
@@ -119,7 +119,7 @@ _initializeDio : 初始化Dio，添加会话管理
 | TextField | TextField |
 
 - **registerPhone** : 注册邮箱（全局变量）
-- **getRegisterPhoneCodeUrl : ** 手机验证码获取接口
+- **getRegisterPhoneCodeUrl :** 手机验证码获取接口
 - **registerCheckPhoneCodeUrl :** 手机验证码检验接口
 - **_phoneController**、**_codeController** : 输入框控制器
 - **_phoneFocusNode**、**_codeFocusNode** : 输入框焦点
