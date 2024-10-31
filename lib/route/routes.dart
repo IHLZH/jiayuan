@@ -4,20 +4,25 @@ import 'package:jiayuan/page/login_page/login_page.dart';
 import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
+import '../page/tab_page.dart';
+
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-    //首页tab
+      //首页tab
       case RoutePath.tab:
         return pageRoute(const TabPage(), settings: settings);
+      // 启动页
       case RoutePath.startPage:
         return pageRoute(StartPage());
+      //账号密码登录页
       case RoutePath.loginPage:
         return pageRoute(LoginPage());
     }
     return MaterialPageRoute(
-        builder: (context) =>
-            Scaffold(body: Center(child: Text('No route defined for ${settings.name}'))));
+        builder: (context) => Scaffold(
+            body:
+                Center(child: Text('No route defined for ${settings.name}'))));
   }
 
   static MaterialPageRoute pageRoute(
