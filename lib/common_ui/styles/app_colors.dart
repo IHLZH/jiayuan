@@ -1,6 +1,10 @@
 import 'dart:ui';
 
 class AppColors {
+
+  //应用主色调
+  static const appColor = Color(0xFF59C2B3);
+
   //按钮红色背景
   static const redBtnColor = Color(0xFFFF3B3D);
   static const cursorColor = Color(0xFFE9AAAB);
