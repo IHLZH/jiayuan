@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 class Constants {
   Constants._();
 
@@ -15,4 +17,7 @@ class Constants {
 
   //鉴权token
   static const String SP_TOKEN = "SP_TOKEN";
+
+  //是否开发模式
+  static const bool IS_Production = true;
 }
