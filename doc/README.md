@@ -4,7 +4,7 @@
 
 初始化 Dio ，添加Cookie Manager，实现会话管理
 
-_initializeDio : 初始化Dio，添加会话管理
+**_initializeDio :** 初始化Dio，添加会话管理
 
 存储中获取Token，发送post请求，检验 Token 存活
 
@@ -96,7 +96,7 @@ _initializeDio : 初始化Dio，添加会话管理
 | TextField | TextField |
 
 - **registerEmail** : 注册邮箱（全局变量）
-- **getRegisterEmailCodeUrl : ** 邮箱验证码获取接口
+- **getRegisterEmailCodeUrl :** 邮箱验证码获取接口
 
 - **registerCheckEmailCodeUrl :** 邮箱验证码检验接口
 
