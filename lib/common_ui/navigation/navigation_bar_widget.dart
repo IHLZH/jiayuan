@@ -80,11 +80,11 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
         //底部导航栏
         bottomNavigationBar: BottomNavigationBar(
             iconSize: 22.r,
-            selectedFontSize: 14.sp,
+            selectedFontSize: 16.sp,
             unselectedFontSize: 13.sp,
             //已选择与未选中的字体颜色
             unselectedItemColor: AppColors.blackColor333,
-            selectedItemColor: AppColors.blackColor333,
+            selectedItemColor: AppColors.appColor,
             backgroundColor: Colors.white,
             type: widget.bottomNavigationBarType ?? BottomNavigationBarType.fixed,
             currentIndex: widget.currentIndex,

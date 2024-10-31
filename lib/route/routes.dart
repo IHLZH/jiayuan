@@ -7,18 +7,17 @@ import 'package:jiayuan/route/route_path.dart';
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+    //首页tab
+      case RoutePath.tab:
+        return pageRoute(const TabPage(), settings: settings);
       case RoutePath.startPage:
         return pageRoute(StartPage());
       case RoutePath.loginPage:
         return pageRoute(LoginPage());
     }
-    return pageRoute(Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Text("route path ${settings.name} is not found"),
-        ),
-      ),
-    ));
+    return MaterialPageRoute(
+        builder: (context) =>
+            Scaffold(body: Center(child: Text('No route defined for ${settings.name}'))));
   }
 
   static MaterialPageRoute pageRoute(
@@ -29,9 +28,7 @@ class Routes {
     bool? allowSnapshotting,
   }) {
     return MaterialPageRoute(
-        builder: (context) {
-          return page;
-        },
+        builder: (context) => page,
         settings: settings,
         fullscreenDialog: fullscreenDialog ?? false,
         maintainState: maintainState ?? true,
