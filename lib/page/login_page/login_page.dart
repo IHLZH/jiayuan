@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _jumpToForgetPasswordPage() async {
-    RouteUtils.pushForNamed(context, RoutePath.forgetPasswordPage);
+    RouteUtils.pushForNamed(context, RoutePath.forgetPasswordCodePage);
   }
 
   Future<void> _login() async {
@@ -112,21 +112,24 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await DioInstance.instance().post(path: url);
-      // if(isProduction)print("res: $response");
+      if(isProduction)print("res: $response");
       // if(isProduction)print("statusCode : ${response.statusCode}");
       // if(isProduction)print("statusmessage : ${response.statusMessage}");
       // if(isProduction)print("code : ${response.data["code"]}");
-      // if(isProduction)print("message : ${response.data["message"]}");
-      if (response.statusCode == 200) {
+      // if(isProduction)print("message : ${response.data["message"]}");\
+
+      if(isProduction)print("res header: ${response.headers['Authorization']}");
+
+      if (response.statusCode == 200&&response.data["code"]==200) {
         final data = response.data;
 
-        Global.userInfo = User.fromMap(data);
+        // Global.userInfo = User.fromMap(data);
 
-        if (isProduction) print("response : $response");
+        // if (isProduction) print("response : $response");
 
         _jumpToTab();
       } else {
-        if (isProduction) print('Login failed: ${response.statusCode}');
+        if (isProduction) print('Login failed: ${response}');
       }
     } catch (e) {
       if (isProduction) print('Error: $e');
