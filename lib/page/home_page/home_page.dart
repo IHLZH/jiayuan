@@ -4,6 +4,7 @@ import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_ui/banner/home_banner_widget.dart';
+import '../../repository/model/Housekeeper _data.dart';
 import 'home_vm.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final HomeViewModel homeViewModel = HomeViewModel();
+
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -20,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     homeViewModel.getBannerData();
+    homeViewModel.getHousekeeperData();
     print("你刚好撒旦阿斯顿打撒");
   }
 
@@ -41,8 +44,7 @@ class _HomePageState extends State<HomePage> {
               slivers: [
                 SliverToBoxAdapter(child: _banner()),
                 SliverToBoxAdapter(child: _PageViewWidget()),
-                SliverAppBar(
-                    title: Row(
+                SliverAppBar(title: Row(
                   children: [
                     Text("家政服务", style: TextStyle(fontSize: 15.sp)),
                     Spacer(),
@@ -56,12 +58,12 @@ class _HomePageState extends State<HomePage> {
 
   // 家政员推荐
   Widget _HouseKeeperRecommendedWidget() {
-    return Selector<HomeViewModel, List<String?>?>(
-      selector: (context, homeViewModel) => homeViewModel.bannerData,
+    return Selector<HomeViewModel, List<Housekeeper>?>(
+      selector: (context, homeViewModel) => homeViewModel.housekeepers,
       builder: (context, serviceData, child) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildHousekeeperCard(),
+              (context, index) => _buildHousekeeperCard(homeViewModel.housekeepers[index]),
               childCount: 10),
         );
       },
@@ -197,22 +199,51 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHousekeeperCard() {
+  Widget _buildHousekeeperCard(Housekeeper housekeeper) {
     return Container(
       margin: EdgeInsets.only(right: 10),
       child: Column(
         children: [
           Container(
-            width: 120,
             height: 120,
+            width: double.infinity,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60), color: Colors.grey),
-          ),
-          SizedBox(height: 10),
-          Text("王小虎",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-          Text("服务评分：4.8", style: TextStyle(color: Colors.grey, fontSize: 12)),
-          Text("服务次数：100+", style: TextStyle(color: Colors.grey, fontSize: 12)),
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage(housekeeper.avatar!),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(housekeeper.realName!,
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text("服务年限：${housekeeper.workExperience}年"),
+                        Text("服务评分：${housekeeper.rating}分"),
+                        Text("擅长：${housekeeper.highlight}"),
+                     ],
+                    )
+                  )
+                )
+              ]
+            )
+          )
         ],
       ),
     );
