@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jiayuan/page/login_page/email_login_page.dart';
+import 'package:jiayuan/page/login_page/forget_password_page.dart';
 import 'package:jiayuan/page/login_page/login_page.dart';
 import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/route/route_path.dart';
@@ -18,6 +20,12 @@ class Routes {
       //账号密码登录页
       case RoutePath.loginPage:
         return pageRoute(LoginPage());
+      // 邮箱验证码登录页
+      case RoutePath.emailLoginPage:
+        return pageRoute(EmailLoginPage());
+      // 忘记密码
+      case RoutePath.forgetPasswordPage:
+        return pageRoute(ForgetPasswordPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

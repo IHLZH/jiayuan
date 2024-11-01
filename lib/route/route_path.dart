@@ -13,4 +13,7 @@ class RoutePath {
 
   //邮箱验证码登录页
   static const String emailLoginPage = "/emailLoginPage";
+
+  //忘记密码页
+  static const String forgetPasswordPage = "/forgetPasswordPage";
 }
