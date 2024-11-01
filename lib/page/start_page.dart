@@ -21,7 +21,7 @@ class _StartPageState extends State<StartPage> {
   void initState() {
     super.initState();
     // 初始化CookieJar
-    DioInstance.instance().initDio();
+    DioInstance.instance().initDio(baseUrl: "");
     DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
 
     // 设置延迟，2秒后跳转

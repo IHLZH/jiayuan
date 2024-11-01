@@ -9,7 +9,7 @@ import 'package:jiayuan/page/Test.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:provider/provider.dart';
-
+//委托页面
 import 'commission_vm.dart';
 
 /*
@@ -23,6 +23,27 @@ class CommissionPage extends StatefulWidget{
 }
 
 class _CommissionPageState extends State<CommissionPage>{
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+
+    //指示器
+    Widget _buildIndicator() {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(2, (index) {
+          return Container(
+            margin: EdgeInsets.all(4.0),
+            width: _currentPage == index ? 8.0.w : 4.0.w,
+            height: 4.0,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _currentPage == index ? Colors.black : Colors.grey,
+            ),
+          );
+        }),
+      );
+    }
 
   final CommissionViewModel _viewModel = CommissionViewModel();
 
@@ -52,10 +73,18 @@ class _CommissionPageState extends State<CommissionPage>{
                     child: CustomScrollView(
                       slivers: [
                         SliverToBoxAdapter(
-                          child: Container(
+                          child: Column(
+                        children: [
+                          Container(
                               height: 180,
                               padding: EdgeInsets.only(left: 20, right: 20, top: 20,bottom: 10),
                               child: PageView(
+                                controller: _pageController,
+                                onPageChanged: (index) {
+                                  setState(() {
+                                    _currentPage = index;
+                                  });
+                                },
                                 children: [
                                   Column(
                                     children: [
@@ -106,6 +135,9 @@ class _CommissionPageState extends State<CommissionPage>{
                                 ],
                               )
                           ),
+                          _buildIndicator(),
+                        ],
+                    )
                         ),
 
                         SliverAppBar(
@@ -156,6 +188,8 @@ class _CommissionPageState extends State<CommissionPage>{
         )
     );
   }
+
+
 
   Widget CommissionCard(Commission commission){
     return Container(
@@ -232,8 +266,9 @@ class _CommissionPageState extends State<CommissionPage>{
         print("AppBar");
       },
       child: Container(
-        height: 30,
-        width: 300,
+        height: 30.w,
+        width: 280.w
+        ,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.black, width: 2),
           borderRadius: BorderRadius.circular(16),

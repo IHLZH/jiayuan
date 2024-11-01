@@ -81,7 +81,7 @@ class _BannerWidgetState extends State<BannerWidget> {
             // widget.onIndexChanged?.call(index);
             return ClipRRect(
                 borderRadius: widget.dotType == BannerDotType.circle
-                    ? BorderRadius.all(Radius.circular(5.r))
+                    ? BorderRadius.all(Radius.circular(10.r))
                     : BorderRadius.zero,
                 child: CachedNetworkImage(
                     fit: BoxFit.fill,
@@ -94,7 +94,8 @@ class _BannerWidgetState extends State<BannerWidget> {
                     imageUrl: widget.bannerData?[index] ?? ""));
           },
           itemCount: widget.bannerData?.length ?? 0,
-        ));
+        ),
+    );
   }
 
   ///指示器样式，默认圆形白色
@@ -121,3 +122,4 @@ class _BannerWidgetState extends State<BannerWidget> {
     }
   }
 }
+
