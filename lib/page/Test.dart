@@ -3,6 +3,9 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/navigation/navigation_bar_widget.dart';
 
+/*
+测试用
+ */
 class HomePage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
