@@ -33,7 +33,7 @@ class _StartPageState extends State<StartPage> {
 
     // 如果Token不存活 跳转到登录界面
     Future.delayed(const Duration(seconds: 2), () {
-      RouteUtils.pushForNamed(context,RoutePath.loginPage);
+      RouteUtils.pushNamedAndRemoveUntil(context,RoutePath.loginPage);
     });
   }
 
