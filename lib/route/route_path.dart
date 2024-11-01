@@ -16,4 +16,10 @@ class RoutePath {
 
   //忘记密码页
   static const String forgetPasswordPage = "/forgetPasswordPage";
+
+  //忘记密码验证码页
+  static const String forgetPasswordCodePage = "/forgetPasswordCodePage";
+
+  //忘记密码新密码页
+  static const String forgetPasswordNewPasswordPage = "/forgetPasswordNewPasswordPage";
 }

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/page/login_page/email_login_page.dart';
+import 'package:jiayuan/page/login_page/forget_password_check_code_page.dart';
 import 'package:jiayuan/page/login_page/forget_password_page.dart';
+import 'package:jiayuan/page/login_page/forget_password_submit_page.dart';
 import 'package:jiayuan/page/login_page/login_page.dart';
 import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/route/route_path.dart';
@@ -26,6 +28,14 @@ class Routes {
       // 忘记密码
       case RoutePath.forgetPasswordPage:
         return pageRoute(ForgetPasswordPage());
+      case RoutePath.forgetPasswordCodePage:
+        return pageRoute(ForgetPasswordCheckCodePage());
+      case RoutePath.forgetPasswordNewPasswordPage:
+        final args = settings.arguments as Map<String, dynamic>;
+        final input = args['input'] as String;
+        final isEmail = args['isEmail'] as bool;
+        return pageRoute(
+            ForgetPasswordSubmitPage(input: input, isEmail: isEmail));
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
