@@ -1,7 +1,4 @@
-import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:jiayuan/http/interceptor/cookie_interceptor.dart';
 import 'http_method.dart';
 import 'interceptor/print_log_interceptor.dart';
 import 'interceptor/rsp_interceptor.dart';
@@ -18,11 +15,10 @@ class DioInstance {
 
   Dio _dio = Dio();
   final _defaultTimeout = const Duration(seconds: 30);
-  final _defaultBaseUrl = "";
   var _inited = false;
 
   void initDio({
-    String? baseUrl,
+    required String baseUrl,
     String? method = HttpMethod.GET,
     Duration? connectTimeout,
     Duration? receiveTimeout,
@@ -32,16 +28,16 @@ class DioInstance {
   }) async {
     _dio.options = buildBaseOptions(
         method: method,
-        baseUrl: baseUrl ?? _defaultBaseUrl,
+        baseUrl: baseUrl,
         connectTimeout: connectTimeout ?? _defaultTimeout,
         receiveTimeout: receiveTimeout ?? _defaultTimeout,
         sendTimeout: sendTimeout ?? _defaultTimeout,
         responseType: responseType,
         contentType: contentType);
-    // _dio.interceptors.add(TokenInterceptor());
-    // _dio.interceptors.add(PrintLogInterceptor());
-    // _dio.interceptors.add(RspInterceptor());
-    _dio.interceptors.add(CookieInterceptor().getCookieManager());
+    _dio.interceptors.add(TokenInterceptor());
+    _dio.interceptors.add(PrintLogInterceptor());
+    _dio.interceptors.add(RspInterceptor());
+
     _inited = true;
   }
 
@@ -109,11 +105,5 @@ class DioInstance {
 
   void changeBaseUrl(String baseUrl) {
     _dio.options.baseUrl = baseUrl;
-  }
-
-  void changeInterceptors(List<Interceptor> interceptors) {
-    _dio.interceptors.clear();
-    _dio.interceptors.addAll(interceptors);
-    _dio.interceptors.add(CookieInterceptor().getCookieManager());
   }
 }

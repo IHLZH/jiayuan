@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/navigation/navigation_bar_widget.dart';
 import 'package:jiayuan/page/Test.dart';
 import 'package:jiayuan/page/commission_page/commission_page.dart';
+import 'package:jiayuan/page/home_page/home_page.dart';
 
 
 /*
