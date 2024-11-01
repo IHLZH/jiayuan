@@ -8,4 +8,6 @@ class UrlPath {
   static const String getEmailCodeUrl="/email/login";
 
   static const String loginWithEmailCodeUrl = "/login/email";
+
+  static const String forgetPasswordCheckCodeUrl="/password/resetPassword";
 }
