@@ -1,4 +1,6 @@
-//存放全局的静态常量
-class Global{
+import 'package:jiayuan/repository/model/user.dart';
 
+class Global{
+  static User? userInfo;
+  static String? token;
 }

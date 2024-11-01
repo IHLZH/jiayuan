@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class User {
   int userId;
   String userName;
@@ -37,7 +39,13 @@ class User {
     required this.userStatus,
   });
 
-  // 从Map对象转换为User对象
+  /// 从JSON字符串中创建User实例
+  factory User.fromJson(String jsonString) {
+    final jsonMap = Map<String, dynamic>.from(json.decode(jsonString));
+    return User.fromMap(jsonMap);
+  }
+
+  /// 从Map对象中创建User实例
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       userId: map['userId'] as int,
@@ -60,7 +68,7 @@ class User {
     );
   }
 
-  // 将User对象转换为Map对象
+  /// 将User实例转换为Map对象
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
@@ -81,5 +89,33 @@ class User {
       'userType': userType,
       'userStatus': userStatus,
     };
+  }
+
+  /// 将User实例转换为JSON字符串
+  String toJson() {
+    return json.encode(toMap());
+  }
+
+  @override
+  String toString() {
+    return 'User{'
+        'userId: $userId, '
+        'userName: $userName, '
+        'nickName: $nickName, '
+        'userPassword: $userPassword, '
+        'userAvatar: $userAvatar, '
+        'userSex: $userSex, '
+        'userPhoneNumber: $userPhoneNumber, '
+        'dailyPhoneNumber: $dailyPhoneNumber, '
+        'email: $email, '
+        'createdTime: $createdTime, '
+        'updatedTime: $updatedTime, '
+        'lng: $lng, '
+        'lat: $lat, '
+        'loginIp: $loginIp, '
+        'loginTime: $loginTime, '
+        'userType: $userType, '
+        'userStatus: $userStatus'
+        '}';
   }
 }

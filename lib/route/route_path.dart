@@ -1,8 +1,7 @@
 //路由地址
 class RoutePath {
   //首页tab
-  static const String tab = "/";
-
+  static const String tab = "/tab";
 
   //启动页
   static const String startPage = "/";
@@ -15,4 +14,13 @@ class RoutePath {
 
   //邮箱验证码登录页
   static const String emailLoginPage = "/emailLoginPage";
+
+  //忘记密码页
+  static const String forgetPasswordPage = "/forgetPasswordPage";
+
+  //忘记密码验证码页
+  static const String forgetPasswordCodePage = "/forgetPasswordCodePage";
+
+  //忘记密码新密码页
+  static const String forgetPasswordNewPasswordPage = "/forgetPasswordNewPasswordPage";
 }
