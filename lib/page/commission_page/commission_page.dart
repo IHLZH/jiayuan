@@ -267,8 +267,7 @@ class _CommissionPageState extends State<CommissionPage>{
       },
       child: Container(
         height: 30.w,
-        width: 280.w
-        ,
+        width: 280.w,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.black, width: 2),
           borderRadius: BorderRadius.circular(16),

@@ -9,5 +9,5 @@ import 'http/dio_instance.dart';
 Future<void> main() async {
   DioInstance.instance().initDio(baseUrl: "http://192.168.3.32:9900/");
   await ScreenUtil.ensureScreenSize();
-  runApp(const MyApp());
+  runApp(MyApp());
 }

@@ -37,7 +37,6 @@ class DioInstance {
     _dio.interceptors.add(TokenInterceptor());
     _dio.interceptors.add(PrintLogInterceptor());
     _dio.interceptors.add(RspInterceptor());
-
     _inited = true;
   }
 
