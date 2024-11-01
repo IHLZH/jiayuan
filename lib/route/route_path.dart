@@ -1,8 +1,7 @@
 //路由地址
 class RoutePath {
   //首页tab
-  static const String tab = "/";
-
+  static const String tab = "/tab";
 
   //启动页
   static const String startPage = "/";
