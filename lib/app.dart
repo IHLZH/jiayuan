@@ -10,13 +10,16 @@ import 'package:oktoast/oktoast.dart';
 Size get designSize {
   final firstView = WidgetsBinding.instance.platformDispatcher.views.first;
   // 逻辑短边
-  final logicalShortestSide = firstView.physicalSize.shortestSide / firstView.devicePixelRatio;
+  final logicalShortestSide =
+      firstView.physicalSize.shortestSide / firstView.devicePixelRatio;
   // 逻辑长边
-  final logicalLongestSide = firstView.physicalSize.longestSide / firstView.devicePixelRatio;
+  final logicalLongestSide =
+      firstView.physicalSize.longestSide / firstView.devicePixelRatio;
   // 缩放比例 designSize越小，元素越大
   const scaleFactor = 1;
   // 缩放后的逻辑短边和长边
-  return Size(logicalShortestSide * scaleFactor, logicalLongestSide * scaleFactor);
+  return Size(
+      logicalShortestSide * scaleFactor, logicalLongestSide * scaleFactor);
 }
 
 class MyApp extends StatelessWidget {
@@ -34,10 +37,17 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             tabBarTheme: TabBarTheme(dividerColor: Colors.transparent),
             useMaterial3: true,
+            primaryColor: Colors.teal,
+            cardColor: Colors.grey,
+            textTheme: TextTheme(
+              // bodyLarge: TextStyle(color: Colors.green),
+              bodyMedium: TextStyle(color: Colors.teal),
+            ),
           ),
           navigatorKey: RouteUtils.navigatorKey,
           onGenerateRoute: Routes.generateRoute,
-          initialRoute: RoutePath.tab,
+          initialRoute: RoutePath.startPage,
+          debugShowCheckedModeBanner: false,
         );
       },
     ));
@@ -69,5 +79,3 @@ class MyApp extends StatelessWidget {
 //     ));
 //   }
 // }
-
-
