@@ -3,5 +3,5 @@ class UrlPath {
 
   static const String captchaImageUrl="/code/image";
 
-  static const String loginUrl="/userLogin";
+  static const String loginUrl="/login/loginBoth";
 }
