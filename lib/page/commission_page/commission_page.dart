@@ -26,7 +26,6 @@ class _CommissionPageState extends State<CommissionPage>{
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-
     //指示器
     Widget _buildIndicator() {
       return Row(
@@ -66,7 +65,8 @@ class _CommissionPageState extends State<CommissionPage>{
                 Row(
                   children: [
                     _Position(),
-                    _SearchTopBar()
+                    Expanded(child: _SearchTopBar()),
+                    SizedBox(width: 10.w)
                   ],
                 ),
                 Expanded(
@@ -195,16 +195,135 @@ class _CommissionPageState extends State<CommissionPage>{
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.appColor,
-        borderRadius: BorderRadius.circular(16)
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2), // 阴影颜色
+            offset: Offset(0, 4), // 阴影偏移量
+            blurRadius: 8, // 模糊半径
+            spreadRadius: 1,
+          )// 扩展半径)
+        ]
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(commission.county),
-          Text(CommissionViewModel.CommissionTypes[commission.commissionType].typeText),
-          Text(commission.expectTime.hour.toString()),
-          Text(commission.distance.toString()),
-          Text(commission.price.toString())
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.location_on_outlined),
+                  Text(
+                    commission.distance.toString() + "km",
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600
+                    ),
+                  ),
+                ],
+              ),
+            Text(
+                commission.expectTime.hour.toString() + ":" + commission.expectTime.minute.toString(),
+              style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600
+              ),
+            ),
+          ],),
+
+          //SizedBox(height: 10.h,),
+
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: AppColors.appColor,
+                  borderRadius: BorderRadius.circular(16.r)
+                ),
+                child: Text(
+                  CommissionViewModel.CommissionTypes[commission.commissionType].typeText,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600
+                  ),
+                ),
+              )
+            ],
+          ),
+
+          //SizedBox(height: 10.h,),
+
+          Row(
+            children: [
+              Text(
+                commission.isLong ? "服务周期: " : "服务时长: " + commission.estimatedTime.toString() + (commission.isLong ? "月" : "小时"),
+                style: TextStyle(
+                  color: AppColors.textColor2b,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w600
+                ),
+              ),
+            ],
+          ),
+
+          //SizedBox(height: 10.h),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                commission.county,
+                style: TextStyle(
+                    color: AppColors.textColor2b,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500
+                ),
+              ),
+              SizedBox(width: 5.w,),
+              Expanded(
+                  child: Text(
+                    commission.address + "诚朴园三号楼204",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+              )
+            ],
+          ),
+
+          //SizedBox(height: 5.h),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                commission.price.toString(),
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.w600
+                ),
+              ),
+              Text(
+                "元",
+                style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600
+                ),
+              )
+            ],
+          )
         ],
       ),
     );
@@ -232,7 +351,10 @@ class _CommissionPageState extends State<CommissionPage>{
               color: Colors.white,
             ),
           ),
-          Text(CommissionViewModel.CommissionTypes[index].typeText)
+          Text(
+              CommissionViewModel.CommissionTypes[index].typeText,
+            style: TextStyle(color: AppColors.textColor2b),
+          )
         ],
       ),
     );
@@ -240,14 +362,14 @@ class _CommissionPageState extends State<CommissionPage>{
 
   Widget _Position(){
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: EdgeInsets.symmetric(horizontal: 10.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
               "石家庄",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 18.sp,
               fontWeight: FontWeight.w600
             ),
           ),
@@ -266,19 +388,17 @@ class _CommissionPageState extends State<CommissionPage>{
         print("AppBar");
       },
       child: Container(
-        height: 30.w,
-        width: 280.w
-        ,
+        height: 30.h,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.black, width: 2),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(16.r),
           color: AppColors.searchBgColor
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end, // 将图标对齐到右侧
           children: [
             Padding(
-              padding: const EdgeInsets.only(right: 8.0), // 添加右侧内边距
+              padding: EdgeInsets.only(right: 8.w), // 添加右侧内边距
               child: Icon(Icons.search),
             ),
           ],

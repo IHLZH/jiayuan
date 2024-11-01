@@ -4,7 +4,7 @@ import 'package:jiayuan/page/login_page/login_page.dart';
 import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
-import '../page/tab_page.dart';
+import '../page/tab_page/tab_page.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {

@@ -7,6 +7,7 @@ class Commission {
   String province; //省
   String city; //市
   String county; //县
+  String address;
   double? distance; //距离
   String userPhone; //用户手机号
   double price;
@@ -23,6 +24,7 @@ class Commission {
     required this.province,
     required this.city,
     required this.county,
+    required this.address,
     this.distance,
     required this.userPhone,
     required this.price,

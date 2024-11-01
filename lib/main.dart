@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/app.dart';
-import 'package:jiayuan/page/tab_page.dart';
+import 'package:jiayuan/page/tab_page/tab_page.dart';
 
 import 'http/dio_instance.dart';
 

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiayuan/page/tab_page/tab_page_vm.dart';
 
 import '../styles/app_colors.dart';
 import 'navigation_bar_item.dart';
@@ -13,7 +14,6 @@ class NavigationBarWidget extends StatefulWidget {
     required this.tabLabels,
     required this.tabIcons,
     required this.tabActiveIcons,
-    this.currentIndex = 0,
     this.themeData,
     this.onItemChange,
     this.bottomNavigationBarType,
@@ -29,6 +29,8 @@ class NavigationBarWidget extends StatefulWidget {
     }
   }
 
+
+
   //界面集合
   final List<Widget> tabItems;
 
@@ -41,8 +43,6 @@ class NavigationBarWidget extends StatefulWidget {
   //选中icon
   final List<String> tabActiveIcons;
 
-  //当前页面下标
-  int currentIndex = 0;
 
   //底部导航栏切换事件
   final ValueChanged<int>? onItemChange;
@@ -64,11 +64,14 @@ class NavigationBarWidget extends StatefulWidget {
 }
 
 class _NavigationBarWidgetState extends State<NavigationBarWidget> {
+
+  TabPageViewModel tabPageViewModel = TabPageViewModel();
+
   @override
   void initState() {
     super.initState();
     //第一次进入默认调用一次
-    widget.onItemChange?.call(widget.currentIndex);
+    widget.onItemChange?.call(tabPageViewModel.currentIndex);
   }
 
   @override
@@ -76,7 +79,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
     return Scaffold(
         backgroundColor: Colors.white,
         //tab页面
-        body: IndexedStack(index: widget.currentIndex, children: widget.tabItems),
+        body: IndexedStack(index: tabPageViewModel.currentIndex, children: widget.tabItems),
         //底部导航栏
         bottomNavigationBar: BottomNavigationBar(
             iconSize: 22.r,
@@ -87,15 +90,15 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
             selectedItemColor: AppColors.appColor,
             backgroundColor: Colors.white,
             type: widget.bottomNavigationBarType ?? BottomNavigationBarType.fixed,
-            currentIndex: widget.currentIndex,
+            currentIndex: tabPageViewModel.currentIndex,
             onTap: (index) {
               //重复事件不处理
-              if (widget.currentIndex == index) {
+              if (tabPageViewModel.currentIndex == index) {
                 return;
               }
               //点击切换page事件
               widget.onItemChange?.call(index);
-              widget.currentIndex = index;
+              tabPageViewModel.currentIndex = index;
               setState(() {});
             },
             items: _barItemList()));
