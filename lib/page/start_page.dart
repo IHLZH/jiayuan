@@ -9,37 +9,14 @@ import 'package:jiayuan/route/route_utils.dart';
 import '../route/routes.dart';
 import '../utils/constants.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '家缘服务平台',
-      theme: ThemeData(
-        primaryColor: Colors.teal,
-        cardColor: Colors.grey,
-        textTheme: TextTheme(
-          bodyLarge: TextStyle(color: Colors.green),
-          bodyMedium: TextStyle(color: Colors.teal),
-        ),
-      ),
-      home: StartPage(),
-      debugShowCheckedModeBanner: false,
-      initialRoute: RoutePath.startPage,
-      onGenerateRoute: Routes.generateRoute,
-    );
-  }
-}
-
 class StartPage extends StatefulWidget {
+  const StartPage({super.key});
+
   @override
-  _SplashPageState createState() => _SplashPageState();
+  State<StartPage> createState() => _StartPageState();
 }
 
-class _SplashPageState extends State<StartPage> {
+class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     super.initState();
@@ -55,14 +32,14 @@ class _SplashPageState extends State<StartPage> {
     // Future.delayed(Duration(seconds: 2), () {});
 
     // 如果Token不存活 跳转到登录界面
-    Future.delayed(Duration(seconds: 2), () {
-      RouteUtils.pushNamedAndRemoveUntil(context,RoutePath.loginPage);
+    Future.delayed(const Duration(seconds: 2), () {
+      RouteUtils.pushForNamed(context,RoutePath.loginPage);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
