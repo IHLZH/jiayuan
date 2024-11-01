@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../entity/user.dart';
 import '../../http/dio_instance.dart';
 import '../../http/url_path.dart';
 import '../../route/route_path.dart';
@@ -55,13 +56,13 @@ class _LoginPageState extends State<LoginPage> {
   void _loadInitialCaptcha() async {
     try {
       final response = await DioInstance.instance().get(
-        path:UrlPath.captchaImageUrl,
+        path: UrlPath.captchaImageUrl,
         options: Options(responseType: ResponseType.bytes),
       );
       setState(() {
         captchaImage = response.data;
       });
-      if(isProduction) print('Initial captcha loaded successfully.');
+      if (isProduction) print('Initial captcha loaded successfully.');
     } catch (e) {
       if (isProduction) print('Error loading initial captcha: $e');
       setState(() {
@@ -73,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
   void _reloadImage() async {
     try {
       final response = await DioInstance.instance().get(
-        path:UrlPath.captchaImageUrl +
+        path: UrlPath.captchaImageUrl +
             "?timestamp=${DateTime.now().millisecondsSinceEpoch}",
         options: Options(responseType: ResponseType.bytes),
       );
@@ -88,27 +89,26 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void _jumpToTab() async {
+    RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
+  }
+
   Future<void> _login() async {
     final String captcha = _captchaController.text;
     final String account = _accountController.text;
     final String password = _passwordController.text;
-    final String url = UrlPath.loginUrl + "?account=$account&password=$password" + "&capcha=$captcha";
+    final String url = UrlPath.loginUrl + "?countId=$account&password=$password" + "&captchaCode=$captcha";
 
     try {
-      final response = await DioInstance.instance().get(path: url);
+      final response = await DioInstance.instance().post(path: url);
       if (response.statusCode == 200) {
-        final data = response.data;
-        String token = data["data"];
-        // UserInfo.account = account;
-        // UserInfo.password = password;
-        // Constants.token = token;
-        if (isProduction) {
-          print('Login successful: $data');
-          print('UserToken: $token');
-        }
+        Map<String, dynamic> data = response.data;
 
-        //TODO
-        RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.startPage);
+        // User.fromMap(data);
+
+        if (isProduction) print("response : $response");
+
+        RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
       } else {
         if (isProduction) print('Login failed: ${response.statusCode}');
       }
@@ -120,6 +120,18 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          TextButton(
+            onPressed: _jumpToTab,
+            child: Text(
+              "游客登录>",
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+          ),
+        ],
+      ),
       body: Container(
         margin: EdgeInsets.only(top: 100),
         child: Center(
