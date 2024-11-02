@@ -18,6 +18,7 @@ class Commission {
   int commissionStatus; //委托状态
   bool isLong; //是否是长期
   String? comment; //备注
+  String? days;
 
   Commission({
     required this.commissionType,
@@ -35,7 +36,17 @@ class Commission {
     required this.commissionStatus,
     required this.isLong,
     this.comment
-});
+}){
+    DateTime currentTime = DateTime.now();
+    int currentMonth = currentTime.month;
+    int currentDay = currentTime.day;
+
+    if(expectTime.month == currentMonth && expectTime.day == currentDay){
+      days = "今天";
+    }else{
+      days = ((expectTime.month - currentMonth) * 30 + (expectTime.day - currentDay)).toString() + "天后";
+    }
+  }
 
 
 }

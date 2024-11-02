@@ -74,6 +74,8 @@ dependencies:
   #    flutter_model_viewer: ^0.0.7
   # 获取文件
   path_provider: ^2.1.4
+  #瀑布流布局
+  flutter_staggered_grid_view: ^0.7.0
   # 腾讯云IM SDK
 #  tencent_cloud_chat_sdk: ^8.0.5903
 
