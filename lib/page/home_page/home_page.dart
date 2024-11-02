@@ -225,6 +225,8 @@ class _HomePageState extends State<HomePage> {
           onTap: () {},
           child: Container(
               padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+              ),
               width: double.infinity,
               child: Column(
                 children: [
