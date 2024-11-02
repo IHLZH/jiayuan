@@ -83,14 +83,14 @@ class HomeViewModel with ChangeNotifier{
           avatar: "https://th.bing.com/th?id=OIP.LO6625C8g41ovz21idvhOgAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2",
           workExperience: 5 ,
           rating: 4.5,
-          highlight: "擅长:专业通下水道，价格便宜，十年老人"
+          highlight: "专业通下水道，价格便宜，十年老人"
       ),
       Housekeeper(
           realName: "徐静磊",
           keeperId: 2,
           avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
           workExperience: 5,
-          highlight: "擅长:.家事全包，价格便宜，服务态度好"
+          highlight: "家事全包，价格便宜，服务态度好"
       ),
 
       Housekeeper(

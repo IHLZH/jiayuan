@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -39,18 +40,34 @@ class _HomePageState extends State<HomePage> {
               ]),
               backgroundColor: AppColors.appColor,
             ),
+            backgroundColor: Colors.grey[200],
             body: CustomScrollView(
               scrollDirection: Axis.vertical,
               slivers: [
                 SliverToBoxAdapter(child: _banner()),
                 SliverToBoxAdapter(child: _PageViewWidget()),
-                SliverAppBar(title: Row(
-                  children: [
-                    Text("家政服务", style: TextStyle(fontSize: 15.sp)),
-                    Spacer(),
-                    Text("更多", style: TextStyle(fontSize: 13.sp)),
-                  ],
-                )),
+                SliverAppBar(
+                  pinned: true,
+                  backgroundColor: Colors.grey[200],
+                  title: Container(
+                    child: Row(
+                      children: [
+                        Text(
+                          "推荐:",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  systemOverlayStyle: SystemUiOverlayStyle.dark,
+                  flexibleSpace: Container(
+                    color: Colors.white,
+                  ),
+                ),
+                SliverToBoxAdapter(child: SizedBox(height: 5)),
                 _HouseKeeperRecommendedWidget(),
               ],
             )));
@@ -63,8 +80,9 @@ class _HomePageState extends State<HomePage> {
       builder: (context, serviceData, child) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
-              (context, index) => _buildHousekeeperCard(homeViewModel.housekeepers[index]),
-              childCount: 10),
+              (context, index) =>
+                  _buildHousekeeperCard(homeViewModel.housekeepers[index]),
+              childCount: homeViewModel.housekeepers.length),
         );
       },
     );
@@ -124,20 +142,20 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      CType(index: 0),
-                      CType(index: 1),
-                      CType(index: 2),
-                      CType(index: 3),
+                      CType(0),
+                      CType(1),
+                      CType(2),
+                      CType(3),
                     ],
                   ),
                   SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      CType(index: 4),
-                      CType(index: 5),
-                      CType(index: 6),
-                      CType(index: 7),
+                      CType(4),
+                      CType(5),
+                      CType(6),
+                      CType(7),
                     ],
                   ),
                 ],
@@ -147,20 +165,20 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      CType(index: 8),
-                      CType(index: 9),
-                      CType(index: 10),
-                      CType(index: 1),
+                      CType(8),
+                      CType(9),
+                      CType(10),
+                      CType(1),
                     ],
                   ),
                   SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      CType(index: 2),
-                      CType(index: 3),
-                      CType(index: 4),
-                      CType(index: 5),
+                      CType(2),
+                      CType(3),
+                      CType(4),
+                      CType(5),
                     ],
                   ),
                 ],
@@ -174,77 +192,114 @@ class _HomePageState extends State<HomePage> {
   }
 
   //委托类型
-  Widget CType({
-    required int index,
-  }) {
-    return GestureDetector(
-      onTap: () {},
-      child: Column(
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: AppColors.appColor),
-            child: Icon(
-              HomeViewModel.CommissionTypes[index].icon,
-              size: 30,
-              color: Colors.white,
+  Widget CType(int index) => GestureDetector(
+        onTap: () {},
+        child: Column(
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: AppColors.appColor),
+              child: Icon(
+                HomeViewModel.CommissionTypes[index].icon,
+                size: 30,
+                color: Colors.white,
+              ),
             ),
-          ),
-          Text(HomeViewModel.CommissionTypes[index].typeText)
-        ],
-      ),
-    );
-  }
+            Text(HomeViewModel.CommissionTypes[index].typeText)
+          ],
+        ),
+      );
 
+//家政员推荐卡片
   Widget _buildHousekeeperCard(Housekeeper housekeeper) {
     return Container(
-      margin: EdgeInsets.only(right: 10),
-      child: Column(
-        children: [
-          Container(
-            height: 120,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: NetworkImage(housekeeper.avatar!),
-                      fit: BoxFit.cover,
+      margin: EdgeInsets.only(left: 12, right: 12, bottom: 10),
+      child: Material(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Colors.white,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10.0),
+          onTap: () {},
+          child: Container(
+              padding: EdgeInsets.all(10),
+              width: double.infinity,
+              child: Column(
+                children: [
+                  Row(children: [
+                    Container(
+                      height: 70,
+                      width: 55,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          image: NetworkImage(housekeeper.avatar!),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                        child: Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(housekeeper.realName!,
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black)),
+                                SizedBox(
+                                  height: 3,
+                                ),
+                                Text("工作经验：${housekeeper.workExperience}年",
+                                    style: TextStyle(
+                                        fontSize: 13, color: Colors.black)),
+                                Text(
+                                  "服务评分：${housekeeper.rating}分",
+                                  style: TextStyle(
+                                      fontSize: 13, color: Colors.black),
+                                ),
+                              ],
+                            )))
+                  ]),
+                  SizedBox(height: 5),
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      gradient: LinearGradient(
+                        colors: [
+                          Color.fromRGBO(233, 247, 237, 1), // 起始颜色
+                          Color.fromRGBO(233, 247, 237, 0.3), // 结束颜色，透明度较低
+                        ],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 5),
+                        Text(
+                          "亮点:",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromRGBO(87, 191, 169, 1),
+                              fontSize: 12),
+                        ),
+                        Text(
+                          " ${housekeeper.highlight}",
+                          style: TextStyle(color: Colors.black45, fontSize: 12),
+                        )
+                      ],
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(housekeeper.realName!,
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text("服务年限：${housekeeper.workExperience}年"),
-                        Text("服务评分：${housekeeper.rating}分"),
-                        Text("擅长：${housekeeper.highlight}"),
-                     ],
-                    )
-                  )
-                )
-              ]
-            )
-          )
-        ],
+                ],
+              )),
+        ),
       ),
     );
   }
