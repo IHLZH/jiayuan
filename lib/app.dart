@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(designSize);
     //toast提示必须为APP的顶层组件
     return OKToast(
         //屏幕适配父组件组件
