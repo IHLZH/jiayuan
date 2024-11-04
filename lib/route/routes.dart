@@ -7,6 +7,7 @@ import 'package:jiayuan/page/login_page/forget_password_page.dart';
 import 'package:jiayuan/page/login_page/forget_password_submit_page.dart';
 import 'package:jiayuan/page/login_page/login_page.dart';
 import 'package:jiayuan/page/register_page/register_check_code_page.dart';
+import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
 import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
@@ -49,6 +50,12 @@ class Routes {
         //注册验证码页
       case RoutePath.registerCheckCodePage:
         return pageRoute(RegisterCheckCodePage());
+        //注册提交密码页
+      case RoutePath.registerSubmitPasswordPage:
+        final args = settings.arguments as Map<String, dynamic>;
+        final input = args['input'] as String;
+        final isEmail = args['isEmail'] as bool;
+        return pageRoute(RegisterPasswordSubmitPage(input: input, isEmail: isEmail,));
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
