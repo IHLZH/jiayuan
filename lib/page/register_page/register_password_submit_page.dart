@@ -42,7 +42,11 @@ class _RegisterPasswordSubmitPageState
     setState(() {});
   }
 
-  void _resetPassword() async {
+  void _jumpToLogin() {
+    RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
+  }
+
+  void _setPassword() async {
     final String password = _passwordController.text;
     final String confirmPassword = _confirmPasswordController.text;
 
@@ -64,7 +68,8 @@ class _RegisterPasswordSubmitPageState
           showToast(response.data['message'],duration: Duration(seconds: 1));
           Global.input = widget.input;
           Global.password = password;
-          RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
+          // 跳转登录页面
+          _jumpToLogin();
         }else{
           showToast(response.data['message'], duration: Duration(seconds: 1));
         }
@@ -84,7 +89,7 @@ class _RegisterPasswordSubmitPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('重置密码'),
+        title: Text('确认密码'),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -139,7 +144,7 @@ class _RegisterPasswordSubmitPageState
               ),
               SizedBox(height: 20.h),
               ElevatedButton(
-                onPressed: _resetPassword,
+                onPressed: _setPassword,
                 child: Text('更改密码',
                     style: TextStyle(fontSize: 18, color: Colors.white)),
                 style: ElevatedButton.styleFrom(

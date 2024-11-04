@@ -167,7 +167,7 @@ class _RegisterCheckCodePageState extends State<RegisterCheckCodePage> {
       // 包裹整个页面
       child: Scaffold(
         appBar: AppBar(
-          title: Text('忘记密码'),
+          title: Text('注册'),
         ),
         body: SingleChildScrollView(
           child: Container(
