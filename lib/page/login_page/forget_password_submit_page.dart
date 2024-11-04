@@ -79,7 +79,19 @@ class _ForgetPasswordSubmitPageState extends State<ForgetPasswordSubmitPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('重置密码'),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).primaryColor,
+          ),
+          onPressed: () {
+            RouteUtils.pop(context);
+          },
+        ),
+        title: Text(
+          "新密码确认",
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(

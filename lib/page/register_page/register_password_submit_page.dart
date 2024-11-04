@@ -89,7 +89,19 @@ class _RegisterPasswordSubmitPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('确认密码'),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).primaryColor,
+          ),
+          onPressed: () {
+            RouteUtils.pop(context);
+          },
+        ),
+        title: Text(
+          "初始化密码",
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(

@@ -150,7 +150,19 @@ class _ForgetPasswordCheckCodePageState
       // 包裹整个页面
       child: Scaffold(
         appBar: AppBar(
-          title: Text('忘记密码'),
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Theme.of(context).primaryColor,
+            ),
+            onPressed: () {
+              RouteUtils.pop(context);
+            },
+          ),
+          title: Text(
+            "忘记密码",
+            style: TextStyle(color: Theme.of(context).primaryColor),
+          ),
         ),
         body: SingleChildScrollView(
           child: Container(
