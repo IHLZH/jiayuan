@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 
+import '../../http/dio_instance.dart';
 import '../../http/url_path.dart';
 import '../../route/route_path.dart';
 import '../../route/route_utils.dart';
@@ -20,7 +21,7 @@ class _RegisterCheckCodePageState extends State<RegisterCheckCodePage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _verificationCodeController =
-  TextEditingController();
+      TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _phoneFocusNode = FocusNode();
   final FocusNode _verificationCodeFocusNode = FocusNode();
@@ -79,22 +80,51 @@ class _RegisterCheckCodePageState extends State<RegisterCheckCodePage> {
   //获取验证码
   void _getVerificationCode() async {
     final String input =
-    _isEmail ? _emailController.text : _phoneController.text;
+        _isEmail ? _emailController.text : _phoneController.text;
     if (input.isEmpty) {
       showToast('邮箱/手机号不能为空', duration: Duration(seconds: 1));
       return;
     }
 
-    // String url = UrlPath.
+    String url = _isEmail
+        ? UrlPath.getEmailCodeUrl + "?email=$input&purpose=register"
+        : UrlPath.getPhoneCodeUrl + "?phone=$input&purpose=register";
 
-    _startTimer();
+    try {
+      final response = await DioInstance.instance().post(
+        path: url,
+      );
+
+      if (response.statusCode == 200) {
+        if (response.data['code'] == 200) {
+          // 显示成功提示
+          showToast('验证码已发送', duration: Duration(seconds: 1));
+
+          _startTimer();
+        } else {
+          showToast(response.data['message'], duration: Duration(seconds: 1));
+        }
+      } else {
+        // 显示错误提示
+        showToast('无法连接服务器', duration: Duration(seconds: 1));
+      }
+    } catch (e) {
+      print("error: $e");
+    }
   }
 
-  //TODO
+  void _jumpToNext(String input) {
+    RouteUtils.pushForNamed(
+      context,
+      RoutePath.registerSubmitPasswordPage,
+      arguments: {"input": input, "isEmail": _isEmail},
+    );
+  }
+
   //验证码认证
   Future<void> _navigateToNextPage() async {
     final String input =
-    _isEmail ? _emailController.text : _phoneController.text;
+        _isEmail ? _emailController.text : _phoneController.text;
     final verificationCode = _verificationCodeController.text;
     // 检查验证码和输入是否为空
     if (input.isEmpty || verificationCode.isEmpty) {
@@ -102,35 +132,33 @@ class _RegisterCheckCodePageState extends State<RegisterCheckCodePage> {
       return;
     }
 
-    //TODO
-    RouteUtils.pushForNamed(
-      context,
-      RoutePath.forgetPasswordNewPasswordPage,
-      arguments: {"input": input, "isEmail": _isEmail},
-    );
+    String url = _isEmail
+        ? UrlPath.checkRegisterEmailCodeUrl +
+            "?email=$input&emailCode=$verificationCode"
+        : UrlPath.checkRegisterPhoneCodeUrl +
+            "?phone=$input&smsCode=$verificationCode";
 
-    // try {
-    //   // 发送POST请求校验验证码
-    //   final response = await DioInstance.instance().post(
-    //     path: UrlPath.forgetPasswordCheckCodeUrl,
-    //   );
-    //
-    //   // 检查校验结果
-    //   if (response.statusCode == 200 && response.data['code'] == 200) {
-    //     // 导航到重置密码页面
-    //     RouteUtils.pushForNamed(
-    //       context,
-    //       RoutePath.forgetPasswordNewPasswordPage,
-    //       arguments: {"input": input, "isEmail": _isEmail},
-    //     );
-    //   } else {
-    //     // 显示错误提示
-    //     showToast('验证码校验失败', duration: Duration(seconds: 1));
-    //   }
-    // } catch (e) {
-    //   print("错误: $e");
-    //   showToast('验证码校验失败', duration: Duration(seconds: 1));
-    // }
+    try {
+      final response = await DioInstance.instance().post(
+        path: url,
+      );
+      if (response.statusCode == 200) {
+        if (response.data['code'] == 200) {
+          // 显示成功提示
+          showToast('验证成功', duration: Duration(seconds: 1));
+
+          // 跳转到下一个页面
+          _jumpToNext(input);
+        } else {
+          showToast(response.data['message'], duration: Duration(seconds: 1));
+        }
+      } else {
+        // 显示错误提示
+        showToast('无法连接服务器', duration: Duration(seconds: 1));
+      }
+    } catch (e) {
+      print("error: $e");
+    }
   }
 
   @override
@@ -258,7 +286,7 @@ class _RegisterCheckCodePageState extends State<RegisterCheckCodePage> {
                     if (_secondsRemaining > 0)
                       Text('$_secondsRemaining s',
                           style:
-                          TextStyle(color: Theme.of(context).primaryColor))
+                              TextStyle(color: Theme.of(context).primaryColor))
                     else
                       ElevatedButton(
                         onPressed: _getVerificationCode,
@@ -283,7 +311,7 @@ class _RegisterCheckCodePageState extends State<RegisterCheckCodePage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
                     padding:
-                    EdgeInsets.symmetric(horizontal: 50.w, vertical: 15.h),
+                        EdgeInsets.symmetric(horizontal: 50.w, vertical: 15.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.r),
                     ),
