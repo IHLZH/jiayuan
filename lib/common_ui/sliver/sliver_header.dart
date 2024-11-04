@@ -27,14 +27,15 @@ class _SliverHeaderState extends State<SliverHeader> {
         pinned: widget.pinned ?? true,
         floating: widget.floating ?? true,
         delegate: SliverAppBarDelegate(
-            minHeight: _childHeight ?? 130.h,
-            maxHeight: _childHeight ?? 130.h,
+            minHeight: _childHeight ?? 70.h,
+            maxHeight: _childHeight ?? 70.h,
             child: LayoutBuilder(
               builder: (context, constraints) {
                 //通过LayoutBuilder动态获取子组件的高度
                 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                   //防止多次回调setState
                   var height = context.size?.height;
+                  print("_SliverHeaderState _Height={$height}");
                   if (_childHeight == height) {
                     return;
                   }
@@ -44,7 +45,6 @@ class _SliverHeaderState extends State<SliverHeader> {
                   }
                   setState(() {});
                 });
-
                 return Container(
                     width: double.infinity,
                     color: Colors.white,

@@ -83,8 +83,8 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
         //底部导航栏
         bottomNavigationBar: BottomNavigationBar(
             iconSize: 22.r,
-            selectedFontSize: 16.sp,
-            unselectedFontSize: 13.sp,
+            selectedFontSize: 13.sp,
+            unselectedFontSize: 10.sp,
             //已选择与未选中的字体颜色
             unselectedItemColor: AppColors.blackColor333,
             selectedItemColor: AppColors.appColor,
@@ -101,7 +101,9 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
               tabPageViewModel.currentIndex = index;
               setState(() {});
             },
-            items: _barItemList()));
+            items: _barItemList()
+        )
+    );
   }
 
   ///底部导航栏集合
@@ -120,11 +122,11 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
 
   Widget _iconContainer(String iconPath) {
     return Container(
-        padding: EdgeInsets.only(top: 8.h, bottom: 5.h),
+        padding: EdgeInsets.only(top: 4.h),
         child: Image.asset(
           iconPath,
-          width: widget.bottomBarIconWidth ?? 22.r,
-          height: widget.bottomBarIconHeight ?? 22.r,
+          width: widget.bottomBarIconWidth ?? 25.r,
+          height: widget.bottomBarIconHeight ?? 25.r,
         ));
   }
 }

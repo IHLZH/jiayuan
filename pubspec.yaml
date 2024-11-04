@@ -76,6 +76,8 @@ dependencies:
   path_provider: ^2.1.4
   #瀑布流布局
   flutter_staggered_grid_view: ^0.7.0
+  # 自定义弹出菜单
+  custom_pop_up_menu: ^1.2.4
   # 腾讯云IM SDK
 #  tencent_cloud_chat_sdk: ^8.0.5903
 
@@ -101,9 +103,12 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-      - assets/images/
-      - assets/images/icons/
-
+    - assets/images/
+    - assets/images/icons/
+  fonts:
+    - family: HYChengXingJ
+      fonts:
+        - asset: assets/font/HYChengXingJ.ttf
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

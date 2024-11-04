@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../styles/app_colors.dart';
@@ -11,13 +12,15 @@ class AppInput extends StatefulWidget {
       this.onChanged,
       this.hintText,
       this.keyboardType,
-      this.obscureText});
+      this.obscureText,
+      this.inputFormatters});
 
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final String? hintText;
   final TextInputType? keyboardType;
   final bool? obscureText;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State createState() {
@@ -41,7 +44,7 @@ class _AppInputState extends State<AppInput> {
     return Container(
       padding: EdgeInsets.only(left: 10.w),
       decoration:
-          BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6.r)), color: Colors.white),
+          BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(6.r)), color: AppColors.searchBgColor),
       child: TextField(
         controller: widget.controller,
         onChanged: widget.onChanged,
@@ -64,6 +67,7 @@ class _AppInputState extends State<AppInput> {
           hintText: widget.hintText ?? "请输入~",
         ),
         textInputAction: TextInputAction.done,
+        inputFormatters: widget.inputFormatters,
       ),
     );
   }

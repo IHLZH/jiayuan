@@ -149,22 +149,23 @@ class _CommissionPageState extends State<CommissionPage>{
                         pinned: true,
                         elevation: 0,
                         backgroundColor: Colors.white,
-                        flexibleSpace: FlexibleSpaceBar(
-                          title: Row(
-                            children: [
-                              Center(
-                                child: Text(
+                          title: Container(
+                            child: Row(
+                              children: [
+                                Text(
                                   "为您推荐:",
                                   style: TextStyle(
+                                    color: Colors.black,
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                              )
-                            ],
+                              ],
+                            ),
                           ),
-                          titlePadding: EdgeInsets.symmetric(horizontal: 10),
-                        ),
+                        flexibleSpace: Container(
+                          color: Colors.white,
+                        )
                       ),
 
                       Consumer<CommissionViewModel>(
@@ -198,152 +199,149 @@ class _CommissionPageState extends State<CommissionPage>{
 
 
   Widget CommissionCard(Commission commission){
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2), // 阴影颜色
-              offset: Offset(0, 4), // 阴影偏移量
-              blurRadius: 8, // 模糊半径
-              spreadRadius: 1,
-            )// 扩展半径)
-          ]
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
+    return Material(
+      elevation: 5,
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: (){},
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                (commission.days ?? "") + commission.expectTime.hour.toString() + ":" + commission.expectTime.minute.toString(),
-                style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600
-                ),
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    (commission.days ?? "") + commission.expectTime.hour.toString() + ":" + commission.expectTime.minute.toString(),
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 14,
+                      ),
+                      Text(
+                        commission.distance.toString() + "km",
+                        style: TextStyle(
+                            color: AppColors.textColor2b,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600
+                        ),
+                      ),
+                    ],
+                  ),
+
+                ],),
+
+              //SizedBox(height: 10.h,),
+
               Row(
                 children: [
-                  Icon(
-                    Icons.location_on_outlined,
-                    size: 14,
-                  ),
+                  Container(
+                    padding: EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                        color: AppColors.appColor,
+                        borderRadius: BorderRadius.circular(16.r)
+                    ),
+                    child: Text(
+                      CommissionViewModel.CommissionTypes[commission.commissionType].typeText,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600
+                      ),
+                    ),
+                  )
+                ],
+              ),
+
+              //SizedBox(height: 10.h,),
+
+              Row(
+                children: [
                   Text(
-                    commission.distance.toString() + "km",
+                    commission.isLong ? "服务周期: " : "服务时长: ",
                     style: TextStyle(
                         color: AppColors.textColor2b,
-                        fontSize: 12.sp,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600
+                    ),
+                  ),
+                  SizedBox(width: 5.w,),
+                  Text(
+                    commission.estimatedTime.toString() + (commission.isLong ? "月" : "小时"),
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600
                     ),
                   ),
                 ],
               ),
 
-            ],),
+              //SizedBox(height: 10.h),
 
-          //SizedBox(height: 10.h,),
-
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                    color: AppColors.appColor,
-                    borderRadius: BorderRadius.circular(16.r)
-                ),
-                child: Text(
-                  CommissionViewModel.CommissionTypes[commission.commissionType].typeText,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    commission.county,
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500
+                    ),
                   ),
-                ),
-              )
-            ],
-          ),
-
-          //SizedBox(height: 10.h,),
-
-          Row(
-            children: [
-              Text(
-                commission.isLong ? "服务周期: " : "服务时长: ",
-                style: TextStyle(
-                    color: AppColors.textColor2b,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600
-                ),
+                  SizedBox(width: 5.w,),
+                  Expanded(
+                    child: Text(
+                      commission.address + "诚朴园三号楼204",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
+                      style: TextStyle(
+                          color: AppColors.textColor2b,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500
+                      ),
+                    ),
+                  )
+                ],
               ),
-              SizedBox(width: 5.w,),
-              Text(
-                commission.estimatedTime.toString() + (commission.isLong ? "月" : "小时"),
-                style: TextStyle(
-                    color: AppColors.textColor2b,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600
-                ),
-              ),
-            ],
-          ),
 
-          //SizedBox(height: 10.h),
+              //SizedBox(height: 5.h),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                commission.county,
-                style: TextStyle(
-                    color: AppColors.textColor2b,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500
-                ),
-              ),
-              SizedBox(width: 5.w,),
-              Expanded(
-                child: Text(
-                  commission.address + "诚朴园三号楼204",
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
-                  style: TextStyle(
-                      color: AppColors.textColor2b,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    commission.price.toString(),
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w600
+                    ),
                   ),
-                ),
+                  Text(
+                    "元",
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600
+                    ),
+                  )
+                ],
               )
             ],
           ),
-
-          //SizedBox(height: 5.h),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                commission.price.toString(),
-                style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w600
-                ),
-              ),
-              Text(
-                "元",
-                style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w600
-                ),
-              )
-            ],
-          )
-        ],
+        ),
       ),
     );
   }

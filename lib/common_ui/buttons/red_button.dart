@@ -6,9 +6,9 @@ import '../styles/app_colors.dart';
 
 enum AppButtonType {
   //红色按钮
-  red,
+  main,
   //黑色按钮
-  black,
+  minor,
   //红色圆角按钮
   redCorner
 }
@@ -68,7 +68,7 @@ class AppButton extends StatelessWidget {
                   ? BorderRadius.all(Radius.circular(radius ?? 24.r))
                   : null,
               color:
-                  (type == AppButtonType.black) ? AppColors.blackColor333 : AppColors.redBtnColor),
+                  (type == AppButtonType.minor) ? AppColors.searchBgColor : AppColors.appColor),
           alignment: textAlignment ?? Alignment.center,
           width: buttonWidth ?? double.infinity,
           height: buttonHeight ?? 49.h,
