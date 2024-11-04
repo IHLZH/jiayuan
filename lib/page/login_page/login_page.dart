@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -116,18 +117,26 @@ class _LoginPageState extends State<LoginPage> {
       // if(isProduction)print("statusCode : ${response.statusCode}");
       // if(isProduction)print("statusmessage : ${response.statusMessage}");
       // if(isProduction)print("code : ${response.data["code"]}");
-      // if(isProduction)print("message : ${response.data["message"]}");\
-
-      if(isProduction)print("res header: ${response.headers['Authorization']}");
+      // if(isProduction)print("message : ${response.data["message"]}");
+      if(isProduction)print("data: ${response.data["data"]}");
+      // if(isProduction)print("res header: ${response.headers['Authorization']}");
 
       if (response.statusCode == 200&&response.data["code"]==200) {
         final data = response.data;
 
-        // Global.userInfo = User.fromMap(data);
+        if(isProduction)print("type ${data["data"].runtimeType}");
 
-        // if (isProduction) print("response : $response");
+        // 处理用户信息
+        Global.userInfo = User.fromJson(data["data"]);
 
-        _jumpToTab();
+        // 处理 Authorization 头部
+        final List<String> token = response.headers["Authorization"] as List<String>;
+        Global.token = token.first;
+
+        if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
+        if (isProduction) print("token: ${Global.token}");
+
+        // _jumpToTab();
       } else {
         if (isProduction) print('Login failed: ${response}');
       }
@@ -169,6 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: 350.w,
                     height: 600.h,
                     child: ListView(
+                      physics: NeverScrollableScrollPhysics(),
                       children: [
                         TextField(
                           controller: _accountController,
@@ -299,7 +309,10 @@ class _LoginPageState extends State<LoginPage> {
                           child: Row(
                             children: [
                               TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    RouteUtils.pushForNamed(
+                                        context, RoutePath.registerCheckCodePage);
+                                  },
                                   child: Text(
                                     "注册",
                                     style: TextStyle(
