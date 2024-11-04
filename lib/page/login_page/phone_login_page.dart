@@ -295,7 +295,9 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                           child: Row(
                             children: [
                               TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    RouteUtils.pushForNamed(context, RoutePath.registerCheckCodePage);
+                                  },
                                   child: Text(
                                     "注册",
                                     style: TextStyle(
