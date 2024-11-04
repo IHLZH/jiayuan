@@ -7,6 +7,9 @@ class CommissionSearchViewModel with ChangeNotifier{
 
   List<Commission> searchResult = [];
 
+  double? minPrice;
+  double? maxPrice;
+  double? distance;
 
 
   void getSearchHistory(){
