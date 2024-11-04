@@ -55,45 +55,65 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
           builder: (context, vm, child){
             return Scaffold(
               appBar: PreferredSize(
-                preferredSize: Size.fromHeight(kToolbarHeight),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.appColor, // 渐变起始颜色
-                        Colors.white,      // 渐变结束颜色
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                  child: AppBar(
-                    title: Text("接委托"),
-                    actions: [
-                      Builder(
-                          builder: (context) =>GestureDetector(
-                            onTap: (){
-                              Scaffold.of(context).openEndDrawer();
-                            },
-                            child: Row(
-                              children: [
-                                Text(
-                                  "筛选",
+                  preferredSize: Size.fromHeight(kToolbarHeight),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.appColor, // 渐变起始颜色
+                            Colors.white,      // 渐变结束颜色
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 5.sp),
+                        height: 250.h,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.arrow_back_ios_new),
+                              onPressed: () {
+                                RouteUtils.pop(context);
+                              },
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                                child: Text(
+                                  "接委托",
                                   style: TextStyle(
-                                      color: AppColors.textColor2b
+                                      color: AppColors.textColor2b,
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.w500
                                   ),
                                 ),
-                                Icon(Icons.filter_list),
-                              ],
                             ),
-                          )
-                      ),
-                      SizedBox(width: 10.w,)
-                    ],
-                    centerTitle: true,
-                    backgroundColor: Colors.transparent, // 使 AppBar 背景透明
-                  ),
-                ),
+                            Builder(
+                                builder: (context) =>GestureDetector(
+                                  onTap: (){
+                                    Scaffold.of(context).openEndDrawer();
+                                  },
+                                  child: Container(
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "筛选",
+                                          style: TextStyle(
+                                              color: AppColors.textColor2b
+                                          ),
+                                        ),
+                                        Icon(Icons.filter_list),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                            ),
+                          ],
+                        ),
+                      )
+                  )
               ),
               body: SafeArea(
                   child: Container(

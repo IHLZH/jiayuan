@@ -62,13 +62,12 @@ class AppSearchBar extends StatelessWidget {
                 margin: margin ?? EdgeInsets.only(left: 15.w, right: 15.w),
                 height: 36.h,
                 decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 2),
                     color: AppColors.searchBgColor,
                     borderRadius:
                         searchType == SearchType.circle ? BorderRadius.circular(18.r) : null),
                 child: Row(
                   children: [
-                    //左边操作按钮
-                    _leftMenu(),
                     Expanded(child: _searchInput())
                   ],
                 ))),
@@ -95,19 +94,13 @@ class AppSearchBar extends StatelessWidget {
       textAlign: TextAlign.start,
       //装饰器
       decoration: InputDecoration(
-        //前缀icon与样式,这里最大宽度给24是因为加上了内边距的10，否则icon会变小
-        prefixIconConstraints: BoxConstraints(maxHeight: 14.r, maxWidth: 24.r),
-        prefixIcon: Container(
-            padding: EdgeInsets.only(right: 10.w),
-            child: Image.asset("assets/images/icon_input_search.png", width: 14.r, height: 14.r)),
-
         // enabledBorder: _inputUnderline(),
         // focusedBorder: _inputUnderline(),
         // hintTextDirection: TextDirection.ltr,
         //输入内容上下居中并且去掉下划线
         contentPadding: EdgeInsets.all(0),
         border: OutlineInputBorder(borderSide: BorderSide.none),
-        hintText: hintText ?? "寻找您的小窝~",
+        hintText: hintText ?? "寻找您心仪的委托~",
       ),
       textInputAction: TextInputAction.search,
     );

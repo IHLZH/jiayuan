@@ -10,6 +10,7 @@ import 'package:jiayuan/page/Test.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
 import 'package:jiayuan/page/commission_page/type/commission_type_page.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
+import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:provider/provider.dart';
 //委托页面
@@ -195,7 +196,6 @@ class _CommissionPageState extends State<CommissionPage>{
         )
     );
   }
-
 
 
   Widget CommissionCard(Commission commission){
@@ -402,7 +402,7 @@ class _CommissionPageState extends State<CommissionPage>{
   Widget SearchTopBar(){
     return GestureDetector(
       onTap: (){
-        print("AppBar");
+        RouteUtils.pushForNamed(context, RoutePath.commissionSearch);
       },
       child: Container(
         height: 30.h,
