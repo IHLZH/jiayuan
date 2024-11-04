@@ -24,4 +24,13 @@ class UrlPath {
 
   //重置密码接口
   static const String resetPasswordUrl="/password/resetPassword";
+
+  //邮箱注册验证码验证接口
+  static const String checkRegisterEmailCodeUrl="/register/email";
+
+  //手机注册验证码验证接口
+  static const String checkRegisterPhoneCodeUrl="/register/phone";
+
+  //注册设置密码接口
+  static const String setRegisterPasswordUrl="/register/setPassword";
 }
