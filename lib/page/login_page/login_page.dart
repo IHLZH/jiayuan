@@ -26,8 +26,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   Uint8List? captchaImage;
-  TextEditingController _accountController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _accountController = TextEditingController(text: Global.input);
+  TextEditingController _passwordController = TextEditingController(text: Global.password);
   TextEditingController _captchaController = TextEditingController();
   FocusNode _accountFocusNode = FocusNode();
   FocusNode _passwordFocusNode = FocusNode();
