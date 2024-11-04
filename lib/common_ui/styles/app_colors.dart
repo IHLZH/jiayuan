@@ -62,4 +62,6 @@ class AppColors {
   static const textRedColor30 = Color(0xFFff2e30);
   static const textColor7c = Color(0xFFfbac7c);
   static const collectColor = Color(0xffef742a);
+
+  static var primaryColor = Color(0xFF59C2B3);
 }
