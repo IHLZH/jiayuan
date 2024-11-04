@@ -8,6 +8,7 @@ import 'package:jiayuan/page/login_page/login_page.dart';
 import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
+import '../page/send_commission_page/send_commision_page.dart';
 import '../page/tab_page/tab_page.dart';
 
 class Routes {
@@ -36,6 +37,8 @@ class Routes {
         final isEmail = args['isEmail'] as bool;
         return pageRoute(
             ForgetPasswordSubmitPage(input: input, isEmail: isEmail));
+      case RoutePath.sendCommissionPage:
+        return pageRoute(SendCommissionPage(id:1));
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

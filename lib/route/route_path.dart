@@ -23,4 +23,10 @@ class RoutePath {
 
   //忘记密码新密码页
   static const String forgetPasswordNewPasswordPage = "/forgetPasswordNewPasswordPage";
+
+  //首页
+  static const String homePage = "/homePage";
+
+  //发委托页面
+  static const String sendCommissionPage = "/sendCommissionPage";
 }
