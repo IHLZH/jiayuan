@@ -1,6 +1,8 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiayuan/app.dart';
 import 'package:jiayuan/common_ui/navigation/navigation_bar_widget.dart';
 import 'package:jiayuan/page/Test.dart';
 import 'package:jiayuan/page/commission_page/commission_page.dart';
@@ -58,7 +60,8 @@ class _TabPageState extends State<TabPage>{
           tabItems: tabItems,
           tabLabels: tabLabels,
           tabIcons: tabIcons,
-          tabActiveIcons: tabActiveIcons
+          tabActiveIcons: tabActiveIcons,
+        bottomBarIconHeight: 25.h,
       ),
     );
   }
