@@ -356,17 +356,16 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       CType(0),
                       CType(1),
                       CType(2),
-                      CType(3),
+
                     ],
                   ),
                   SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      CType(3),
                       CType(4),
                       CType(5),
-                      CType(6),
-                      CType(7),
                     ],
                   ),
                 ],
@@ -376,20 +375,21 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      CType(6),
+                      CType(7),
                       CType(8),
-                      CType(9),
-                      CType(10),
-                      CType(1),
                     ],
                   ),
                   SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      CType(2),
-                      CType(3),
-                      CType(4),
-                      CType(5),
+                      CType(9),
+                      CType(10),
+                      Container(
+                        width: 50,
+                        height: 50,
+                      )
                     ],
                   ),
                 ],
