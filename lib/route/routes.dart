@@ -11,6 +11,7 @@ import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
 import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
+import '../page/login_page/phone_login_page.dart';
 import '../page/send_commission_page/send_commision_page.dart';
 import '../page/tab_page/tab_page.dart';
 
@@ -29,6 +30,9 @@ class Routes {
       // 邮箱验证码登录页
       case RoutePath.emailLoginPage:
         return pageRoute(EmailLoginPage());
+      //手机号验证码登录页
+      case RoutePath.phoneLoginPage:
+        return pageRoute(PhoneLoginPage());
       // 忘记密码页（不用）
       case RoutePath.forgetPasswordPage:
         return pageRoute(ForgetPasswordPage());
@@ -42,20 +46,23 @@ class Routes {
         final isEmail = args['isEmail'] as bool;
         return pageRoute(
             ForgetPasswordSubmitPage(input: input, isEmail: isEmail));
-        //委托搜索页
+      //委托搜索页
       case RoutePath.commissionSearch:
         return pageRoute(CommissionSearchPage());
       case RoutePath.sendCommissionPage:
-        return pageRoute(SendCommissionPage(id:1));
-        //注册验证码页
+        return pageRoute(SendCommissionPage(id: 1));
+      //注册验证码页
       case RoutePath.registerCheckCodePage:
         return pageRoute(RegisterCheckCodePage());
-        //注册提交密码页
+      //注册提交密码页
       case RoutePath.registerSubmitPasswordPage:
         final args = settings.arguments as Map<String, dynamic>;
         final input = args['input'] as String;
         final isEmail = args['isEmail'] as bool;
-        return pageRoute(RegisterPasswordSubmitPage(input: input, isEmail: isEmail,));
+        return pageRoute(RegisterPasswordSubmitPage(
+          input: input,
+          isEmail: isEmail,
+        ));
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
