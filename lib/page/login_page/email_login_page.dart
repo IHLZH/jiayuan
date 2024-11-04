@@ -155,6 +155,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                     width: 350,
                     height: 600,
                     child: ListView(
+                      physics: NeverScrollableScrollPhysics(),
                       children: [
                         TextField(
                           controller: _emailController,

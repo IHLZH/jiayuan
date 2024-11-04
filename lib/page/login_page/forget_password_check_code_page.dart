@@ -20,7 +20,7 @@ class _ForgetPasswordCheckCodePageState
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _verificationCodeController =
-  TextEditingController();
+      TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _phoneFocusNode = FocusNode();
   final FocusNode _verificationCodeFocusNode = FocusNode();
@@ -77,7 +77,8 @@ class _ForgetPasswordCheckCodePageState
   }
 
   void _getVerificationCode() async {
-    final String input = _isEmail ? _emailController.text : _phoneController.text;
+    final String input =
+        _isEmail ? _emailController.text : _phoneController.text;
     if (input.isEmpty) {
       showToast('邮箱/手机号不能为空', duration: Duration(seconds: 1));
       return;
@@ -104,7 +105,7 @@ class _ForgetPasswordCheckCodePageState
   //验证码认证
   Future<void> _navigateToNextPage() async {
     final String input =
-    _isEmail ? _emailController.text : _phoneController.text;
+        _isEmail ? _emailController.text : _phoneController.text;
     final verificationCode = _verificationCodeController.text;
     // 检查验证码和输入是否为空
     if (input.isEmpty || verificationCode.isEmpty) {
@@ -113,34 +114,40 @@ class _ForgetPasswordCheckCodePageState
     }
 
     String url = UrlPath.forgetPasswordCheckCodeUrl + "";
+    RouteUtils.pushForNamed(
+      context,
+      RoutePath.forgetPasswordNewPasswordPage,
+      arguments: {"input": input, "isEmail": _isEmail},
+    );
 
-    try {
-      // 发送POST请求校验验证码
-      final response = await DioInstance.instance().post(
-        path: UrlPath.forgetPasswordCheckCodeUrl,
-      );
-
-      // 检查校验结果
-      if (response.statusCode == 200 && response.data['code'] == 200) {
-        // 导航到重置密码页面
-        RouteUtils.pushForNamed(
-          context,
-          RoutePath.forgetPasswordNewPasswordPage,
-          arguments: {"input": input, "isEmail": _isEmail},
-        );
-      } else {
-        // 显示错误提示
-        showToast('验证码校验失败', duration: Duration(seconds: 1));
-      }
-    } catch (e) {
-      print("错误: $e");
-      showToast('验证码校验失败', duration: Duration(seconds: 1));
-    }
+    // try {
+    //   // 发送POST请求校验验证码
+    //   final response = await DioInstance.instance().post(
+    //     path: UrlPath.forgetPasswordCheckCodeUrl,
+    //   );
+    //
+    //   // 检查校验结果
+    //   if (response.statusCode == 200 && response.data['code'] == 200) {
+    //     // 导航到重置密码页面
+    //     RouteUtils.pushForNamed(
+    //       context,
+    //       RoutePath.forgetPasswordNewPasswordPage,
+    //       arguments: {"input": input, "isEmail": _isEmail},
+    //     );
+    //   } else {
+    //     // 显示错误提示
+    //     showToast('验证码校验失败', duration: Duration(seconds: 1));
+    //   }
+    // } catch (e) {
+    //   print("错误: $e");
+    //   showToast('验证码校验失败', duration: Duration(seconds: 1));
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    return OKToast( // 包裹整个页面
+    return OKToast(
+      // 包裹整个页面
       child: Scaffold(
         appBar: AppBar(
           title: Text('忘记密码'),
@@ -261,11 +268,13 @@ class _ForgetPasswordCheckCodePageState
                     SizedBox(width: 10.w),
                     if (_secondsRemaining > 0)
                       Text('$_secondsRemaining s',
-                          style: TextStyle(color: Theme.of(context).primaryColor))
+                          style:
+                              TextStyle(color: Theme.of(context).primaryColor))
                     else
                       ElevatedButton(
                         onPressed: _getVerificationCode,
-                        child: Text('获取验证码', style: TextStyle(color: Colors.white)),
+                        child: Text('获取验证码',
+                            style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Theme.of(context).primaryColor,
                           padding: EdgeInsets.symmetric(
@@ -284,7 +293,8 @@ class _ForgetPasswordCheckCodePageState
                       style: TextStyle(fontSize: 18, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
-                    padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 15.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 50.w, vertical: 15.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.r),
                     ),

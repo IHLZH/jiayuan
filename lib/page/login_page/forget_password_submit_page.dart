@@ -12,19 +12,15 @@ class ForgetPasswordSubmitPage extends StatefulWidget {
 }
 
 class _ForgetPasswordSubmitPageState extends State<ForgetPasswordSubmitPage> {
-  final TextEditingController _verificationCodeController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
-  final FocusNode _verificationCodeFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   final FocusNode _confirmPasswordFocusNode = FocusNode();
 
   @override
   void dispose() {
-    _verificationCodeController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _verificationCodeFocusNode.dispose();
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
     super.dispose();
@@ -35,7 +31,6 @@ class _ForgetPasswordSubmitPageState extends State<ForgetPasswordSubmitPage> {
   }
 
   void _resetPassword() async {
-    final String verificationCode = _verificationCodeController.text;
     final String password = _passwordController.text;
     final String confirmPassword = _confirmPasswordController.text;
 
@@ -52,7 +47,6 @@ class _ForgetPasswordSubmitPageState extends State<ForgetPasswordSubmitPage> {
       //   path: UrlPath.resetPasswordUrl,
       //   data: {
       //     'emailOrPhone': widget.isEmail ? widget.input : widget.input,
-      //     'verificationCode': verificationCode,
       //     'password': password,
       //   },
       // );
@@ -81,29 +75,6 @@ class _ForgetPasswordSubmitPageState extends State<ForgetPasswordSubmitPage> {
           padding: EdgeInsets.only(left: 20.w, right: 20.w),
           child: Column(
             children: [
-              TextField(
-                controller: _verificationCodeController,
-                focusNode: _verificationCodeFocusNode,
-                decoration: InputDecoration(
-                  labelText: "验证码",
-                  labelStyle: TextStyle(
-                    color: _verificationCodeFocusNode.hasFocus
-                        ? Theme.of(context).primaryColor
-                        : Colors.grey,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                      width: 2.0,
-                    ),
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20.h),
               TextField(
                 controller: _passwordController,
                 focusNode: _passwordFocusNode,
