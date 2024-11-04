@@ -1,0 +1,319 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:jiayuan/route/route_path.dart';
+import 'package:jiayuan/route/route_utils.dart';
+import 'package:oktoast/oktoast.dart';
+
+import '../../http/dio_instance.dart';
+import '../../http/url_path.dart';
+import '../../repository/model/user.dart';
+import '../../utils/constants.dart';
+import '../../utils/global.dart';
+
+bool isProduction = Constants.IS_Production;
+
+class PhoneLoginPage extends StatefulWidget {
+  const PhoneLoginPage({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() => _PhoneLoginPageState();
+}
+
+class _PhoneLoginPageState extends State<PhoneLoginPage> {
+  TextEditingController _phoneController = TextEditingController();
+  TextEditingController _codeController = TextEditingController();
+  int _secondsRemaining = 0;
+  Timer? _timer;
+  FocusNode _phoneFocusNode = FocusNode();
+  FocusNode _codeFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController.addListener(_onFocusChange);
+    _codeFocusNode.addListener(_onFocusChange);
+  }
+
+  @override
+  void dispose() {
+    _phoneController.removeListener(_onFocusChange);
+    _codeFocusNode.removeListener(_onFocusChange);
+    _phoneFocusNode.dispose(); //销毁焦点监听
+    _codeFocusNode.dispose(); //销毁焦点监听
+    _timer?.cancel(); //销毁定时器
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    setState(() {});
+  }
+
+  void _startTimer() {
+    const duration = Duration(seconds: 1);
+    _secondsRemaining = 60;
+    _timer = Timer.periodic(duration, (Timer timer) {
+      if (_secondsRemaining == 0) {
+        setState(() {
+          timer.cancel();
+        });
+      } else {
+        setState(() {
+          _secondsRemaining--;
+        });
+      }
+    });
+  }
+
+  Future<void> _getVerificationCode() async {
+    final String phone = _phoneController.text;
+    final String url = UrlPath.getPhoneCodeUrl + "?phone=$phone&purpose=login";
+
+    try {
+      final response = await DioInstance.instance().get(path: url);
+      if (response.statusCode == 200) {
+        if (response.data['code'] == 200) {
+          // final data = response.data;
+
+          showToast("获取验证码成功", duration: const Duration(seconds: 1));
+
+          _startTimer();
+        } else {
+          showToast(response.data['message'],
+              duration: const Duration(seconds: 1));
+        }
+      } else {
+        showToast("无法连接服务器", duration: const Duration(seconds: 1));
+      }
+    } catch (e) {
+      if (isProduction) {
+        print('Error: $e');
+      }
+    }
+  }
+
+  void _jumpToTab() {
+    RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
+  }
+
+  void _loginWithPhoneCode() async {
+    final String phone = _phoneController.text;
+    final String code = _codeController.text;
+    final String url =
+        UrlPath.loginWithPhoneCodeUrl + "?phone=$phone&smsCode=$code";
+
+    try {
+      final response = await DioInstance.instance().post(path: url);
+      if (response.statusCode == 200) {
+        if (response.data['code'] == 200) {
+          final data = response.data;
+
+          // 保存用户信息
+          Global.userInfo = User.fromJson(data["data"]);
+
+          // 保存token
+          final List<String> token =
+              response.headers["Authorization"] as List<String>;
+          Global.token = token.first;
+
+          if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
+          if (isProduction) print("token: ${Global.token}");
+
+          // 跳转
+          _jumpToTab();
+        } else {
+          showToast(response.data['message'],
+              duration: const Duration(seconds: 1));
+        }
+      } else {
+        showToast("无法连接服务器", duration: const Duration(seconds: 1));
+      }
+    } catch (e) {
+      if (isProduction) {
+        print('Error: $e');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).primaryColor,
+          ),
+          onPressed: () {
+            RouteUtils.pop(context);
+          },
+        ),
+        title: Text(
+          "手机号登录",
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+      ),
+      body: Container(
+        margin: EdgeInsets.only(top: 100),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "手机号登录",
+                    style: TextStyle(
+                        fontSize: 30, color: Theme.of(context).primaryColor),
+                  ),
+                  SizedBox(height: 30),
+                  Container(
+                    width: 350,
+                    height: 600,
+                    child: ListView(
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        TextField(
+                          controller: _phoneController,
+                          focusNode: _phoneFocusNode,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            labelText: "手机号",
+                            labelStyle: TextStyle(
+                              color: _phoneFocusNode.hasFocus
+                                  ? Theme.of(context).primaryColor
+                                  : Colors.grey,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          height: 80,
+                          width: 250,
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 70,
+                                width: 200,
+                                child: Center(
+                                  child: TextField(
+                                    focusNode: _codeFocusNode,
+                                    controller: _codeController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      labelText: "验证码",
+                                      labelStyle: TextStyle(
+                                        color: _codeFocusNode.hasFocus
+                                            ? Theme.of(context).primaryColor
+                                            : Colors.grey,
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            width: 2.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(child: SizedBox()),
+                              Container(
+                                height: 65,
+                                child: Center(
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                      side:
+                                          MaterialStateProperty.all<BorderSide>(
+                                        BorderSide(
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            width: 1.0),
+                                      ),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              10.0), // 设置小幅度的圆角
+                                        ),
+                                      ),
+                                    ),
+                                    onPressed: _secondsRemaining > 0
+                                        ? null
+                                        : _getVerificationCode,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        _secondsRemaining > 0
+                                            ? "重新获取 ($_secondsRemaining)"
+                                            : "获取验证码",
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _loginWithPhoneCode,
+                          child: Text('登录',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.white)),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 50, vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          height: 50,
+                          width: 300,
+                          child: Row(
+                            children: [
+                              TextButton(
+                                  onPressed: () {},
+                                  child: Text(
+                                    "注册",
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                  )),
+                              Expanded(child: SizedBox()),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
