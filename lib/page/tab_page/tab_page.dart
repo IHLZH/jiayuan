@@ -7,6 +7,7 @@ import 'package:jiayuan/common_ui/navigation/navigation_bar_widget.dart';
 import 'package:jiayuan/page/Test.dart';
 import 'package:jiayuan/page/commission_page/commission_page.dart';
 import 'package:jiayuan/page/home_page/home_page.dart';
+import 'package:jiayuan/page/user_page/user_page.dart';
 
 
 /*
@@ -49,7 +50,7 @@ class _TabPageState extends State<TabPage>{
     tabItems.add(HomePage());
     tabItems.add(CommissionPage());
     tabItems.add(ChatPage());
-    tabItems.add(MinePage());
+    tabItems.add(UserPage());
   }
 
   @override

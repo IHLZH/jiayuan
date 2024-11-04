@@ -1,5 +1,5 @@
 import 'dart:ffi';
-
+import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
@@ -90,6 +90,7 @@ class HomeViewModel with ChangeNotifier{
           keeperId: 2,
           avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
           workExperience: 5,
+          rating: 4.7,
           highlight: "家事全包，价格便宜，服务态度好"
       ),
 
@@ -99,6 +100,7 @@ class HomeViewModel with ChangeNotifier{
           age: 18,
           avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
           workExperience: 5,
+          rating: 5,
           highlight: "家电维修，，价格实惠"
       ),
 
@@ -108,6 +110,7 @@ class HomeViewModel with ChangeNotifier{
           age: 18,
           avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
           workExperience: 5,
+          rating: 5,
           highlight: "家电维修，，价格实惠"
       ),
 
@@ -117,6 +120,7 @@ class HomeViewModel with ChangeNotifier{
           age: 18,
           avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
           workExperience: 5,
+          rating: 5,
           highlight: "家电维修，，价格实惠"
       ),
 
@@ -126,11 +130,22 @@ class HomeViewModel with ChangeNotifier{
           age: 18,
           avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
           workExperience: 5,
+          rating: 5,
           highlight: "家电维修，，价格实惠"
       ),
     ];
     notifyListeners();
   }
 }
+
+class ItemModel {
+  final String title;
+  final IconData icon;
+
+  ItemModel({required this.title, required this.icon});
+}
+
+
+
 
 

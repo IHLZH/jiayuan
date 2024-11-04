@@ -4,10 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/utils/constants.dart';
+import 'package:oktoast/oktoast.dart';
 
 import '../../http/url_path.dart';
+import '../../repository/model/user.dart';
 import '../../route/route_path.dart';
 import '../../route/route_utils.dart';
+import '../../utils/global.dart';
 
 bool isProduction = Constants.IS_Production;
 
@@ -61,20 +64,23 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
 
   Future<void> _getVerificationCode() async {
     final String email = _emailController.text;
-    final String url = UrlPath.getEmailCodeUrl + "?email=$email";
+    final String url = UrlPath.getEmailCodeUrl + "?email=$email&purpose=login";
 
     try {
       final response = await DioInstance.instance().get(path: url);
       if (response.statusCode == 200) {
-        final data = response.data;
-        if (isProduction) {
-          print('Verification code sent: $data');
+        if (response.data['code'] == 200) {
+          // final data = response.data;
+
+          showToast("获取验证码成功", duration: const Duration(seconds: 1));
+
+          _startTimer();
+        } else {
+          showToast(response.data['message'],
+              duration: const Duration(seconds: 1));
         }
-        _startTimer();
       } else {
-        if (isProduction) {
-          print('Failed to get verification code: ${response.statusCode}');
-        }
+        showToast("无法连接服务器", duration: const Duration(seconds: 1));
       }
     } catch (e) {
       if (isProduction) {
@@ -96,17 +102,27 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     try {
       final response = await DioInstance.instance().post(path: url);
       if (response.statusCode == 200) {
-        final data = response.data;
-        if (isProduction) {
-          print('Login successful: $data');
+        if (response.data['code'] == 200) {
+          final data = response.data;
+
+          // 保存用户信息
+          Global.userInfo = User.fromJson(data["data"]);
+
+          // 保存token
+          final List<String> token = response.headers["Authorization"] as List<String>;
+          Global.token = token.first;
+
+          if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
+          if (isProduction) print("token: ${Global.token}");
+
+          // 跳转
+          _jumpToTab();
+        } else {
+          showToast(response.data['message'],
+              duration: const Duration(seconds: 1));
         }
-
-        _jumpToTab();
-
       } else {
-        if (isProduction) {
-          print('Login failed: ${response.statusCode}');
-        }
+        showToast("无法连接服务器", duration: const Duration(seconds: 1));
       }
     } catch (e) {
       if (isProduction) {
@@ -155,6 +171,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                     width: 350,
                     height: 600,
                     child: ListView(
+                      physics: NeverScrollableScrollPhysics(),
                       children: [
                         TextField(
                           controller: _emailController,
@@ -205,7 +222,8 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
-                                            color: Theme.of(context).primaryColor,
+                                            color:
+                                                Theme.of(context).primaryColor,
                                             width: 2.0),
                                       ),
                                     ),
@@ -219,9 +237,11 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                                   child: TextButton(
                                     style: ButtonStyle(
                                       side:
-                                      MaterialStateProperty.all<BorderSide>(
+                                          MaterialStateProperty.all<BorderSide>(
                                         BorderSide(
-                                            color: Theme.of(context).primaryColor, width: 1.0),
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            width: 1.0),
                                       ),
                                       shape: MaterialStateProperty.all<
                                           RoundedRectangleBorder>(
@@ -257,7 +277,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                           onPressed: _loginWithEmailCode,
                           child: Text('登录',
                               style:
-                              TextStyle(fontSize: 18, color: Colors.white)),
+                                  TextStyle(fontSize: 18, color: Colors.white)),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(context).primaryColor,
                             padding: EdgeInsets.symmetric(
@@ -277,7 +297,8 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                                   onPressed: () {},
                                   child: Text(
                                     "注册",
-                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                    style: TextStyle(
+                                        color: Theme.of(context).primaryColor),
                                   )),
                               Expanded(child: SizedBox()),
                             ],

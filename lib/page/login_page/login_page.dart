@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -31,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
   FocusNode _accountFocusNode = FocusNode();
   FocusNode _passwordFocusNode = FocusNode();
   FocusNode _captchaFocusNode = FocusNode();
+  bool _isPasswordVisible = false; // 新增变量，用于控制密码是否可见
 
   @override
   void initState() {
@@ -108,25 +110,22 @@ class _LoginPageState extends State<LoginPage> {
     final String password = _passwordController.text;
     final String url = UrlPath.loginUrl + "?countId=$account&password=$password" + "&captchaCode=$captcha";
 
-    // final String url = "/sss";
-
     try {
       final response = await DioInstance.instance().post(path: url);
-      if(isProduction)print("res: $response");
-      // if(isProduction)print("statusCode : ${response.statusCode}");
-      // if(isProduction)print("statusmessage : ${response.statusMessage}");
-      // if(isProduction)print("code : ${response.data["code"]}");
-      // if(isProduction)print("message : ${response.data["message"]}");\
-
-      if(isProduction)print("res header: ${response.headers['Authorization']}");
-
-      if (response.statusCode == 200&&response.data["code"]==200) {
+      if (response.statusCode == 200 && response.data["code"] == 200) {
         final data = response.data;
 
-        // Global.userInfo = User.fromMap(data);
+        // 保存用户信息
+        Global.userInfo = User.fromJson(data["data"]);
 
-        // if (isProduction) print("response : $response");
+        // 保存token
+        final List<String> token = response.headers["Authorization"] as List<String>;
+        Global.token = token.first;
 
+        if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
+        if (isProduction) print("token: ${Global.token}");
+
+        // 跳转
         _jumpToTab();
       } else {
         if (isProduction) print('Login failed: ${response}');
@@ -169,6 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: 350.w,
                     height: 600.h,
                     child: ListView(
+                      physics: NeverScrollableScrollPhysics(),
                       children: [
                         TextField(
                           controller: _accountController,
@@ -198,6 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: TextField(
                                 controller: _passwordController,
                                 focusNode: _passwordFocusNode,
+                                obscureText: !_isPasswordVisible, // 控制密码是否可见
                                 decoration: InputDecoration(
                                   labelText: "密码",
                                   labelStyle: TextStyle(
@@ -213,6 +214,19 @@ class _LoginPageState extends State<LoginPage> {
                                         color: Theme.of(context).primaryColor,
                                         width: 2.0),
                                     borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _isPasswordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isPasswordVisible = !_isPasswordVisible;
+                                      });
+                                    },
                                   ),
                                 ),
                               ),
@@ -299,7 +313,10 @@ class _LoginPageState extends State<LoginPage> {
                           child: Row(
                             children: [
                               TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    RouteUtils.pushForNamed(
+                                        context, RoutePath.registerCheckCodePage);
+                                  },
                                   child: Text(
                                     "注册",
                                     style: TextStyle(
