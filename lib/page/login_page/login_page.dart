@@ -114,11 +114,18 @@ class _LoginPageState extends State<LoginPage> {
       final response = await DioInstance.instance().post(path: url);
       if (response.statusCode == 200 && response.data["code"] == 200) {
         final data = response.data;
+
+        // 保存用户信息
         Global.userInfo = User.fromJson(data["data"]);
+
+        // 保存token
         final List<String> token = response.headers["Authorization"] as List<String>;
         Global.token = token.first;
+
         if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
         if (isProduction) print("token: ${Global.token}");
+
+        // 跳转
         _jumpToTab();
       } else {
         if (isProduction) print('Login failed: ${response}');
