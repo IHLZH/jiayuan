@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jiayuan/page/commission_page/search/commission_search_page.dart';
 import 'package:jiayuan/page/login_page/email_login_page.dart';
 import 'package:jiayuan/page/login_page/forget_password_check_code_page.dart';
 import 'package:jiayuan/page/login_page/forget_password_page.dart';
@@ -40,6 +41,9 @@ class Routes {
         final isEmail = args['isEmail'] as bool;
         return pageRoute(
             ForgetPasswordSubmitPage(input: input, isEmail: isEmail));
+        //委托搜索页
+      case RoutePath.commissionSearch:
+        return pageRoute(CommissionSearchPage());
       case RoutePath.sendCommissionPage:
         return pageRoute(SendCommissionPage(id:1));
         //注册验证码页

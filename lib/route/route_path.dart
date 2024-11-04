@@ -32,4 +32,13 @@ class RoutePath {
 
   //发委托页面
   static const String sendCommissionPage = "/sendCommissionPage";
+
+  //委托分类页
+  static const String commissionType = "/commissionType";
+
+  //委托搜索页
+  static const String commissionSearch = "/commissionSearch";
+
+  //委托搜索结果页
+  static const String commissionSearchResult = "/commissionSearchResult";
 }
