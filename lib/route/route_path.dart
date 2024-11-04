@@ -27,11 +27,17 @@ class RoutePath {
   //注册检验验证码页
   static const String registerCheckCodePage = "/registerCheckCodePage";
 
+  //注册确认密码页
+  static const String registerSubmitPasswordPage = "/registerSubmitPasswordPage";
+
   //首页
   static const String homePage = "/homePage";
 
   //发委托页面
   static const String sendCommissionPage = "/sendCommissionPage";
+
+  //个人页
+  static const String userPage = "/userPage";
 
   //委托分类页
   static const String commissionType = "/commissionType";
