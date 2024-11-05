@@ -105,10 +105,12 @@ class _RegisterPasswordSubmitPageState
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.only(top: 40.h),
+          // margin: EdgeInsets.only(top: 40.h),
           padding: EdgeInsets.only(left: 20.w, right: 20.w),
           child: Column(
             children: [
+              Image(image: AssetImage("assets/images/ikun1.png")),
+              SizedBox(height: 10.h),
               TextField(
                 controller: _passwordController,
                 focusNode: _passwordFocusNode,
