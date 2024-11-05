@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/utils/constants.dart';
+import 'package:jiayuan/utils/sp_utils.dart';
 import 'package:oktoast/oktoast.dart';
 
 import '../../http/url_path.dart';
@@ -28,6 +29,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   Timer? _timer;
   FocusNode _emailFocusNode = FocusNode();
   FocusNode _codeFocusNode = FocusNode();
+  bool _isAgreed = false; // 新增变量，用于控制协议同意状态
 
   @override
   void initState() {
@@ -59,6 +61,12 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
           _secondsRemaining--;
         });
       }
+    });
+  }
+
+  void _toggleAgreement() {
+    setState(() {
+      _isAgreed = !_isAgreed;
     });
   }
 
@@ -96,6 +104,22 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   Future<void> _loginWithEmailCode() async {
     final String email = _emailController.text;
     final String code = _codeController.text;
+
+    if(email.isEmpty){
+      showToast("邮箱不能为空", duration: const Duration(seconds: 1));
+      return;
+    }
+
+    if(code.isEmpty){
+      showToast("验证码不能为空", duration: const Duration(seconds: 1));
+      return;
+    }
+
+    if (!_isAgreed) {
+      showToast("请先同意协议", duration: const Duration(seconds: 1));
+      return;
+    }
+
     final String url =
         UrlPath.loginWithEmailCodeUrl + "?email=$email&emailCode=$code";
 
@@ -107,10 +131,15 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
 
           // 保存用户信息
           Global.userInfo = User.fromJson(data["data"]);
+          Global.input = email;
 
           // 保存token
           final List<String> token = response.headers["Authorization"] as List<String>;
           Global.token = token.first;
+
+          // 持久化
+          await SpUtils.saveString("input", Global.input!);
+          await SpUtils.saveString("token", Global.token!);
 
           if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
           if (isProduction) print("token: ${Global.token}");
@@ -138,6 +167,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
@@ -157,6 +187,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
         margin: EdgeInsets.only(top: 100),
         child: Center(
           child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -313,6 +344,37 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
               ),
             ),
           ),
+        ),
+      ),
+      floatingActionButton: Container(
+        margin: EdgeInsets.only(left: 40),
+        child: Row(
+          children: [
+            Expanded(child: SizedBox()),
+            GestureDetector(
+              onTap: _toggleAgreement,
+              child: Icon(
+                _isAgreed
+                    ? Icons.check_circle_rounded
+                    : Icons.check_circle_outline,
+                color: _isAgreed
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey,
+                size: 25,
+              ),
+            ),
+            SizedBox(width: 10),
+            Text(
+              "我已阅读《服务协议》《隐私协议》",
+              style: TextStyle(
+                color: _isAgreed
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey,
+                fontSize: 15,
+              ),
+            ),
+            Expanded(child: SizedBox()),
+          ],
         ),
       ),
     );

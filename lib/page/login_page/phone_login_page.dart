@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/utils/sp_utils.dart';
 import 'package:oktoast/oktoast.dart';
 
 import '../../http/dio_instance.dart';
@@ -28,6 +29,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
   Timer? _timer;
   FocusNode _phoneFocusNode = FocusNode();
   FocusNode _codeFocusNode = FocusNode();
+  bool _isAgreed = false; // 新增变量，用于控制协议同意状态
 
   @override
   void initState() {
@@ -66,6 +68,12 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
     });
   }
 
+  void _toggleAgreement() {
+    setState(() {
+      _isAgreed = !_isAgreed;
+    });
+  }
+
   Future<void> _getVerificationCode() async {
     final String phone = _phoneController.text;
     final String url = UrlPath.getPhoneCodeUrl + "?phone=$phone&purpose=login";
@@ -97,9 +105,27 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
     RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
   }
 
+  void _jumpToRegisterPage() async {
+    RouteUtils.pushForNamed(context, RoutePath.registerCheckCodePage);
+  }
+
   void _loginWithPhoneCode() async {
     final String phone = _phoneController.text;
     final String code = _codeController.text;
+
+    if(phone.isEmpty){
+      showToast("请输入手机号", duration: const Duration(seconds: 1));
+      return;
+    }
+    if(code.isEmpty){
+      showToast("请输入验证码", duration: const Duration(seconds: 1));
+      return;
+    }
+    if(!_isAgreed){
+      showToast("请先同意用户协议", duration: const Duration(seconds: 1));
+      return;
+    }
+
     final String url =
         UrlPath.loginWithPhoneCodeUrl + "?phone=$phone&smsCode=$code";
 
@@ -111,11 +137,16 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
 
           // 保存用户信息
           Global.userInfo = User.fromJson(data["data"]);
+          Global.input = phone;
 
           // 保存token
           final List<String> token =
               response.headers["Authorization"] as List<String>;
           Global.token = token.first;
+
+          //持久化
+          await SpUtils.saveString("input", Global.input!);
+          await SpUtils.saveString("token", Global.token!);
 
           if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
           if (isProduction) print("token: ${Global.token}");
@@ -139,6 +170,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
@@ -158,6 +190,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
         margin: EdgeInsets.only(top: 100),
         child: Center(
           child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -295,9 +328,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                           child: Row(
                             children: [
                               TextButton(
-                                  onPressed: () {
-                                    RouteUtils.pushForNamed(context, RoutePath.registerCheckCodePage);
-                                  },
+                                  onPressed: _jumpToRegisterPage,
                                   child: Text(
                                     "注册",
                                     style: TextStyle(
@@ -314,6 +345,37 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
               ),
             ),
           ),
+        ),
+      ),
+      floatingActionButton: Container(
+        margin: EdgeInsets.only(left: 40),
+        child: Row(
+          children: [
+            Expanded(child: SizedBox()),
+            GestureDetector(
+              onTap: _toggleAgreement,
+              child: Icon(
+                _isAgreed
+                    ? Icons.check_circle_rounded
+                    : Icons.check_circle_outline,
+                color: _isAgreed
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey,
+                size: 25,
+              ),
+            ),
+            SizedBox(width: 10),
+            Text(
+              "我已阅读《服务协议》《隐私协议》",
+              style: TextStyle(
+                color: _isAgreed
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey,
+                fontSize: 15,
+              ),
+            ),
+            Expanded(child: SizedBox()),
+          ],
         ),
       ),
     );
