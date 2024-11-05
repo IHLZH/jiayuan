@@ -5,6 +5,9 @@ import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/sqlite/dbutil.dart';
+import 'package:jiayuan/sqlite/tables_init.dart';
+import 'package:jiayuan/utils/global.dart';
 
 import '../route/routes.dart';
 import '../utils/constants.dart';
@@ -24,6 +27,8 @@ class _StartPageState extends State<StartPage> {
     DioInstance.instance().initDio(baseUrl: "");
     DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
 
+    _initDB();
+
     // 设置延迟，2秒后跳转
     // 检验token是否存活
 
@@ -35,6 +40,12 @@ class _StartPageState extends State<StartPage> {
     Future.delayed(const Duration(seconds: 2), () {
       RouteUtils.pushNamedAndRemoveUntil(context,RoutePath.loginPage);
     });
+  }
+
+  void _initDB() async {
+    TablesInit tables = TablesInit();
+    tables.init();
+    Global.dbUtil = DBUtil();
   }
 
   @override

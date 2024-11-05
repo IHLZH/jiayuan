@@ -20,4 +20,7 @@ class Constants {
 
   //是否开发模式
   static const bool IS_Production = true;
+
+  //本地sqlite数据库
+  static const String DB_NAME = "jiayuan.db";
 }
