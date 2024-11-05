@@ -49,14 +49,17 @@ class _StartPageState extends State<StartPage> {
     _AutoLogin();
   }
 
-  void _jumpToTab(){
+  void _jumpToTab() {
     // 如果Token存活 跳转到首页
-    // Future.delayed(Duration(seconds: 2), () {});
+    Future.delayed(Duration(seconds: 2), () {
+      RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
+    });
+  }
 
-  void _jumpToLogin(){
+  void _jumpToLogin() {
     // 如果Token不存活 跳转到登录界面
     Future.delayed(const Duration(seconds: 2), () {
-      RouteUtils.pushNamedAndRemoveUntil(context,RoutePath.loginPage);
+      RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
     });
   }
 
@@ -66,14 +69,16 @@ class _StartPageState extends State<StartPage> {
     Global.dbUtil = DBUtil();
   }
 
-  void _AutoLogin() async{
+  void _AutoLogin() async {
     // 设置延迟，2秒后跳转
     // 检验token是否存活
-    if(Global.token != null){
-      try{
-        final response = await DioInstance.instance().post(path: UrlPath.loginAutoUrl,options: Options(headers: {"Authorization": Global.token}));
-        if(response.statusCode == 200){
-          if(response.data['code'] == 200){
+    if (Global.token != null) {
+      try {
+        final response = await DioInstance.instance().post(
+            path: UrlPath.loginAutoUrl,
+            options: Options(headers: {"Authorization": Global.token}));
+        if (response.statusCode == 200) {
+          if (response.data['code'] == 200) {
             final data = response.data;
 
             // 保存用户信息
@@ -81,26 +86,27 @@ class _StartPageState extends State<StartPage> {
 
             // 保存token
             final List<String> token =
-            response.headers["Authorization"] as List<String>;
+                response.headers["Authorization"] as List<String>;
             Global.token = token.first;
 
             //持久化
             await SpUtils.saveString("token", Global.token!);
 
-            showToast("自动登录成功",duration: const Duration(seconds: 1));
+            showToast("自动登录成功", duration: const Duration(seconds: 1));
             _jumpToTab();
-          }else{
-            showToast(response.data['message'],duration: const Duration(seconds: 1));
+          } else {
+            showToast(response.data['message'],
+                duration: const Duration(seconds: 1));
             _jumpToLogin();
           }
-        }else{
-          showToast("无法连接服务器",duration: const Duration(seconds: 1));
+        } else {
+          showToast("无法连接服务器", duration: const Duration(seconds: 1));
           _jumpToLogin();
         }
-      }catch(e){
+      } catch (e) {
         _jumpToLogin();
       }
-    }else{
+    } else {
       _jumpToLogin();
     }
   }
@@ -112,9 +118,16 @@ class _StartPageState extends State<StartPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("欢迎使用家缘服务平台",style: TextStyle(fontSize: 24,),),
+            Text(
+              "欢迎使用家缘服务平台",
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
             SizedBox(height: 20),
-            CircularProgressIndicator(color: Theme.of(context).primaryColor,), // 圆形加载框
+            CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ), // 圆形加载框
             SizedBox(height: 20), // 间隔
             Text(
               '进入中...',
