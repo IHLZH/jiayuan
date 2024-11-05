@@ -8,6 +8,9 @@ import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/sp_utils.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:jiayuan/sqlite/dbutil.dart';
+import 'package:jiayuan/sqlite/tables_init.dart';
+import 'package:jiayuan/utils/global.dart';
 
 import '../repository/model/user.dart';
 import '../route/routes.dart';
@@ -29,6 +32,10 @@ class _StartPageState extends State<StartPage> {
     DioInstance.instance().initDio(baseUrl: "");
     DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
 
+    _initDB();
+
+    // 设置延迟，2秒后跳转
+    // 检验token是否存活
     // 异步初始化持久化数据
     _initializeData();
   }
@@ -44,16 +51,19 @@ class _StartPageState extends State<StartPage> {
 
   void _jumpToTab(){
     // 如果Token存活 跳转到首页
-    Future.delayed(Duration(seconds: 2), () {
-      RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
-    });
-  }
+    // Future.delayed(Duration(seconds: 2), () {});
 
   void _jumpToLogin(){
     // 如果Token不存活 跳转到登录界面
     Future.delayed(const Duration(seconds: 2), () {
       RouteUtils.pushNamedAndRemoveUntil(context,RoutePath.loginPage);
     });
+  }
+
+  void _initDB() async {
+    TablesInit tables = TablesInit();
+    tables.init();
+    Global.dbUtil = DBUtil();
   }
 
   void _AutoLogin() async{

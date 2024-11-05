@@ -377,13 +377,18 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                   Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                        color: AppColors.appColor,
+                        gradient: LinearGradient(
+                            colors: [
+                              AppColors.appColor, // 渐变起始颜色
+                              AppColors.endColor,      // 渐变结束颜色
+                            ],
+                        ),
                         borderRadius: BorderRadius.circular(16.r)
                     ),
                     child: Text(
                       CommissionViewModel.CommissionTypes[commission.commissionType].typeText,
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black45,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600
                       ),
@@ -482,8 +487,15 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
       width: 50,
       height: 50,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: AppColors.appColor
+        borderRadius: BorderRadius.circular(25),
+        gradient: LinearGradient(
+            colors: [
+              AppColors.appColor, // 渐变起始颜色
+              AppColors.endColor,      // 渐变结束颜色
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter
+        ),
       ),
       child: Icon(
         CommissionViewModel.CommissionTypes[index].icon,

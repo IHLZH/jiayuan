@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:flutter_pickers/time_picker/model/date_mode.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/page/home_page/home_vm.dart';
+import 'package:jiayuan/page/send_commission_page/send_commission_vm.dart';
+import 'package:provider/provider.dart';
 
 import '../../animation/PopUpAnimation.dart';
 import '../../common_ui/dialog/loading.dart';
@@ -21,9 +24,14 @@ class SendCommissionPage extends StatefulWidget {
 class _SendCommissionPageState extends State<SendCommissionPage> {
   late CommissionType commissionType;
 
-  String selectedDuration = "请选择服务时长";
+  SendCommissionViewModel _sendCommissionViewModel = SendCommissionViewModel();
 
-  String selectedTime = "请选择服务时间";
+  TextEditingController _phoneController = TextEditingController();
+  FocusNode _focusNodePhone = FocusNode();
+  FocusNode _focusNodeRemark = FocusNode();
+  String _inputText = '';
+
+  final int _maxLength = 100; // 最大字数限制
 
   @override
   void initState() {
@@ -39,44 +47,102 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
       Loading.dismissAll();
     });
 
-    return Scaffold(
-      body: Container(
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColors.appColor,
-                Colors.white,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                child: AppBar(
-                  title: Text("需求发布"),
-                  centerTitle: true,
-                  backgroundColor: Colors.transparent, // 使 AppBar 背景透明
-                  elevation: 0, // 取消阴影
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(left: 30.w, right: 30.w),
-                child: Column(
-                  children: [
-                    _buildTypeService(),
-                    _buildAreaService(),
-                    _buildTimeService(),
-                    _buildDurationService(),
-                    _buildContactService(),
+    return ChangeNotifierProvider<SendCommissionViewModel>(
+      create: (context) => _sendCommissionViewModel,
+      child: Scaffold(
+          body: Container(
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.appColor,
+                    Colors.white,
                   ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
               ),
-            ],
-          )),
+              child: Column(
+                children: [
+                  Container(
+                    child: AppBar(
+                      title: Text("需求发布"),
+                      centerTitle: true,
+                      backgroundColor: Colors.transparent, // 使 AppBar 背景透明
+                      elevation: 0, // 取消阴影
+                    ),
+                  ),
+                  Expanded(
+                      child: SingleChildScrollView(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 30.w, right: 30.w),
+                      child: Column(
+                        children: [
+                          _buildTypeService(),
+                          _buildRemarkService(),
+                          _buildContactService(),
+                          _buildAreaService(),
+                          _buildTimeService(),
+                          _buildDurationService(),
+                        ],
+                      ),
+                    ),
+                  ))
+                ],
+              ))),
     );
+  }
+
+  Widget _buildRemarkService() {
+    return PopUpAnimation(
+        child: Container(
+      margin: EdgeInsets.only(top: 20.h),
+      width: double.infinity,
+      height: 150.h,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade100, width: 1),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+      ),
+      child: Material(
+          elevation: 3,
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            padding: EdgeInsets.only(left: 10.w, right: 10.w),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    maxLines: 4,
+                    focusNode: _focusNodeRemark,
+                    onTapOutside: (event) {
+                      _focusNodeRemark.unfocus();
+                    },
+                    onChanged: (text) {
+                      setState(() {
+                        _inputText = text;
+                      });
+                    },
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(100),
+                    ],
+                    decoration: InputDecoration(
+                      icon: Icon(
+                        Icons.edit,
+                        color: AppColors.appColor,
+                      ),
+                      hintText: "请输入备注",
+                      hintStyle: TextStyle(color: Colors.grey),
+                      border: InputBorder.none,
+                      counterText: '${_inputText.length} / $_maxLength', // 显示字数
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )),
+    ));
   }
 
   //填写联系方式
@@ -95,56 +161,108 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                 elevation: 3,
                 borderRadius: BorderRadius.circular(10),
                 child: Column(
-                  children: [],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 20.w,
+                        ),
+                        Text(
+                          '手机号',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(
+                          width: 101.w,
+                        ),
+                        Icon(
+                          Icons.phone,
+                          color: AppColors.appColor,
+                        ),
+                        SizedBox(
+                          width: 10.w,
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: _phoneController,
+                            focusNode: _focusNodePhone,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly, // 过滤非数字字符
+                              LengthLimitingTextInputFormatter(11),
+                            ],
+                            onTapOutside: (e) => {_focusNodePhone.unfocus()},
+                            style: TextStyle(fontSize: 16, color: Colors.black),
+                            decoration: InputDecoration(
+                              hintText: "请输入手机号",
+                              hintStyle: TextStyle(color: Colors.grey),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
                 ))));
   }
 
-  // 设置服务时长
+  // 设置服务时长--------------------------------------------------------------------
   Widget _buildDurationService() {
-    return PopUpAnimation(
-      child: GestureDetector(
-        onTap: () {
-          _showDurationPicker(context);
-        },
-        child: Container(
-          margin: EdgeInsets.only(top: 20.h),
-          width: double.infinity,
-          height: 60.h,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300, width: 1),
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          child: Material(
-            elevation: 3,
-            borderRadius: BorderRadius.circular(10),
-            child: Row(
-              children: [
-                SizedBox(width: 20.w),
-                Text(
-                  "服务时长:      ",
-                  style: TextStyle(fontSize: 16),
-                ),
-                Spacer(),
-                Row(
+    return Selector<SendCommissionViewModel, int?>(
+      selector: (context, _sendCommissionViewModel) =>
+          _sendCommissionViewModel.selectedDuration,
+      builder: (context, selectedDuration, child) {
+        return PopUpAnimation(
+          child: GestureDetector(
+            onTap: () {
+              _showDurationPicker(context);
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: 20.h),
+              width: double.infinity,
+              height: 60.h,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade300, width: 1),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: Material(
+                elevation: 3,
+                borderRadius: BorderRadius.circular(10),
+                child: Row(
                   children: [
-                    SizedBox(width: 10.w),
+                    SizedBox(width: 20.w),
                     Text(
-                      selectedDuration, // 显示选择的服务时长
-                      style: TextStyle(fontSize: 13, color: Colors.grey),
+                      "服务时长:      ",
+                      style: TextStyle(fontSize: 16),
                     ),
-                    Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                    Spacer(),
+                    Row(
+                      children: [
+                        SizedBox(width: 10.w),
+                        selectedDuration == null
+                            ? Text(
+                                '请选择服务时长', // 显示选择的服务时长
+                                style:
+                                    TextStyle(fontSize: 13, color: Colors.grey),
+                              )
+                            : widget.id > 6
+                                ? Text('${selectedDuration}个月')
+                                : Text('${selectedDuration}个小时'),
+                        Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                      ],
+                    ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  //日期选择器
+  //时长选择器
   void _showDurationPicker(BuildContext context) {
     print("服务id为${widget.id}");
     showModalBottomSheet(
@@ -236,60 +354,73 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
 
   // 更新选择的服务时长
   void _updateSelectedDuration(String duration) {
-    setState(() {
-      selectedDuration = duration; // 更新状态
-    });
+    _sendCommissionViewModel
+        .updateSelectedDuration(int.parse(duration[0])); // 更新状态
     Navigator.pop(context); // 关闭底部弹出框
   }
 
-  //设置服务时间
+  //设置服务时间-----------------------------------------------------------------------------------------------------
   Widget _buildTimeService() {
-    return PopUpAnimation(
-        child: GestureDetector(
-            onTap: () {
-              Pickers.showDatePicker(
-                  context,mode: DateMode.MDHM,onConfirm: (value) {
-                    setState(() {
-                      selectedTime =  value.month.toString() + value.day.toString() + value.hour.toString() + value.minute.toString();
-                      print("还"+ selectedTime);
-                    });
-                   print('longer >>> 返回数据：${value.toString}');
-              });
-            },
-            child: Container(
-              width: double.infinity,
-              margin: EdgeInsets.only(top: 20.h),
-              height: 60.h,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300, width: 1),
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
-              ),
-              child: Material(
-                elevation: 3,
-                borderRadius: BorderRadius.circular(10),
-                child: Row(
-                  children: [
-                    SizedBox(width: 20.w),
-                    Text(
-                      "服务时间:      ",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Spacer(),
-                    Row(
+    return Selector<SendCommissionViewModel, DateTime?>(
+      selector: (context, _sendCommissionViewModel) =>
+          _sendCommissionViewModel.selectedDate,
+      builder: (context, selectedTime, child) {
+        return PopUpAnimation(
+            child: GestureDetector(
+                onTap: () {
+                  Pickers.showDatePicker(context, mode: DateMode.MDHM,
+                      onConfirm: (value) {
+                    _sendCommissionViewModel.updateSelectedDate(DateTime(
+                        value.year ?? 0,
+                        value.month ?? 0,
+                        value.day ?? 0,
+                        value.hour ?? 0,
+                        value.minute ?? 0));
+
+                    print(
+                        'longer >>> 返回数据：${_sendCommissionViewModel.selectedDate}');
+                  });
+                },
+                child: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(top: 20.h),
+                  height: 60.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.shade300, width: 1),
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  child: Material(
+                    elevation: 3,
+                    borderRadius: BorderRadius.circular(10),
+                    child: Row(
                       children: [
-                        SizedBox(width: 10.w),
+                        SizedBox(width: 20.w),
                         Text(
-                          "请选择服务时间",
-                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                          "服务时间:      ",
+                          style: TextStyle(fontSize: 16),
                         ),
-                        Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                        Spacer(),
+                        Row(
+                          children: [
+                            SizedBox(width: 10.w),
+                            _sendCommissionViewModel.selectedDate == null
+                                ? Text('请选择服务时间',
+                                    style: TextStyle(
+                                        fontSize: 13, color: Colors.grey))
+                                : Text(
+                                    '${_sendCommissionViewModel.selectedDate?.month}月 ${_sendCommissionViewModel.selectedDate?.day}日 ${_sendCommissionViewModel.selectedDate?.hour}:${_sendCommissionViewModel.selectedDate?.minute}',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                            Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                          ],
+                        )
                       ],
-                    )
-                  ],
-                ),
-              ),
-            )));
+                    ),
+                  ),
+                )));
+      },
+    );
   }
 
   //设置服务地点
