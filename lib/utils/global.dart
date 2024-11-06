@@ -17,4 +17,5 @@ class Global{
   static DBUtil? dbUtil;
   //用户定位信息
   static LocationData? location;
+
 }

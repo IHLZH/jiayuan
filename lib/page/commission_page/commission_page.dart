@@ -9,10 +9,10 @@ import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/Test.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
 import 'package:jiayuan/page/commission_page/type/commission_type_page.dart';
-import 'package:jiayuan/page/location_test_page.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/utils/global.dart';
 import 'package:provider/provider.dart';
 //委托页面
 import 'commission_vm.dart';
@@ -56,6 +56,7 @@ class _CommissionPageState extends State<CommissionPage>{
     super.initState();
     //请求委托数据
     _viewModel.getCommissionData();
+    print("定位信息为：" + (Global.location?.city ?? "定位错误"));
   }
 
   @override
@@ -393,7 +394,7 @@ class _CommissionPageState extends State<CommissionPage>{
   Widget Position(){
     return GestureDetector(
       onTap: (){
-        RouteUtils.push(context, LocationPage());
+        //RouteUtils.push(context, LocationPage());
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10.w),
@@ -401,7 +402,7 @@ class _CommissionPageState extends State<CommissionPage>{
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "石家庄",
+              Global.location?.city ?? "定位错误",
               style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600
