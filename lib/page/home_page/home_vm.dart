@@ -1,9 +1,9 @@
-import 'dart:ffi';
-import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
+import 'package:jiayuan/repository/model/StandardPrice.dart';
 
+import '../../utils/global.dart';
 import '../commission_page/commission_vm.dart';
 
 class HomeViewModel with ChangeNotifier{
@@ -57,7 +57,21 @@ class HomeViewModel with ChangeNotifier{
         typeText: "家庭保健"
     ),
   ];
-
+  void loadingStandardPrice() async{
+    Global.standPrices = [
+      StandardPrice(referencePrice: 50, lowestPrice: 30, typeId: 0),
+      StandardPrice(referencePrice: 50, lowestPrice: 30, typeId: 1),
+      StandardPrice(referencePrice: 60, lowestPrice: 40, typeId: 2),
+      StandardPrice(referencePrice: 70, lowestPrice: 50, typeId: 3),
+      StandardPrice(referencePrice: 80, lowestPrice: 60, typeId: 4),
+      StandardPrice(referencePrice: 90, lowestPrice: 70, typeId: 5),
+      StandardPrice(referencePrice: 100, lowestPrice: 80, typeId: 6),
+      StandardPrice(referencePrice: 110, lowestPrice: 90, typeId: 7),
+      StandardPrice(referencePrice: 120, lowestPrice: 100, typeId: 8),
+      StandardPrice(referencePrice: 130, lowestPrice: 110, typeId: 9),
+      StandardPrice(referencePrice: 140, lowestPrice: 120, typeId: 10),
+    ];
+  }
   //家政员表
    List<Housekeeper> housekeepers = [];
 
@@ -138,12 +152,6 @@ class HomeViewModel with ChangeNotifier{
   }
 }
 
-class ItemModel {
-  final String title;
-  final IconData icon;
-
-  ItemModel({required this.title, required this.icon});
-}
 
 
 
