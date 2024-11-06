@@ -6,6 +6,7 @@ class Global{
   static String? token;
   static String? input;
   static String? password;
+  static bool isLogin = false;
   //sqlite数据库工具类 用于打开和关闭数据库
   static DBUtil? dbUtil;
 }

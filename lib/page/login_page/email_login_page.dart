@@ -48,9 +48,10 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     super.dispose();
   }
 
-  void _startTimer() {
+  void _startTimer() async{
     const duration = Duration(seconds: 1);
     _secondsRemaining = 60;
+    _timer?.cancel();//清除之前的
     _timer = Timer.periodic(duration, (Timer timer) {
       if (_secondsRemaining == 0) {
         setState(() {
@@ -128,6 +129,8 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
           final data = response.data;
+
+          Global.isLogin = true;
 
           // 保存用户信息
           Global.userInfo = User.fromJson(data["data"]);
