@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../../../common_ui/buttons/red_button.dart';
 import '../../../common_ui/dialog/loading.dart';
 import '../../../common_ui/input/app_input.dart';
+import '../../../route/route_path.dart';
 import '../commission_vm.dart';
 
 class CommissionSearchPage extends StatefulWidget{
@@ -58,6 +59,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
   Future<void> _deleteHistory() async {
     await _commissionSearchViewModel.deleteSearchHistory();
     setState(() {
+      _getHisory();
     });
   }
 
@@ -382,7 +384,11 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                                 },
                                 type: AppButtonType.minor,
                                 buttonText: "取消",
+                                buttonTextStyle: TextStyle(
+                                  color: AppColors.textColor2b
+                                ),
                               ),
+                              SizedBox(height: 5.h,),
                               AppButton(
                                 onTap: (){
                                   _deleteHistory();
@@ -524,7 +530,13 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             child: InkWell(
-              onTap: (){},
+              onTap: (){
+                RouteUtils.pushForNamed(
+                    context,
+                    RoutePath.commissionDetail,
+                    arguments: commission
+                );
+              },
               borderRadius: BorderRadius.circular(16),
               child: Container(
                 padding: EdgeInsets.all(10),

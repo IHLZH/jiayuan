@@ -12,6 +12,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../../repository/model/commission_data.dart';
+import '../../../route/route_path.dart';
 import '../../../route/route_utils.dart';
 import '../commission_vm.dart';
 
@@ -334,7 +335,13 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
       color: Colors.white,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        onTap: (){},
+        onTap: (){
+          RouteUtils.pushForNamed(
+              context,
+              RoutePath.commissionDetail,
+              arguments: commission
+          );
+        },
         borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: EdgeInsets.all(10),

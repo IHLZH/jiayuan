@@ -50,5 +50,8 @@ class Commission {
     }
   }
 
-
+  @override
+  String toString() {
+    return 'Commission{commissionType: $commissionType, province: $province, city: $city, county: $county, address: $address, distance: $distance, userPhone: $userPhone, price: $price, expectTime: $expectTime, realStartTime: $realStartTime, endTime: $endTime, estimatedTime: $estimatedTime, commissionStatus: $commissionStatus, isLong: $isLong, comment: $comment, longitude: $longitude, latitude: $latitude, days: $days}';
+  }
 }

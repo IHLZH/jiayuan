@@ -206,7 +206,11 @@ class _CommissionPageState extends State<CommissionPage>{
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: (){
-          RouteUtils.pushForNamed(context, RoutePath.commissionDetail);
+          RouteUtils.pushForNamed(
+              context,
+              RoutePath.commissionDetail,
+              arguments: commission
+          );
         },
         borderRadius: BorderRadius.circular(16),
         child: Container(
@@ -311,7 +315,7 @@ class _CommissionPageState extends State<CommissionPage>{
                   SizedBox(width: 5.w,),
                   Expanded(
                     child: Text(
-                      commission.address + "诚朴园三号楼204",
+                      commission.address,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
                       style: TextStyle(
@@ -395,7 +399,7 @@ class _CommissionPageState extends State<CommissionPage>{
   Widget Position(){
     return GestureDetector(
       onTap: (){
-        //RouteUtils.push(context, LocationPage());
+        //RouteUtils.push(context, MapPage());
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10.w),

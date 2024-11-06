@@ -65,7 +65,7 @@ class Routes {
           isEmail: isEmail,
         ));
       case RoutePath.commissionDetail:
-        return pageRoute(CommissionDetailPage());
+        return pageRoute(CommissionDetailPage(),settings: settings);
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

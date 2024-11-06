@@ -72,7 +72,6 @@ class _TabPageState extends State<TabPage>{
     _locationListener = _locationPlugin
         .onLocationChanged()
         .listen((Map<String, Object> result) {
-      print(result);
 
       setState(() {
         Global.location = LocationData(

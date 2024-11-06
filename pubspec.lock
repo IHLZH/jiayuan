@@ -270,6 +270,14 @@ packages:
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
     version: "5.9.3"
+  flutter_speed_dial:
+    dependency: "direct main"
+    description:
+      name: flutter_speed_dial
+      sha256: "84d0a3e86640efb9feb9fd0f8e236fffd3fb6c83e40ad6fb617654faabc86936"
+      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+    source: hosted
+    version: "6.3.0"
   flutter_staggered_grid_view:
     dependency: "direct main"
     description:
