@@ -9,6 +9,7 @@ import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/Test.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
 import 'package:jiayuan/page/commission_page/type/commission_type_page.dart';
+import 'package:jiayuan/page/location_test_page.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
@@ -390,23 +391,28 @@ class _CommissionPageState extends State<CommissionPage>{
   }
 
   Widget Position(){
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10.w),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            "石家庄",
-            style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600
+    return GestureDetector(
+      onTap: (){
+        RouteUtils.push(context, LocationPage());
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10.w),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "石家庄",
+              style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600
+              ),
             ),
-          ),
-          Icon(
-            Icons.keyboard_arrow_down,
-            weight: 3,
-          )
-        ],
+            Icon(
+              Icons.keyboard_arrow_down,
+              weight: 3,
+            )
+          ],
+        ),
       ),
     );
   }
