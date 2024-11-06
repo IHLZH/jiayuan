@@ -7,10 +7,10 @@ class Commission {
   String province; //省
   String city; //市
   String county; //县
-  String address;
+  String address; //详细地址
   double? distance; //距离
   String userPhone; //用户手机号
-  double price;
+  double price; //委托价格
   DateTime expectTime; //期望委托开始时间
   DateTime? realStartTime; //实际开始时间
   DateTime? endTime; //结束时间
@@ -18,7 +18,9 @@ class Commission {
   int commissionStatus; //委托状态
   bool isLong; //是否是长期
   String? comment; //备注
-  String? days;
+  double?  longitude ; // 经度
+  double? latitude ; //纬度
+  String? days; //
 
   Commission({
     required this.commissionType,
@@ -35,7 +37,7 @@ class Commission {
     required this.estimatedTime,
     required this.commissionStatus,
     required this.isLong,
-    this.comment
+    this.comment,
 }){
     DateTime currentTime = DateTime.now();
     int currentMonth = currentTime.month;
