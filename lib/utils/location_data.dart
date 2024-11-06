@@ -22,4 +22,9 @@ class LocationData{
     this.address,
     this.cityCode
   });
+
+  @override
+  String toString() {
+    return 'LocationData{latitude: $latitude, longitude: $longitude, country: $country, province: $province, city: $city, district: $district, street: $street, adCode: $adCode, address: $address, cityCode: $cityCode}';
+  }
 }
