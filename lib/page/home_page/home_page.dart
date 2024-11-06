@@ -26,10 +26,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
+
   final HomeViewModel homeViewModel = HomeViewModel();
 
   final PageController _pageController = PageController();
   int _currentPage = 0;
+
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -48,6 +50,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
     homeViewModel.getBannerData();
     homeViewModel.getHousekeeperData();
+    homeViewModel.loadingStandardPrice();
   }
 
   @override
@@ -73,10 +76,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             body: CustomScrollView(
               scrollDirection: Axis.vertical,
               slivers: [
-                //委托服务类型
-                SliverToBoxAdapter(child: _PageViewWidget()),
                 //轮播图
                 SliverToBoxAdapter(child: _banner()),
+                //委托服务类型
+                SliverToBoxAdapter(child: _PageViewWidget()),
                 //固定头部
                 SliverHeader(children: _buildHeaderList()),
                 //推荐
@@ -324,7 +327,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 style: TextStyle(
                   fontSize: 17.sp,
                   color: Colors.black87,
-                  fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.bold,
                 ),
               ),
