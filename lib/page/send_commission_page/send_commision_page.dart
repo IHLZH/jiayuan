@@ -5,10 +5,12 @@ import 'package:flutter_pickers/time_picker/model/date_mode.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/page/home_page/home_vm.dart';
 import 'package:jiayuan/page/send_commission_page/send_commission_vm.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../animation/PopUpAnimation.dart';
 import '../../common_ui/dialog/loading.dart';
+import '../../common_ui/keyboard/customer_keyboard.dart';
 import '../../common_ui/styles/app_colors.dart';
 import '../commission_page/commission_vm.dart';
 
@@ -27,12 +29,19 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
   SendCommissionViewModel _sendCommissionViewModel = SendCommissionViewModel();
 
   TextEditingController _phoneController = TextEditingController();
+
   FocusNode _focusNodePhone = FocusNode();
   FocusNode _focusNodeRemark = FocusNode();
+
+
   String _inputText = '';
+
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _tempPriceController = TextEditingController();
 
   final int _maxLength = 100; // 最大字数限制
 
+  final FocusNode _focusNodePrice = FocusNode();
   @override
   void initState() {
     super.initState();
@@ -48,9 +57,16 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
     });
 
     return ChangeNotifierProvider<SendCommissionViewModel>(
+
       create: (context) => _sendCommissionViewModel,
       child: Scaffold(
-          body: Container(
+          body: TextSelectionTheme(
+              data: TextSelectionThemeData(
+                selectionColor: Colors.green,//选中文字背景颜色
+                selectionHandleColor: Colors.greenAccent,
+                cursorColor: Colors.greenAccent,//光标颜色
+              ),
+             child:  Container(
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -78,21 +94,153 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                       margin: EdgeInsets.only(left: 30.w, right: 30.w),
                       child: Column(
                         children: [
+                          //委托类型
                           _buildTypeService(),
+                          //备注
                           _buildRemarkService(),
+                          //联系方式
                           _buildContactService(),
+                          //地区
                           _buildAreaService(),
+                          //服务时间
                           _buildTimeService(),
+                          //服务时长
                           _buildDurationService(),
+                          //价格
+                          _buildPriceService(),
                         ],
                       ),
                     ),
                   ))
                 ],
               ))),
+    ));
+  }
+
+  Widget _buildPriceService() {
+    return PopUpAnimation(
+        child: Container(
+      margin: EdgeInsets.only(top: 20.h),
+      width: double.infinity,
+      height: 60.h,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300, width: 1),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+      ),
+      child: Material(
+        elevation: 3,
+        borderRadius: BorderRadius.circular(10),
+        child: GestureDetector(
+          onTap: (){
+            _showCustomKeyboard();
+          },
+          child: Container(
+            padding: EdgeInsets.only(left: 10.w, right: 10.w),
+            child: Row(
+              children: [
+                SizedBox(width: 20.w),
+                Text(
+                  "价格:      ",
+                  style: TextStyle(fontSize: 16),
+                ),
+                Spacer(),
+                Row(
+                  children: [
+                    SizedBox(width: 10.w),
+                    Text("${_sendCommissionViewModel.price.toStringAsFixed(2)}",
+                        style: TextStyle(fontSize: 16)),
+                    Icon(Icons.keyboard_arrow_right, color: Colors.grey),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ));
+  }
+
+  //显示自定义键盘
+  void _showCustomKeyboard() {
+
+     _priceController.text = _sendCommissionViewModel.price.toStringAsFixed(2);
+     print('价格:_priceController.text:${_priceController.text}');
+    _tempPriceController.text = _priceController.text; // 初始化临时输入框内容
+     print('临时价格_tempPriceController.text:${_tempPriceController.text}');
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return CustomKeyboard(
+          tempPriceController: _tempPriceController,
+          onKeyboardTap: _onKeyboardTap,
+          onBackspace: _onBackspace,
+          onConfirm: _onConfirm,
+          onSwitchKeyboard: _onSwitchKeyboard, priceController: _priceController,
+        );
+      },
     );
   }
 
+  // 键盘点击事件
+  void _onKeyboardTap(String value) {
+    setState(() {
+      String text = _tempPriceController.text;
+      print('临时价格_tempPriceController.text:${_tempPriceController.text}');
+      TextSelection selection = _tempPriceController.selection;
+      // print('光标位置 ${selection.baseOffset}');
+      // 限制小数点输入和保留两位小数
+      if (value == ".") {
+        if (text.contains(".")) return;
+      } else {
+        // 限制输入两位小数  当光标位置在小数点后面时，不允许输入
+        if (text.contains(".") && text.split(".")[1].length >= 2 && selection.baseOffset >= text.length) return;
+        //不允许在前面输入0
+        if(selection.baseOffset == 0 && value == '0'){
+          return ;
+        }
+        //如果小数点前长度大于9，则不允许输入
+        print('小数点前长度:${text.split(".")[0].length}');
+        if(text.split(".")[0].length >= 9) {
+          return ;
+        }
+      }
+      // 更新输入框内容和光标位置
+      int newOffset = selection.baseOffset + value.length;
+      _tempPriceController.text = text.substring(0, selection.baseOffset) + value + text.substring(selection.baseOffset);
+      _tempPriceController.selection = TextSelection.collapsed(offset:newOffset);
+    });
+  }
+
+  // 退格键删除最后一个字符
+  void _onBackspace() {
+    setState(() {
+      String text = _tempPriceController.text;
+      TextSelection selection = _tempPriceController.selection;
+      if(selection.baseOffset > 0){
+       int  newOffset = selection.baseOffset - 1;
+
+       _tempPriceController.text = text.substring(0, newOffset) + text.substring(newOffset + 1);
+       _tempPriceController.selection = TextSelection.collapsed(offset: newOffset);
+      }
+    });
+  }
+
+  // 确认按钮点击事件
+  void _onConfirm() {
+    setState(() {
+      _priceController.text = _tempPriceController.text;
+      _sendCommissionViewModel.price = double.parse(_priceController.text);
+    });
+    Navigator.of(context).pop();
+  }
+
+  // 切换键盘按钮事件
+  void _onSwitchKeyboard() {
+    Navigator.of(context).pop();
+  }
+  //填写备注
   Widget _buildRemarkService() {
     return PopUpAnimation(
         child: Container(
@@ -453,7 +601,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                   "请选择服务地点",
                   style: TextStyle(fontSize: 13, color: Colors.grey),
                 ),
-                Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                Icon(Icons.location_on_outlined, color: Colors.black),
               ],
             )
           ],
