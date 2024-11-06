@@ -100,16 +100,22 @@ class UserPage extends StatelessWidget {
       }
       return Material(
         color: Colors.transparent, // 确保背景透明
-        child: InkWell(
-          onTap: () {},
-          splashColor: Theme.of(context).primaryColor.withAlpha(30),
-          highlightColor: Theme.of(context).primaryColor.withAlpha(30),
-          child: Column(
-            children: [
-              Icon(icon, size: 35, color: Theme.of(context).primaryColor),
-              SizedBox(height: 8),
-              Text("$title", style: TextStyle(fontSize: 14)),
-            ],
+        child: Container(
+          width: 90.w,
+          child: InkWell(
+            onTap: () {},
+            splashColor: Theme.of(context).primaryColor.withAlpha(30),
+            highlightColor: Theme.of(context).primaryColor.withAlpha(30),
+            // 设置水波纹为圆形
+            customBorder: const CircleBorder(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: 35, color: Theme.of(context).primaryColor),
+                SizedBox(height: 8),
+                Text("$title", style: TextStyle(fontSize: 14)),
+              ],
+            ),
           ),
         ),
       );
@@ -118,13 +124,26 @@ class UserPage extends StatelessWidget {
     // 标题
     Widget _buildSectionTitle(String title) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 1.0,horizontal: 12.0),
         child: Row(
           children: [
-            SizedBox(width: 16),
             Text(
               title,
               style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
+            Expanded(child: SizedBox()),
+            TextButton(
+              onPressed: () {
+                if(title=="服务订单"){
+                  //TODO
+                }else{
+                  //TODO
+                }
+              },
+              child: Text(
+                '更多',
+                style: TextStyle(color: Colors.grey, fontSize: 16),
+              ),
             ),
           ],
         ),
@@ -135,38 +154,61 @@ class UserPage extends StatelessWidget {
     Widget _buildManagementOption(IconData icon, String title) {
       return Material(
         color: Colors.transparent, // 确保背景透明
-        child: InkWell(
-          onTap: () {},
-          splashColor: Theme.of(context).primaryColor.withAlpha(30),
-          highlightColor: Theme.of(context).primaryColor.withAlpha(30),
-          child: Column(
-            children: [
-              Icon(icon, color: Theme.of(context).primaryColor, size: 35),
-              SizedBox(height: 8),
-              Text(title, style: TextStyle(fontSize: 14)),
-            ],
+        child: Container(
+          width: 90.w,
+          child: InkWell(
+            onTap: () {},
+            splashColor: Theme.of(context).primaryColor.withAlpha(30),
+            highlightColor: Theme.of(context).primaryColor.withAlpha(30),
+            // 设置水波纹为圆形
+            customBorder: const CircleBorder(),
+            child: Column(
+              children: [
+                Icon(icon, color: Theme.of(context).primaryColor, size: 35),
+                SizedBox(height: 8),
+                Text(title, style: TextStyle(fontSize: 14)),
+              ],
+            ),
           ),
         ),
       );
     }
 
     Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
-      return ListTile(
-        leading: Icon(icon,
-            color: icon == Icons.logout
-                ? Colors.red
-                : Theme.of(context).primaryColor),
-        title: Text(title,
-            style: TextStyle(
-                color: icon == Icons.logout ? Colors.red : Colors.black)),
-        trailing: Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {
-          if (icon == Icons.logout && onCheck != null) {
-            _showLogoutDialog(context, onCheck);
-          } else {
-            // 其他选项的点击事件处理
-          }
-        },
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            if (icon == Icons.logout && onCheck != null) {
+              _showLogoutDialog(context, onCheck);
+            } else {
+              // 其他选项的点击事件处理
+            }
+          },
+          // 水波纹颜色
+          splashColor: Colors.grey[300],
+          // 高亮颜色
+          highlightColor: Theme.of(context).primaryColor.withAlpha(30),
+          child: ListTile(
+            leading: Icon(icon,
+                color: icon == Icons.logout
+                    ? Colors.red
+                    : Theme.of(context).primaryColor),
+            title: Text(title,
+                style: TextStyle(
+                    color: icon == Icons.logout ? Colors.red : Colors.black)),
+            trailing: Icon(Icons.arrow_forward_ios, size: 16),
+          ),
+        ),
+      );
+    }
+
+    Widget _line() {
+      return Container(
+        margin: EdgeInsets.symmetric(horizontal: 10.r),
+        child: Divider(
+          height: 2.h,
+        ),
       );
     }
 
@@ -196,13 +238,21 @@ class UserPage extends StatelessWidget {
                     Expanded(child: SizedBox()),
                     Material(
                       color: Colors.transparent, // 确保背景透明
-                      child: InkWell(
-                        onTap: () {},
-                        splashColor:
-                            Theme.of(context).primaryColor.withAlpha(30),
-                        highlightColor:
-                            Theme.of(context).primaryColor.withAlpha(30),
-                        child: Icon(Icons.arrow_forward_ios, size: 20),
+                      child: ClipOval(
+                        child: InkWell(
+                          onTap: () {
+                            // 点击事件的回调函数
+                          },
+                          // 水波纹颜色
+                          splashColor:
+                              Theme.of(context).primaryColor.withAlpha(30),
+                          // 高亮颜色
+                          highlightColor:
+                              Theme.of(context).primaryColor.withAlpha(30),
+                          // 设置水波纹为圆形
+                          customBorder: CircleBorder(),
+                          child: Icon(Icons.chevron_right_outlined, size: 40),
+                        ),
                       ),
                     ),
                   ],
@@ -230,7 +280,10 @@ class UserPage extends StatelessWidget {
                 child: Column(
                   children: [
                     _buildSectionTitle('服务订单'),
-                    Divider(),
+                    Container(
+                      margin: EdgeInsets.only(left: 10.w, right: 10.w),
+                      child: Divider(),
+                    ),
                     Expanded(child: SizedBox()),
                     Padding(
                       padding: const EdgeInsets.all(0.0),
@@ -270,7 +323,10 @@ class UserPage extends StatelessWidget {
                 child: Column(
                   children: [
                     _buildSectionTitle('家政管理'),
-                    Divider(),
+                    Container(
+                      margin: EdgeInsets.only(left: 10.w, right: 10.w),
+                      child: Divider(),
+                    ),
                     Expanded(child: SizedBox()),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 0.0),
@@ -289,13 +345,37 @@ class UserPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 16.h),
+              SizedBox(height: 30.h),
 
-              _buildOption(Icons.favorite_border, '我的收藏'),
-              _buildOption(Icons.history, '浏览历史'),
-              _buildOption(Icons.help_outline, '常见问题'),
-              _buildOption(Icons.settings, '设置'),
-              _buildOption(Icons.logout, '退出登录', onCheck: _logout),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 0,
+                      blurRadius: 2,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                  border: Border.all(color: Colors.grey, width: 1.w),
+                ),
+                child: Column(
+                  children: [
+                    _buildOption(Icons.favorite_border, '我的收藏'),
+                    _line(),
+                    _buildOption(Icons.history, '浏览历史'),
+                    _line(),
+                    _buildOption(Icons.help_outline, '常见问题'),
+                    _line(),
+                    _buildOption(Icons.settings, '设置'),
+                    _line(),
+                    _buildOption(Icons.logout, '退出登录', onCheck: _logout),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
