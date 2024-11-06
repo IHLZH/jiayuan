@@ -21,23 +21,3 @@ class _ChatPage extends State<ChatPage>{
   }
 }
 
-class LoadingPage extends StatefulWidget{
-  @override
-  State<StatefulWidget> createState() {
-    return _LoadingPage();
-  }
-}
-
-class _LoadingPage extends State<ChatPage>{
-
-  @override
-  void initState() {
-    super.initState();
-    Loading.showLoading();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Text("ChatPage");
-  }
-}

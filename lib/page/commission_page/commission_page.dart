@@ -56,7 +56,6 @@ class _CommissionPageState extends State<CommissionPage>{
     super.initState();
     //请求委托数据
     _viewModel.getCommissionData();
-    print("定位信息为：" + (Global.location?.city ?? "定位错误"));
   }
 
   @override
@@ -206,7 +205,9 @@ class _CommissionPageState extends State<CommissionPage>{
       color: Colors.white,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        onTap: (){},
+        onTap: (){
+          RouteUtils.pushForNamed(context, RoutePath.commissionDetail);
+        },
         borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: EdgeInsets.all(10),
@@ -402,7 +403,7 @@ class _CommissionPageState extends State<CommissionPage>{
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              Global.location?.city ?? "定位错误",
+              Global.location?.city ?? "定位中..",
               style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600
