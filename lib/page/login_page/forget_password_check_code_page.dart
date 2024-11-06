@@ -166,10 +166,12 @@ class _ForgetPasswordCheckCodePageState
         ),
         body: SingleChildScrollView(
           child: Container(
-            margin: EdgeInsets.only(top: 40.h),
+            // margin: EdgeInsets.only(top: 40.h),
             padding: EdgeInsets.only(left: 20.w, right: 20.w),
             child: Column(
               children: [
+                Image(image: AssetImage("assets/images/ikun1.png")),
+                SizedBox(height: 10.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -278,24 +280,44 @@ class _ForgetPasswordCheckCodePageState
                       ),
                     ),
                     SizedBox(width: 10.w),
-                    if (_secondsRemaining > 0)
-                      Text('$_secondsRemaining s',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor))
-                    else
-                      ElevatedButton(
-                        onPressed: _getVerificationCode,
-                        child: Text('获取验证码',
-                            style: TextStyle(color: Colors.white)),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.w, vertical: 5.h),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.r),
+                    Container(
+                      height: 65,
+                      child: Center(
+                        child: TextButton(
+                          style: ButtonStyle(
+                            side:
+                            MaterialStateProperty.all<BorderSide>(
+                              BorderSide(
+                                  color:
+                                  Theme.of(context).primaryColor,
+                                  width: 1.0),
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    10.0), // 设置小幅度的圆角
+                              ),
+                            ),
+                          ),
+                          onPressed: _secondsRemaining > 0
+                              ? null
+                              : _getVerificationCode,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              _secondsRemaining > 0
+                                  ? "重新获取 ($_secondsRemaining)"
+                                  : "获取验证码",
+                              style: TextStyle(
+                                fontSize: 17,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ),
                           ),
                         ),
                       ),
+                    )
                   ],
                 ),
                 SizedBox(height: 20.h),

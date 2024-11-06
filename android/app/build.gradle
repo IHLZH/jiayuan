@@ -30,8 +30,29 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        release {//发布版本的签名配置
+            storeFile file('../mykey.jks') //KeyStore路径
+            keyAlias "key0" // 别名
+            storePassword "2022015517" //密码
+            keyPassword "2022015517" // 密码
+        }
+        debug {//调试版本的签名配置
+            storeFile file('../mykey.jks')
+            keyAlias "key0"
+            storePassword "2022015517"
+            keyPassword "2022015517"
+        }
+    }
+
+
     buildTypes {
         release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig = signingConfigs.debug
+        }
+        debug {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
@@ -41,4 +62,10 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation('com.amap.api:location:5.2.0')
+    implementation('com.amap.api:3dmap:8.1.0')
+    implementation 'com.amap.api:search:5.0.0'
 }

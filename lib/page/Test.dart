@@ -19,17 +19,3 @@ class _ChatPage extends State<ChatPage>{
     return Text("ChatPage");
   }
 }
-
-class MinePage extends StatefulWidget{
-  @override
-  State<StatefulWidget> createState() {
-    return _MinePage();
-  }
-}
-
-class _MinePage extends State<MinePage>{
-  @override
-  Widget build(BuildContext context) {
-    return Text("MinePage");
-  }
-}

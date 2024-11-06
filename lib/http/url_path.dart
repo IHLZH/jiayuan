@@ -1,5 +1,8 @@
 class UrlPath {
-  static const String BaseUrl = "http://192.168.242.236:8080";
+  static const String BaseUrl = "http://10.7.89.237:8080";
+
+  //Token登录
+  static const String loginAutoUrl="/login/autoLogin";
 
   //账号登录获取图像验证码接口
   static const String captchaImageUrl="/code/image";
@@ -36,4 +39,7 @@ class UrlPath {
 
   //注册设置密码接口
   static const String setRegisterPasswordUrl="/register/setPassword";
+
+  //注销接口
+  static const String logoutUrl="/logout";
 }

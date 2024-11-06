@@ -321,6 +321,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                   ),
                 ),
               ),
+              endDrawerEnableOpenDragGesture: false,
             );
           }
       ),

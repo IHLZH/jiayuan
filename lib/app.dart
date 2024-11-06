@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
             primaryColor: Colors.teal,
             cardColor: Colors.grey,
             textTheme: TextTheme(
-              // bodyLarge: TextStyle(color: Colors.green),
+              bodyLarge: TextStyle(color: Colors.teal, fontSize: 17,fontWeight: FontWeight.bold),
               bodyMedium: TextStyle(color: Colors.teal),
             ),
           ),
