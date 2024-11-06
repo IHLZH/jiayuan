@@ -32,6 +32,7 @@ class _StartPageState extends State<StartPage> {
     DioInstance.instance().initDio(baseUrl: "");
     DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
 
+    //初始化sqlite数据库
     _initDB();
 
     // 设置延迟，2秒后跳转

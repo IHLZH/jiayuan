@@ -47,4 +47,7 @@ class RoutePath {
 
   //委托搜索结果页
   static const String commissionSearchResult = "/commissionSearchResult";
+
+  //委托详情页
+  static const String commissionDetail = "/commissionDetail";
 }

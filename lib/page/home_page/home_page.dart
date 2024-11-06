@@ -1,3 +1,8 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:amap_flutter_location/amap_flutter_location.dart';
+import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +11,9 @@ import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/send_commission_page/send_commision_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/utils/global.dart';
+import 'package:jiayuan/utils/location_data.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_ui/banner/home_banner_widget.dart';
@@ -18,12 +26,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
+
   final HomeViewModel homeViewModel = HomeViewModel();
 
   final PageController _pageController = PageController();
   int _currentPage = 0;
+
   late AnimationController _controller;
   late Animation<double> _animation;
+
   @override
   void initState() {
     super.initState();
@@ -39,6 +50,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
     homeViewModel.getBannerData();
     homeViewModel.getHousekeeperData();
+    homeViewModel.loadingStandardPrice();
   }
 
   @override
@@ -64,10 +76,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             body: CustomScrollView(
               scrollDirection: Axis.vertical,
               slivers: [
-                //委托服务类型
-                SliverToBoxAdapter(child: _PageViewWidget()),
                 //轮播图
                 SliverToBoxAdapter(child: _banner()),
+                //委托服务类型
+                SliverToBoxAdapter(child: _PageViewWidget()),
                 //固定头部
                 SliverHeader(children: _buildHeaderList()),
                 //推荐
@@ -315,7 +327,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 style: TextStyle(
                   fontSize: 17.sp,
                   color: Colors.black87,
-                  fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.bold,
                 ),
               ),

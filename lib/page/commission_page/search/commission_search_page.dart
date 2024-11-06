@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/app_bar/app_search_bar.dart';
+import 'package:jiayuan/common_ui/dialog/dialog_factory.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_vm.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
@@ -11,7 +12,9 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common_ui/buttons/red_button.dart';
+import '../../../common_ui/dialog/loading.dart';
 import '../../../common_ui/input/app_input.dart';
+import '../../../route/route_path.dart';
 import '../commission_vm.dart';
 
 class CommissionSearchPage extends StatefulWidget{
@@ -44,7 +47,20 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _commissionSearchViewModel.getSearchHistory();
+    _getHisory();
+  }
+
+  Future<void> _getHisory() async {
+    await _commissionSearchViewModel.getSearchHistory();
+    setState(() {
+    });
+  }
+
+  Future<void> _deleteHistory() async {
+    await _commissionSearchViewModel.deleteSearchHistory();
+    setState(() {
+      _getHisory();
+    });
   }
 
   void _search(String searchMessage){
@@ -52,6 +68,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
     synthesisCheck = true;
     priceCheck = false;
     distanceCheck = false;
+    if(searchMessage != "")_commissionSearchViewModel.saveSearchHistory(searchMessage);
     _commissionSearchViewModel.searchCommission(searchMessage);
     setState(() {});
   }
@@ -59,6 +76,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
   void _back(){
     if(isSearch){
       isSearch = false;
+      _getHisory();
       setState(() {
       });
     }else{
@@ -116,7 +134,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
       child: Consumer<CommissionSearchViewModel>(
           builder: (context, vm, child){
             return Scaffold(
-                appBar: PreferredSize(
+              appBar: PreferredSize(
                     preferredSize: Size.fromHeight(kToolbarHeight),
                     child: Container(
                         decoration: BoxDecoration(
@@ -167,7 +185,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                         )
                     )
                 ),
-                body: SafeArea(
+              body: SafeArea(
                     child: Container(
                       decoration: BoxDecoration(
                           color: Colors.white
@@ -175,7 +193,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                       child: isSearch ? _Result(vm) : _History(vm),
                     )
                 ),
-                endDrawer: Drawer(
+              endDrawer: Drawer(
                   child: Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -325,6 +343,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                     ),
                   ),
                 ),
+              endDrawerEnableOpenDragGesture: false,
             );
           }
       )
@@ -335,9 +354,10 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
     return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
                 "历史搜索",
                 style: TextStyle(
@@ -346,17 +366,59 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                     fontWeight: FontWeight.w600
                 ),
               ),
-            )
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: IconButton(
+                  onPressed: (){
+                    showDialog(
+                        context: context,
+                        builder: (context){
+                          return AlertDialog(
+                            title: Text("删除历史搜索"),
+                            content: Text("确定要删除全部历史搜索吗？"),
+                            actions: [
+                              AppButton(
+                                onTap: (){
+                                  Navigator.of(context).pop();
+                                },
+                                type: AppButtonType.minor,
+                                buttonText: "取消",
+                                buttonTextStyle: TextStyle(
+                                  color: AppColors.textColor2b
+                                ),
+                              ),
+                              SizedBox(height: 5.h,),
+                              AppButton(
+                                onTap: (){
+                                  _deleteHistory();
+                                  Navigator.of(context).pop();
+                                },
+                                type: AppButtonType.main,
+                                buttonText: "确定",
+                              )
+                            ],
+                          );
+                        }
+                    );
+                  },
+                  icon: Icon(Icons.delete)
+              )
+            ),
+
           ],
         ),
         Row(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Wrap(
-                spacing: 5,
-                children: _SearchHistory(vm.searchHistory),
-              ),
+            Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Wrap(
+                    spacing: 5,
+                    runSpacing: 5,
+                    children: _SearchHistory(vm.searchHistory),
+                  ),
+                )
             )
           ],
         )
@@ -468,7 +530,13 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
             child: InkWell(
-              onTap: (){},
+              onTap: (){
+                RouteUtils.pushForNamed(
+                    context,
+                    RoutePath.commissionDetail,
+                    arguments: commission
+                );
+              },
               borderRadius: BorderRadius.circular(16),
               child: Container(
                 padding: EdgeInsets.all(10),

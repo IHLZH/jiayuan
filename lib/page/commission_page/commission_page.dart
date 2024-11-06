@@ -12,6 +12,7 @@ import 'package:jiayuan/page/commission_page/type/commission_type_page.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/utils/global.dart';
 import 'package:provider/provider.dart';
 //委托页面
 import 'commission_vm.dart';
@@ -204,7 +205,13 @@ class _CommissionPageState extends State<CommissionPage>{
       color: Colors.white,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        onTap: (){},
+        onTap: (){
+          RouteUtils.pushForNamed(
+              context,
+              RoutePath.commissionDetail,
+              arguments: commission
+          );
+        },
         borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: EdgeInsets.all(10),
@@ -308,7 +315,7 @@ class _CommissionPageState extends State<CommissionPage>{
                   SizedBox(width: 5.w,),
                   Expanded(
                     child: Text(
-                      commission.address + "诚朴园三号楼204",
+                      commission.address,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
                       style: TextStyle(
@@ -390,23 +397,28 @@ class _CommissionPageState extends State<CommissionPage>{
   }
 
   Widget Position(){
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10.w),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            "石家庄",
-            style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600
+    return GestureDetector(
+      onTap: (){
+        //RouteUtils.push(context, MapPage());
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10.w),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              Global.location?.city ?? "定位中..",
+              style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600
+              ),
             ),
-          ),
-          Icon(
-            Icons.keyboard_arrow_down,
-            weight: 3,
-          )
-        ],
+            Icon(
+              Icons.keyboard_arrow_down,
+              weight: 3,
+            )
+          ],
+        ),
       ),
     );
   }

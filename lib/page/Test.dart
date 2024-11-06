@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:jiayuan/common_ui/dialog/loading.dart';
 import 'package:jiayuan/common_ui/navigation/navigation_bar_widget.dart';
 
 
@@ -19,3 +20,4 @@ class _ChatPage extends State<ChatPage>{
     return Text("ChatPage");
   }
 }
+
