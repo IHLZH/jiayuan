@@ -160,6 +160,8 @@ class _LoginPageState extends State<LoginPage> {
         if(response.data['code']==200){
           final data = response.data;
 
+          Global.isLogin = true;
+
           // 保存用户信息
           Global.userInfo = User.fromJson(data["data"]);
           Global.input = account;
@@ -203,6 +205,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -218,16 +221,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: Stack(
         children: [
-          // 背景图片
-          // Container(
-          //   decoration: BoxDecoration(
-          //     image: DecorationImage(
-          //       image: AssetImage('assets/images/background.jpg'), // 替换为你的图片路径
-          //       fit: BoxFit.cover, // 填充整个屏幕
-          //     ),
-          //   ),
-          // ),
-          // 登录表单和其他Widgets
           Center(
             child: Padding(
               padding: EdgeInsets.only(top: 100.h),

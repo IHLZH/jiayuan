@@ -52,7 +52,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
     setState(() {});
   }
 
-  void _startTimer() {
+  void _startTimer() async {
     const duration = Duration(seconds: 1);
     _secondsRemaining = 60;
     _timer = Timer.periodic(duration, (Timer timer) {
@@ -82,14 +82,13 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
       final response = await DioInstance.instance().get(path: url);
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
-          // final data = response.data;
+          // 显示提示信息
+          showToast("获取验证码成功");
 
-          showToast("获取验证码成功", duration: const Duration(seconds: 1));
-
+          // 启动倒计时
           _startTimer();
         } else {
-          showToast(response.data['message'],
-              duration: const Duration(seconds: 1));
+          showToast(response.data['message'], duration: const Duration(seconds: 1));
         }
       } else {
         showToast("无法连接服务器", duration: const Duration(seconds: 1));
@@ -100,6 +99,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
       }
     }
   }
+
 
   void _jumpToTab() {
     RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
@@ -134,6 +134,8 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
           final data = response.data;
+
+          Global.isLogin = true;
 
           // 保存用户信息
           Global.userInfo = User.fromJson(data["data"]);

@@ -32,6 +32,7 @@ class _StartPageState extends State<StartPage> {
     DioInstance.instance().initDio(baseUrl: "");
     DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
 
+    //初始化sqlite数据库
     _initDB();
 
     // 设置延迟，2秒后跳转
@@ -51,14 +52,14 @@ class _StartPageState extends State<StartPage> {
 
   void _jumpToTab() {
     // 如果Token存活 跳转到首页
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
       RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
     });
   }
 
   void _jumpToLogin() {
     // 如果Token不存活 跳转到登录界面
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 1), () {
       RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
     });
   }
@@ -80,6 +81,8 @@ class _StartPageState extends State<StartPage> {
         if (response.statusCode == 200) {
           if (response.data['code'] == 200) {
             final data = response.data;
+
+            Global.isLogin = true;
 
             // 保存用户信息
             Global.userInfo = User.fromJson(data["data"]);

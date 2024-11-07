@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_page.dart';
 import 'package:jiayuan/page/login_page/email_login_page.dart';
 import 'package:jiayuan/page/login_page/forget_password_check_code_page.dart';
@@ -63,6 +64,8 @@ class Routes {
           input: input,
           isEmail: isEmail,
         ));
+      case RoutePath.commissionDetail:
+        return pageRoute(CommissionDetailPage(),settings: settings);
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

@@ -10,8 +10,10 @@ import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/commission_page/type/commission_type_vm.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../repository/model/commission_data.dart';
+import '../../../route/route_path.dart';
 import '../../../route/route_utils.dart';
 import '../commission_vm.dart';
 
@@ -34,6 +36,8 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
   final TextEditingController _distanceController = TextEditingController();
 
   CommissionTypeViewModel _commissionTypeViewModel = CommissionTypeViewModel();
+  //刷新控制器
+  RefreshController _refreshController = RefreshController();
 
   @override
   void initState() {
@@ -121,55 +125,68 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                     child: Column(
                       children: [
                         Expanded(
-                          child: CustomScrollView(
-                            slivers: [
-                              SliverToBoxAdapter(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.only(top: 10.h, left: 10.h),
-                                      child: CTypeIcon(index: widget.id),
-                                    ),
-                                    SizedBox(width: 5.w,),
-                                    Text(
-                                      CommissionViewModel.CommissionTypes[widget.id].typeText,
-                                      style: TextStyle(
-                                          color: AppColors.textColor2b
+                          child: SmartRefresher(
+                            controller: _refreshController,
+                            enablePullUp: true,
+                            enablePullDown: true,
+                            header: ClassicHeader(),
+                            footer: ClassicFooter(),
+                            onLoading: (){
+                              print("loading...");
+                            },
+                            onRefresh: (){
+                              print("refresh...");
+                            },
+                            child: CustomScrollView(
+                              slivers: [
+                                SliverToBoxAdapter(
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.only(top: 10.h, left: 10.h),
+                                        child: CTypeIcon(index: widget.id),
                                       ),
-                                    ),
-                                    SizedBox(width: 5.w,),
-                                    Text(
-                                      (vm.commissionList.length > 999) ? "999+" : (vm.commissionList.length.toString()) + "个相关委托",
-                                      style: TextStyle(
-                                          color: AppColors.textColor2b
+                                      SizedBox(width: 5.w,),
+                                      Text(
+                                        CommissionViewModel.CommissionTypes[widget.id].typeText,
+                                        style: TextStyle(
+                                            color: AppColors.textColor2b
+                                        ),
                                       ),
-                                    )
-                                  ],
+                                      SizedBox(width: 5.w,),
+                                      Text(
+                                        (vm.commissionList.length > 999) ? "999+" : (vm.commissionList.length.toString()) + "个相关委托",
+                                        style: TextStyle(
+                                            color: AppColors.textColor2b
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
 
-                              SliverToBoxAdapter(
-                                child: MasonryGridView.count(
-                                  crossAxisCount: 2,
-                                  itemCount: vm.commissionList.length,
-                                  itemBuilder: (context, index){
-                                    return Container(
-                                      height: (index % 2 == 0) ? 250.h : 300.h,
-                                      padding: EdgeInsets.all(10),
-                                      child: CommissionCard(vm.commissionList[index]),
-                                    );
-                                  },
-                                  shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(), // 禁止内部滚动
-                                ),
-                              )
-                            ],
+                                SliverToBoxAdapter(
+                                  child: MasonryGridView.count(
+                                    crossAxisCount: 2,
+                                    itemCount: vm.commissionList.length,
+                                    itemBuilder: (context, index){
+                                      return Container(
+                                        height: (index % 2 == 0) ? 250.h : 300.h,
+                                        padding: EdgeInsets.all(10),
+                                        child: CommissionCard(vm.commissionList[index]),
+                                      );
+                                    },
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(), // 禁止内部滚动
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         )
                       ],
                     ),
-                  )
+                  ),
               ),
               endDrawer: Drawer(
                 child: Container(
@@ -334,7 +351,13 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
       color: Colors.white,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        onTap: (){},
+        onTap: (){
+          RouteUtils.pushForNamed(
+              context,
+              RoutePath.commissionDetail,
+              arguments: commission
+          );
+        },
         borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: EdgeInsets.all(10),

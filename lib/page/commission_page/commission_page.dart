@@ -14,6 +14,7 @@ import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 //委托页面
 import 'commission_vm.dart';
 
@@ -51,12 +52,14 @@ class _CommissionPageState extends State<CommissionPage>{
 
   final CommissionViewModel _viewModel = CommissionViewModel();
 
+  //刷新控制器
+  RefreshController _refreshController = RefreshController();
+
   @override
   void initState() {
     super.initState();
     //请求委托数据
     _viewModel.getCommissionData();
-    print("定位信息为：" + (Global.location?.city ?? "定位错误"));
   }
 
   @override
@@ -76,105 +79,113 @@ class _CommissionPageState extends State<CommissionPage>{
                   ],
                 ),
                 Expanded(
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                          child: Column(
-                            children: [
-                              Container(
-                                  height: 180,
-                                  padding: EdgeInsets.only(left: 20, right: 20, top: 20,bottom: 10),
-                                  child: PageView(
-                                    controller: _pageController,
-                                    onPageChanged: (index) {
-                                      setState(() {
-                                        _currentPage = index;
-                                      });
-                                    },
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                            children: [
-                                              CType(index: 0),
-                                              CType(index: 1),
-                                              CType(index: 2),
-                                              CType(index: 3),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                            children: [
-                                              CType(index: 4),
-                                              CType(index: 5),
-                                              CType(index: 6),
-                                              CType(index: 7),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                            children: [
-                                              CType(index: 8),
-                                              CType(index: 9),
-                                              CType(index: 10),
-                                              CType(index: 1),
-                                            ],
-                                          ),
-                                          SizedBox(height: 10),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                            children: [
-                                              CType(index: 2),
-                                              CType(index: 3),
-                                              CType(index: 4),
-                                              CType(index: 5),
-                                            ],
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                              ),
-                              _buildIndicator(),
-                            ],
-                          )
-                      ),
-
-                      SliverAppBar(
-                        automaticallyImplyLeading: false,
-                        floating: false,
-                        pinned: true,
-                        elevation: 0,
-                        backgroundColor: Colors.white,
-                          title: Container(
-                            child: Row(
+                  child: SmartRefresher(
+                    controller: _refreshController,
+                    enablePullUp: true,
+                    enablePullDown: true,
+                    header: ClassicHeader(),
+                    footer: ClassicFooter(),
+                    onLoading: (){},
+                    onRefresh: (){},
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                            child: Column(
                               children: [
-                                Text(
-                                  "为您推荐:",
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                Container(
+                                    height: 180,
+                                    padding: EdgeInsets.only(left: 20, right: 20, top: 20,bottom: 10),
+                                    child: PageView(
+                                      controller: _pageController,
+                                      onPageChanged: (index) {
+                                        setState(() {
+                                          _currentPage = index;
+                                        });
+                                      },
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: [
+                                                CType(index: 0),
+                                                CType(index: 1),
+                                                CType(index: 2),
+                                                CType(index: 3),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: [
+                                                CType(index: 4),
+                                                CType(index: 5),
+                                                CType(index: 6),
+                                                CType(index: 7),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: [
+                                                CType(index: 8),
+                                                CType(index: 9),
+                                                CType(index: 10),
+                                                CType(index: 1),
+                                              ],
+                                            ),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: [
+                                                CType(index: 2),
+                                                CType(index: 3),
+                                                CType(index: 4),
+                                                CType(index: 5),
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    )
                                 ),
+                                _buildIndicator(),
                               ],
-                            ),
-                          ),
-                        flexibleSpace: Container(
-                          color: Colors.white,
-                        )
-                      ),
+                            )
+                        ),
 
-                      Consumer<CommissionViewModel>(
-                          builder: (context, vm, child){
-                            return SliverToBoxAdapter(
-                              child: MasonryGridView.count(
+                        SliverAppBar(
+                            automaticallyImplyLeading: false,
+                            floating: false,
+                            pinned: true,
+                            elevation: 0,
+                            backgroundColor: Colors.white,
+                            title: Container(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "为您推荐:",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            flexibleSpace: Container(
+                              color: Colors.white,
+                            )
+                        ),
+
+                        Consumer<CommissionViewModel>(
+                            builder: (context, vm, child){
+                              return SliverToBoxAdapter(
+                                child: MasonryGridView.count(
                                   crossAxisCount: 2,
                                   itemCount: vm.commissions.length,
                                   itemBuilder: (context, index){
@@ -184,15 +195,16 @@ class _CommissionPageState extends State<CommissionPage>{
                                       child: CommissionCard(vm.commissions[index]),
                                     );
                                   },
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(), // 禁止内部滚动
-                              ),
-                            );
-                          }
-                      ),
-                    ],
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(), // 禁止内部滚动
+                                ),
+                              );
+                            }
+                        ),
+                      ],
+                    ),
                   ),
-                )
+                ),
               ],
             )
         )
@@ -206,7 +218,13 @@ class _CommissionPageState extends State<CommissionPage>{
       color: Colors.white,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        onTap: (){},
+        onTap: (){
+          RouteUtils.pushForNamed(
+              context,
+              RoutePath.commissionDetail,
+              arguments: commission
+          );
+        },
         borderRadius: BorderRadius.circular(16),
         child: Container(
           padding: EdgeInsets.all(10),
@@ -310,7 +328,7 @@ class _CommissionPageState extends State<CommissionPage>{
                   SizedBox(width: 5.w,),
                   Expanded(
                     child: Text(
-                      commission.address + "诚朴园三号楼204",
+                      commission.address,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
                       style: TextStyle(
@@ -394,24 +412,25 @@ class _CommissionPageState extends State<CommissionPage>{
   Widget Position(){
     return GestureDetector(
       onTap: (){
-        //RouteUtils.push(context, LocationPage());
+        //RouteUtils.push(context, MapPage());
       },
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 10.w),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Icon(
+              Icons.location_on_outlined,
+              weight: 3,
+              color: AppColors.appColor,
+            ),
             Text(
-              Global.location?.city ?? "定位错误",
+              Global.location?.city ?? "定位中..",
               style: TextStyle(
-                  fontSize: 18.sp,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600
               ),
             ),
-            Icon(
-              Icons.keyboard_arrow_down,
-              weight: 3,
-            )
           ],
         ),
       ),
