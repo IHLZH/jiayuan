@@ -1,4 +1,4 @@
-import 'package:jiayuan/repository/model/StandardPrice.dart';
+import 'package:jiayuan/repository/model/standardPrice.dart';
 import 'package:jiayuan/repository/model/user.dart';
 import 'package:jiayuan/sqlite/dbutil.dart';
 import 'package:jiayuan/utils/location_data.dart';

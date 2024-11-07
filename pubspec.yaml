@@ -86,6 +86,8 @@ dependencies:
   amap_flutter_location: ^3.0.0
   amap_flutter_map: ^3.0.0
   amap_flutter_base: ^3.0.0
+
+  flutter_speed_dial: ^6.2.0
   # 腾讯云IM SDK
 #  tencent_cloud_chat_sdk: ^8.0.5903
 
