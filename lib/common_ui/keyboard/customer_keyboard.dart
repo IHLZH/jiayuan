@@ -147,12 +147,15 @@ class CustomKeyboard extends StatelessWidget {
           border: Border.all(color: Colors.grey.shade300),
           borderRadius: BorderRadius.circular(10),
         )),
-        child: InkWell(
-          onTap: onTap,
-          child: Center(
-            child: Text(
-              label,
-              style: TextStyle(fontSize: 24, color: Colors.black),
+        child: Material(
+          color: Colors.white,
+          child: InkWell(
+            onTap: onTap,
+            child: Center(
+              child: Text(
+                label,
+                style: TextStyle(fontSize: 24, color: Colors.black),
+              ),
             ),
           ),
         ),
@@ -163,15 +166,21 @@ class CustomKeyboard extends StatelessWidget {
   // 删除按钮
   Widget _buildDeleteButton() {
     return Expanded(
-      child: Container(
-        decoration: (BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(10),
-        )),
-        child: Center(
-          child: IconButton(
-            icon: Icon(Icons.backspace, color: Colors.black54),
-            onPressed: onBackspace,
+      child: Material(
+        color: Colors.white,
+        child: InkWell(
+          onTap: onBackspace,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: Icon(
+                Icons.backspace,
+                color: Colors.black,
+              ),
+            ),
           ),
         ),
       ),
@@ -181,17 +190,24 @@ class CustomKeyboard extends StatelessWidget {
   // 确认按钮
   Widget _buildConfirmButton() {
     return Expanded(
-      child: Container(
-        decoration: (BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(10),
-        )),
-        child: TextButton(
-          onPressed: onConfirm,
-          child: Center(
-            child: Text(
-              "确定",
-              style: TextStyle(fontSize: 18, color: Colors.black),
+      child: Material(
+        child: InkWell(
+          onTap: onConfirm,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(10),
+              gradient: LinearGradient(
+                colors: [AppColors.endColor,Colors.white ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            ),
+            child: Center(
+              child: Text(
+                "确定",
+                style: TextStyle(fontSize: 24, color: Colors.black),
+              ),
             ),
           ),
         ),
@@ -207,6 +223,11 @@ class CustomKeyboard extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(color: Colors.grey.shade300),
           borderRadius: BorderRadius.circular(10),
+          gradient: LinearGradient(
+            colors: [AppColors.appColor, AppColors.endColor],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          )
         ),
         child: Center(
           child: IconButton(

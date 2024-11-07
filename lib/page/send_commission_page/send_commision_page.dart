@@ -671,7 +671,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                                     style: TextStyle(
                                         fontSize: 13, color: Colors.grey))
                                 : Text(
-                                    '${_sendCommissionViewModel.selectedDate?.month}月 ${_sendCommissionViewModel.selectedDate?.day}日 ${_sendCommissionViewModel.selectedDate?.hour}:${_sendCommissionViewModel.selectedDate?.minute}',
+                                    '${_sendCommissionViewModel.selectedDate?.month}月 ${_sendCommissionViewModel.selectedDate?.day}日 ${_sendCommissionViewModel.selectedDate?.hour}:${_sendCommissionViewModel.selectedDate?.minute.toString().padLeft(2, '0')}',
                                     style: TextStyle(fontSize: 14),
                                   ),
                             Icon(Icons.keyboard_arrow_down, color: Colors.grey),
@@ -769,7 +769,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                           "门牌号:",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(width: 20.w),
+                        SizedBox(width: 35.w),
                         Expanded(
                           child: TextField(
                             onChanged: (value) {
@@ -779,6 +779,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                             onTapOutside: (_) {
                               _focusNodeDoorNumber.unfocus();
                             },
+                            style: TextStyle(fontSize: 14,color: Colors.black,fontWeight: FontWeight.w400),
                             decoration: InputDecoration(
                               hintText: "请输入详细门牌号",
                               hintStyle: TextStyle(
