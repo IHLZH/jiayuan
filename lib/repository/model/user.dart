@@ -59,6 +59,28 @@ class User {
     );
   }
 
+  Map<String, Object> toMap() {
+    return {
+      'userId': userId,
+      'userName': userName,
+      'nickName': nickName,
+      'userPassword': userPassword,
+      'userAvatar': userAvatar,
+      'userSex': userSex,
+      'userPhoneNumber': userPhoneNumber,
+      'dailyPhoneNumber': dailyPhoneNumber ?? '',
+      'email': email ?? '',
+      'createdTime': createdTime,
+      'updatedTime': updatedTime,
+      'lng': lng ?? '',
+      'lat': lat ?? '',
+      'loginIp': loginIp,
+      'loginTime': loginTime,
+      'userType': userType,
+      'userStatus': userStatus,
+    };
+  }
+
   @override
   String toString() {
     return 'User(userId: $userId, userName: $userName, nickName: $nickName, userPassword: $userPassword, userAvatar: $userAvatar, userSex: $userSex, userPhoneNumber: $userPhoneNumber, dailyPhoneNumber: $dailyPhoneNumber, email: $email, createdTime: $createdTime, updatedTime: $updatedTime, lng: $lng, lat: $lat, loginIp: $loginIp, loginTime: $loginTime, userType: $userType, userStatus: $userStatus)';
