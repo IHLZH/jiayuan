@@ -189,12 +189,64 @@ class _MapPageState extends State<MapPage> {
     if (null == poi) return;
 
     var poiData = poi.toJson();
+    print('获取到的poi信息：$poiData');
+    
+    // 更新标记位置
     setState(() {
-      markerLatitude = poiData['latLng'][1];
-      markerLongitude = poiData['latLng'][0];
+      markerLatitude = poi.latLng?.latitude;
+      markerLongitude = poi.latLng?.longitude;
       _addMarker(poi.latLng!);
     });
-    _getPoisData();
+
+    // 获取详细的地址信息
+    try {
+      var response = await Dio().get(
+        'https://restapi.amap.com/v3/geocode/regeo',
+        queryParameters: {
+          'key': ConstConfig.webKey,
+          'location': '${poi.latLng?.longitude},${poi.latLng?.latitude}',
+          'extensions': 'base',
+          'radius': 50,
+          'extensions': 'all',
+        },
+      );
+
+      if (response.data['status'] == '1' && response.data['regeocode'] != null) {
+        var regeocode = response.data['regeocode'];
+        var addressComponent = regeocode['addressComponent'];
+        var formatted_address = regeocode['formatted_address'];
+        
+        print('获取到的地址信息：$regeocode');
+
+        // 构造位置信息，使用 POI 的名称和逆地理编码的地址信息
+        Map<String, dynamic> locationInfo = {
+          'name': poi.name,  // POI 点的名称
+          'address': formatted_address,  // 完整地址
+          'pname': addressComponent['province'] ?? '',
+          'cityname': addressComponent['city']?[0] ?? '',
+          'adname': addressComponent['district'] ?? '',
+          'location': '${poi.latLng?.longitude},${poi.latLng?.latitude}', // 保存经纬度信息
+          'latLng': [poi.latLng?.longitude, poi.latLng?.latitude], // 保存为数组格式
+        };
+
+        // 显示确认对话框
+        _showLocationConfirmDialog(locationInfo);
+      }
+    } catch (e) {
+      print('获取地址详细信息失败: $e');
+      
+      // 如果获取详细地址失败，至少显示 POI 的基本信息
+      Map<String, dynamic> locationInfo = {
+        'name': poi.name,
+        'address': poi.name,
+        'pname': '',
+        'cityname': '',
+        'adname': '',
+        'location': '${poi.latLng?.longitude},${poi.latLng?.latitude}',
+        'latLng': [poi.latLng?.longitude, poi.latLng?.latitude],
+      };
+      _showLocationConfirmDialog(locationInfo);
+    }
   }
 
   void _showLocationConfirmDialog(Map<String, dynamic> locationInfo) {
@@ -257,7 +309,7 @@ class _MapPageState extends State<MapPage> {
       //将新的marker添加到map里
       _markers[marker.id] = marker;
     });
-    _changeCameraPosition(markPostion);
+    _changeCameraPosition(markPostion, zoom: 15);
   }
 
   /// 清除marker
@@ -270,18 +322,15 @@ class _MapPageState extends State<MapPage> {
   }
 
   /// 改变中心点
-  void _changeCameraPosition(LatLng markPostion, {double zoom = 13}) {
+  void _changeCameraPosition(LatLng markPostion, {double? zoom}) {
     mapController?.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          //中心点
-            target: markPostion,
-            //缩放级别
-            zoom: zoom,
-            //俯仰角0°~45°（垂直与地图时为0）
-            tilt: 30,
-            //偏航角 0~360° (正北方为0)
-            bearing: 0),
+          target: markPostion,
+          zoom: zoom ?? 15,
+          tilt: 30,
+          bearing: 0
+        ),
       ),
       animated: true,
     );
@@ -315,7 +364,7 @@ class _MapPageState extends State<MapPage> {
                 child: TextField(
                   controller: _addressController,
                   decoration: InputDecoration(
-                    hintText: '请输入地址（如：河北师范大学诚朴园3）',
+                    hintText: '请输入详细地址（如：河北师范大学）',
                     prefixIcon: Icon(Icons.search),
                     suffixIcon: _addressController.text.isNotEmpty
                         ? IconButton(
@@ -442,11 +491,8 @@ class _MapPageState extends State<MapPage> {
   bool _isLoadingPois = false;
 
   Future<void> _getPoisData() async {
-    // 直接关掉
-    _isLoadingPois = true ;
-
     if (_isLoadingPois) return;
-
+    
     setState(() {
       _isLoadingPois = true;
       poisData = [];
@@ -458,13 +504,15 @@ class _MapPageState extends State<MapPage> {
         queryParameters: {
           'key': ConstConfig.webKey,
           'location': '$markerLongitude,$markerLatitude',
-          'radius': '1000',
+          'radius': '500',  // 缩小搜索半径到500米
+          'types': '120201|120302|120303', // 添加类型过滤：住宅区|楼宇|住宅小区
           'offset': '20',
           'page': '1',
-          'extensions': 'base'
+          'extensions': 'all',  // 返回详细信息
+          'sortrule': 'distance'  // 按距离排序
         },
       );
-
+      
       if (response.data['status'] == '1' && response.data['pois'] != null) {
         setState(() {
           poisData = response.data['pois'];
