@@ -654,62 +654,42 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
           borderRadius: BorderRadius.circular(10),
           child: GestureDetector(
             onTap: () async {
-              // // 获取当前已选择的坐标（如果有的话）
-              // final double? currentLat = _sendCommissionViewModel.latitude;
-              // final double? currentLng = _sendCommissionViewModel.longitude;
-              //
-              // final result = await Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) =>
-              //         MapPage(
-              //           initialLatitude: currentLat,
-              //           initialLongitude: currentLng,
-              //         ),
-              //   ),
-              // );
-              setState(() {
-                _selectedAddress = '河北省石家庄市裕华区宋营镇信工路18号';
-                _locationDetail =  {'name': '河北省石家庄市裕华区宋营镇信工路18号', 'address': '河北省石家庄市裕华区宋营镇信工路18号', 'pname': '河北省', 'cityname': '石家庄市', 'adname': '裕华区'};
-                // 更新 ViewModel 中的位置信息
-                _sendCommissionViewModel.updateLocation(
-                    address: _selectedAddress?? '',
-                    longitude: '114.60459468405571',
-                    latitude: '37.999715202648865',
-                    locationDetail:_locationDetail ?? {}
-                );
-              });
-              // 打印详细信息
-              print('完整地址: ${_selectedAddress}');
-              print('位置详情: ');
-              print('  - 省份: ${_sendCommissionViewModel.province}');
-              print('  - 城市: ${_sendCommissionViewModel.city}');
-              print('  - 区/县: ${_sendCommissionViewModel.district}');
-              print('  - 经度: ${_sendCommissionViewModel.longitude}');
-              print('  - 纬度: ${_sendCommissionViewModel.latitude}');
-              print('原始位置信息: ${_locationDetail}');
-              // if (result != null && mounted) {
-              //   setState(() {
-              //     _selectedAddress = result['address'];
-              //     _locationDetail = result['locationDetail'];
-              //     // 更新 ViewModel 中的位置信息
-              //     _sendCommissionViewModel.updateLocation(
-              //         address: result['address'],
-              //         latitude: result['latitude'].toString(),
-              //         longitude: result['longitude'].toString(),
-              //         locationDetail: result['locationDetail']
-              //     );
-              //   });
-              //   // 打印详细信息
-              //   print('完整地址: ${_selectedAddress}');
-              //   print('位置详情: ');
-              //   print('  - 省份: ${_sendCommissionViewModel.province}');
-              //   print('  - 城市: ${_sendCommissionViewModel.city}');
-              //   print('  - 区/县: ${_sendCommissionViewModel.district}');
-              //   print('  - 经度: ${_sendCommissionViewModel.longitude}');
-              //   print('  - 纬度: ${_sendCommissionViewModel.latitude}');
-              //   print('原始位置信息: ${_locationDetail}');
-              // }
+              // 获取当前已选择的坐标（如果有的话）
+              final double? currentLat = _sendCommissionViewModel.latitude;
+              final double? currentLng = _sendCommissionViewModel.longitude;
+
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      MapPage(
+                        initialLatitude: currentLat,
+                        initialLongitude: currentLng,
+                      ),
+                ),
+              );
+              if (result != null && mounted) {
+                setState(() {
+                  _selectedAddress = result['address'];
+                  _locationDetail = result['locationDetail'];
+                  // 更新 ViewModel 中的位置信息
+                  _sendCommissionViewModel.updateLocation(
+                      address: result['address'],
+                      latitude: result['latitude'].toString(),
+                      longitude: result['longitude'].toString(),
+                      locationDetail: result['locationDetail']
+                  );
+                });
+                // 打印详细信息
+                print('完整地址: ${_selectedAddress}');
+                print('位置详情: ');
+                print('  - 省份: ${_sendCommissionViewModel.province}');
+                print('  - 城市: ${_sendCommissionViewModel.city}');
+                print('  - 区/县: ${_sendCommissionViewModel.district}');
+                print('  - 经度: ${_sendCommissionViewModel.longitude}');
+                print('  - 纬度: ${_sendCommissionViewModel.latitude}');
+                print('原始位置信息: ${_locationDetail}');
+              }
             },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
