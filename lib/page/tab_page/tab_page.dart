@@ -66,7 +66,7 @@ class _TabPageState extends State<TabPage>{
     super.initState();
 
     //获取定位权限
-    getPermission();
+    getPermissionAndStart();
 
     ///注册定位结果监听
     _locationListener = _locationPlugin
@@ -92,13 +92,12 @@ class _TabPageState extends State<TabPage>{
       });
     });
 
-    //开始定位
-    _startLocation();
+
   }
 
-  void getPermission(){
+  Future<void> getPermissionAndStart() async {
     /// 动态申请定位权限
-    requestPermission();
+    await requestPermission();
 
     /// 设置Android和iOS的apikey，
     AMapFlutterLocation.setApiKey("deec9d608ddc51b91c745ba02af59a96", "");
@@ -113,10 +112,13 @@ class _TabPageState extends State<TabPage>{
     if (Platform.isIOS) {
       requestAccuracyAuthorization();
     }
+
+    //开始定位
+    _startLocation();
   }
 
   /// 动态申请定位权限
-  void requestPermission() async {
+  Future<void> requestPermission() async {
     // 申请权限
     bool hasLocationPermission = await requestLocationPermission();
     if (hasLocationPermission) {
@@ -181,7 +183,7 @@ class _TabPageState extends State<TabPage>{
       locationOption.fullAccuracyPurposeKey = "AMapLocationScene";
 
       ///设置Android端连续定位的定位间隔
-      locationOption.locationInterval = 2000;
+      locationOption.locationInterval = 3600000;
 
       ///设置Android端的定位模式<br>
       ///可选值：<br>

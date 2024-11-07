@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
-import 'package:jiayuan/repository/model/StandardPrice.dart';
 
+
+import '../../repository/model/standardPrice.dart';
 import '../../utils/global.dart';
 import '../commission_page/commission_vm.dart';
 

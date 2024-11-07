@@ -30,7 +30,6 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
 
     _commissionDetailViewModel.commission = ModalRoute.of(context)?.settings.arguments as Commission;
     _commissionDetailViewModel.getUserById(0);
-    print("路由跳转参数为：" + _commissionDetailViewModel.commission.toString());
 
     return ChangeNotifierProvider(
         create: (context){
