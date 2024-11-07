@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
+import 'package:jiayuan/utils/global.dart';
 
 class CustomKeyboard extends StatelessWidget {
   final TextEditingController priceController ;
@@ -9,14 +10,15 @@ class CustomKeyboard extends StatelessWidget {
   final VoidCallback onBackspace;
   final VoidCallback onConfirm;
   final VoidCallback onSwitchKeyboard;
-
+  final id ;
   const CustomKeyboard({
     required this.priceController,
     required this.tempPriceController,
     required this.onKeyboardTap,
     required this.onBackspace,
     required this.onConfirm,
-    required this.onSwitchKeyboard
+    required this.onSwitchKeyboard,
+    required this.id
   });
 
   @override
@@ -38,11 +40,10 @@ class CustomKeyboard extends StatelessWidget {
       child: Column(
         children: [
           // 顶部显示区域，包含价格输入框和退格键
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Row(
+             mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                SizedBox(width: 8,),
                 Expanded(
                   child: TextField(
                     autofocus: true,
@@ -50,15 +51,32 @@ class CustomKeyboard extends StatelessWidget {
                     controller: tempPriceController,
                     keyboardType: TextInputType.none,
                     //调整光标下水滴型
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(fontSize: 18),
                     decoration: InputDecoration(
                       hintText: "0.00",
+                      hintStyle: TextStyle(color: Colors.grey),
+                      prefixText: '价格  ¥ ',
+                      prefixStyle: TextStyle(color: Colors.black,fontSize: 18),
                       border: InputBorder.none,
                     ),
                   ),
                 ),
               ],
             ),
+          Row(
+            children: [
+              SizedBox(width: 8,),
+              Text('最低价¥  '),
+              id < 6 ? Text('${Global.standPrices?[id].lowestPrice}/小时',) : Text('${Global.standPrices?[id].lowestPrice}/月'),
+              SizedBox(width: 40,),
+              Text('参考价¥  '),
+              id < 6 ? Text('${Global.standPrices?[id].referencePrice}/小时',) : Text('${Global.standPrices?[id].referencePrice}/月'),
+            ],
+          ),
+          Row(
+            children: [
+              SizedBox(height: 5,)
+            ],
           ),
           // 数字键盘区域
           Expanded(
