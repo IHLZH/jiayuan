@@ -20,7 +20,7 @@ class _LoadingPage extends State<LoadingPage>{
 
   @override
   Widget build(BuildContext context) {
-    return Text("ChatPage");
+    return Text("");
   }
 
   @override
