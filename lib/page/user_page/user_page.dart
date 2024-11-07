@@ -100,8 +100,7 @@ class UserPage extends StatelessWidget {
       }
       return Material(
         color: Colors.transparent, // 确保背景透明
-        child: Container(
-          width: 90.w,
+        child: SafeArea(
           child: InkWell(
             onTap: () {},
             splashColor: Theme.of(context).primaryColor.withAlpha(30),
@@ -124,7 +123,7 @@ class UserPage extends StatelessWidget {
     // 标题
     Widget _buildSectionTitle(String title) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 1.0,horizontal: 12.0),
+        padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 12.0),
         child: Row(
           children: [
             Text(
@@ -134,9 +133,9 @@ class UserPage extends StatelessWidget {
             Expanded(child: SizedBox()),
             TextButton(
               onPressed: () {
-                if(title=="服务订单"){
+                if (title == "服务订单") {
                   //TODO
-                }else{
+                } else {
                   //TODO
                 }
               },
@@ -154,8 +153,7 @@ class UserPage extends StatelessWidget {
     Widget _buildManagementOption(IconData icon, String title) {
       return Material(
         color: Colors.transparent, // 确保背景透明
-        child: Container(
-          width: 90.w,
+        child: SafeArea(
           child: InkWell(
             onTap: () {},
             splashColor: Theme.of(context).primaryColor.withAlpha(30),
