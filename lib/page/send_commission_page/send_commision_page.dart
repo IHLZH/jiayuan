@@ -25,24 +25,18 @@ class SendCommissionPage extends StatefulWidget {
 }
 
 class _SendCommissionPageState extends State<SendCommissionPage> {
+
   late CommissionType commissionType;
 
   SendCommissionViewModel _sendCommissionViewModel = SendCommissionViewModel();
 
-  TextEditingController _phoneController = TextEditingController();
-
   FocusNode _focusNodePhone = FocusNode();
   FocusNode _focusNodeRemark = FocusNode();
-
+  FocusNode _focusNodeDoorNumber = FocusNode();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _tempPriceController = TextEditingController();
 
   final int _maxLength = 100; // 最大字数限制
-
-  final FocusNode _focusNodePrice = FocusNode();
-
-  String? _selectedAddress;
-  Map<String, dynamic>? _locationDetail;
 
   @override
   void initState() {
@@ -59,107 +53,159 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
     });
 
     return ChangeNotifierProvider<SendCommissionViewModel>(
-        create: (context) => _sendCommissionViewModel,
-        child: Scaffold(
-          body: TextSelectionTheme(
-              data: TextSelectionThemeData(
-                selectionColor: Colors.green, //选中文字背景颜色
-                selectionHandleColor: Colors.greenAccent,
-                cursorColor: Colors.greenAccent, //光标颜色
+      create: (context) => _sendCommissionViewModel,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: TextSelectionTheme(
+          data: TextSelectionThemeData(
+            selectionColor: Colors.green,
+            selectionHandleColor: Colors.greenAccent,
+            cursorColor: Colors.greenAccent,
+          ),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.appColor,
+                  Colors.white,
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
-              child: Stack(
-                children: [
-                  Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppColors.appColor,
-                            Colors.white,
+            ),
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    // AppBar
+                    Container(
+                      child: AppBar(
+                        title: Text("需求发布"),
+                        centerTitle: true,
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                      ),
+                    ),
+                    // 主要内容区域
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.only(
+                          left: 30.w, 
+                          right: 30.w,
+                          bottom: 100.h,
+                        ),
+                        child: Column(
+                          children: [
+                            //服务类型
+                            _buildTypeService(),
+                            //备注
+                            _buildRemarkService(),
+                            // 联系方式
+                            _buildContactService(),
+                            // 地点
+                            _buildAreaService(),
+                            //时间
+                            _buildTimeService(),
+                            // 服务时长
+                            _buildDurationService(),
+                            // 价格
+                            _buildPriceService(),
+                            // 在最底部添加一个额外的间距
+                            SizedBox(height: 20.h),
                           ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
                         ),
                       ),
-                      child: Column(
-                        children: [
-                          Container(
-                            child: AppBar(
-                              title: Text("需求发布"),
-                              centerTitle: true,
-                              backgroundColor: Colors.transparent,
-                              // 使 AppBar 背景透明
-                              elevation: 0, // 取消阴影
-                            ),
-                          ),
-                          Expanded(
-                              child: SingleChildScrollView(
-                            child: Container(
-                              margin: EdgeInsets.only(left: 30.w, right: 30.w),
-                              child: Column(
-                                children: [
-                                  //委托类型
-                                  _buildTypeService(),
-                                  //备注
-                                  _buildRemarkService(),
-                                  //联系方式
-                                  _buildContactService(),
-                                  //地区
-                                  _buildAreaService(),
-                                  //服务时间
-                                  _buildTimeService(),
-                                  //服务时长
-                                  _buildDurationService(),
-                                  //价格
-                                  _buildPriceService(),
-                                ],
-                              ),
-                            ),
-                          ))
-                        ],
-                      )),
-                  Align(
-                      alignment: Alignment.bottomRight,
-                      child: _buildPostService())
-                ],
-              )),
-        ));
-  }
-
-  Widget _buildPostService() {
-    return Container(
-      margin: EdgeInsets.only(right: 30.w, bottom: 10.h),
-      width: 70,
-      height: 70,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(35),
-        gradient: LinearGradient(
-          colors: [
-            AppColors.endColor,
-            Colors.white,
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(35),
-          onTap: () {
-            // 你点击后的操作
-          },
-          child: Container(
-            child: Center(
-              child: Text(
-                '发布',
-                style: TextStyle(fontSize: 20),
-              ),
+                    ),
+                  ],
+                ),
+                // 发布按钮 - 固定在底部
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    margin: EdgeInsets.only(right: 30.w, bottom: 20.h),
+                    child: _buildPostService(),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPostService() {
+    return Selector<SendCommissionViewModel, bool>(
+      selector: (_, viewModel) => viewModel.checkCommisssion(),
+      builder: (context, canSubmit, child) {
+        return Container(
+          width: 70,
+          height: 70,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(35),
+            gradient: LinearGradient(
+              colors: [
+                AppColors.endColor,
+                Colors.white,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 3,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(35),
+              onTap: () {
+                // 获取验证结果
+                String? errorMessage = context
+                    .read<SendCommissionViewModel>()
+                    .validateCommission();
+
+                if (errorMessage != null) {
+                  // 显示错误提示
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('提示'),
+                      content: Text(errorMessage),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('确定'),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  // 验证通过，执行发布操作
+                  print('发布委托');
+                }
+              },
+              child: Center(
+                child: Text(
+                  '发布',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -299,67 +345,73 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
 
   //填写备注
   Widget _buildRemarkService() {
-    return PopUpAnimation(
-        child: Container(
-      margin: EdgeInsets.only(top: 20.h),
-      width: double.infinity,
-      height: 150.h,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade100, width: 1),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
-      child: Material(
-          elevation: 3,
-          borderRadius: BorderRadius.circular(10),
+    return Selector<SendCommissionViewModel, int>(
+      selector: (_, viewModel) => viewModel.remark.length,
+      builder: (context, remarkLength, child) {
+        return PopUpAnimation(
           child: Container(
-            padding: EdgeInsets.only(left: 10.w, right: 10.w),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400),
-                    maxLines: 4,
-                    focusNode: _focusNodeRemark,
-                    onTapOutside: (event) {
-                      _focusNodeRemark.unfocus();
-                    },
-                    onChanged: (text) {
-                      setState(() {
-                        _sendCommissionViewModel.remark = text;
-                      });
-                    },
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(100),
-                    ],
-                    decoration: InputDecoration(
-                      icon: Icon(
-                        Icons.edit,
-                        color: AppColors.appColor,
-                      ),
-                      hintText: "请输入备注",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
-                      border: InputBorder.none,
-                      counterText:
-                          '${_sendCommissionViewModel.remark?.length} / $_maxLength', // 显示字数
-                    ),
-                  ),
-                )
-              ],
+            margin: EdgeInsets.only(top: 20.h),
+            width: double.infinity,
+            height: 90.h,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade100, width: 1),
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
             ),
-          )),
-    ));
+            child: Material(
+              elevation: 3,
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w400
+                        ),
+                        maxLines: 2,
+                        focusNode: _focusNodeRemark,
+                        onTapOutside: (event) {
+                          _focusNodeRemark.unfocus();
+                        },
+                        onChanged: (text) {
+                          context.read<SendCommissionViewModel>().updateRemark(text);
+                        },
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(100),
+                        ],
+                        decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.edit,
+                            color: AppColors.appColor,
+                          ),
+                          hintText: "请输入备注",
+                          hintStyle: TextStyle(color: Colors.grey),
+                          border: InputBorder.none,
+                          counterText: '$remarkLength / $_maxLength',
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   //填写联系方式
   Widget _buildContactService() {
-    return PopUpAnimation(
-        child: Container(
+    return Selector<SendCommissionViewModel, String>(
+      selector: (_, viewModel) => viewModel.phoneNumber,
+      builder: (context, phoneNumber, child) {
+        return PopUpAnimation(
+          child: Container(
             margin: EdgeInsets.only(top: 20.h),
             width: double.infinity,
             height: 60.h,
@@ -369,55 +421,51 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
               color: Colors.white,
             ),
             child: Material(
-                elevation: 3,
-                borderRadius: BorderRadius.circular(10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 20.w,
-                        ),
-                        Text(
-                          '手机号',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        SizedBox(
-                          width: 95.w,
-                        ),
-                        Icon(
-                          Icons.phone,
-                          color: AppColors.appColor,
-                        ),
-                        SizedBox(
-                          width: 10.w,
-                        ),
-                        Expanded(
-                          child: TextField(
-                            controller: _phoneController,
-                            focusNode: _focusNodePhone,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly, // 过滤非数字字符
-                              LengthLimitingTextInputFormatter(11),
-                            ],
-                            onTapOutside: (e) => {_focusNodePhone.unfocus()},
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400),
-                            decoration: InputDecoration(
-                              hintText: "请输入手机号",
-                              hintStyle: TextStyle(color: Colors.grey),
-                              border: InputBorder.none,
-                            ),
+              elevation: 3,
+              borderRadius: BorderRadius.circular(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      SizedBox(width: 20.w),
+                      Text('手机号', style: TextStyle(fontSize: 16)),
+                      SizedBox(width: 95.w),
+                      Icon(Icons.phone, color: AppColors.appColor),
+                      SizedBox(width: 10.w),
+                      Expanded(
+                        child: TextField(
+                          focusNode: _focusNodePhone,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(11),
+                          ],
+                          onTapOutside: (e) => _focusNodePhone.unfocus(),
+                          onChanged: (value) {
+                            context.read<SendCommissionViewModel>().updatePhoneNumber(value);
+                          },
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400
                           ),
-                        )
-                      ],
-                    )
-                  ],
-                ))));
+                          decoration: InputDecoration(
+                            hintText: "请输入手机号",
+                            hintStyle: TextStyle(color: Colors.grey),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   // 设置服务时长--------------------------------------------------------------------
@@ -639,87 +687,117 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
 
   //设置服务地点
   Widget _buildAreaService() {
-    return PopUpAnimation(
-      child: Container(
-        width: double.infinity,
-        margin: EdgeInsets.only(top: 20.h),
-        height: 60.h,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300, width: 1),
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-        ),
-        child: Material(
-          elevation: 3,
-          borderRadius: BorderRadius.circular(10),
-          child: GestureDetector(
-            onTap: () async {
-              // 获取当前已选择的坐标（如果有的话）
-              final double? currentLat = _sendCommissionViewModel.latitude;
-              final double? currentLng = _sendCommissionViewModel.longitude;
-
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      MapPage(
-                        initialLatitude: currentLat,
-                        initialLongitude: currentLng,
-                      ),
-                ),
-              );
-              if (result != null && mounted) {
-                setState(() {
-                  _selectedAddress = result['address'];
-                  _locationDetail = result['locationDetail'];
-                  // 更新 ViewModel 中的位置信息
-                  _sendCommissionViewModel.updateLocation(
-                      address: result['address'],
-                      latitude: result['latitude'].toString(),
-                      longitude: result['longitude'].toString(),
-                      locationDetail: result['locationDetail']
-                  );
-                });
-                // 打印详细信息
-                print('完整地址: ${_selectedAddress}');
-                print('位置详情: ');
-                print('  - 省份: ${_sendCommissionViewModel.province}');
-                print('  - 城市: ${_sendCommissionViewModel.city}');
-                print('  - 区/县: ${_sendCommissionViewModel.district}');
-                print('  - 经度: ${_sendCommissionViewModel.longitude}');
-                print('  - 纬度: ${_sendCommissionViewModel.latitude}');
-                print('原始位置信息: ${_locationDetail}');
-              }
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Row(
+    return Selector<SendCommissionViewModel, Map<String, dynamic>?>(
+      selector: (_, viewModel) => viewModel.locationDetail,
+      builder: (context, locationDetail, child) {
+        return PopUpAnimation(
+          child: Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(top: 20.h),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300, width: 1),
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            child: Material(
+              elevation: 3,
+              borderRadius: BorderRadius.circular(10),
+              child: Column(
                 children: [
-                  Text(
-                    "服务地点:",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  SizedBox(width: 20.w),
-                  Expanded(
-                    child: Text(
-                      _locationDetail?['address'] ?? "请选择服务地点",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: _locationDetail?['address'] == null
-                            ? Colors.grey
-                            : Colors.black,
+                  // 服务地点选择
+                  GestureDetector(
+                    onTap: () async {
+                      final double? currentLat = _sendCommissionViewModel.latitude;
+                      final double? currentLng = _sendCommissionViewModel.longitude;
+
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MapPage(
+                            initialLatitude: currentLat,
+                            initialLongitude: currentLng,
+                          ),
+                        ),
+                      );
+
+                      if (result != null) {
+                        _sendCommissionViewModel.updateLocation(
+                          address: result['address'],
+                          latitude: result['latitude'].toString(),
+                          longitude: result['longitude'].toString(),
+                          locationDetail: result['locationDetail']
+                        );
+                      }
+                    },
+                    child: Container(
+                      height: 60.h,
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Row(
+                        children: [
+                          Text(
+                            "服务地点:",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          SizedBox(width: 20.w),
+                          Expanded(
+                            child: Text(
+                              locationDetail?['address'] ?? "请选择服务地点",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: locationDetail?['address'] == null
+                                    ? Colors.grey
+                                    : Colors.black,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Icon(Icons.location_on_outlined, color: Colors.black),
+                        ],
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Icon(Icons.location_on_outlined, color: Colors.black),
+                  // 分割线
+                  Divider(height: 1, color: Colors.grey.shade300),
+                  // 门牌号输入框
+                  Container(
+                    height: 50.h,
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Row(
+                      children: [
+                        Text(
+                          "门牌号:",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(width: 20.w),
+                        Expanded(
+                          child: TextField(
+                            onChanged: (value) {
+                              context.read<SendCommissionViewModel>().updateDoorNumber(value);
+                            },
+                            focusNode: _focusNodeDoorNumber,
+                            onTapOutside: (_) {
+                              _focusNodeDoorNumber.unfocus();
+                            },
+                            decoration: InputDecoration(
+                              hintText: "请输入详细门牌号",
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 13,
+                              ),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -767,7 +845,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
 
   // 打开地图选择位置
   void _openLocationPicker() async {
-    // 获取当前已选择的坐标（如果有的话）
+    // 获取当前已选择的坐（如果有的话）
     final double? currentLat = _sendCommissionViewModel.latitude;
     final double? currentLng = _sendCommissionViewModel.longitude;
 

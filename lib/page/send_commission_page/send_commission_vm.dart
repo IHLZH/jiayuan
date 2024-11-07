@@ -1,4 +1,4 @@
-          import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -8,29 +8,32 @@ import '../../repository/model/standardPrice.dart';
 class SendCommissionViewModel with ChangeNotifier{
 
   CommissionData1? commissionData1 ;
-
+  //手机号格式验证
+  RegExp reg_tel = RegExp(r'^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$');
   int? selectedDuration ; //服务时长
 
   DateTime? selectedDate ;//日期
 
-  String? phoneNumber; //手机号
-
-  String? remark = ""; // 备注
+  String _phoneNumber = ""; // 手机号
+  String remark = ""; // 备注
 
   double price = 0.00 ; //价格
 
   StandardPrice? standardPrice ;
+  //门牌号
+  String? _doorNumber;
 
   String? _address;
   double? _latitude;
-  double? _longitude;
+  double?  _longitude;
   Map<String, dynamic>? _locationDetail;
 
   String? _province;  // 省
   String? _city;     // 市
   String? _district; // 区/县
 
-  String? get address => _address;
+  String get phoneNumber => _phoneNumber;
+
   double? get latitude => _latitude;
   double? get longitude => _longitude;
   Map<String, dynamic>? get locationDetail => _locationDetail;
@@ -39,25 +42,57 @@ class SendCommissionViewModel with ChangeNotifier{
   String? get city => _city;
   String? get district => _district;
 
+  String? get doorNumber => _doorNumber;
+
   void initData(int id ){
     // standardPrice = Global.standPrices?[id];
     standardPrice = StandardPrice(lowestPrice:  100, referencePrice: 300 , typeId: id);
   }
 
   bool checkCommisssion() {
-    if(selectedDuration != null && selectedDate != null && phoneNumber != null){
-
-      return true ;
+    if (selectedDuration != null && 
+        selectedDate != null && 
+        _phoneNumber.length == 11 &&  // 确保手机号长度为11位
+        _address != null  // 确保已选择地址
+        || price != 0.00) {
+      return true;
     }
-    return false ;
+    return false;
+  }
+
+  // 验证委托信息并返回错误信息
+  String? validateCommission() {
+    if (_phoneNumber.isEmpty) {
+      return "请输入手机号";
+    }
+    if (_phoneNumber.length != 11) {
+      return "手机号格式不正确";
+    }
+    if (_address == null || _address!.isEmpty) {
+      return "请选择服务地点";
+    }
+    if (_doorNumber == null || _doorNumber!.isEmpty) {
+      return "请输入门牌号";
+    }
+    if (selectedDuration == null) {
+      return "请选择服务时长";
+    }
+    if (selectedDate == null) {
+      return "请选择服务日期";
+    }
+    if(price == 0.00){
+      return "请输入价格";
+    }
+    return null;
   }
 
 
+  //更新选择的服务时长
   void updateSelectedDuration(int duration){
     selectedDuration = duration;
     notifyListeners();
   }
-
+  //更新选择的日期
   void updateSelectedDate(DateTime date){
     selectedDate = date;
     notifyListeners();
@@ -79,6 +114,23 @@ class SendCommissionViewModel with ChangeNotifier{
     _city = locationDetail['cityname'];
     _district = locationDetail['adname'];
 
+    notifyListeners();
+  }
+
+  // 更新手机号
+  void updatePhoneNumber(String number) {
+    _phoneNumber = number;
+    notifyListeners();
+  }
+
+  // 更新备注
+  void updateRemark(String text) {
+    remark = text;
+    notifyListeners();
+  }
+
+  void updateDoorNumber(String number) {
+    _doorNumber = number;
     notifyListeners();
   }
 
