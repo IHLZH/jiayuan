@@ -5,6 +5,7 @@ import 'package:jiayuan/utils/location_data.dart';
 
 class Global{
 
+  static User? userTmp = User(userId: 1, userName: "ikun", nickName: "nickName", userPassword: "123456", userAvatar: "userAvatar", userSex: 1, userPhoneNumber: "userPhoneNumber", createdTime: "createdTime", updatedTime: "updatedTime", loginIp: "loginIp", loginTime: "loginTime", userType: 1, userStatus: 1);
   static User? userInfo;
   static String? token;
   static String? input;
