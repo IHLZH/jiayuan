@@ -60,6 +60,11 @@ class DBUtil {
         whereArgs: whereArgs);
   }
 
+  ///sql清空表
+  Future<int> deleteAllByHelper(String tableName) async{
+    return await db.delete(tableName);
+  }
+
   ///sql原生删除
   Future<int> delete(String sql,List parameters) async {
     //样例： 样例：await dbUtil.delete('DELETE FROM relation WHERE uid = ? and fuid = ?', [123,234]);
