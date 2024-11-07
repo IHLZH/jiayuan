@@ -75,7 +75,7 @@ class _MapPageState extends State<MapPage> {
     if (widget.initialLatitude != null && widget.initialLongitude != null) {
       markerLatitude = widget.initialLatitude;
       markerLongitude = widget.initialLongitude;
-      
+
       currentLocation = CameraPosition(
         target: LatLng(widget.initialLatitude!, widget.initialLongitude!),
         zoom: 15,
@@ -118,7 +118,7 @@ class _MapPageState extends State<MapPage> {
         print(event);
         double? latitude = double.tryParse(event['latitude'].toString());
         double? longitude = double.tryParse(event['longitude'].toString());
-        
+
         if (latitude != null && longitude != null) {
           setState(() {
             markerLatitude = latitude;
@@ -130,10 +130,10 @@ class _MapPageState extends State<MapPage> {
               zoom: 15,
             );
           });
-          
+
           _addMarker(LatLng(latitude, longitude));
           _getPoisData();
-          
+
           location?.stopLocation();
         }
       })
@@ -146,7 +146,7 @@ class _MapPageState extends State<MapPage> {
       markerLongitude = position.longitude;
       _addMarker(position);
     });
-    
+
     // 根据坐标获取地址信息
     _getAddressFromLocation(position.latitude, position.longitude);
   }
@@ -167,7 +167,7 @@ class _MapPageState extends State<MapPage> {
         var regeocode = response.data['regeocode'];
         var addressComponent = regeocode['addressComponent'];
         var formatted_address = regeocode['formatted_address'];
-        
+
         // 构造位置信息
         Map<String, dynamic> locationInfo = {
           'name': formatted_address,
@@ -187,7 +187,7 @@ class _MapPageState extends State<MapPage> {
 
   void _onMapPoiTouched(AMapPoi poi) async {
     if (null == poi) return;
-    
+
     var poiData = poi.toJson();
     setState(() {
       markerLatitude = poiData['latLng'][1];
@@ -307,132 +307,132 @@ class _MapPageState extends State<MapPage> {
           currentLocation == null
               ? Container()
               : Column(
+            children: [
+              // 搜索框
+              Container(
+                padding: EdgeInsets.all(16),
+                color: Colors.white,
+                child: TextField(
+                  controller: _addressController,
+                  decoration: InputDecoration(
+                    hintText: '请输入地址（如：河北师范大学诚朴园3）',
+                    prefixIcon: Icon(Icons.search),
+                    suffixIcon: _addressController.text.isNotEmpty
+                        ? IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: () {
+                        setState(() {
+                          _addressController.clear();
+                          _searchResults.clear();
+                        });
+                      },
+                    )
+                        : null,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      _searchAddress();
+                    } else {
+                      setState(() {
+                        _searchResults.clear();
+                      });
+                    }
+                  },
+                ),
+              ),
+              // 地图
+              Expanded(
+                child: Stack(
                   children: [
-                    // 搜索框
-                    Container(
-                      padding: EdgeInsets.all(16),
-                      color: Colors.white,
-                      child: TextField(
-                        controller: _addressController,
-                        decoration: InputDecoration(
-                          hintText: '请输入地址（如：河北师范大学诚朴园3）',
-                          prefixIcon: Icon(Icons.search),
-                          suffixIcon: _addressController.text.isNotEmpty
-                              ? IconButton(
-                                  icon: Icon(Icons.clear),
-                                  onPressed: () {
-                                    setState(() {
-                                      _addressController.clear();
-                                      _searchResults.clear();
-                                    });
-                                  },
-                                )
-                              : null,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          if (value.isNotEmpty) {
-                            _searchAddress();
-                          } else {
-                            setState(() {
-                              _searchResults.clear();
-                            });
-                          }
-                        },
-                      ),
+                    AMapWidget(
+                      privacyStatement: ConstConfig.amapPrivacyStatement,
+                      apiKey: ConstConfig.amapApiKeys,
+                      initialCameraPosition: currentLocation!,
+                      myLocationStyleOptions: MyLocationStyleOptions(true),
+                      mapType: MapType.normal,
+                      minMaxZoomPreference: const MinMaxZoomPreference(3, 20),
+                      onPoiTouched: _onMapPoiTouched,
+                      onTap: _onMapTap,
+                      markers: Set<Marker>.of(_markers.values),
+                      onMapCreated: (AMapController controller) {
+                        mapController = controller;
+                      },
                     ),
-                    // 地图
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          AMapWidget(
-                            privacyStatement: ConstConfig.amapPrivacyStatement,
-                            apiKey: ConstConfig.amapApiKeys,
-                            initialCameraPosition: currentLocation!,
-                            myLocationStyleOptions: MyLocationStyleOptions(true),
-                            mapType: MapType.normal,
-                            minMaxZoomPreference: const MinMaxZoomPreference(3, 20),
-                            onPoiTouched: _onMapPoiTouched,
-                            onTap: _onMapTap,
-                            markers: Set<Marker>.of(_markers.values),
-                            onMapCreated: (AMapController controller) {
-                              mapController = controller;
-                            },
-                          ),
-                          // 搜索结果覆盖层
-                          if (_searchResults.isNotEmpty)
-                            Container(
-                              color: Colors.white,
-                              child: ListView.separated(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
-                                itemCount: _searchResults.length,
-                                separatorBuilder: (context, index) => Divider(height: 1),
-                                itemBuilder: (context, index) {
-                                  final result = _searchResults[index];
-                                  return ListTile(
-                                    title: Text(result['name']),
-                                    subtitle: Text(
-                                      '${result['pname']}${result['cityname']}${result['adname']}${result['address']}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    onTap: () {
-                                      List<String> location = result['location'].split(',');
-                                      double longitude = double.parse(location[0]);
-                                      double latitude = double.parse(location[1]);
-                                      
-                                      setState(() {
-                                        markerLatitude = latitude;
-                                        markerLongitude = longitude;
-                                        _searchResults.clear();
-                                        _addMarker(LatLng(latitude, longitude));
-                                        _changeCameraPosition(LatLng(latitude, longitude));
-                                      });
-                                      
-                                      _showLocationConfirmDialog(result);
-                                    },
-                                  );
-                                },
+                    // 搜索结果覆盖层
+                    if (_searchResults.isNotEmpty)
+                      Container(
+                        color: Colors.white,
+                        child: ListView.separated(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: _searchResults.length,
+                          separatorBuilder: (context, index) => Divider(height: 1),
+                          itemBuilder: (context, index) {
+                            final result = _searchResults[index];
+                            return ListTile(
+                              title: Text(result['name']),
+                              subtitle: Text(
+                                '${result['pname']}${result['cityname']}${result['adname']}${result['address']}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ),
-                        ],
+                              onTap: () {
+                                List<String> location = result['location'].split(',');
+                                double longitude = double.parse(location[0]);
+                                double latitude = double.parse(location[1]);
+
+                                setState(() {
+                                  markerLatitude = latitude;
+                                  markerLongitude = longitude;
+                                  _searchResults.clear();
+                                  _addMarker(LatLng(latitude, longitude));
+                                  _changeCameraPosition(LatLng(latitude, longitude));
+                                });
+
+                                _showLocationConfirmDialog(result);
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              // 周边位置列表
+              Container(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '周边位置',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    // 周边位置列表
+                    SizedBox(height: 8),
                     Container(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '周边位置',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Container(
-                            height: 200,
-                            child: ListView.builder(
-                              itemCount: poisData.length,
-                              itemBuilder: (context, index) {
-                                final poi = poisData[index];
-                                return ListTile(
-                                  title: Text(poi['name']),
-                                  subtitle: Text(poi['address']),
-                                  onTap: () => _showLocationConfirmDialog(poi),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
+                      height: 200,
+                      child: ListView.builder(
+                        itemCount: poisData.length,
+                        itemBuilder: (context, index) {
+                          final poi = poisData[index];
+                          return ListTile(
+                            title: Text(poi['name']),
+                            subtitle: Text(poi['address']),
+                            onTap: () => _showLocationConfirmDialog(poi),
+                          );
+                        },
                       ),
                     ),
                   ],
                 ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -442,8 +442,11 @@ class _MapPageState extends State<MapPage> {
   bool _isLoadingPois = false;
 
   Future<void> _getPoisData() async {
+    // 直接关掉
+    _isLoadingPois = true ;
+
     if (_isLoadingPois) return;
-    
+
     setState(() {
       _isLoadingPois = true;
       poisData = [];
@@ -461,7 +464,7 @@ class _MapPageState extends State<MapPage> {
           'extensions': 'base'
         },
       );
-      
+
       if (response.data['status'] == '1' && response.data['pois'] != null) {
         setState(() {
           poisData = response.data['pois'];
