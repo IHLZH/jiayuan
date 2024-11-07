@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -20,8 +21,11 @@ class UserPage extends StatelessWidget {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('确认注销'),
-            content: Text('您确定要注销吗？'),
+            title: Text('退出'),
+            content: Text(
+              '您确定要退出吗？',
+              style: TextStyle(fontSize: 16),
+            ),
             actions: <Widget>[
               TextButton(
                 child: Text('取消', style: TextStyle(color: Colors.grey)),
@@ -98,19 +102,50 @@ class UserPage extends StatelessWidget {
         default:
           icon = Icons.circle;
       }
+      // return Material(
+      //   color: Colors.transparent, // 确保背景透明
+      //   child: SafeArea(
+      //     child: InkWell(
+      //       onTap: () {},
+      //       splashColor: Theme.of(context).primaryColor.withAlpha(30),
+      //       highlightColor: Theme.of(context).primaryColor.withAlpha(30),
+      //       // 设置水波纹为圆形
+      //       customBorder: const CircleBorder(),
+      //       child: Column(
+      //         mainAxisAlignment: MainAxisAlignment.center,
+      //         children: [
+      //           Icon(icon, size: 35, color: Theme.of(context).primaryColor),
+      //           SizedBox(height: 8),
+      //           Text("$title", style: TextStyle(fontSize: 14)),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // );
       return Material(
-        color: Colors.transparent, // 确保背景透明
+        color: Colors.transparent,
         child: SafeArea(
           child: InkWell(
             onTap: () {},
             splashColor: Theme.of(context).primaryColor.withAlpha(30),
             highlightColor: Theme.of(context).primaryColor.withAlpha(30),
-            // 设置水波纹为圆形
             customBorder: const CircleBorder(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, size: 35, color: Theme.of(context).primaryColor),
+                ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Theme.of(context).primaryColor,
+                        AppColors.endColor,
+                      ],
+                    ).createShader(bounds);
+                  },
+                  child: Icon(icon, size: 35, color: Colors.white),
+                ),
                 SizedBox(height: 8),
                 Text("$title", style: TextStyle(fontSize: 14)),
               ],
@@ -151,18 +186,48 @@ class UserPage extends StatelessWidget {
 
     // 管理选项
     Widget _buildManagementOption(IconData icon, String title) {
+      // return Material(
+      //   color: Colors.transparent, // 确保背景透明
+      //   child: SafeArea(
+      //     child: InkWell(
+      //       onTap: () {},
+      //       splashColor: Theme.of(context).primaryColor.withAlpha(30),
+      //       highlightColor: Theme.of(context).primaryColor.withAlpha(30),
+      //       // 设置水波纹为圆形
+      //       customBorder: const CircleBorder(),
+      //       child: Column(
+      //         children: [
+      //           Icon(icon, color: Theme.of(context).primaryColor, size: 35),
+      //           SizedBox(height: 8),
+      //           Text(title, style: TextStyle(fontSize: 14)),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // );
       return Material(
-        color: Colors.transparent, // 确保背景透明
+        color: Colors.transparent,
         child: SafeArea(
           child: InkWell(
             onTap: () {},
             splashColor: Theme.of(context).primaryColor.withAlpha(30),
             highlightColor: Theme.of(context).primaryColor.withAlpha(30),
-            // 设置水波纹为圆形
             customBorder: const CircleBorder(),
             child: Column(
               children: [
-                Icon(icon, color: Theme.of(context).primaryColor, size: 35),
+                ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Theme.of(context).primaryColor,
+                        AppColors.endColor,
+                      ],
+                    ).createShader(bounds);
+                  },
+                  child: Icon(icon, size: 35, color: Colors.white),
+                ),
                 SizedBox(height: 8),
                 Text(title, style: TextStyle(fontSize: 14)),
               ],
@@ -171,6 +236,35 @@ class UserPage extends StatelessWidget {
         ),
       );
     }
+
+    // Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
+    //   return Material(
+    //     color: Colors.transparent,
+    //     child: InkWell(
+    //       onTap: () {
+    //         if (icon == Icons.logout && onCheck != null) {
+    //           _showLogoutDialog(context, onCheck);
+    //         } else {
+    //           // 其他选项的点击事件处理
+    //         }
+    //       },
+    //       // 水波纹颜色
+    //       splashColor: Colors.grey[300],
+    //       // 高亮颜色
+    //       highlightColor: Theme.of(context).primaryColor.withAlpha(30),
+    //       child: ListTile(
+    //         leading: Icon(icon,
+    //             color: icon == Icons.logout
+    //                 ? Colors.red
+    //                 : Theme.of(context).primaryColor),
+    //         title: Text(title,
+    //             style: TextStyle(
+    //                 color: icon == Icons.logout ? Colors.red : Colors.black)),
+    //         trailing: Icon(Icons.arrow_forward_ios, size: 16),
+    //       ),
+    //     ),
+    //   );
+    // }
 
     Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
       return Material(
@@ -183,18 +277,29 @@ class UserPage extends StatelessWidget {
               // 其他选项的点击事件处理
             }
           },
-          // 水波纹颜色
           splashColor: Colors.grey[300],
-          // 高亮颜色
           highlightColor: Theme.of(context).primaryColor.withAlpha(30),
           child: ListTile(
-            leading: Icon(icon,
-                color: icon == Icons.logout
-                    ? Colors.red
-                    : Theme.of(context).primaryColor),
-            title: Text(title,
-                style: TextStyle(
-                    color: icon == Icons.logout ? Colors.red : Colors.black)),
+            leading: icon == Icons.logout
+                ? Icon(icon, color: Colors.red)
+                : ShaderMask(
+                    shaderCallback: (Rect bounds) {
+                      return LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Theme.of(context).primaryColor,
+                          AppColors.appColor,
+                        ],
+                      ).createShader(bounds);
+                    },
+                    child: Icon(icon, color: Colors.white),
+                  ),
+            title: Text(
+              title,
+              style: TextStyle(
+                  color: icon == Icons.logout ? Colors.red : Colors.black),
+            ),
             trailing: Icon(Icons.arrow_forward_ios, size: 16),
           ),
         ),
@@ -228,10 +333,25 @@ class UserPage extends StatelessWidget {
                           const AssetImage('assets/images/ikun1.png'),
                     ),
                     SizedBox(width: 16),
-                    Text(
-                      "用户名",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ShaderMask(
+                      shaderCallback: (Rect bounds) {
+                        return LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Theme.of(context).primaryColor,
+                            AppColors.appColor,
+                          ],
+                        ).createShader(bounds);
+                      },
+                      child: Text(
+                        "用户名",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white, // 必须设为白色才能显示渐变效果
+                        ),
+                      ),
                     ),
                     Expanded(child: SizedBox()),
                     Material(
