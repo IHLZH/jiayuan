@@ -71,6 +71,7 @@ class _UserPageState extends State<UserPage> {
               if (isProduction) print("注销");
 
               Global.isLogin = false;
+              Global.userInfo = null;
               RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
             } else {
               showToast("注销失败", duration: Duration(seconds: 1));
@@ -89,6 +90,21 @@ class _UserPageState extends State<UserPage> {
 
         Global.isLogin = false;
         RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
+      }
+    }
+
+    Future<void> _jumpToProfileEditPage() async {
+      if (Global.isLogin) {
+        final result = await RouteUtils.pushForNamed(
+          context,
+          RoutePath.profileEditPage,
+        );
+
+        if (result == true) {
+          setState(() {});
+        }
+      } else {
+        showToast("请先登录", duration: Duration(seconds: 1));
       }
     }
 
@@ -382,17 +398,7 @@ class _UserPageState extends State<UserPage> {
                         color: Colors.transparent, // 确保背景透明
                         child: ClipOval(
                           child: InkWell(
-                            onTap: () async {
-                              // 点击事件的回调函数
-                              final result = await RouteUtils.pushForNamed(
-                                context,
-                                RoutePath.profileEditPage,
-                              );
-
-                              if (result == true) {
-                                setState(() {});
-                              }
-                            },
+                            onTap: () => _jumpToProfileEditPage(),
                             // 水波纹颜色
                             splashColor:
                                 Theme.of(context).primaryColor.withAlpha(30),
