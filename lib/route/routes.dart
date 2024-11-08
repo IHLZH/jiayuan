@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_page.dart';
@@ -10,6 +9,7 @@ import 'package:jiayuan/page/login_page/login_page.dart';
 import 'package:jiayuan/page/register_page/register_check_code_page.dart';
 import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
 import 'package:jiayuan/page/start_page.dart';
+import 'package:jiayuan/page/user_page/profile_edit_page/profile_edit_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
 import '../page/login_page/phone_login_page.dart';
@@ -65,7 +65,10 @@ class Routes {
           isEmail: isEmail,
         ));
       case RoutePath.commissionDetail:
-        return pageRoute(CommissionDetailPage(),settings: settings);
+        return pageRoute(CommissionDetailPage(), settings: settings);
+      //个人资料编辑页
+      case RoutePath.profileEditPage:
+        return pageRoute(ProfileEditPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
