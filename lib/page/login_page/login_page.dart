@@ -1,17 +1,14 @@
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiayuan/app.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
-import '../../repository/model/user.dart';
 import '../../http/dio_instance.dart';
 import '../../http/url_path.dart';
+import '../../repository/model/user.dart';
 import '../../route/route_path.dart';
 import '../../route/route_utils.dart';
 import '../../utils/constants.dart';
@@ -102,6 +99,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _jumpToTab() async {
+    await Global.dbUtil!.open();
+
+    //await Global.dbUtil!.deleteAllByHelper('tbl_user');
+    // await Global.dbUtil!.insertByHelper("tbl_user", Global.userTmp!.toMap());
+    // if (Global.isLogin)
+    //   await Global.dbUtil!.insertByHelper("tbl_user", Global.userInfo!.toMap());
+    await Global.dbUtil!.close();
+
     RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
   }
 
@@ -157,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final response = await DioInstance.instance().post(path: url);
       if (response.statusCode == 200) {
-        if(response.data['code']==200){
+        if (response.data['code'] == 200) {
           final data = response.data;
 
           Global.isLogin = true;
@@ -169,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
 
           // 保存token
           final List<String> token =
-          response.headers["Authorization"] as List<String>;
+              response.headers["Authorization"] as List<String>;
           Global.token = token.first;
 
           //持久化
@@ -180,13 +185,12 @@ class _LoginPageState extends State<LoginPage> {
           if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
           if (isProduction) print("token: ${Global.token}");
 
-          showToast("登陆成功",duration: Duration(seconds: 1));
+          showToast("登陆成功", duration: Duration(seconds: 1));
 
           // 跳转
           _jumpToTab();
-        }
-        else{
-          showToast(response.data['message'],duration: Duration(seconds: 1));
+        } else {
+          showToast(response.data['message'], duration: Duration(seconds: 1));
         }
       } else {
         if (isProduction) print('Login failed: ${response}');

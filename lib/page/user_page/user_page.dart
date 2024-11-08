@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/repository/model/user.dart';
 import 'package:jiayuan/utils/constants.dart';
+import 'package:jiayuan/utils/sp_utils.dart';
 import 'package:oktoast/oktoast.dart';
 
 import '../../http/dio_instance.dart';
@@ -71,7 +72,11 @@ class _UserPageState extends State<UserPage> {
               if (isProduction) print("注销");
 
               Global.isLogin = false;
-              Global.userInfo = null;
+              Global.password = null;
+              Global.userInfoNotifier.value = null;
+
+              await SpUtils.saveString("password", "");
+
               RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
             } else {
               showToast("注销失败", duration: Duration(seconds: 1));
@@ -521,6 +526,10 @@ class _UserPageState extends State<UserPage> {
                 ),
                 child: Column(
                   children: [
+                    _buildOption(Icons.email, '我的邮箱'),
+                    _line(),
+                    _buildOption(Icons.phone, '我的手机'),
+                    _line(),
                     _buildOption(Icons.favorite_border, '我的收藏'),
                     _line(),
                     _buildOption(Icons.history, '浏览历史'),
