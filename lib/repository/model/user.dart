@@ -1,21 +1,21 @@
 class User {
-  final int userId;
-  final String userName;
-  final String nickName;
-  final String userPassword;
-  final String userAvatar;
-  final int userSex;
-  final String userPhoneNumber;
-  final String? dailyPhoneNumber;
-  final String? email;
-  final String createdTime;
-  final String updatedTime;
-  final String? lng;
-  final String? lat;
-  final String loginIp;
-  final String loginTime;
-  final int userType;
-  final int userStatus;
+  int userId;
+  String userName;
+  String nickName;
+  String userPassword;
+  String userAvatar;
+  int userSex;
+  String userPhoneNumber;
+  String? dailyPhoneNumber;
+  String? email;
+  String createdTime;
+  String updatedTime;
+  String? lng;
+  String? lat;
+  String loginIp;
+  String loginTime;
+  int userType;
+  int userStatus;
 
   User({
     required this.userId,
