@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
+import 'package:jiayuan/repository/model/user.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -13,7 +14,14 @@ import '../../utils/global.dart';
 
 bool isProduction = Constants.IS_Production;
 
-class UserPage extends StatelessWidget {
+class UserPage extends StatefulWidget {
+  const UserPage({super.key});
+
+  @override
+  _UserPageState createState() => _UserPageState();
+}
+
+class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     void _showLogoutDialog(BuildContext context, VoidCallback onLogout) {
@@ -63,6 +71,7 @@ class UserPage extends StatelessWidget {
               if (isProduction) print("注销");
 
               Global.isLogin = false;
+              Global.userInfo = null;
               RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
             } else {
               showToast("注销失败", duration: Duration(seconds: 1));
@@ -81,6 +90,21 @@ class UserPage extends StatelessWidget {
 
         Global.isLogin = false;
         RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
+      }
+    }
+
+    Future<void> _jumpToProfileEditPage() async {
+      if (Global.isLogin) {
+        final result = await RouteUtils.pushForNamed(
+          context,
+          RoutePath.profileEditPage,
+        );
+
+        if (result == true) {
+          setState(() {});
+        }
+      } else {
+        showToast("请先登录", duration: Duration(seconds: 1));
       }
     }
 
@@ -323,57 +347,72 @@ class UserPage extends StatelessWidget {
           child: Column(
             children: [
               // 用户信息头部
-              Container(
-                padding: EdgeInsets.all(16.r),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage:
-                          const AssetImage('assets/images/ikun1.png'),
-                    ),
-                    SizedBox(width: 16),
-                    ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            Theme.of(context).primaryColor,
-                            AppColors.appColor,
-                          ],
-                        ).createShader(bounds);
-                      },
-                      child: Text(
-                        "用户名",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white, // 必须设为白色才能显示渐变效果
-                        ),
+              SafeArea(
+                child: Container(
+                  padding: EdgeInsets.all(16.r),
+                  child: Row(
+                    children: [
+                      //头像
+                      CircleAvatar(
+                        radius: 40,
+                        backgroundImage:
+                            const AssetImage('assets/images/ikun1.png'),
                       ),
-                    ),
-                    Expanded(child: SizedBox()),
-                    Material(
-                      color: Colors.transparent, // 确保背景透明
-                      child: ClipOval(
-                        child: InkWell(
-                          onTap: () {
-                            // 点击事件的回调函数
+                      SizedBox(width: 16),
+
+                      // 修改昵称显示部分
+                      Container(
+                        width: 200.w,
+                        child: ValueListenableBuilder<User?>(
+                          valueListenable: Global.userInfoNotifier,
+                          builder: (context, userInfo, child) {
+                            return ShaderMask(
+                              shaderCallback: (Rect bounds) {
+                                return LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Theme.of(context).primaryColor,
+                                    AppColors.appColor,
+                                  ],
+                                ).createShader(bounds);
+                              },
+                              child: Text(
+                                userInfo?.nickName ?? '未命名',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            );
                           },
-                          // 水波纹颜色
-                          splashColor:
-                              Theme.of(context).primaryColor.withAlpha(30),
-                          // 高亮颜色
-                          highlightColor:
-                              Theme.of(context).primaryColor.withAlpha(30),
-                          // 设置水波纹为圆形
-                          customBorder: CircleBorder(),
-                          child: Icon(Icons.chevron_right_outlined, size: 40),
                         ),
                       ),
-                    ),
-                  ],
+
+                      Expanded(child: SizedBox()),
+                      //个人信息修改
+                      Material(
+                        color: Colors.transparent, // 确保背景透明
+                        child: ClipOval(
+                          child: InkWell(
+                            onTap: () => _jumpToProfileEditPage(),
+                            // 水波纹颜色
+                            splashColor:
+                                Theme.of(context).primaryColor.withAlpha(30),
+                            // 高亮颜色
+                            highlightColor:
+                                Theme.of(context).primaryColor.withAlpha(30),
+                            // 设置水波纹为圆形
+                            customBorder: CircleBorder(),
+                            child: Icon(Icons.chevron_right_outlined, size: 40),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
 
