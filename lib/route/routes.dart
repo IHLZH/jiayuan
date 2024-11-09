@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_page.dart';
+import 'package:jiayuan/page/home_page/housekeepingScreening%20_page.dart';
 import 'package:jiayuan/page/login_page/email_login_page.dart';
 import 'package:jiayuan/page/login_page/forget_password_check_code_page.dart';
 import 'package:jiayuan/page/login_page/forget_password_page.dart';
@@ -66,15 +66,19 @@ class Routes {
           input: input,
           isEmail: isEmail,
         ));
-        //委托详情页
+      //委托详情页
       case RoutePath.commissionDetail:
         return pageRoute(CommissionDetailPage(), settings: settings);
       //个人资料编辑页
       case RoutePath.profileEditPage:
         return pageRoute(ProfileEditPage());
-        //家政员个人页面
+      //家政员个人页面
       case RoutePath.KeeperPage:
-        return pageRoute(Keeperpage(),settings: settings);
+        final keeperId = settings.arguments as int;
+        return pageRoute(Keeperpage(keeperId: keeperId), settings: settings);
+      //家政员分类页
+      case RoutePath.houseKeepingScreeningPage:
+        return pageRoute(HouseKeepingScreeningPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
