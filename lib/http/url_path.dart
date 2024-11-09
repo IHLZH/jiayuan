@@ -15,7 +15,7 @@ class UrlPath {
   static const String loginUrl="/login/loginBoth";
 
   //邮箱获取验证码接口
-  static const String getEmailCodeUrl="/sendEmailCode";
+  static const String getEmailCodeUrl="/email/sendEmailCode";
 
   //邮箱登录接口
   static const String loginWithEmailCodeUrl = "/login/email";

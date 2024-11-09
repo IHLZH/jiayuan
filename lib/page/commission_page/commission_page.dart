@@ -60,6 +60,14 @@ class _CommissionPageState extends State<CommissionPage>{
     super.initState();
     //请求委托数据
     _viewModel.getCommissionData();
+    _viewModel.getRecommendComission({
+      "search":" ",
+      "longitude":double.parse(Global.location?.longitude ?? "0.0"),
+      "latitude":double.parse(Global.location?.latitude ?? "0.0"),
+      "distance":10,
+      "page": _viewModel.startPage,
+      "size": _viewModel.size
+    });
   }
 
   @override

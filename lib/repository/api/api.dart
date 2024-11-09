@@ -15,28 +15,7 @@ class Api{
   //   return bannerData.bannerList;
   // }
 
-  Future<List<CommissionData1>> getRecommendCommission(Map<String, dynamic>? param) async {
-    List<CommissionData1> commissionList = [];
 
-    try{
-      Response response = await DioInstance.instance().get(
-          path: "/search_by_distance",
-          param: param
-      );
-
-      if(response.statusCode == 200){
-        int total = response.data['total'];
-        print("共请求到" + total.toString() + "条数据");
-        for(int i = 0; i < total; i++){
-          commissionList.add(CommissionData1.fromJson(response.data['data'][i]));
-        }
-      }
-    }catch(e){
-      print("error:" + e.toString());
-    }
-
-    return commissionList;
-  }
 
 
 

@@ -7,6 +7,7 @@ import 'package:jiayuan/common_ui/dialog/dialog_factory.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_vm.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
+import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
@@ -66,14 +67,21 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
     });
   }
 
-  void _search(String searchMessage){
+  Future<void> _search(String searchMessage) async {
     isSearch = true;
     synthesisCheck = true;
     priceCheck = false;
     distanceCheck = false;
     if(searchMessage != "")_commissionSearchViewModel.saveSearchHistory(searchMessage);
-    _commissionSearchViewModel.searchCommission(searchMessage);
-    setState(() {});
+    Loading.showLoading();
+    await _commissionSearchViewModel.getSearchCommission({
+      "search":searchMessage,
+      "page":1,
+      "size":11
+    });
+    setState(() {
+      Loading.dismissAll();
+    });
   }
 
   void _back(){
@@ -535,9 +543,9 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
         print("refresh...");
       },
       child: ListView.builder(
-        itemCount: _commissionSearchViewModel.searchResult.length,
+        itemCount: _commissionSearchViewModel.searchCommissionList.length,
         itemBuilder: (context, index) {
-          Commission commission = _commissionSearchViewModel.searchResult[index];
+          CommissionData1 commission = _commissionSearchViewModel.searchCommissionList[index];
           return Container(
             padding: EdgeInsets.all(10),
             child: Material(
@@ -563,7 +571,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            (commission.days ?? "今天") + commission.expectTime.hour.toString() + ":" + commission.expectTime.minute.toString(),
+                            (commission.days ?? "今天") + commission.expectStartTime!.hour.toString() + ":" + commission.expectStartTime!.minute.toString(),
                             style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 14.sp,
@@ -575,7 +583,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                commission.price.toString(),
+                                commission.commissionBudget.toString(),
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontSize: 20.sp,
@@ -609,7 +617,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                                 borderRadius: BorderRadius.circular(16.r)
                             ),
                             child: Text(
-                              CommissionViewModel.CommissionTypes[commission.commissionType].typeText,
+                              CommissionViewModel.CommissionTypes[commission.keeperId ?? 0].typeText,
                               style: TextStyle(
                                   color: Colors.black45,
                                   fontSize: 16.sp,
@@ -619,7 +627,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                           ),
                           SizedBox(width: 5.w,),
                           Text(
-                            "内容：" + (commission.comment ?? "家政员招募中~"),
+                            "内容：" + (commission.commissionDescription ?? "家政员招募中~"),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
                             style: TextStyle(
@@ -635,7 +643,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                         children: [
                           Icon(Icons.location_on_outlined),
                           Text(
-                            commission.distance.toString() + "km",
+                            commission.commissionId.toString() + "km",
                             style: TextStyle(
                                 color: AppColors.textColor2b,
                                 fontSize: 12.sp,
@@ -644,7 +652,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                           ),
                           SizedBox(width: 5.w,),
                           Text(
-                            commission.county,
+                            commission.county ?? "",
                             style: TextStyle(
                                 color: AppColors.textColor2b,
                                 fontSize: 12.sp,
@@ -654,7 +662,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                           SizedBox(width: 5.w,),
                           Expanded(
                             child: Text(
-                              commission.address + "诚朴园三号楼204",
+                              commission.commissionAddress ?? "",
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
                               style: TextStyle(
@@ -679,22 +687,33 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
 
 
   List<Widget> _SearchHistory(List<String> searchHistory){
+    List<String> reverseSearchHistory = searchHistory.reversed.toList();
+    Set<String> searchHistorySet = Set();
+    for (var value in reverseSearchHistory){
+      searchHistorySet.add(value);
+    }
     List<Widget> searchHistoryList = [];
-    for (var value in searchHistory) {
+    for (var value in searchHistorySet) {
       searchHistoryList.add(
-        Container(
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Colors.black12,
-            borderRadius: BorderRadius.circular(8.r),
+        GestureDetector(
+          onTap: (){
+            _searchController.text = value;
+            _search(value);
+          },
+          child: Container(
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.black12,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Text(
+                value,
+                style: TextStyle(
+                    color: AppColors.textColor2b,
+                    fontSize: 14.sp
+                ),
+              )
           ),
-          child: Text(
-            value,
-            style: TextStyle(
-              color: AppColors.textColor2b,
-              fontSize: 14.sp
-            ),
-          )
         )
       );
     }
