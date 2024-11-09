@@ -22,13 +22,15 @@ class RoutePath {
   static const String forgetPasswordCodePage = "/forgetPasswordCodePage";
 
   //忘记密码新密码页
-  static const String forgetPasswordNewPasswordPage = "/forgetPasswordNewPasswordPage";
+  static const String forgetPasswordNewPasswordPage =
+      "/forgetPasswordNewPasswordPage";
 
   //注册检验验证码页
   static const String registerCheckCodePage = "/registerCheckCodePage";
 
   //注册确认密码页
-  static const String registerSubmitPasswordPage = "/registerSubmitPasswordPage";
+  static const String registerSubmitPasswordPage =
+      "/registerSubmitPasswordPage";
 
   //首页
   static const String homePage = "/homePage";
@@ -38,6 +40,9 @@ class RoutePath {
 
   //个人页
   static const String userPage = "/userPage";
+
+  //个人资料编辑页
+  static const String profileEditPage = "/profileEditPage";
 
   //委托分类页
   static const String commissionType = "/commissionType";
