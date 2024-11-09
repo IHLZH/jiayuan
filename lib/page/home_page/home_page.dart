@@ -194,7 +194,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         color: Colors.white,
         child: InkWell(
           borderRadius: BorderRadius.circular(10.0),
-          onTap: () {},
+          onTap: () {
+            RouteUtils.pushForNamed(context, RoutePath.KeeperPage,arguments: housekeeper.keeperId);
+          },
           child: Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(),

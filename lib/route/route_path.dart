@@ -50,4 +50,7 @@ class RoutePath {
 
   //委托详情页
   static const String commissionDetail = "/commissionDetail";
+
+  //家政员个人页面
+  static const String KeeperPage = "/KeeperPage";
 }
