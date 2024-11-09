@@ -37,8 +37,10 @@ class Global {
   static List<StandardPrice>? standPrices;
 
   static bool isLogin = false;
+
   //sqlite数据库工具类 用于打开和关闭数据库
   static DBUtil? dbUtil;
+
   //用户定位信息
   static LocationData? location;
 }
