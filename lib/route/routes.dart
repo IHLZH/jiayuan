@@ -12,9 +12,11 @@ import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
 import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
+import '../page/keeper_page/KeeperPage.dart';
 import '../page/login_page/phone_login_page.dart';
 import '../page/send_commission_page/send_commision_page.dart';
 import '../page/tab_page/tab_page.dart';
+import '../page/user_page/profile_edit_page/profile_edit_page.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
