@@ -63,7 +63,8 @@ class RoutePath {
   static const String KeeperPage = "/KeeperPage";
 
   //家政员分类页
-  static const String houseKeepingScreeningPage = "/houseKeepingScreeningPage"
+  static const String houseKeepingScreeningPage = "/houseKeepingScreeningPage";
 
-  ;
+  //委托中心页
+  static const String commissionCenter = "/commissionCenter";
 }

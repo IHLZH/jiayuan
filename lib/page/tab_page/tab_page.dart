@@ -17,7 +17,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../utils/location_data.dart';
-import '../loading_page/LoadingPage.dart';
+import '../loading_page/loading_page.dart';
 
 
 

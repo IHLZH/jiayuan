@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jiayuan/page/commission_center_page/commission_center_page.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_page.dart';
 import 'package:jiayuan/page/home_page/housekeepingScreening%20_page.dart';
@@ -83,6 +84,8 @@ class Routes {
       //家政员分类页
       case RoutePath.houseKeepingScreeningPage:
         return pageRoute(HouseKeepingScreeningPage());
+      case RoutePath.commissionCenter:
+        return pageRoute(CommissionCenterPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
