@@ -113,6 +113,14 @@ class _UserPageState extends State<UserPage> {
       }
     }
 
+    Future<void> _jumpToCommissionCenterPage () async {
+      RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
+    }
+
+    Future<void> _jumpToSettingPage() async {
+      RouteUtils.pushForNamed(context, RoutePath.settingPage);
+    }
+
     Widget _buildOrderStatus(String title) {
       IconData icon;
       switch (title) {
@@ -238,7 +246,11 @@ class _UserPageState extends State<UserPage> {
         color: Colors.transparent,
         child: SafeArea(
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              if(title=='委托中心'){
+                _jumpToCommissionCenterPage();
+              }
+            },
             splashColor: Theme.of(context).primaryColor.withAlpha(30),
             highlightColor: Theme.of(context).primaryColor.withAlpha(30),
             customBorder: const CircleBorder(),
@@ -303,6 +315,7 @@ class _UserPageState extends State<UserPage> {
             if (icon == Icons.logout && onCheck != null) {
               _showLogoutDialog(context, onCheck);
             } else if (icon == Icons.settings) {
+              _jumpToSettingPage();
             } else {
               // 其他选项的点击事件处理
             }
@@ -385,7 +398,8 @@ class _UserPageState extends State<UserPage> {
                                   ).createShader(bounds);
                                 },
                                 child: Text(
-                                  userInfo?.nickName ?? '111111111111111111111111111111111111111111111',
+                                  userInfo?.nickName ??
+                                      '111111111111111111111111111111111111111111111',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
