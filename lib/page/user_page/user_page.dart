@@ -177,14 +177,15 @@ class _UserPageState extends State<UserPage> {
                       end: Alignment.bottomRight,
                       colors: [
                         Theme.of(context).primaryColor,
-                        AppColors.endColor,
+                        AppColors.appColor,
+                        AppColors.endDeepColor,
                       ],
                     ).createShader(bounds);
                   },
                   child: Icon(icon, size: 35, color: Colors.white),
                 ),
                 SizedBox(height: 8),
-                Text("$title", style: TextStyle(fontSize: 14)),
+                Text("$title", style: TextStyle(fontSize: 14,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold)),
               ],
             ),
           ),
@@ -200,7 +201,7 @@ class _UserPageState extends State<UserPage> {
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 16, color: Colors.black),
+              style: TextStyle(fontSize: 16, color: Colors.grey[800],fontWeight: FontWeight.bold),
             ),
             Expanded(child: SizedBox()),
             TextButton(
@@ -263,14 +264,15 @@ class _UserPageState extends State<UserPage> {
                       end: Alignment.bottomRight,
                       colors: [
                         Theme.of(context).primaryColor,
-                        AppColors.endColor,
+                        AppColors.appColor,
+                        AppColors.endDeepColor,
                       ],
                     ).createShader(bounds);
                   },
                   child: Icon(icon, size: 35, color: Colors.white),
                 ),
                 SizedBox(height: 8),
-                Text(title, style: TextStyle(fontSize: 14)),
+                Text(title, style: TextStyle(color:Theme.of(context).primaryColor,fontSize: 14,fontWeight: FontWeight.bold)),
               ],
             ),
           ),
@@ -320,8 +322,10 @@ class _UserPageState extends State<UserPage> {
               // 其他选项的点击事件处理
             }
           },
+          // 水波纹颜色
           splashColor: Colors.grey[300],
-          highlightColor: Theme.of(context).primaryColor.withAlpha(30),
+          // 高亮颜色
+          highlightColor: Colors.grey[300],
           child: ListTile(
             leading: icon == Icons.logout
                 ? Icon(icon, color: Colors.red)
@@ -333,6 +337,7 @@ class _UserPageState extends State<UserPage> {
                         colors: [
                           Theme.of(context).primaryColor,
                           AppColors.appColor,
+                          AppColors.endDeepColor,
                         ],
                       ).createShader(bounds);
                     },
@@ -394,12 +399,13 @@ class _UserPageState extends State<UserPage> {
                                     colors: [
                                       Theme.of(context).primaryColor,
                                       AppColors.appColor,
+                                      // AppColors.endDeepColor,
                                     ],
                                   ).createShader(bounds);
                                 },
                                 child: Text(
                                   userInfo?.nickName ??
-                                      '111111111111111111111111111111111111111111111',
+                                      '未命名',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -423,10 +429,10 @@ class _UserPageState extends State<UserPage> {
                             onTap: () => _jumpToProfileEditPage(),
                             // 水波纹颜色
                             splashColor:
-                                Theme.of(context).primaryColor.withAlpha(30),
+                                Colors.grey[300],
                             // 高亮颜色
                             highlightColor:
-                                Theme.of(context).primaryColor.withAlpha(30),
+                                Colors.grey[300],
                             // 设置水波纹为圆形
                             customBorder: CircleBorder(),
                             child: Icon(Icons.chevron_right_outlined, size: 40),

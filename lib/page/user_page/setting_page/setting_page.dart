@@ -70,7 +70,7 @@ class _SettingPageState extends State<SettingPage> {
             gradient: LinearGradient(
               colors: [
                 AppColors.appColor,
-                AppColors.endColor,
+                AppColors.endDeepColor,
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
