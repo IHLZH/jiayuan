@@ -30,7 +30,7 @@ class _StartPageState extends State<StartPage> {
     super.initState();
     // 初始化CookieJar
     DioInstance.instance().initDio(baseUrl: "");
-    DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
+    DioInstance.instance().changeBaseUrl(UrlPath.testBaseUrl);
 
     //初始化sqlite数据库
     _initDB();

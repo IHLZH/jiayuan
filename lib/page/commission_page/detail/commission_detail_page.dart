@@ -220,14 +220,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16.r),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.appColor.withOpacity(0.2), // 阴影颜色
-                                offset: Offset(0, 4), // 阴影偏移量
-                                blurRadius: 8, // 模糊半径
-                                spreadRadius: 1, // 扩展半径
-                              ),
-                            ]
+                            border: Border.all(color: AppColors.endColor,width: 1),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -283,21 +276,13 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                           ),
                           SizedBox(height: 5.w,),
                           Container(
-                            width: 300.w,
+                            width: double.infinity,
                             height: 300.h,
                             padding: EdgeInsets.symmetric(horizontal: 5),
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(16.r),
                                 border: Border.all(color: AppColors.endColor),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.appColor.withOpacity(0.2), // 阴影颜色
-                                    offset: Offset(0, 4), // 阴影偏移量
-                                    blurRadius: 8, // 模糊半径
-                                    spreadRadius: 1, // 扩展半径
-                                  ),
-                                ]
                             ),
                             child: Wrap(
                               children: [
