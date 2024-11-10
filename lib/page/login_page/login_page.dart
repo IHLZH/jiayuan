@@ -218,7 +218,10 @@ class _LoginPageState extends State<LoginPage> {
             onPressed: _jumpToTab,
             child: Text(
               "游客登录>",
-              style: TextStyle(color: Theme.of(context).primaryColor),
+              style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
             ),
           ),
         ],
@@ -238,7 +241,8 @@ class _LoginPageState extends State<LoginPage> {
                         "账号登录",
                         style: TextStyle(
                             fontSize: 30,
-                            color: Theme.of(context).primaryColor),
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 30.h),
                       Container(
@@ -316,6 +320,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: Text(
                                     "忘记密码",
                                     style: TextStyle(
+                                        fontWeight: FontWeight.bold,
                                         color: Theme.of(context).primaryColor),
                                   ),
                                 ),
@@ -400,6 +405,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Text(
                                         "注册",
                                         style: TextStyle(
+                                            fontWeight: FontWeight.bold,
                                             color:
                                                 Theme.of(context).primaryColor),
                                       )),
@@ -409,6 +415,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Text(
                                         "使用手机验证码登录",
                                         style: TextStyle(
+                                            fontWeight: FontWeight.bold,
                                             color:
                                                 Theme.of(context).primaryColor),
                                       )),
@@ -426,6 +433,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Text(
                                         "使用邮箱验证码登录",
                                         style: TextStyle(
+                                            fontWeight: FontWeight.bold,
                                             color:
                                                 Theme.of(context).primaryColor),
                                       )),
@@ -464,6 +472,7 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(
                 color: _isAgreed ? Theme.of(context).primaryColor : Colors.grey,
                 fontSize: 15,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Expanded(child: SizedBox()),
