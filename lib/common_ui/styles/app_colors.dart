@@ -5,6 +5,10 @@ class AppColors {
   //应用主色调
   static const appColor = Color(0xFF59C2B3);
   static const endColor = Color(0xFFcbf2ed);
+  static const endDeepColor = Color(0xFF71FFEB);
+
+  //偏白色背景色
+  static const backgroundColor = Color(0xFAFAFAFF);
 
   //按钮红色背景
   static const redBtnColor = Color(0xFFFF3B3D);
