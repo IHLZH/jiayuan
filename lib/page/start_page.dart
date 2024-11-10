@@ -64,9 +64,9 @@ class _StartPageState extends State<StartPage> {
     });
   }
 
-  void _initDB() async {
+  Future<void> _initDB() async {
     TablesInit tables = TablesInit();
-    tables.init();
+    await tables.init();
     Global.dbUtil = DBUtil();
   }
 

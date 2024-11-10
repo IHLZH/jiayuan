@@ -3,10 +3,16 @@ import 'package:jiayuan/repository/model/HouseKeeper_data_detail.dart';
 
 class KeeperViewModel with ChangeNotifier {
   HousekeeperDataDetail? keeperData ;
+  bool isLoading = false;
+  String? error;
 
-  Future getKeeperData(int id) async {
-    // 模拟数据获取
-    keeperData =  HousekeeperDataDetail(
+  Future<void> getKeeperData(int id) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      await Future.delayed(Duration(seconds: 1));
+      keeperData = HousekeeperDataDetail(
         keeperId: id,
         realName: "刘子恒",
         age: 30,
@@ -50,7 +56,7 @@ class KeeperViewModel with ChangeNotifier {
             avatar:
             'https://ts4.cn.mm.bing.net/th?id=OIP-C.mPGy-QSWMXym-J4zC_MJfwAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
             nickname: "张先生",
-            content: "服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意",
+            content: "服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意",
               time: DateTime(2024,2,25),
             images: [
               'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
@@ -63,6 +69,15 @@ class KeeperViewModel with ChangeNotifier {
             rating: 3.2
           ),
         ]);
-    notifyListeners();
+      
+      isLoading = false;
+      error = null;
+      notifyListeners();
+    } catch (e) {
+      print("获取数据失败: $e");
+      isLoading = false;
+      error = e.toString();
+      notifyListeners();
+    }
   }
 }

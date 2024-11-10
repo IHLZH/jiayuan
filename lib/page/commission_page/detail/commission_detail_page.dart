@@ -100,7 +100,9 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                 width: 50.w,
                                 child: CircleAvatar(
                                   radius: 25.r,
-                                  child: Image.network(vm.user!.userAvatar),
+                                  child: ClipOval(
+                                    child: Image.network(vm.user!.userAvatar),
+                                  )
                                 ),
                               ),
                               Text(
@@ -220,10 +222,10 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                             borderRadius: BorderRadius.circular(16.r),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.2), // 阴影颜色
-                                offset: Offset(0, 2), // 阴影偏移量
-                                blurRadius: 2, // 模糊半径
-                                spreadRadius: 0.5, // 扩展半径
+                                color: AppColors.appColor.withOpacity(0.2), // 阴影颜色
+                                offset: Offset(0, 4), // 阴影偏移量
+                                blurRadius: 8, // 模糊半径
+                                spreadRadius: 1, // 扩展半径
                               ),
                             ]
                         ),
@@ -248,7 +250,19 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                             ),
                             IconButton(
                                 onPressed: (){},
-                                icon: Icon(Icons.phone)
+                                icon: ShaderMask(
+                                  shaderCallback: (Rect bounds) {
+                                    return LinearGradient(
+                                      colors: <Color>[AppColors.appColor, AppColors.endColor],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ).createShader(bounds);
+                                  },
+                                  child: Icon(
+                                    Icons.phone,
+                                    color: Colors.white
+                                  ),
+                                )
                             )
                           ],
                         ),
@@ -275,20 +289,26 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(16.r),
-                                border: Border.all(color: Colors.black)
+                                border: Border.all(color: AppColors.endColor),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.appColor.withOpacity(0.2), // 阴影颜色
+                                    offset: Offset(0, 4), // 阴影偏移量
+                                    blurRadius: 8, // 模糊半径
+                                    spreadRadius: 1, // 扩展半径
+                                  ),
+                                ]
                             ),
-                            child: Expanded(
-                                child: Wrap(
-                                  children: [
-                                    Text(
-                                      "这是一条备注~",
-                                      style: TextStyle(
-                                        color: AppColors.textColor2b,
-                                        fontSize: 14.sp,
-                                      ),
-                                    )
-                                  ],
+                            child: Wrap(
+                              children: [
+                                Text(
+                                  "这是一条备注~",
+                                  style: TextStyle(
+                                    color: AppColors.textColor2b,
+                                    fontSize: 14.sp,
+                                  ),
                                 )
+                              ],
                             ),
                           )
                         ],

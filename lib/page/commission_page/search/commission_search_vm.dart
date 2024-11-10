@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:jiayuan/repository/api/commission_api.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
+import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/utils/global.dart';
 
 class CommissionSearchViewModel with ChangeNotifier{
@@ -8,9 +10,24 @@ class CommissionSearchViewModel with ChangeNotifier{
 
   List<Commission> searchResult = [];
 
+  List<CommissionData1> searchCommissionList = [];
+
   double? minPrice;
   double? maxPrice;
   double? distance;
+
+  Future<void> getSearchCommission(Map<String, dynamic>? param) async {
+    List<CommissionData1> searchCommissionData = await CommissionApi.instance.getSearchCommission(param);
+    if(!searchCommissionData.isEmpty){
+      searchCommissionList = searchCommissionData;
+      print("接收到" + searchCommissionList.length.toString() + "条数据");
+      for (var value in searchCommissionList) {
+        print(value.toString());
+      }
+    }else{
+      print("数据为空");
+    }
+  }
 
   Future<void> deleteSearchHistory() async {
     await Global.dbUtil?.open();
@@ -27,7 +44,7 @@ class CommissionSearchViewModel with ChangeNotifier{
   Future<void> getSearchHistory() async {
     await Global.dbUtil?.open();
     searchHistory = [
-      "保姆","月嫂","日常保洁","修管道"
+
     ];
     List<Map> history = await Global.dbUtil?.queryList("select * from search_history") ?? [];
     if(history.length > 0){

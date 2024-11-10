@@ -23,7 +23,7 @@ class CommissionData1 {
       int? commissionId,
       int? userId,
       int? keeperId,
-      int? commissionBudget,
+      double? commissionBudget,
       String? commissionDescription, 
       String? province, 
       String? city, 
@@ -37,7 +37,7 @@ class CommissionData1 {
     DateTime? expectStartTime,
     DateTime? realStartTime,
     DateTime? endTime,
-      int? specifyServiceDuration,
+      String? specifyServiceDuration,
       int? commissionStatus,}){
     _commissionId = commissionId;
     _userId = userId;
@@ -61,10 +61,10 @@ class CommissionData1 {
 }
 
   CommissionData1.fromJson(dynamic json) {
-    _commissionId = int.parse(json['commissionId']);
-    _userId = int.parse(json['userId']);
-    _keeperId = int.parse(json['keeperId']);
-    _commissionBudget = int.parse(json['commissionBudget']);
+    _commissionId = json['commissionId'];
+    _userId = json['userId'];
+    _keeperId = json['keeperId'];
+    _commissionBudget = json['commissionBudget'].toDouble();
     _commissionDescription = json['commissionDescription'];
     _province = json['province'];
     _city = json['city'];
@@ -78,8 +78,8 @@ class CommissionData1 {
     _expectStartTime = DateTime.parse(json['expectStartTime']);
     _realStartTime = DateTime.parse(json['realStartTime']);
     _endTime = DateTime.parse(json['endTime']);
-    _specifyServiceDuration = int.parse(json['specifyServiceDuration']);
-    _commissionStatus = int.parse(json['commissionStatus']);
+    _specifyServiceDuration = json['specifyServiceDuration'];
+    _commissionStatus = json['commissionStatus'];
 
     _initDays();
   }
@@ -102,7 +102,7 @@ class CommissionData1 {
   int? _commissionId;
   int? _userId;
   int? _keeperId;
-  int? _commissionBudget;
+  double? _commissionBudget;
   String? _commissionDescription;
   String? _province;
   String? _city;
@@ -116,7 +116,7 @@ class CommissionData1 {
   DateTime? _expectStartTime;
   DateTime? _realStartTime;
   DateTime? _endTime;
-  int? _specifyServiceDuration;
+  String? _specifyServiceDuration;
   int? _commissionStatus;
   bool? _isLong; //是否是长期
   String? _days;
@@ -126,7 +126,7 @@ CommissionData1 copyWith({
   int? commissionId,
   int? userId,
   int? keeperId,
-  int? commissionBudget,
+  double? commissionBudget,
   String? commissionDescription,
   String? province,
   String? city,
@@ -140,7 +140,7 @@ CommissionData1 copyWith({
   DateTime? expectStartTime,
   DateTime? realStartTime,
   DateTime? endTime,
-  int? specifyServiceDuration,
+  String? specifyServiceDuration,
   int? commissionStatus,
 }) => CommissionData1(
   commissionId: commissionId ?? _commissionId,
@@ -166,7 +166,7 @@ CommissionData1 copyWith({
   int? get commissionId => _commissionId;
   int? get userId => _userId;
   int? get keeperId => _keeperId;
-  int? get commissionBudget => _commissionBudget;
+  double? get commissionBudget => _commissionBudget;
   String? get commissionDescription => _commissionDescription;
   String? get province => _province;
   String? get city => _city;
@@ -180,10 +180,10 @@ CommissionData1 copyWith({
   DateTime? get expectStartTime => _expectStartTime;
   DateTime? get realStartTime => _realStartTime;
   DateTime? get endTime => _endTime;
-  int? get specifyServiceDuration => _specifyServiceDuration;
+  String? get specifyServiceDuration => _specifyServiceDuration;
   int? get commissionStatus => _commissionStatus;
   bool? get isLong => _isLong;
-  String? get days => days;
+  String? get days => _days;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -209,4 +209,8 @@ CommissionData1 copyWith({
     return map;
   }
 
+  @override
+  String toString() {
+    return 'CommissionData1{_commissionId: $_commissionId, _userId: $_userId, _keeperId: $_keeperId, _commissionBudget: $_commissionBudget, _commissionDescription: $_commissionDescription, _province: $_province, _city: $_city, _county: $_county, _commissionAddress: $_commissionAddress, _lng: $_lng, _lat: $_lat, _userPhoneNumber: $_userPhoneNumber, _createTime: $_createTime, _updatedTime: $_updatedTime, _expectStartTime: $_expectStartTime, _realStartTime: $_realStartTime, _endTime: $_endTime, _specifyServiceDuration: $_specifyServiceDuration, _commissionStatus: $_commissionStatus, _isLong: $_isLong, _days: $_days}';
+  }
 }

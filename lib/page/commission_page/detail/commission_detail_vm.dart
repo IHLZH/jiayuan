@@ -26,7 +26,7 @@ class CommissionDetailViewModel with ChangeNotifier{
         userName: "userName",
         nickName: "用户114514号",
         userPassword: "",
-        userAvatar: "https://i1.hdslb.com/bfs/face/5b6e078ee8f63c4638dca02ba80e44b44225bf1b.jpg@92w_92h.avif",
+        userAvatar: "https://i1.hdslb.com/bfs/face/ff445d09efe51be21b6d8170e746699899fb9c52.jpg@92w_92h.avif",
         userSex: 0,
         userPhoneNumber: "11451419198",
         createdTime: "createdTime",

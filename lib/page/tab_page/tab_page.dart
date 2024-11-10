@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/app.dart';
 import 'package:jiayuan/common_ui/dialog/loading.dart';
@@ -14,10 +15,11 @@ import 'package:jiayuan/page/commission_page/commission_page.dart';
 import 'package:jiayuan/page/home_page/home_page.dart';
 import 'package:jiayuan/page/user_page/user_page.dart';
 import 'package:jiayuan/utils/global.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../utils/location_data.dart';
-import '../loading_page/LoadingPage.dart';
+import '../loading_page/loading_page.dart';
 
 
 /*
@@ -75,8 +77,8 @@ class _TabPageState extends State<TabPage>{
 
       setState(() {
         Global.location = LocationData(
-            latitude: result["latitude"].toString(),
-            longitude: result["longitude"].toString(),
+            latitude: result["latitude"] as double,
+            longitude: result["longitude"]as double,
             country: result['country'].toString(),
             province: result['province'].toString(),
             city: result['city'].toString(),
@@ -235,17 +237,36 @@ class _TabPageState extends State<TabPage>{
     tabItems[3] = UserPage();
   }
 
+  DateTime? _lastPressedAt; // 用于记录上次点击返回键的时间
+
+  Future<bool> _onWillPop() async {
+    final now = DateTime.now();
+    if (_lastPressedAt == null || now.difference(_lastPressedAt!) > Duration(seconds: 2)) {
+      // 如果距离上次点击返回键超过2秒，更新时间并提示用户
+      _lastPressedAt = now;
+      showToast("再按一次退出应用");
+      return Future.value(false); // 不退出应用，拦截返回键
+    }
+    // 如果在2秒内再次点击返回键，则退出应用
+    SystemNavigator.pop(); // 退出应用
+    return Future.value(true);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: null,
-      body: NavigationBarWidget(
-          tabItems: tabItems,
-          tabLabels: tabLabels,
-          tabIcons: tabIcons,
-          tabActiveIcons: tabActiveIcons,
-        bottomBarIconHeight: 25.h,
-      ),
+    return WillPopScope(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false, // 禁止布局被键盘顶掉
+          appBar: null,
+          body: NavigationBarWidget(
+            tabItems: tabItems,
+            tabLabels: tabLabels,
+            tabIcons: tabIcons,
+            tabActiveIcons: tabActiveIcons,
+            bottomBarIconHeight: 25.h,
+          ),
+        ),
+        onWillPop: _onWillPop
     );
   }
 }

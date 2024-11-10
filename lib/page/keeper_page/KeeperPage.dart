@@ -9,118 +9,141 @@ import '../../common_ui/dialog/loading.dart';
 import 'keeper_vm.dart';
 
 class Keeperpage extends StatefulWidget {
+  final int keeperId;
+
+  const Keeperpage({Key? key, required this.keeperId}) : super(key: key);
+
   @override
   State<Keeperpage> createState() => _KeeperpageState();
 }
 
-class _KeeperpageState extends State<Keeperpage>
-    with SingleTickerProviderStateMixin {
-  KeeperViewModel keeperViewModel = KeeperViewModel();
+class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateMixin {
 
+  late final KeeperViewModel keeperViewModel;
+
+  @override
   void initState() {
-    super.initState(); // 添加这一行
-    keeperViewModel.getKeeperData(1);
-    Loading.showLoading();
+    super.initState();
+    keeperViewModel = KeeperViewModel();
+     keeperViewModel.getKeeperData(widget.keeperId);
+    // 使用 addPostFrameCallback 确保在构建完成后执行异步操作
   }
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((duration) {
-      Loading.dismissAll();
-    });
-
     return ChangeNotifierProvider(
       create: (context) => keeperViewModel,
-      child: Scaffold(
-        backgroundColor: Colors.grey.shade100,
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              Container(
-                child: AppBar(
-                  centerTitle: true,
-                  backgroundColor: AppColors.appColor,
-                  elevation: 0,
-                  actions: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.share,
-                        color: Colors.white,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: _keeperPersonInfo(),
-                    ),
-                    SliverToBoxAdapter(child: _keeperIntroduction()),
-                    SliverToBoxAdapter(
-                      child: _keeperEvaluation(),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        bottomSheet: Container(
-          height: 60.h,
-          color: Colors.white70,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: Container(
-                  height: 60.h,
-                  child: ElevatedButton(
-                    onPressed: () {
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                      Icon(Icons.favorite_border),
-                      SizedBox(width: 5.w,),
-                      Text('加入收藏')
-                    ],),
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(AppColors.appColor)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 10.w,
-              ),
-              Expanded(
-                child: Container(
-                  height: 60.h,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.phone),
-                        SizedBox(width: 5.w,),
-                        Text('电话咨询'),
+      child: Consumer<KeeperViewModel>(
+        builder: (context, vm, child) {
+          if (vm.isLoading) {
+            return Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+          if (vm.error != null) {
+            return Scaffold(
+              body: Center(child: Text('加载失败: ${vm.error}')),
+            );
+          }
+
+          if (vm.keeperData == null) {
+            return Scaffold(
+              body: Center(child: Text('无数据')),
+            );
+          }
+
+          return Scaffold(
+            backgroundColor: Colors.grey.shade100,
+            body: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                children: [
+                  Container(
+                    child: AppBar(
+                      centerTitle: true,
+                      backgroundColor: AppColors.appColor,
+                      elevation: 0,
+                      actions: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.share,
+                            color: Colors.white,
+                          ),
+                        )
                       ],
                     ),
-                    style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(5),
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.white)),
                   ),
-                ),
+                  Expanded(
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: _keeperPersonInfo(),
+                        ),
+                        SliverToBoxAdapter(child: _keeperIntroduction()),
+                        SliverToBoxAdapter(
+                          child: _keeperEvaluation(),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+            bottomSheet: Container(
+              height: 60.h,
+              color: Colors.white70,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 60.h,
+                      child: ElevatedButton(
+                        onPressed: () {
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                          Icon(Icons.favorite_border),
+                          SizedBox(width: 5.w,),
+                          Text('加入收藏')
+                        ],),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(AppColors.appColor)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10.w,
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 60.h,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.phone),
+                            SizedBox(width: 5.w,),
+                            Text('电话咨询'),
+                          ],
+                        ),
+                        style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(5),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.white)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
