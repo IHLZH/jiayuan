@@ -9,7 +9,6 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../animation/PopUpAnimation.dart';
-import '../../common_ui/dialog/loading.dart';
 import '../../common_ui/keyboard/customer_keyboard.dart';
 import '../../common_ui/styles/app_colors.dart';
 import '../commission_page/commission_vm.dart';
@@ -43,7 +42,6 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
   void initState() {
     _sendCommissionViewModel.id = widget.id;
     super.initState();
-    Loading.showLoading();
     commissionType = HomeViewModel.CommissionTypes[widget.id];
     print(commissionType.typeText);
   }
@@ -73,6 +71,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
+              margin: EdgeInsets.only(bottom: 10.h),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [AppColors.appColor, Colors.white],
@@ -82,7 +81,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
               ),
               child: Column(
                 children: [
-                  // AppBar
+                  // AppBar - 1份
                   Expanded(
                     flex: 1,
                     child: AppBar(
@@ -92,10 +91,10 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                       elevation: 0,
                     ),
                   ),
-                  // 主要内容区域
+                  // 主要内容区域 - 9份
                   Expanded(
-                    flex: 10, // 内容区域占10份
-                    child: SingleChildScrollView(
+                    flex: 9,
+                    child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 30.w),
                       child: Column(
                         children: [
@@ -138,7 +137,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                       ),
                     ),
                   ),
-                  // 发布按钮
+                  // 发布按钮 - 1份
                   Expanded(
                     flex: 1,
                     child: Align(
@@ -164,6 +163,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
       builder: (context, canSubmit, child) {
         return Container(
           width: 70,
+          margin: EdgeInsets.only(top: 5.h),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade300),
             borderRadius: BorderRadius.circular(35),
@@ -238,7 +238,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
   Widget _buildPriceService() {
     return PopUpAnimation(
         child: Container(
-      margin: EdgeInsets.only(top: 20.h),
+      margin: EdgeInsets.only(top: 20.h,),
       width: double.infinity,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300, width: 1),
@@ -453,7 +453,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                   Row(
                     children: [
                       SizedBox(width: 20.w),
-                      Text('手机号', style: TextStyle(fontSize: 16)),
+                      Text('机号', style: TextStyle(fontSize: 16)),
                       SizedBox(width: 95.w),
                       Icon(Icons.phone, color: AppColors.appColor),
                       SizedBox(width: 10.w),
