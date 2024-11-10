@@ -23,4 +23,14 @@ class Housekeeper {
     this.highlight,
     this.rating,
   });
+
+  Housekeeper.fromJson(data) {
+    realName = data['realName'];
+    keeperId = data['keeperId'];
+    age = data['age'];
+    avatar = data['avatar'];
+    workExperience = data['workExperience'];
+    highlight = data['highlight'];
+    rating = data['rating'];
+  }
 }

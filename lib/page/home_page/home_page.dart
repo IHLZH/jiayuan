@@ -47,6 +47,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void dispose() {
     _controller.dispose();
+    _pageController.dispose();
+    homeViewModel.dispose();
     super.dispose();
   }
 
@@ -251,19 +253,22 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       ),
                     ),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(width: 5),
                         Text(
-                          "亮点:",
+                          "亮点: ",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Color.fromRGBO(87, 191, 169, 1),
                               fontSize: 12),
                         ),
-                        Text(
-                          " ${housekeeper.highlight}",
-                          style: TextStyle(color: Colors.black45, fontSize: 12),
-                        )
+                        Expanded(
+                            child: Text(
+                              " ${housekeeper.highlight}",
+                              style: TextStyle(color: Colors.black45,
+                                  fontSize: 12),
+                            ))
                       ],
                     ),
                   ),

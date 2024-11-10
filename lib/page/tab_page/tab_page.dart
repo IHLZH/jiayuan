@@ -7,8 +7,6 @@ import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiayuan/app.dart';
-import 'package:jiayuan/common_ui/dialog/loading.dart';
 import 'package:jiayuan/common_ui/navigation/navigation_bar_widget.dart';
 import 'package:jiayuan/page/Test.dart';
 import 'package:jiayuan/page/commission_page/commission_page.dart';
@@ -19,7 +17,8 @@ import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../utils/location_data.dart';
-import '../loading_page/loading_page.dart';
+import '../loading_page/LoadingPage.dart';
+
 
 
 /*

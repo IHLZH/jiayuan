@@ -44,6 +44,7 @@ class HousekeeperDataDetail {
   //评价类
   List<Evaluation>? evaluations;
 
+
   HousekeeperDataDetail({
     this.city,
     this.completedOrders,
@@ -61,6 +62,24 @@ class HousekeeperDataDetail {
     this.contact,
     this.evaluations
   });
+
+   HousekeeperDataDetail.fromJson(data) {
+     keeperId = data['keeperId'];
+     realName = data['realName'];
+     age = data['age'];
+     avatar = data['avatar'];
+     workExperience = data['workExperience'];
+     highlight = data['highlight'];
+     rating = data['rating'];
+     city = data['city'];
+     completedOrders = data['completedOrders'];
+      tags = data['tags'].cast<String>();
+      keeperImages = data['keeperImages'].cast<String>();
+      introduction = data['introduction'];
+      certificates = data['certificates'];
+      contact = data['contact'];
+      evaluations = data['evaluations'].map<Evaluation>((item) => Evaluation.fromJson(item)).toList();
+   }
 }
 
 class Evaluation{
@@ -96,4 +115,14 @@ class Evaluation{
     this.images,
     this.rating,
   });
+
+  Evaluation.fromJson(item) {
+    userId = item['userId'];
+    avatar = item['avatar'];
+    nickname = item['nickname'];
+    content = item['content'];
+    time = DateTime.parse(item['time']);
+    images = item['images'].cast<String>();
+    rating = item['rating'];
+  }
 }

@@ -25,7 +25,7 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
   void initState() {
     super.initState();
     keeperViewModel = KeeperViewModel();
-     keeperViewModel.getKeeperData(widget.keeperId);
+    keeperViewModel.getKeeperDataDetail(widget.keeperId);
     // 使用 addPostFrameCallback 确保在构建完成后执行异步操作
   }
 
@@ -37,6 +37,20 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
         builder: (context, vm, child) {
           if (vm.isLoading) {
             return Scaffold(
+              appBar: AppBar(
+                centerTitle: true,
+                backgroundColor: AppColors.appColor,
+                elevation: 0,
+                actions: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.share,
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              ),
               body: Center(child: CircularProgressIndicator()),
             );
           }
@@ -123,7 +137,15 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
                     child: Container(
                       height: 60.h,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          try {
+                            await keeperViewModel.makePhoneCall();
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.toString())),
+                            );
+                          }
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -388,7 +410,7 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
           Container(
               height: 240.h,
               margin: EdgeInsets.only(
-                  left: 10.w, right: 15.w, bottom: 15.h, top: 8.h),
+                  left: 10.w, right: 15.w, bottom: 60.h, top: 8.h),
               child: ListView.builder(
                   padding: EdgeInsets.zero, // 清除默认内边距
                   itemCount: keeperViewModel.keeperData?.evaluations?.length,

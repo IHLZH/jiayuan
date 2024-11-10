@@ -1,7 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!--允许访问网络，必选权限-->
     <uses-permission android:name="android.permission.INTERNET" />
-
+<!--    允许拨打电话，选填-->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+   <!-- 读取电话状态，用于拨打电话，选填-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <!--允许获取精确位置，精准定位必选-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -34,7 +37,20 @@
 
     <!--允许读设备等信息，用于问题排查-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tel" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="sms" />
+        </intent>
+    </queries>
     <application
         android:usesCleartextTraffic="true"
         android:label="jiayuan"
