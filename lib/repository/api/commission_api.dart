@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../http/dio_instance.dart';
+import '../model/Commission.dart';
 import '../model/commission_data1.dart';
 
 class CommissionApi{
@@ -80,5 +81,10 @@ class CommissionApi{
     return commissionList;
   }
 
-
+  //发送委托
+  Future<String> sendCommission(Commission commission) async{
+      // Response response = await DioInstance.instance().post(path: "/commission/add",data: commission.toJson(), options: Options(headers: {'Content-Type': 'application/json'}),);
+    // return response.statusCode.toString();
+    return "200";
+  }
 }

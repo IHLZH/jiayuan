@@ -1,20 +1,21 @@
 import 'package:flutter/cupertino.dart';
+import 'package:jiayuan/repository/model/Commission.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
+import '../../repository/api/commission_api.dart';
 import '../../repository/model/commission_data1.dart';
 import '../../repository/model/standardPrice.dart';
 
 class SendCommissionViewModel with ChangeNotifier{
-
-  CommissionData1? commissionData1 ;
+  Commission? commission ;
   //手机号格式验证
   RegExp reg_tel = RegExp(r'^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$');
   int? selectedDuration ; //服务时长
-
+  int? id ;
   DateTime? selectedDate ;//日期
 
-  String _phoneNumber = ""; // 手机号
+  String _phoneNumber = ""; // 手机号sd
   String remark = ""; // 备注
 
   double price = 0.00 ; //价格
@@ -44,9 +45,40 @@ class SendCommissionViewModel with ChangeNotifier{
 
   String? get doorNumber => _doorNumber;
 
+   //发布委托
+  Future<bool> sendCommission() async{
+    try{
+      commission = Commission(
+          commissionId: id,
+          commissionBudget: price,
+          down_payment: price/10.0,
+          commissionDescription: remark,
+          commissionAddress: _address!+doorNumber.toString(),
+          lng: _longitude?.toString(),
+          lat: _latitude?.toString(),
+          province: _province,
+          city: _city,
+          county: _district,
+          userPhoneNumber: _phoneNumber,
+          specifyServiceDuration: selectedDuration?.toString(),
+          expectStartTime: selectedDate
+      );
+     // print(commission?.toJson());
+      var res = await CommissionApi.instance.sendCommission(commission!);
+      if(res == "200"){
+        showToast("发布成功");
+        return true;
+      }else{
+        return false;
+      }
+    }catch(e){
+
+    }
+    return false;
+  }
+
   void initData(int id ){
-    // standardPrice = Global.standPrices?[id];
-    standardPrice = StandardPrice(lowestPrice:  100, referencePrice: 300 , typeId: id);
+     standardPrice = Global.standPrices?[id];
   }
 
   bool checkCommisssion() {
@@ -98,6 +130,8 @@ class SendCommissionViewModel with ChangeNotifier{
     notifyListeners();
   }
 
+
+  //更新地址
   void updateLocation({
     required String address,
     required String latitude,

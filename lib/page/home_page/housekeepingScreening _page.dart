@@ -50,11 +50,13 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
         borderRadius: BorderRadius.circular(10),
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
-          onTap: () async {
+          onTap: () {
             if (!mounted) return;
             _pageController.jumpToPage(index);
             _houseKeepingScreeningVM.updateCurrentIndex(index);
-            await _houseKeepingScreeningVM.loadHouseKeepers(index);
+            setState(() {
+
+            });
           },
           child: Container(
             height: 40,
@@ -219,7 +221,7 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
                       children: [
                         SizedBox(width: 5),
                         Text(
-                          "亮点:",
+                          "亮点: ",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Color.fromRGBO(87, 191, 169, 1),

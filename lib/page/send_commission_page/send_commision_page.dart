@@ -5,6 +5,7 @@ import 'package:flutter_pickers/time_picker/model/date_mode.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/page/home_page/home_vm.dart';
 import 'package:jiayuan/page/send_commission_page/send_commission_vm.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../animation/PopUpAnimation.dart';
@@ -40,6 +41,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
 
   @override
   void initState() {
+    _sendCommissionViewModel.id = widget.id;
     super.initState();
     Loading.showLoading();
     commissionType = HomeViewModel.CommissionTypes[widget.id];
@@ -167,7 +169,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(35),
-              onTap: () {
+              onTap: () async{
                 // 获取验证结果
                 String? errorMessage = context
                     .read<SendCommissionViewModel>()
@@ -190,7 +192,11 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                   );
                 } else {
                   // 验证通过，执行发布操作
-                  print('发布委托');
+                  if(await _sendCommissionViewModel.sendCommission()){
+                    Navigator.pop(context);
+                  }else{
+                    showToast("发布失败");
+                  }
                 }
               },
               child: Center(
@@ -631,7 +637,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
         return PopUpAnimation(
             child: GestureDetector(
                 onTap: () {
-                  Pickers.showDatePicker(context, mode: DateMode.MDHM,
+                  Pickers.showDatePicker(context, mode: DateMode.YMDHM,
                       onConfirm: (value) {
                     _sendCommissionViewModel.updateSelectedDate(DateTime(
                         value.year ?? 0,
@@ -639,9 +645,6 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                         value.day ?? 0,
                         value.hour ?? 0,
                         value.minute ?? 0));
-
-                    print(
-                        'longer >>> 返回数据：${_sendCommissionViewModel.selectedDate}');
                   });
                 },
                 child: Container(

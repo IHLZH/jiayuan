@@ -54,7 +54,7 @@ dependencies:
   # 权限申请
   permission_handler: ^11.3.1
   # 跳转到外部应用、scheme
-  url_launcher: ^6.1.6
+  url_launcher: ^6.1.8
   # 本地化存储
   shared_preferences: ^2.0.15
   # banner轮播图组件
