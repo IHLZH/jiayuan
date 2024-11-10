@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/utils/constants.dart';
@@ -63,12 +62,25 @@ class _SettingPageState extends State<SettingPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        title: Text('设置', style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+        // 使用 Container 包裹 AppBar 以实现渐变背景
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.appColor,
+                AppColors.endColor,
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        title: Text('设置',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: AppColors.appColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
@@ -78,7 +90,7 @@ class _SettingPageState extends State<SettingPage> {
       ),
       body: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.only(top:10.r),
+        padding: EdgeInsets.only(top: 10.r),
         child: Column(
           children: [
             Container(

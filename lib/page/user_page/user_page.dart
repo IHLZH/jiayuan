@@ -359,7 +359,7 @@ class _UserPageState extends State<UserPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(
