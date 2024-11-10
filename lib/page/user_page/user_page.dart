@@ -302,6 +302,7 @@ class _UserPageState extends State<UserPage> {
           onTap: () {
             if (icon == Icons.logout && onCheck != null) {
               _showLogoutDialog(context, onCheck);
+            } else if (icon == Icons.settings) {
             } else {
               // 其他选项的点击事件处理
             }
@@ -367,33 +368,35 @@ class _UserPageState extends State<UserPage> {
 
                       // 修改昵称显示部分
                       Container(
-                        width: 200.w,
-                        child: ValueListenableBuilder<User?>(
-                          valueListenable: Global.userInfoNotifier,
-                          builder: (context, userInfo, child) {
-                            return ShaderMask(
-                              shaderCallback: (Rect bounds) {
-                                return LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Theme.of(context).primaryColor,
-                                    AppColors.appColor,
-                                  ],
-                                ).createShader(bounds);
-                              },
-                              child: Text(
-                                userInfo?.nickName ?? '未命名',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                        width: 150.w,
+                        child: SafeArea(
+                          child: ValueListenableBuilder<User?>(
+                            valueListenable: Global.userInfoNotifier,
+                            builder: (context, userInfo, child) {
+                              return ShaderMask(
+                                shaderCallback: (Rect bounds) {
+                                  return LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Theme.of(context).primaryColor,
+                                      AppColors.appColor,
+                                    ],
+                                  ).createShader(bounds);
+                                },
+                                child: Text(
+                                  userInfo?.nickName ?? '111111111111111111111111111111111111111111111',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
 
@@ -448,7 +451,7 @@ class _UserPageState extends State<UserPage> {
                     ),
                     Expanded(child: SizedBox()),
                     Padding(
-                      padding: const EdgeInsets.all(0.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -526,10 +529,6 @@ class _UserPageState extends State<UserPage> {
                 ),
                 child: Column(
                   children: [
-                    _buildOption(Icons.email, '我的邮箱'),
-                    _line(),
-                    _buildOption(Icons.phone, '我的手机'),
-                    _line(),
                     _buildOption(Icons.favorite_border, '我的收藏'),
                     _line(),
                     _buildOption(Icons.history, '浏览历史'),
