@@ -29,6 +29,11 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
     // 使用 addPostFrameCallback 确保在构建完成后执行异步操作
   }
 
+  void dispose() {
+    keeperViewModel.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -138,12 +143,27 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
                       height: 60.h,
                       child: ElevatedButton(
                         onPressed: () async {
-                          try {
-                            await keeperViewModel.makePhoneCall();
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(e.toString())),
-                            );
+                          final bool? isCancel = await showDialog<bool>(context: context, builder: (context) => AlertDialog(
+                            content: Text('确定拨打电话吗？'),
+                            actions: [
+                              TextButton(onPressed: (){
+                                Navigator.of(context).pop(false);
+                              }, child: Text('取消')),
+                              TextButton(onPressed: () {
+                                Navigator.of(context).pop(true);
+                              }, child: Text('确定'))
+                            ],
+                          ));
+                          if(isCancel == true){
+                            try {
+                              await keeperViewModel.makePhoneCall();
+                            } catch (e) {
+                             if(mounted){
+                               ScaffoldMessenger.of(context).showSnackBar(
+                                 SnackBar(content: Text(e.toString())),
+                               );
+                             }
+                            }
                           }
                         },
                         child: Row(

@@ -3,6 +3,7 @@ import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/home_page/home_vm.dart';
 import 'package:jiayuan/page/home_page/housekeepingScreening_vm.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../repository/model/Housekeeper _data.dart';
 import '../../route/route_path.dart';
@@ -19,7 +20,7 @@ class HouseKeepingScreeningPage extends StatefulWidget {
 class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
   PageController _pageController = PageController(initialPage: 0);
   HouseKeepingScreeningVM _houseKeepingScreeningVM = HouseKeepingScreeningVM();
-
+  List<RefreshController> _refreshControllers = List.generate(HomeViewModel.CommissionTypes.length, (index)=> RefreshController());
   @override
   void initState() {
     super.initState();
@@ -33,6 +34,9 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
   @override
   void dispose() {
     _pageController.dispose();
+    _refreshControllers.forEach((element) {
+      element.dispose();
+    });
     _houseKeepingScreeningVM.dispose();
     super.dispose();
   }
@@ -128,10 +132,25 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
                               }
                               return Container(
                                 color: Colors.white,
-                                child: ListView.builder(
-                                    itemCount: housekeepers.length,
-                                    itemBuilder: (context, _) =>
-                                        _buildHousekeeperCard(housekeepers[_])),
+                                child: SmartRefresher(
+                                  controller: _refreshControllers[index],
+                                  enablePullDown: true,
+                                  enablePullUp: true,
+                                  header: MaterialClassicHeader(),
+                                  footer:ClassicFooter(),
+                                  onRefresh: () async {
+                                    await _houseKeepingScreeningVM.refreshHouseKeepers(index);
+                                    _refreshControllers[index].refreshCompleted();
+                                  },
+                                  onLoading: () async {
+                                    await _houseKeepingScreeningVM.loadMoreHouseKeepers(index);
+                                    _refreshControllers[index].loadComplete();
+                                  },
+                                  child: ListView.builder(
+                                      itemCount: housekeepers.length,
+                                      itemBuilder: (context, _) =>
+                                          _buildHousekeeperCard(housekeepers[_])),
+                                ),
                               );
                             });
                       }))

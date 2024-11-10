@@ -43,7 +43,6 @@ class KeeperViewModel with ChangeNotifier {
         }
       }
 
-
       final phoneNumber = keeperData?.contact?.replaceAll(RegExp(r'[^\d]'), '');
       final Uri telUri = Uri.parse('tel:${keeperData?.contact}');
       print('准备拨打电话: ${telUri.toString()}');

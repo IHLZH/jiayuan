@@ -101,6 +101,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             InkWell(
               onTap: () {
                 _controller.forward();
+                homeViewModel.getHousekeeperData();
               },
               child: Row(
                 children: [
