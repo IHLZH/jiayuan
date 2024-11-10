@@ -49,94 +49,114 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((duration) {
-      Loading.dismissAll();
-    });
+  void dispose() {
+    _focusNodePhone.dispose();
+    _focusNodeRemark.dispose();
+    _focusNodeDoorNumber.dispose();
+    _priceController.dispose();
+    _tempPriceController.dispose();
+  }
 
-    return ChangeNotifierProvider<SendCommissionViewModel>(
-      create: (context) => _sendCommissionViewModel,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: TextSelectionTheme(
-          data: TextSelectionThemeData(
-            selectionColor: Colors.green,
-            selectionHandleColor: Colors.greenAccent,
-            cursorColor: Colors.greenAccent,
-          ),
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.appColor,
-                  Colors.white,
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+
+   @override
+    Widget build(BuildContext context) {
+      return ChangeNotifierProvider<SendCommissionViewModel>(
+        create: (context) => _sendCommissionViewModel,
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: TextSelectionTheme(
+            data: TextSelectionThemeData(
+              selectionColor: Colors.green,
+              selectionHandleColor: Colors.greenAccent,
+              cursorColor: Colors.greenAccent,
             ),
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    // AppBar
-                    Container(
-                      child: AppBar(
-                        title: Text("需求发布"),
-                        centerTitle: true,
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
-                      ),
-                    ),
-                    // 主要内容区域
-                    Expanded(
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.only(
-                          left: 30.w, 
-                          right: 30.w,
-                          bottom: 100.h,
-                        ),
-                        child: Column(
-                          children: [
-                            //服务类型
-                            _buildTypeService(),
-                            //备注
-                            _buildRemarkService(),
-                            // 联系方式
-                            _buildContactService(),
-                            // 地点
-                            _buildAreaService(),
-                            //时间
-                            _buildTimeService(),
-                            // 服务时长
-                            _buildDurationService(),
-                            // 价格
-                            _buildPriceService(),
-                            // 在最底部添加一个额外的间距
-                            SizedBox(height: 20.h),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [AppColors.appColor, Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
-                // 发布按钮 - 固定在底部
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    margin: EdgeInsets.only(right: 30.w, bottom: 20.h),
-                    child: _buildPostService(),
+              ),
+              child: Column(
+                children: [
+                  // AppBar
+                  Expanded(
+                    flex: 1,
+                    child: AppBar(
+                      title: Text("需求发布"),
+                      centerTitle: true,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                    ),
                   ),
-                ),
-              ],
+                  // 主要内容区域
+                  Expanded(
+                    flex: 10, // 内容区域占10份
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(horizontal: 30.w),
+                      child: Column(
+                        children: [
+                          // 服务类型 - 1份
+                          Expanded(
+                            flex: 1,
+                            child: _buildTypeService(),
+                          ),
+                          // 备注 - 2份
+                          Expanded(
+                            flex: 2,
+                            child: _buildRemarkService(),
+                          ),
+                          // 联系方式 - 1份
+                          Expanded(
+                            flex: 1,
+                            child: _buildContactService(),
+                          ),
+                          // 地点和门牌号 - 2份
+                          Expanded(
+                            flex: 2,
+                            child: _buildAreaService(),
+                          ),
+                          // 时间 - 1份
+                          Expanded(
+                            flex: 1,
+                            child: _buildTimeService(),
+                          ),
+                          // 服务时长 - 1份
+                          Expanded(
+                            flex: 1,
+                            child: _buildDurationService(),
+                          ),
+                          // 价格 - 1份
+                          Expanded(
+                            flex: 1,
+                            child: _buildPriceService(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // 发布按钮
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 30.w),
+                        child: _buildPostService(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
+
 
   Widget _buildPostService() {
     return Selector<SendCommissionViewModel, bool>(
@@ -144,7 +164,6 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
       builder: (context, canSubmit, child) {
         return Container(
           width: 70,
-          height: 70,
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade300),
             borderRadius: BorderRadius.circular(35),
@@ -221,7 +240,6 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
         child: Container(
       margin: EdgeInsets.only(top: 20.h),
       width: double.infinity,
-      height: 60.h,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300, width: 1),
         borderRadius: BorderRadius.circular(10),
@@ -359,7 +377,6 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
           child: Container(
             margin: EdgeInsets.only(top: 20.h),
             width: double.infinity,
-            height: 90.h,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade100, width: 1),
               borderRadius: BorderRadius.circular(10),
@@ -421,7 +438,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
           child: Container(
             margin: EdgeInsets.only(top: 20.h),
             width: double.infinity,
-            height: 60.h,
+
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade300, width: 1),
               borderRadius: BorderRadius.circular(10),
@@ -489,7 +506,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
             child: Container(
               margin: EdgeInsets.only(top: 20.h),
               width: double.infinity,
-              height: 60.h,
+
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey.shade300, width: 1),
                 borderRadius: BorderRadius.circular(10),
@@ -650,7 +667,6 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                 child: Container(
                   width: double.infinity,
                   margin: EdgeInsets.only(top: 20.h),
-                  height: 60.h,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey.shade300, width: 1),
                     borderRadius: BorderRadius.circular(10),
@@ -709,7 +725,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
               child: Column(
                 children: [
                   // 服务地点选择
-                  GestureDetector(
+                  Expanded(child: GestureDetector(
                     onTap: () async {
                       final double? currentLat = _sendCommissionViewModel.latitude;
                       final double? currentLng = _sendCommissionViewModel.longitude;
@@ -726,10 +742,10 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
 
                       if (result != null) {
                         _sendCommissionViewModel.updateLocation(
-                          address: result['address'],
-                          latitude: result['latitude'].toString(),
-                          longitude: result['longitude'].toString(),
-                          locationDetail: result['locationDetail']
+                            address: result['address'],
+                            latitude: result['latitude'].toString(),
+                            longitude: result['longitude'].toString(),
+                            locationDetail: result['locationDetail']
                         );
                       }
                     },
@@ -760,11 +776,11 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                         ],
                       ),
                     ),
-                  ),
+                  )),
                   // 分割线
                   Divider(height: 1, color: Colors.grey.shade300),
                   // 门牌号输入框
-                  Container(
+                  Expanded(child: Container(
                     height: 50.h,
                     padding: EdgeInsets.symmetric(horizontal: 20.w),
                     child: Row(
@@ -796,7 +812,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                         ),
                       ],
                     ),
-                  ),
+                  )),
                 ],
               ),
             ),
@@ -812,7 +828,6 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
         child: Container(
       margin: EdgeInsets.only(top: 20.h),
       width: double.infinity,
-      height: 50.h,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300, width: 1),
         borderRadius: BorderRadius.circular(10),
