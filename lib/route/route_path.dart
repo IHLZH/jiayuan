@@ -44,6 +44,9 @@ class RoutePath {
   //个人资料编辑页
   static const String profileEditPage = "/profileEditPage";
 
+  //设置页
+  static const String settingPage = "/settingPage";
+
   //委托分类页
   static const String commissionType = "/commissionType";
 

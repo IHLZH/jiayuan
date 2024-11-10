@@ -10,6 +10,7 @@ import 'package:jiayuan/page/login_page/login_page.dart';
 import 'package:jiayuan/page/register_page/register_check_code_page.dart';
 import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
 import 'package:jiayuan/page/start_page.dart';
+import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
 import '../page/keeper_page/KeeperPage.dart';
@@ -72,6 +73,9 @@ class Routes {
       //个人资料编辑页
       case RoutePath.profileEditPage:
         return pageRoute(ProfileEditPage());
+      //设置页
+      case RoutePath.settingPage:
+        return pageRoute(SettingPage());
       //家政员个人页面
       case RoutePath.KeeperPage:
         final keeperId = settings.arguments as int;
