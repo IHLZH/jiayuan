@@ -19,7 +19,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../utils/location_data.dart';
-import '../loading_page/LoadingPage.dart';
+import '../loading_page/loading_page.dart';
 
 
 /*
@@ -77,8 +77,8 @@ class _TabPageState extends State<TabPage>{
 
       setState(() {
         Global.location = LocationData(
-            latitude: result["latitude"].toString(),
-            longitude: result["longitude"].toString(),
+            latitude: result["latitude"] as double,
+            longitude: result["longitude"]as double,
             country: result['country'].toString(),
             province: result['province'].toString(),
             city: result['city'].toString(),
@@ -256,6 +256,7 @@ class _TabPageState extends State<TabPage>{
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
+          resizeToAvoidBottomInset: false, // 禁止布局被键盘顶掉
           appBar: null,
           body: NavigationBarWidget(
             tabItems: tabItems,

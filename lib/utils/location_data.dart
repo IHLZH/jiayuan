@@ -1,6 +1,6 @@
 class LocationData{
-  String? latitude = ""; //纬度
-  String? longitude = ""; //经度
+  double? latitude; //纬度
+  double? longitude; //经度
   String? country = ""; // 国家
   String? province = ""; // 省份
   String? city = ""; // 市

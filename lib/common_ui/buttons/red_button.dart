@@ -64,9 +64,7 @@ class AppButton extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: (type == AppButtonType.redCorner)
-                  ? BorderRadius.all(Radius.circular(radius ?? 24.r))
-                  : null,
+              borderRadius: BorderRadius.all(Radius.circular(radius ?? 0.r)),
               color:
                   (type == AppButtonType.minor) ? AppColors.searchBgColor : AppColors.appColor),
           alignment: textAlignment ?? Alignment.center,
