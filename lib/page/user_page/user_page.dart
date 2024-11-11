@@ -99,17 +99,26 @@ class _UserPageState extends State<UserPage> {
     }
 
     Future<void> _jumpToProfileEditPage() async {
-      if (Global.isLogin) {
-        final result = await RouteUtils.pushForNamed(
-          context,
-          RoutePath.profileEditPage,
-        );
+      // if (Global.isLogin) {
+      //   final result = await RouteUtils.pushForNamed(
+      //     context,
+      //     RoutePath.profileEditPage,
+      //   );
+      //
+      //   if (result == true) {
+      //     setState(() {});
+      //   }
+      // } else {
+      //   showToast("请先登录", duration: Duration(seconds: 1));
+      // }
 
-        if (result == true) {
-          setState(() {});
-        }
-      } else {
-        showToast("请先登录", duration: Duration(seconds: 1));
+      final result = await RouteUtils.pushForNamed(
+        context,
+        RoutePath.profileEditPage,
+      );
+
+      if (result == true) {
+        setState(() {});
       }
     }
 
