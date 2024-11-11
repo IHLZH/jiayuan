@@ -68,9 +68,10 @@ class RoutePath {
   //委托中心页
   static const String commissionCenter = "/commissionCenter";
 
-  //浏览历史页面
-  static const String browseHistoryPage = "/browseHistoryPage";
+  //家政员认证页面
+  static const String keeperCertified = "/keeperCertified";
 
-  //我的收藏页面
-  static const String myCollectionPage = "/myCollectionPage";
+  //证书认证页面
+  static const String certCertified = "/certCertified";
+
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jiayuan/page/certified_page/cert/cert_certified_page.dart';
+import 'package:jiayuan/page/certified_page/keeper/keeper_certified_page.dart';
 import 'package:jiayuan/page/commission_center_page/commission_center_page.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_page.dart';
@@ -18,7 +20,6 @@ import '../page/keeper_page/KeeperPage.dart';
 import '../page/login_page/phone_login_page.dart';
 import '../page/send_commission_page/send_commision_page.dart';
 import '../page/tab_page/tab_page.dart';
-import '../page/user_page/browse_history_page/browse_history_page.dart';
 import '../page/user_page/profile_edit_page/profile_edit_page.dart';
 
 class Routes {
@@ -85,12 +86,15 @@ class Routes {
       //家政员分类页
       case RoutePath.houseKeepingScreeningPage:
         return pageRoute(HouseKeepingScreeningPage());
-        //委托中心页面
+      //委托中心页
       case RoutePath.commissionCenter:
         return pageRoute(CommissionCenterPage());
-        //浏览历史页面
-      case RoutePath.browseHistoryPage:
-        return pageRoute(BrowseHistoryPage());
+      //家政员认证页
+      case RoutePath.keeperCertified:
+        return pageRoute(KeeperCertifiedPage());
+      //证书认证页
+      case RoutePath.certCertified:
+        return pageRoute(CertCertifiedPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

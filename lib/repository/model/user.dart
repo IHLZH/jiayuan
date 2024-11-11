@@ -59,7 +59,9 @@ class User {
     );
   }
 
-  Map<String, Object> toMap() {
+  // Map<String, Object>
+
+  Object toMap() {
     return {
       'userId': userId,
       'userName': userName,
