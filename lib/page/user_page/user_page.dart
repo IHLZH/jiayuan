@@ -130,6 +130,14 @@ class _UserPageState extends State<UserPage> {
       RouteUtils.pushForNamed(context, RoutePath.settingPage);
     }
 
+    Future<void> _jumpToKeeperCertified() async {
+      RouteUtils.pushForNamed(context, RoutePath.keeperCertified);
+    }
+
+    Future<void> _jumpToCertCertified() async {
+      RouteUtils.pushForNamed(context, RoutePath.certCertified);
+    }
+
     Widget _buildOrderStatus(String title) {
       IconData icon;
       switch (title) {
@@ -259,6 +267,10 @@ class _UserPageState extends State<UserPage> {
             onTap: () {
               if(title=='委托中心'){
                 _jumpToCommissionCenterPage();
+              }else if(title=='家政员认证'){
+                _jumpToKeeperCertified();
+              }else if(title=='证书认证'){
+                _jumpToCertCertified();
               }
             },
             splashColor: Theme.of(context).primaryColor.withAlpha(30),
