@@ -265,7 +265,7 @@ class _UserPageState extends State<UserPage> {
                       colors: [
                         Theme.of(context).primaryColor,
                         AppColors.appColor,
-                        AppColors.endDeepColor,
+                        AppColors.whiteColor80,
                       ],
                     ).createShader(bounds);
                   },
@@ -318,8 +318,11 @@ class _UserPageState extends State<UserPage> {
               _showLogoutDialog(context, onCheck);
             } else if (icon == Icons.settings) {
               _jumpToSettingPage();
-            } else {
+            } else if(icon == Icons.favorite_border){
+
               // 其他选项的点击事件处理
+            } else if(icon == Icons.history){
+              RouteUtils.pushForNamed(context, RoutePath.browseHistoryPage);
             }
           },
           // 水波纹颜色
@@ -337,7 +340,7 @@ class _UserPageState extends State<UserPage> {
                         colors: [
                           Theme.of(context).primaryColor,
                           AppColors.appColor,
-                          AppColors.endDeepColor,
+                          AppColors.whiteColor80,
                         ],
                       ).createShader(bounds);
                     },
@@ -364,7 +367,7 @@ class _UserPageState extends State<UserPage> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SingleChildScrollView(

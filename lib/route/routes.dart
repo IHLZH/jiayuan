@@ -18,6 +18,7 @@ import '../page/keeper_page/KeeperPage.dart';
 import '../page/login_page/phone_login_page.dart';
 import '../page/send_commission_page/send_commision_page.dart';
 import '../page/tab_page/tab_page.dart';
+import '../page/user_page/browse_history_page/browse_history_page.dart';
 import '../page/user_page/profile_edit_page/profile_edit_page.dart';
 
 class Routes {
@@ -84,8 +85,12 @@ class Routes {
       //家政员分类页
       case RoutePath.houseKeepingScreeningPage:
         return pageRoute(HouseKeepingScreeningPage());
+        //委托中心页面
       case RoutePath.commissionCenter:
         return pageRoute(CommissionCenterPage());
+        //浏览历史页面
+      case RoutePath.browseHistoryPage:
+        return pageRoute(BrowseHistoryPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
