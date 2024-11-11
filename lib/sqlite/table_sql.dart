@@ -30,10 +30,24 @@ class CreateTableSqls{
   )
   ''';
 
+  static final String createTableSql_browser_history = '''
+  CREATE TABLE IF NOT EXISTS browser_history (
+    keeperid INTEGER PRIMARY KEY AUTOINCREMENT,
+    realName VARCHAR(255) NOT NULL,
+    age INTEGER NOT NULL,
+    avatar VARCHAR(255) NOT NULL,
+    workExperience INTEGER NOT NULL,
+    highlight VARCHAR(255) NOT NULL,
+    rating DOUBLE NOT NULL,
+    createdTime VARCHAR(255) NOT NULL
+  )
+  ''';
+
   Map<String,String> getAllTables(){
     Map<String,String> map = Map<String,String>();
     map['search_history'] = createTableSql_search_history;
     map['tbl_user'] = createTableSql_tbl_user;
+    map['browser_history'] = createTableSql_browser_history;
     return map;
   }
 }
