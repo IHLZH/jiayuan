@@ -1,8 +1,17 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:jiayuan/http/dio_instance.dart';
+import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/repository/model/user.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:jiayuan/utils/global.dart';
+import 'package:jiayuan/utils/image_utils.dart';
+import 'package:jiayuan/utils/sp_utils.dart';
+import 'package:oktoast/oktoast.dart';
 
 bool isProduction = Constants.IS_Production;
 
@@ -17,6 +26,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   final TextEditingController _nickNameController = TextEditingController();
   int _selectedSex = 0;
   String? _avatarUrl;
+  // 添加一个状态变量来存储选择的头像
+  XFile? _pickedFile;
 
   // 添加最大字符限制
   static const int _maxNickNameLength = 20;
@@ -40,12 +51,62 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     });
   }
 
-  void _updateUserInfo() {
-    //TODO: 后端更新用户信息
+  Future<void> _jumpToTab() async {
+    RouteUtils.pop(context);
   }
 
-  void _selectAvatar() {
-    // TODO: 实现头像选择逻辑
+  Future<void> _updateUserInfo(User updatedUser) async {
+    //TODO: 新头像上传和更新
+    String url = UrlPath.updateUserInfoUrl;
+
+    try {
+      final response = await DioInstance.instance().post(
+          path: url,
+          data: updatedUser.toMap(),
+          options: Options(headers: {"Authorization": Global.token!}));
+
+      if (response.statusCode == 200) {
+        if (response.data['code'] == 200) {
+          showToast("更新成功", duration: Duration(seconds: 1));
+
+          // 更新 userInfoNotifier 以通知监听者
+          Global.userInfoNotifier.value = User.fromJson(response.data['data']);
+
+          // 保存token
+          final List<String> token =
+              response.headers["Authorization"] as List<String>;
+          Global.token = token.first;
+
+          //持久化
+          await SpUtils.saveString("token", Global.token!);
+
+          if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
+          if (isProduction) print("token: ${Global.token}");
+
+          _jumpToTab();
+        } else {
+          if (isProduction) print(response.data['message']);
+          showToast(response.data['message'], duration: Duration(seconds: 1));
+        }
+      } else {
+        if (isProduction) print("无法连接服务器");
+        showToast("无法连接服务器", duration: Duration(seconds: 1));
+      }
+    } catch (e) {
+      if (isProduction) print('Error: $e');
+    }
+  }
+
+  Future<void> _selectAvatar() async {
+    // 打开一个弹窗选择本地图片
+    final pickedFile = await ImageUtils.getImage();
+
+    // 在选择头像后更新状态
+    if (pickedFile != null) {
+      setState(() {
+        _pickedFile = pickedFile; // 更新选择的头像
+      });
+    }
   }
 
   void _saveChanges() {
@@ -66,14 +127,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       userStatus: Global.userInfo?.userStatus ?? 0,
     );
 
-    // 更新 userInfoNotifier 以通知监听者
-    Global.userInfoNotifier.value = updatedUser;
-
     //更新后端数据
-    _updateUserInfo();
-
-    // 保存修改
-    RouteUtils.pop(context);
+    _updateUserInfo(updatedUser);
   }
 
   @override
@@ -95,16 +150,19 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       body: ListView(
         padding: EdgeInsets.all(16.0),
         children: [
-          // 头像选择
+          // 头像选择部分
           Center(
             child: GestureDetector(
               onTap: _selectAvatar,
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: _avatarUrl != null && _avatarUrl != '默认头像'
-                    ? NetworkImage(_avatarUrl!)
-                    : null,
-                child: _avatarUrl == null || _avatarUrl == '默认头像'
+                backgroundImage: _pickedFile != null // 优化头像显示逻辑
+                    ? FileImage(File(_pickedFile!.path)) // 使用选择的头像
+                    : _avatarUrl != null && _avatarUrl != '默认头像'
+                        ? NetworkImage(_avatarUrl!)
+                        : null,
+                child: _pickedFile == null &&
+                        (_avatarUrl == null || _avatarUrl == '默认头像')
                     ? Icon(Icons.person, size: 50)
                     : null, // 如果头像为空，显示默认头像
               ),
