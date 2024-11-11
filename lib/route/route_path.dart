@@ -67,4 +67,11 @@ class RoutePath {
 
   //委托中心页
   static const String commissionCenter = "/commissionCenter";
+
+  //家政员认证页面
+  static const String keeperCertified = "/keeperCertified";
+
+  //证书认证页面
+  static const String certCertified = "/certCertified";
+
 }

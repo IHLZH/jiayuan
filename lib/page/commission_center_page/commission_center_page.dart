@@ -23,6 +23,12 @@ class _CommissionCenterState extends State<CommissionCenterPage>{
   int touchedIndex = -1;
 
   @override
+  void initState() {
+    super.initState();
+    
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (BuildContext context) {
@@ -338,6 +344,7 @@ class _CommissionCenterState extends State<CommissionCenterPage>{
                   "本月数据",
                   style: TextStyle(
                       fontSize: 16.sp,
+                      color: AppColors.textColor2b,
                       fontWeight: FontWeight.w600
                   ),
                 ),
