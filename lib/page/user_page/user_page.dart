@@ -113,7 +113,7 @@ class _UserPageState extends State<UserPage> {
       }
     }
 
-    Future<void> _jumpToCommissionCenterPage () async {
+    Future<void> _jumpToCommissionCenterPage() async {
       RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
     }
 
@@ -185,7 +185,11 @@ class _UserPageState extends State<UserPage> {
                   child: Icon(icon, size: 35, color: Colors.white),
                 ),
                 SizedBox(height: 8),
-                Text("$title", style: TextStyle(fontSize: 14,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold)),
+                Text("$title",
+                    style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold)),
               ],
             ),
           ),
@@ -201,7 +205,10 @@ class _UserPageState extends State<UserPage> {
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 16, color: Colors.grey[800],fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 17,
+                  color: Colors.grey[800],
+                  fontWeight: FontWeight.bold),
             ),
             Expanded(child: SizedBox()),
             TextButton(
@@ -214,7 +221,7 @@ class _UserPageState extends State<UserPage> {
               },
               child: Text(
                 '更多',
-                style: TextStyle(color: Colors.grey, fontSize: 16),
+                style: TextStyle(color: Colors.grey, fontSize: 17,fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -248,7 +255,7 @@ class _UserPageState extends State<UserPage> {
         child: SafeArea(
           child: InkWell(
             onTap: () {
-              if(title=='委托中心'){
+              if (title == '委托中心') {
                 _jumpToCommissionCenterPage();
               }
             },
@@ -272,7 +279,11 @@ class _UserPageState extends State<UserPage> {
                   child: Icon(icon, size: 35, color: Colors.white),
                 ),
                 SizedBox(height: 8),
-                Text(title, style: TextStyle(color:Theme.of(context).primaryColor,fontSize: 14,fontWeight: FontWeight.bold)),
+                Text(title,
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold)),
               ],
             ),
           ),
@@ -370,82 +381,94 @@ class _UserPageState extends State<UserPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // 用户信息头部
-              SafeArea(
-                child: Container(
-                  padding: EdgeInsets.all(16.r),
-                  child: Row(
-                    children: [
-                      //头像
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundImage:
-                            const AssetImage('assets/images/ikun1.png'),
-                      ),
-                      SizedBox(width: 16),
+              Container(
+                // margin: EdgeInsets.only(left: 10.r,right: 10.r,top: 15.r),
+                // decoration: BoxDecoration(
+                //   color: AppColors.backgroundColor,
+                //   border: Border.all(color: Colors.white70),
+                //   borderRadius: BorderRadius.circular(30.r), // 设置圆角
+                //   boxShadow: [
+                //     BoxShadow(
+                //       color: Colors.grey.withOpacity(0.0), // 阴影颜色
+                //       spreadRadius: 2, // 阴影扩展半径
+                //       blurRadius: 5, // 阴影模糊半径
+                //       offset: Offset(0, 0), // 阴影偏移量
+                //     ),
+                //   ],
+                // ),
+                child: // 用户信息头部
+                    SafeArea(
+                  child: Container(
+                    padding: EdgeInsets.all(16.r),
+                    child: Row(
+                      children: [
+                        //头像
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundImage:
+                              const AssetImage('assets/images/ikun1.png'),
+                        ),
+                        SizedBox(width: 16),
 
-                      // 修改昵称显示部分
-                      Container(
-                        width: 150.w,
-                        child: SafeArea(
-                          child: ValueListenableBuilder<User?>(
-                            valueListenable: Global.userInfoNotifier,
-                            builder: (context, userInfo, child) {
-                              return ShaderMask(
-                                shaderCallback: (Rect bounds) {
-                                  return LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Theme.of(context).primaryColor,
-                                      AppColors.appColor,
-                                      // AppColors.endDeepColor,
-                                    ],
-                                  ).createShader(bounds);
-                                },
-                                child: Text(
-                                  userInfo?.nickName ??
-                                      '未命名',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                        // 修改昵称显示部分
+                        Container(
+                          width: 150.w,
+                          child: SafeArea(
+                            child: ValueListenableBuilder<User?>(
+                              valueListenable: Global.userInfoNotifier,
+                              builder: (context, userInfo, child) {
+                                return ShaderMask(
+                                  shaderCallback: (Rect bounds) {
+                                    return LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        Theme.of(context).primaryColor,
+                                        AppColors.appColor,
+                                        // AppColors.endDeepColor,
+                                      ],
+                                    ).createShader(bounds);
+                                  },
+                                  child: Text(
+                                    userInfo?.nickName ?? '未命名',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),
 
-                      Expanded(child: SizedBox()),
-                      //个人信息修改
-                      Material(
-                        color: Colors.transparent, // 确保背景透明
-                        child: ClipOval(
-                          child: InkWell(
-                            onTap: () => _jumpToProfileEditPage(),
-                            // 水波纹颜色
-                            splashColor:
-                                Colors.grey[300],
-                            // 高亮颜色
-                            highlightColor:
-                                Colors.grey[300],
-                            // 设置水波纹为圆形
-                            customBorder: CircleBorder(),
-                            child: Icon(Icons.chevron_right_outlined, size: 40),
+                        Expanded(child: SizedBox()),
+                        //个人信息修改
+                        Material(
+                          color: Colors.transparent, // 确保背景透明
+                          child: ClipOval(
+                            child: InkWell(
+                              onTap: () => _jumpToProfileEditPage(),
+                              // 水波纹颜色
+                              splashColor: Colors.grey[300],
+                              // 高亮颜色
+                              highlightColor: Colors.grey[300],
+                              // 设置水波纹为圆形
+                              customBorder: CircleBorder(),
+                              child:
+                                  Icon(Icons.chevron_right_outlined, size: 40),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-
               SizedBox(height: 16.h),
-
               Container(
                 height: 150.h,
                 margin: EdgeInsets.symmetric(horizontal: 10),
@@ -486,9 +509,7 @@ class _UserPageState extends State<UserPage> {
                   ],
                 ),
               ),
-
               SizedBox(height: 16.h),
-
               Container(
                 height: 150,
                 margin: EdgeInsets.symmetric(horizontal: 10),
@@ -529,9 +550,7 @@ class _UserPageState extends State<UserPage> {
                   ],
                 ),
               ),
-
               SizedBox(height: 30.h),
-
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
