@@ -267,7 +267,7 @@ class _UserPageState extends State<UserPage> {
             onTap: () {
               if(title=='委托中心'){
                 _jumpToCommissionCenterPage();
-              }else if(title=='家政员认证'){
+              }else if(title=='成为家政员'){
                 _jumpToKeeperCertified();
               }else if(title=='证书认证'){
                 _jumpToCertCertified();
