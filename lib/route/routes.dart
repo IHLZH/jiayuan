@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jiayuan/page/certified_page/cert/cert_certified_page.dart';
+import 'package:jiayuan/page/certified_page/keeper/keeper_certified_page.dart';
 import 'package:jiayuan/page/commission_center_page/commission_center_page.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_page.dart';
@@ -84,8 +86,15 @@ class Routes {
       //家政员分类页
       case RoutePath.houseKeepingScreeningPage:
         return pageRoute(HouseKeepingScreeningPage());
+      //委托中心页
       case RoutePath.commissionCenter:
         return pageRoute(CommissionCenterPage());
+      //家政员认证页
+      case RoutePath.keeperCertified:
+        return pageRoute(KeeperCertifiedPage());
+      //证书认证页
+      case RoutePath.certCertified:
+        return pageRoute(CertCertifiedPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
