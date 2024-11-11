@@ -137,6 +137,12 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
   }
 
   @override
+  void dispose() {
+    Loading.dismissAll();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context){
