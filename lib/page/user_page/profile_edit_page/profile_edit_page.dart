@@ -12,11 +12,13 @@ import 'package:jiayuan/utils/global.dart';
 import 'package:jiayuan/utils/image_utils.dart';
 import 'package:jiayuan/utils/sp_utils.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 bool isProduction = Constants.IS_Production;
 
 class ProfileEditPage extends StatefulWidget {
   const ProfileEditPage({Key? key}) : super(key: key);
+
   @override
   State<ProfileEditPage> createState() => _ProfileEditPageState();
 }
@@ -26,6 +28,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   final TextEditingController _nickNameController = TextEditingController();
   int _selectedSex = 0;
   String? _avatarUrl;
+
   // 添加一个状态变量来存储选择的头像
   XFile? _pickedFile;
 
@@ -97,7 +100,16 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     }
   }
 
+  Future<bool> requestGalleryPermission() async {
+    PermissionStatus status = await Permission.photos.request();
+    if (status.isGranted) {
+      return true;
+    } else {}
+    return false;
+  }
+
   Future<void> _selectAvatar() async {
+    requestGalleryPermission();
     // 打开一个弹窗选择本地图片
     final pickedFile = await ImageUtils.getImage();
 
