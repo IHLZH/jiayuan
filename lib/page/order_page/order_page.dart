@@ -79,7 +79,7 @@ class _OrderPageState extends State<OrderPage> {
                     color: Colors.black, fontWeight: FontWeight.bold)),
                 SizedBox(width: 10),
                 Container(
-                  width: 70, // 设置容器宽度为70
+                  width: 55,
                   child: Text(
                     "${commissionData.commissionId}",
                     style: TextStyle(
