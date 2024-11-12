@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../../../repository/model/Housekeeper _data.dart';
 import '../../../route/route_path.dart';
 import '../../../route/route_utils.dart';
+import '../../../utils/global.dart';
 import 'browser_history_vim.dart';
 
 
@@ -65,7 +67,7 @@ class _BrowseHistoryPageState extends State<BrowseHistoryPage> {
           borderRadius: BorderRadius.circular(10.0),
           onTap: () async{
             housekeeper.createdTime = DateTime.now();
-            await browseHistoryViewModel.insertBrowseHistory(housekeeper);
+            await Global.dbUtil?.db.insert('browser_history', housekeeper.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
             RouteUtils.pushForNamed(
                 context,
                 RoutePath.KeeperPage,

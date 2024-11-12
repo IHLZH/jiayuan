@@ -49,7 +49,7 @@ class SendCommissionViewModel with ChangeNotifier{
   Future<bool> sendCommission() async{
     try{
       commission = Commission(
-          commissionId: id,
+          userId: 1,
           commissionBudget: price,
           downPayment: price/10.0,
           commissionDescription: remark,
@@ -64,7 +64,7 @@ class SendCommissionViewModel with ChangeNotifier{
           expectStartTime: selectedDate
       );
      // print(commission?.toJson());
-      var res = await CommissionApi.instance.sendCommission(commission!);
+      var res = await CommissionApi.instance.sendCommission(commission!,id!);
       if(res == "200"){
         showToast("发布成功");
         return true;

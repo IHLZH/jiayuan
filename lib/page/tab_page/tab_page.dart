@@ -65,7 +65,7 @@ class _TabPageState extends State<TabPage>{
   @override
   void initState() {
     super.initState();
-
+    Global.dbUtil?.open();
     //获取定位权限
     getPermissionAndStart();
 
@@ -94,6 +94,21 @@ class _TabPageState extends State<TabPage>{
     });
 
 
+  }
+
+
+  void dispose()  {
+    //销毁定位
+    _locationPlugin.destroy();
+    //取消定位订阅
+    _locationListener.cancel();
+    //关闭数据库
+    print("数据库关闭");
+    void dispose() async{
+      Global.dbUtil?.close();
+      print("已被销毁dispose");
+    }
+    super.dispose();
   }
 
   Future<void> getPermissionAndStart() async {
