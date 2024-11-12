@@ -138,6 +138,10 @@ class _UserPageState extends State<UserPage> {
       RouteUtils.pushForNamed(context, RoutePath.certCertified);
     }
 
+    Future<void> _jumpToOrderPage() async {
+      RouteUtils.pushForNamed(context, RoutePath.orderPage);
+    }
+
     // 水平图标1.0
     // Widget _buildOrderStatus(String title) {
     //   IconData icon;
@@ -225,7 +229,7 @@ class _UserPageState extends State<UserPage> {
             TextButton(
               onPressed: () {
                 if (title == "服务订单") {
-                  //TODO
+                  _jumpToOrderPage();
                 } else {
                   //TODO
                 }
