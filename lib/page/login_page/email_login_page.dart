@@ -48,10 +48,10 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     super.dispose();
   }
 
-  void _startTimer() async{
+  void _startTimer() async {
     const duration = Duration(seconds: 1);
     _secondsRemaining = 60;
-    _timer?.cancel();//清除之前的
+    _timer?.cancel(); //清除之前的
     _timer = Timer.periodic(duration, (Timer timer) {
       if (_secondsRemaining == 0) {
         setState(() {
@@ -106,12 +106,12 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     final String email = _emailController.text;
     final String code = _codeController.text;
 
-    if(email.isEmpty){
+    if (email.isEmpty) {
       showToast("邮箱不能为空", duration: const Duration(seconds: 1));
       return;
     }
 
-    if(code.isEmpty){
+    if (code.isEmpty) {
       showToast("验证码不能为空", duration: const Duration(seconds: 1));
       return;
     }
@@ -137,7 +137,8 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
           Global.input = email;
 
           // 保存token
-          final List<String> token = response.headers["Authorization"] as List<String>;
+          final List<String> token =
+              response.headers["Authorization"] as List<String>;
           Global.token = token.first;
 
           // 持久化
@@ -170,8 +171,10 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -198,7 +201,9 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                   Text(
                     "邮箱登录",
                     style: TextStyle(
-                        fontSize: 30, color: Theme.of(context).primaryColor),
+                        fontSize: 30,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 30),
                   Container(
@@ -297,6 +302,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                                         style: TextStyle(
                                           fontSize: 17,
                                           color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
@@ -329,12 +335,14 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                             children: [
                               TextButton(
                                   onPressed: () {
-                                    RouteUtils.pushForNamed(context, RoutePath.registerCheckCodePage);
+                                    RouteUtils.pushForNamed(context,
+                                        RoutePath.registerCheckCodePage);
                                   },
                                   child: Text(
                                     "注册",
                                     style: TextStyle(
-                                        color: Theme.of(context).primaryColor),
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.bold),
                                   )),
                               Expanded(child: SizedBox()),
                             ],
@@ -360,9 +368,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                 _isAgreed
                     ? Icons.check_circle_rounded
                     : Icons.check_circle_outline,
-                color: _isAgreed
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey,
+                color: _isAgreed ? Theme.of(context).primaryColor : Colors.grey,
                 size: 25,
               ),
             ),
@@ -370,9 +376,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
             Text(
               "我已阅读《服务协议》《隐私协议》",
               style: TextStyle(
-                color: _isAgreed
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey,
+                color: _isAgreed ? Theme.of(context).primaryColor : Colors.grey,
                 fontSize: 15,
               ),
             ),

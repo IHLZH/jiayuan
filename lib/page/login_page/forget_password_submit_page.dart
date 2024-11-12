@@ -78,7 +78,9 @@ class _ForgetPasswordSubmitPageState extends State<ForgetPasswordSubmitPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,

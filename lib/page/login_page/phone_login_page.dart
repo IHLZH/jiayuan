@@ -88,7 +88,8 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
           // 启动倒计时
           _startTimer();
         } else {
-          showToast(response.data['message'], duration: const Duration(seconds: 1));
+          showToast(response.data['message'],
+              duration: const Duration(seconds: 1));
         }
       } else {
         showToast("无法连接服务器", duration: const Duration(seconds: 1));
@@ -99,7 +100,6 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
       }
     }
   }
-
 
   void _jumpToTab() {
     RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
@@ -113,15 +113,15 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
     final String phone = _phoneController.text;
     final String code = _codeController.text;
 
-    if(phone.isEmpty){
+    if (phone.isEmpty) {
       showToast("请输入手机号", duration: const Duration(seconds: 1));
       return;
     }
-    if(code.isEmpty){
+    if (code.isEmpty) {
       showToast("请输入验证码", duration: const Duration(seconds: 1));
       return;
     }
-    if(!_isAgreed){
+    if (!_isAgreed) {
       showToast("请先同意用户协议", duration: const Duration(seconds: 1));
       return;
     }
@@ -172,8 +172,10 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -185,7 +187,9 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
         ),
         title: Text(
           "手机号登录",
-          style: TextStyle(color: Theme.of(context).primaryColor),
+          style: TextStyle(
+              color: Theme.of(context).primaryColor,
+              fontWeight: FontWeight.bold),
         ),
       ),
       body: Container(
@@ -299,6 +303,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                                         style: TextStyle(
                                           fontSize: 17,
                                           color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
@@ -334,7 +339,8 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                                   child: Text(
                                     "注册",
                                     style: TextStyle(
-                                        color: Theme.of(context).primaryColor),
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.bold),
                                   )),
                               Expanded(child: SizedBox()),
                             ],
@@ -360,9 +366,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                 _isAgreed
                     ? Icons.check_circle_rounded
                     : Icons.check_circle_outline,
-                color: _isAgreed
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey,
+                color: _isAgreed ? Theme.of(context).primaryColor : Colors.grey,
                 size: 25,
               ),
             ),
@@ -370,10 +374,9 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
             Text(
               "我已阅读《服务协议》《隐私协议》",
               style: TextStyle(
-                color: _isAgreed
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey,
+                color: _isAgreed ? Theme.of(context).primaryColor : Colors.grey,
                 fontSize: 15,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Expanded(child: SizedBox()),

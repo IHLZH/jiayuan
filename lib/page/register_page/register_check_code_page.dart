@@ -166,7 +166,9 @@ class _RegisterCheckCodePageState extends State<RegisterCheckCodePage> {
     return OKToast(
       // 包裹整个页面
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
@@ -204,7 +206,7 @@ class _RegisterCheckCodePageState extends State<RegisterCheckCodePage> {
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
-                      child: Text('使用邮箱'),
+                      child: Text('使用邮箱',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
                     ),
                     TextButton(
                       onPressed: () => _toggleInputType(false),
@@ -218,7 +220,7 @@ class _RegisterCheckCodePageState extends State<RegisterCheckCodePage> {
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
-                      child: Text('使用手机号'),
+                      child: Text('使用手机号',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
                     ),
                   ],
                 ),
@@ -329,6 +331,7 @@ class _RegisterCheckCodePageState extends State<RegisterCheckCodePage> {
                               style: TextStyle(
                                 fontSize: 17,
                                 color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold
                               ),
                             ),
                           ),

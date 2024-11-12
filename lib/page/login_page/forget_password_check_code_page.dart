@@ -112,7 +112,6 @@ class _ForgetPasswordCheckCodePageState
     }
   }
 
-  //TODO
   //验证码认证
   Future<void> _navigateToNextPage() async {
     final String input =
@@ -149,7 +148,9 @@ class _ForgetPasswordCheckCodePageState
     return OKToast(
       // 包裹整个页面
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
@@ -187,7 +188,7 @@ class _ForgetPasswordCheckCodePageState
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
-                      child: Text('使用邮箱'),
+                      child: Text('使用邮箱',style: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.bold),),
                     ),
                     TextButton(
                       onPressed: () => _toggleInputType(false),
@@ -201,7 +202,7 @@ class _ForgetPasswordCheckCodePageState
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
-                      child: Text('使用手机号'),
+                      child: Text('使用手机号',style: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.bold),),
                     ),
                   ],
                 ),
@@ -312,6 +313,7 @@ class _ForgetPasswordCheckCodePageState
                               style: TextStyle(
                                 fontSize: 17,
                                 color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
