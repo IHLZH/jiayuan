@@ -7,7 +7,7 @@ class Commission {
 
   double? commissionBudget;
 
-  double? down_payment;
+  double? downPayment;
 
   String? commissionDescription;
 
@@ -45,7 +45,7 @@ class Commission {
     this.userId,
     this.keeperId,
     this.commissionBudget,
-    this.down_payment,
+    this.downPayment,
     this.commissionDescription,
     this.province,
     this.city,
@@ -67,7 +67,7 @@ class Commission {
     userId = json['userId'];
     keeperId = json['keeperId'];
     commissionBudget = json['commissionBudget'];
-    down_payment = json['down_payment'];
+    downPayment = json['down_payment'];
     commissionDescription = json['commissionDescription'];
     province = json['province'];
     city = json['city'];
@@ -92,7 +92,7 @@ class Commission {
       'userId': userId,
       'keeperId': keeperId,
       'commissionBudget': commissionBudget,
-      'down_payment': down_payment,
+      'down_payment': downPayment,
       'commissionDescription': commissionDescription,
       'province': province,
       'city': city,

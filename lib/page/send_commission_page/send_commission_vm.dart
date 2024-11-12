@@ -51,7 +51,7 @@ class SendCommissionViewModel with ChangeNotifier{
       commission = Commission(
           commissionId: id,
           commissionBudget: price,
-          down_payment: price/10.0,
+          downPayment: price/10.0,
           commissionDescription: remark,
           commissionAddress: _address!+doorNumber.toString(),
           lng: _longitude?.toString(),
