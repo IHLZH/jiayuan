@@ -138,20 +138,24 @@ class _UserPageState extends State<UserPage> {
       RouteUtils.pushForNamed(context, RoutePath.certCertified);
     }
 
+    Future<void> _jumpToOrderPage() async {
+      RouteUtils.pushForNamed(context, RoutePath.orderPage);
+    }
+
     // 水平图标1.0
     // Widget _buildOrderStatus(String title) {
     //   IconData icon;
     //   switch (title) {
-    //     case '未进行':
+    //     case '待接取':
     //       icon = Icons.pending_outlined;
     //       break;
-    //     case '进行中':
+    //     case '服务中':
     //       icon = Icons.hourglass_empty;
     //       break;
-    //     case '待验收':
+    //     case '待支付':
     //       icon = Icons.done_all_outlined;
     //       break;
-    //     case '待评价':
+    //     case '已完成':
     //       icon = Icons.rate_review_outlined;
     //       break;
     //     default:
@@ -225,7 +229,7 @@ class _UserPageState extends State<UserPage> {
             TextButton(
               onPressed: () {
                 if (title == "服务订单") {
-                  //TODO
+                  _jumpToOrderPage();
                 } else {
                   //TODO
                 }
@@ -483,10 +487,10 @@ class _UserPageState extends State<UserPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildManagementOption(Icons.pending_outlined, '未进行'),
-                          _buildManagementOption(Icons.hourglass_empty, '进行中'),
-                          _buildManagementOption(Icons.done_all_outlined, '待验收'),
-                          _buildManagementOption(Icons.rate_review_outlined, '待评价'),
+                          _buildManagementOption(Icons.pending_outlined, '待接取'),
+                          _buildManagementOption(Icons.hourglass_empty, '服务中'),
+                          _buildManagementOption(Icons.monetization_on_outlined, '待支付'),
+                          _buildManagementOption(Icons.done_all_outlined, '已完成'),
                         ],
                       ),
                     ),
@@ -525,10 +529,10 @@ class _UserPageState extends State<UserPage> {
               //         child: Row(
               //           mainAxisAlignment: MainAxisAlignment.spaceAround,
               //           children: [
-              //             // _buildOrderStatus('未进行'),
-              //             // _buildOrderStatus('进行中'),
-              //             // _buildOrderStatus('待验收'),
-              //             // _buildOrderStatus('待评价'),
+              //             // _buildOrderStatus('待接取'),
+              //             // _buildOrderStatus('服务中'),
+              //             // _buildOrderStatus('待支付'),
+              //             // _buildOrderStatus('已完成'),
               //
               //
               //           ],

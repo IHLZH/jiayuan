@@ -18,6 +18,7 @@ import 'package:jiayuan/route/route_path.dart';
 
 import '../page/keeper_page/KeeperPage.dart';
 import '../page/login_page/phone_login_page.dart';
+import '../page/order_page/order_page.dart';
 import '../page/send_commission_page/send_commision_page.dart';
 import '../page/tab_page/tab_page.dart';
 import '../page/user_page/browser_history_page/browser_history_page.dart';
@@ -77,6 +78,9 @@ class Routes {
       //个人资料编辑页
       case RoutePath.profileEditPage:
         return pageRoute(ProfileEditPage());
+      //订单页
+      case RoutePath.orderPage:
+        return pageRoute(OrderPage());
       //设置页
       case RoutePath.settingPage:
         return pageRoute(SettingPage());
@@ -87,10 +91,10 @@ class Routes {
       //家政员分类页
       case RoutePath.houseKeepingScreeningPage:
         return pageRoute(HouseKeepingScreeningPage());
-        //委托中心页面
+      //委托中心页面
       case RoutePath.commissionCenter:
         return pageRoute(CommissionCenterPage());
-        //浏览历史页面
+      //浏览历史页面
       case RoutePath.browseHistoryPage:
         return pageRoute(BrowseHistoryPage());
       //委托中心页
@@ -102,7 +106,6 @@ class Routes {
       //证书认证页
       case RoutePath.certCertified:
         return pageRoute(CertCertifiedPage());
-
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
