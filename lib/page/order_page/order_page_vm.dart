@@ -1,9 +1,11 @@
 import 'package:jiayuan/repository/model/Commission.dart';
 
+import '../../repository/model/full_order.dart';
+
 class OrderPageVM {
-  static List<Commission> getCommissionList() {
+  static List<FullOrder> getFullOrderList() {
     return [
-      Commission(
+      FullOrder(
           commissionId: 1,
           userId: 1,
           keeperId: 1,
@@ -23,8 +25,11 @@ class OrderPageVM {
           realStartTime: DateTime.now(),
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
-          commissionStatus: 0),
-      Commission(
+          commissionStatus: 0,
+          keeperName: "lzh",
+          serviceName: "日常保洁（元/小时）",
+      ),
+      FullOrder(
           commissionId: 2,
           userId: 1,
           keeperId: 1,
@@ -45,7 +50,7 @@ class OrderPageVM {
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
           commissionStatus: 0),
-      Commission(
+      FullOrder(
           commissionId: 3,
           userId: 1,
           keeperId: 1,
@@ -66,7 +71,7 @@ class OrderPageVM {
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
           commissionStatus: 1),
-      Commission(
+      FullOrder(
           commissionId: 4,
           userId: 1,
           keeperId: 1,
@@ -87,7 +92,7 @@ class OrderPageVM {
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
           commissionStatus: 1),
-      Commission(
+      FullOrder(
           commissionId: 5,
           userId: 1,
           keeperId: 1,
@@ -108,7 +113,7 @@ class OrderPageVM {
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
           commissionStatus: 2),
-      Commission(
+      FullOrder(
           commissionId: 6,
           userId: 1,
           keeperId: 1,
@@ -129,7 +134,7 @@ class OrderPageVM {
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
           commissionStatus: 2),
-      Commission(
+      FullOrder(
           commissionId: 7,
           userId: 1,
           keeperId: 1,
@@ -150,7 +155,7 @@ class OrderPageVM {
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
           commissionStatus: 3),
-      Commission(
+      FullOrder(
           commissionId: 8,
           userId: 1,
           keeperId: 1,

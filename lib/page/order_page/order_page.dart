@@ -25,12 +25,12 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
-  List<Commission> _commissionDataList = [];
+  List<FullOrder> _commissionDataList = [];
 
   @override
   void initState() {
     // _commissionDataList = CommissionApi.instance.getComissionListWithStatus(widget.status, widget.userId) as List<CommissionData1>;
-    _commissionDataList = OrderPageVM.getCommissionList();
+    _commissionDataList = OrderPageVM.getFullOrderList();
     super.initState();
   }
 
