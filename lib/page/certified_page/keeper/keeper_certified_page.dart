@@ -138,9 +138,11 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
   void _authenticated(){
     if(isNameCorrect && isIdCorrect && isPhoneCorrect){
       if(_keeperViewModel.name != "" && _keeperViewModel.idCard != "" && _keeperViewModel.phoneNumber != ""){
-
-        //发送网络请求
-
+        if(_keeperViewModel.idCardFront != null && _keeperViewModel.idCardOther != null && _keeperViewModel.selfAvatar != null){
+          //发送网络请求
+        }else{
+          showToast("照片不能为空");
+        }
       } else{
         showToast("信息不能为空");
       }
@@ -243,6 +245,10 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                                               vm.name = name;
                                               isNameCorrect = _validateName(name);
                                             });
+                                          }else{
+                                            setState(() {
+                                              isNameCorrect = true;
+                                            });
                                           }
                                         },
                                       )
@@ -278,6 +284,10 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                                             setState(() {
                                               vm.idCard = id;
                                               isIdCorrect = _validateIDCard(id);
+                                            });
+                                          }else{
+                                            setState(() {
+                                              isIdCorrect = true;
                                             });
                                           }
                                         },
@@ -397,6 +407,10 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                                             setState(() {
                                               vm.phoneNumber = phone;
                                               isPhoneCorrect = _validatePhoneNumber(phone);
+                                            });
+                                          }else{
+                                            setState(() {
+                                              isPhoneCorrect = true;
                                             });
                                           }
                                         },

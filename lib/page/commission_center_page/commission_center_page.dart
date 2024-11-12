@@ -303,7 +303,7 @@ class _CommissionCenterState extends State<CommissionCenterPage>{
               children: [
                 _TitleIcon(Icons.account_circle, "认证信息"),
                 _TitleIcon(Icons.history, "浏览记录"),
-                _TitleIcon(Icons.menu_book, "证书认证"),
+                _TitleIcon(Icons.menu_book, "我的证书"),
                 _TitleIcon(Icons.comment, "用户评论"),
 
               ],
