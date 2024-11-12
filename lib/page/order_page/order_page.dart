@@ -71,7 +71,7 @@ class _OrderPageState extends State<OrderPage> {
 
             SizedBox(height: 10),
 
-            Row(
+            SafeArea(child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -108,43 +108,45 @@ class _OrderPageState extends State<OrderPage> {
                       fontWeight: FontWeight.bold)),
                 },
               ],
-            ),
+            ),),
+
             SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children:[
-                Text("家政员:", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
-                SizedBox(width: 10),
-                Container(
-                  width: 70, // 设置容器宽度为70
-                  child: Text(
-                    "${commissionData.keeperName}",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+
+            SafeArea(child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:[
+                  Text("家政员:", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                  SizedBox(width: 10),
+                  Container(
+                    width: 70, // 设置容器宽度为70
+                    child: Text(
+                      "${commissionData.keeperName}",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                SizedBox(width: 5,),
-                Text("委托类型:", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),maxLines: 1,overflow: TextOverflow.ellipsis,),
-                SizedBox(width: 10),
-                Container(
-                  width: 80,
-                  child: Text(
-                    "${commissionData.serviceName}",
-                    style: TextStyle(
-                      color: Colors.amber[900],
-                      fontWeight: FontWeight.bold,
+                  SizedBox(width: 5,),
+                  Text("委托类型:", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                  SizedBox(width: 10),
+                  Container(
+                    width: 80,
+                    child: Text(
+                      "${commissionData.serviceName}",
+                      style: TextStyle(
+                        color: Colors.amber[900],
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ]
-            ),
+                ]
+            ),),
 
             SizedBox(height: 10),
             Row(
