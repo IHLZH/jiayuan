@@ -1,7 +1,7 @@
 class UrlPath {
   static const String realBaseUrl = "http://192.168.3.32:9900/";
 
-  static const String BaseUrl = "http://192.168.137.136:8080";
+  static const String BaseUrl = "http://10.7.89.247:8080";
 
   static const String testBaseUrl = "http://10.7.89.171:8080";
 
@@ -48,7 +48,7 @@ class UrlPath {
   static const String logoutUrl = "/logout";
 
   //个人信息修改接口
-  static const String updateUserInfoUrl = "/login/updateUser";
+  static const String updateUserInfoUrl = "/update/userInfo";
 
   //搜索委托接口
   static const String searchCommissionUrl = "/search";
@@ -74,4 +74,7 @@ class UrlPath {
 
   //取消接取委托接口
   static const String cancelReceiveCommissionUrl = "/cancel_receive";
+
+  //根据userId和commissionId获取委托信息接口
+  static const String getCommissionInfoByIdUrl = "/release/comissionByUserId";
 }
