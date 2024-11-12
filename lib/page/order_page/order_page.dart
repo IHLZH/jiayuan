@@ -114,12 +114,12 @@ class _OrderPageState extends State<OrderPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children:[
-                Text("家政员ID:", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+                Text("家政员:", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
                 SizedBox(width: 10),
                 Container(
                   width: 70, // 设置容器宽度为70
                   child: Text(
-                    "${commissionData.keeperId}",
+                    "${commissionData.keeperName}",
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -132,9 +132,9 @@ class _OrderPageState extends State<OrderPage> {
                 Text("委托类型:", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),maxLines: 1,overflow: TextOverflow.ellipsis,),
                 SizedBox(width: 10),
                 Container(
-                  width: 70, // 设置容器宽度为70
+                  width: 80,
                   child: Text(
-                    "保姆月嫂",
+                    "${commissionData.serviceName}",
                     style: TextStyle(
                       color: Colors.amber[900],
                       fontWeight: FontWeight.bold,
