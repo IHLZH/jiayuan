@@ -22,7 +22,7 @@ class Global {
       userStatus: 1);
 
   //个人信息与监听器
-  //Global.userInfoNotifier.value = Global.userInfo;//这样来实现更新
+  //Global.userInfoNotifier.value = (User)updatedUser;//这样来实现更新
   static final userInfoNotifier = ValueNotifier<User?>(null);
 
   static User? get userInfo => userInfoNotifier.value;
