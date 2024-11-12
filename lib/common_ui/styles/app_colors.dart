@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+
 class AppColors {
 
   //应用主色调
@@ -13,6 +15,8 @@ class AppColors {
   //按钮红色背景
   static const redBtnColor = Color(0xFFFF3B3D);
   static const cursorColor = Color(0xFFE9AAAB);
+
+  static const orangeBtnColor = Color(0xE6FF6A00);
 
   //按钮/标题黑色
   static const blackColor333 = Color(0xFF333333);
