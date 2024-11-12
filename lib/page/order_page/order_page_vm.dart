@@ -26,7 +26,7 @@ class OrderPageVM {
         endTime: DateTime.now(),
         specifyServiceDuration: "2",
         commissionStatus: 0,
-        keeperName: "lzh",
+        keeperName: null,
         serviceName: "日常保洁（元/小时）",
       ),
       FullOrder(
@@ -50,7 +50,7 @@ class OrderPageVM {
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
           commissionStatus: 0,
-          keeperName: "dm",
+          keeperName: null,
           serviceName: "家电维修"),
       FullOrder(
           commissionId: 3,

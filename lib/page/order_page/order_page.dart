@@ -121,7 +121,7 @@ class _OrderPageState extends State<OrderPage> {
                   Container(
                     width: 70, // 设置容器宽度为70
                     child: Text(
-                      "${commissionData.keeperName}",
+                      "${commissionData.keeperName==null?"无":commissionData.keeperName==''?"无":commissionData.keeperName}",
                       style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
