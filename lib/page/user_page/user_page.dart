@@ -138,77 +138,78 @@ class _UserPageState extends State<UserPage> {
       RouteUtils.pushForNamed(context, RoutePath.certCertified);
     }
 
-    Widget _buildOrderStatus(String title) {
-      IconData icon;
-      switch (title) {
-        case '未进行':
-          icon = Icons.pending_outlined;
-          break;
-        case '进行中':
-          icon = Icons.hourglass_empty;
-          break;
-        case '待验收':
-          icon = Icons.done_all_outlined;
-          break;
-        case '待评价':
-          icon = Icons.rate_review_outlined;
-          break;
-        default:
-          icon = Icons.circle;
-      }
-      // return Material(
-      //   color: Colors.transparent, // 确保背景透明
-      //   child: SafeArea(
-      //     child: InkWell(
-      //       onTap: () {},
-      //       splashColor: Theme.of(context).primaryColor.withAlpha(30),
-      //       highlightColor: Theme.of(context).primaryColor.withAlpha(30),
-      //       // 设置水波纹为圆形
-      //       customBorder: const CircleBorder(),
-      //       child: Column(
-      //         mainAxisAlignment: MainAxisAlignment.center,
-      //         children: [
-      //           Icon(icon, size: 35, color: Theme.of(context).primaryColor),
-      //           SizedBox(height: 8),
-      //           Text("$title", style: TextStyle(fontSize: 14)),
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // );
-      return Material(
-        color: Colors.transparent,
-        child: SafeArea(
-          child: InkWell(
-            onTap: () {},
-            splashColor: Theme.of(context).primaryColor.withAlpha(30),
-            highlightColor: Theme.of(context).primaryColor.withAlpha(30),
-            customBorder: const CircleBorder(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ShaderMask(
-                  shaderCallback: (Rect bounds) {
-                    return LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Theme.of(context).primaryColor,
-                        AppColors.appColor,
-                        AppColors.endDeepColor,
-                      ],
-                    ).createShader(bounds);
-                  },
-                  child: Icon(icon, size: 35, color: Colors.white),
-                ),
-                SizedBox(height: 8),
-                Text("$title", style: TextStyle(fontSize: 14,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
+    // 水平图标1.0
+    // Widget _buildOrderStatus(String title) {
+    //   IconData icon;
+    //   switch (title) {
+    //     case '未进行':
+    //       icon = Icons.pending_outlined;
+    //       break;
+    //     case '进行中':
+    //       icon = Icons.hourglass_empty;
+    //       break;
+    //     case '待验收':
+    //       icon = Icons.done_all_outlined;
+    //       break;
+    //     case '待评价':
+    //       icon = Icons.rate_review_outlined;
+    //       break;
+    //     default:
+    //       icon = Icons.circle;
+    //   }
+    //   // return Material(
+    //   //   color: Colors.transparent, // 确保背景透明
+    //   //   child: SafeArea(
+    //   //     child: InkWell(
+    //   //       onTap: () {},
+    //   //       splashColor: Theme.of(context).primaryColor.withAlpha(30),
+    //   //       highlightColor: Theme.of(context).primaryColor.withAlpha(30),
+    //   //       // 设置水波纹为圆形
+    //   //       customBorder: const CircleBorder(),
+    //   //       child: Column(
+    //   //         mainAxisAlignment: MainAxisAlignment.center,
+    //   //         children: [
+    //   //           Icon(icon, size: 35, color: Theme.of(context).primaryColor),
+    //   //           SizedBox(height: 8),
+    //   //           Text("$title", style: TextStyle(fontSize: 14)),
+    //   //         ],
+    //   //       ),
+    //   //     ),
+    //   //   ),
+    //   // );
+    //   return Material(
+    //     color: Colors.transparent,
+    //     child: SafeArea(
+    //       child: InkWell(
+    //         onTap: () {},
+    //         splashColor: Theme.of(context).primaryColor.withAlpha(30),
+    //         highlightColor: Theme.of(context).primaryColor.withAlpha(30),
+    //         customBorder: const CircleBorder(),
+    //         child: Column(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           children: [
+    //             ShaderMask(
+    //               shaderCallback: (Rect bounds) {
+    //                 return LinearGradient(
+    //                   begin: Alignment.topLeft,
+    //                   end: Alignment.bottomRight,
+    //                   colors: [
+    //                     Theme.of(context).primaryColor,
+    //                     AppColors.appColor,
+    //                     AppColors.endDeepColor,
+    //                   ],
+    //                 ).createShader(bounds);
+    //               },
+    //               child: Icon(icon, size: 35, color: Colors.white),
+    //             ),
+    //             SizedBox(height: 8),
+    //             Text("$title", style: TextStyle(fontSize: 14,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold)),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
 
     // 标题
     Widget _buildSectionTitle(String title) {
@@ -239,27 +240,8 @@ class _UserPageState extends State<UserPage> {
       );
     }
 
-    // 管理选项
+    // 水平图标2.0
     Widget _buildManagementOption(IconData icon, String title) {
-      // return Material(
-      //   color: Colors.transparent, // 确保背景透明
-      //   child: SafeArea(
-      //     child: InkWell(
-      //       onTap: () {},
-      //       splashColor: Theme.of(context).primaryColor.withAlpha(30),
-      //       highlightColor: Theme.of(context).primaryColor.withAlpha(30),
-      //       // 设置水波纹为圆形
-      //       customBorder: const CircleBorder(),
-      //       child: Column(
-      //         children: [
-      //           Icon(icon, color: Theme.of(context).primaryColor, size: 35),
-      //           SizedBox(height: 8),
-      //           Text(title, style: TextStyle(fontSize: 14)),
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // );
       return Material(
         color: Colors.transparent,
         child: SafeArea(
@@ -330,6 +312,7 @@ class _UserPageState extends State<UserPage> {
     //   );
     // }
 
+    //点击导航栏2.0
     Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
       return Material(
         color: Colors.transparent,
@@ -470,8 +453,9 @@ class _UserPageState extends State<UserPage> {
 
               SizedBox(height: 16.h),
 
+              //水平图标2.0
               Container(
-                height: 150.h,
+                height: 150,
                 margin: EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -484,7 +468,7 @@ class _UserPageState extends State<UserPage> {
                       offset: Offset(0, 1),
                     ),
                   ],
-                  border: Border.all(color: Colors.grey, width: 1.0),
+                  border: Border.all(color: Colors.grey, width: 1.w),
                 ),
                 child: Column(
                   children: [
@@ -499,10 +483,10 @@ class _UserPageState extends State<UserPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildOrderStatus('未进行'),
-                          _buildOrderStatus('进行中'),
-                          _buildOrderStatus('待验收'),
-                          _buildOrderStatus('待评价'),
+                          _buildManagementOption(Icons.pending_outlined, '未进行'),
+                          _buildManagementOption(Icons.hourglass_empty, '进行中'),
+                          _buildManagementOption(Icons.done_all_outlined, '待验收'),
+                          _buildManagementOption(Icons.rate_review_outlined, '待评价'),
                         ],
                       ),
                     ),
@@ -510,6 +494,50 @@ class _UserPageState extends State<UserPage> {
                   ],
                 ),
               ),
+
+              //水平图标1.0
+              // Container(
+              //   height: 150.h,
+              //   margin: EdgeInsets.symmetric(horizontal: 10),
+              //   decoration: BoxDecoration(
+              //     color: Colors.white,
+              //     borderRadius: BorderRadius.circular(10.0),
+              //     boxShadow: [
+              //       BoxShadow(
+              //         color: Colors.grey.withOpacity(0.5),
+              //         spreadRadius: 0,
+              //         blurRadius: 2,
+              //         offset: Offset(0, 1),
+              //       ),
+              //     ],
+              //     border: Border.all(color: Colors.grey, width: 1.0),
+              //   ),
+              //   child: Column(
+              //     children: [
+              //       _buildSectionTitle('服务订单'),
+              //       Container(
+              //         margin: EdgeInsets.only(left: 10.w, right: 10.w),
+              //         child: Divider(),
+              //       ),
+              //       Expanded(child: SizedBox()),
+              //       Padding(
+              //         padding: const EdgeInsets.symmetric(horizontal: 0.0),
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //           children: [
+              //             // _buildOrderStatus('未进行'),
+              //             // _buildOrderStatus('进行中'),
+              //             // _buildOrderStatus('待验收'),
+              //             // _buildOrderStatus('待评价'),
+              //
+              //
+              //           ],
+              //         ),
+              //       ),
+              //       Expanded(child: SizedBox()),
+              //     ],
+              //   ),
+              // ),
 
               SizedBox(height: 16.h),
 
