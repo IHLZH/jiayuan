@@ -17,6 +17,11 @@ class ImageUtils {
     return await ImagePicker().pickImage(source: ImageSource.gallery);
   }
 
+  //获取相机拍摄图片
+  static Future<XFile?> getCameraImage() async {
+    return await ImagePicker().pickImage(source: ImageSource.camera);
+  }
+
   //图片传输时转FromData
   static Future<FormData> toFromData(XFile image) async {
     return FormData.fromMap({"file": await MultipartFile.fromFile(image.path)});
