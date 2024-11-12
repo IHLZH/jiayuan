@@ -7,6 +7,8 @@ import 'package:jiayuan/repository/model/Commission.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:jiayuan/utils/global.dart';
 
+import '../../repository/model/full_order.dart';
+
 bool isProduction = Constants.IS_Production;
 
 class OrderPage extends StatefulWidget {
