@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
+import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
@@ -74,8 +75,8 @@ class _SettingPageState extends State<SettingPage> {
                 AppColors.appColor,
                 AppColors.endDeepColor,
               ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
         ),
@@ -86,7 +87,7 @@ class _SettingPageState extends State<SettingPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context);
+            RouteUtils.pop(context);
           },
         ),
       ),
