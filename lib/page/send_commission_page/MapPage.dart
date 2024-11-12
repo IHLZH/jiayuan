@@ -1,14 +1,14 @@
-import 'dart:io';
+import 'dart:async';
+import 'dart:math';
 
 import 'package:amap_flutter_base/amap_flutter_base.dart';
 import 'package:amap_flutter_location/amap_flutter_location.dart';
 import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:amap_flutter_map/amap_flutter_map.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../../config.dart';
 
@@ -45,6 +45,9 @@ class _MapPageState extends State<MapPage> {
   /// 周边数据
   List poisData = [];
 
+  //
+ BuildContext? _dialogContext;
+
   var markerLatitude;
   var markerLongitude;
 
@@ -58,6 +61,10 @@ class _MapPageState extends State<MapPage> {
   // 当前选中的地址信息
   Map<String, dynamic>? _selectedLocation;
 
+  Timer? _debounceTimer;
+
+  bool _isDialogShowing = false;
+
   @override
   void initState() {
     super.initState();
@@ -66,6 +73,7 @@ class _MapPageState extends State<MapPage> {
     /// 设置Android和iOS的apikey，
     AMapFlutterLocation.setApiKey(ConstConfig.androidKey, ConstConfig.iosKey);
 
+    /// 设置是否已经取得用户同意，如果未取得用户同意，高德定位SDK将不会工作,这里传true
     /// 设置是否已经取得用户同意，如果未取得用户同意，高德定位SDK将不会工作,这里传true
     AMapFlutterLocation.updatePrivacyAgree(true);
 
@@ -112,14 +120,25 @@ class _MapPageState extends State<MapPage> {
 
   /// 请求位置
   void requestLocation() {
+    bool hasInitialized = false; // 添加标记，确保只初始化一次
+
     location = AMapFlutterLocation()
-      ..setLocationOption(AMapLocationOption())
+      ..setLocationOption(AMapLocationOption(
+        onceLocation: true,
+        locationMode: AMapLocationMode.Battery_Saving,
+      ))
       ..onLocationChanged().listen((event) {
-        print(event);
+        // 如果已经初始化过，直接返回
+        if (hasInitialized) return;
+
+        print("位置更新: $event");
         double? latitude = double.tryParse(event['latitude'].toString());
         double? longitude = double.tryParse(event['longitude'].toString());
 
         if (latitude != null && longitude != null) {
+          hasInitialized = true; // 标记已初始化
+
+          if (!mounted) return;
           setState(() {
             markerLatitude = latitude;
             markerLongitude = longitude;
@@ -132,23 +151,36 @@ class _MapPageState extends State<MapPage> {
           });
 
           _addMarker(LatLng(latitude, longitude));
+          // 只在初始化时获取一次POI数据
           _getPoisData();
 
+          // 获取完位置后立即停止定位
           location?.stopLocation();
         }
-      })
-      ..startLocation();
+      });
+
+    // 开始定位
+    location?.startLocation();
   }
 
   void _onMapTap(LatLng position) {
-    setState(() {
-      markerLatitude = position.latitude;
-      markerLongitude = position.longitude;
-      _addMarker(position);
+    // 使用防抖处理状态更新
+    if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
+    _debounceTimer = Timer(Duration(milliseconds: 500), () {
+      var _markerLatitude;
+      if (!mounted) return;
+      setState(() {
+        markerLatitude = position.latitude;
+        _markerLatitude = position.latitude;
+        markerLongitude = position.longitude;
+        _addMarker(position);
+      });
+      if(_markerLatitude!=markerLatitude){
+        return;
+      }
+      _getPoisData();
+      _getAddressFromLocation(position.latitude, position.longitude);
     });
-
-    // 根据坐标获取地址信息
-    _getAddressFromLocation(position.latitude, position.longitude);
   }
 
   // 添加根据坐标获取地址信息的方法
@@ -163,10 +195,11 @@ class _MapPageState extends State<MapPage> {
         },
       );
 
-      if (response.data['status'] == '1' && response.data['regeocode'] != null) {
+      if (response.data['status'] == '1' &&
+          response.data['regeocode'] != null) {
         var regeocode = response.data['regeocode'];
         var addressComponent = regeocode['addressComponent'];
-        var formatted_address = regeocode['formatted_address'];
+        var formatted_address = matchAddress(regeocode['formatted_address']);
 
         // 构造位置信息
         Map<String, dynamic> locationInfo = {
@@ -188,71 +221,90 @@ class _MapPageState extends State<MapPage> {
   void _onMapPoiTouched(AMapPoi poi) async {
     if (null == poi) return;
 
-    var poiData = poi.toJson();
-    print('获取到的poi信息：$poiData');
-    
-    // 更新标记位置
-    setState(() {
-      markerLatitude = poi.latLng?.latitude;
-      markerLongitude = poi.latLng?.longitude;
-      _addMarker(poi.latLng!);
-    });
+    if(_debounceTimer?.isActive ?? false){
+      _debounceTimer!.cancel();
+    }
+    _debounceTimer = Timer(Duration(milliseconds: 500), () async{
+      var poiData = poi.toJson();
+      print('获取到的poi信息：$poiData');
 
-    // 获取详细的地址信息
-    try {
-      var response = await Dio().get(
-        'https://restapi.amap.com/v3/geocode/regeo',
-        queryParameters: {
-          'key': ConstConfig.webKey,
-          'location': '${poi.latLng?.longitude},${poi.latLng?.latitude}',
-          'extensions': 'base',
-          'radius': 50,
-          'extensions': 'all',
-        },
-      );
+      // 更新标记位置
+      setState(() {
+        markerLatitude = poi.latLng?.latitude;
+        markerLongitude = poi.latLng?.longitude;
+        _addMarker(poi.latLng!);
+        _getPoisData();
+      });
 
-      if (response.data['status'] == '1' && response.data['regeocode'] != null) {
-        var regeocode = response.data['regeocode'];
-        var addressComponent = regeocode['addressComponent'];
-        var formatted_address = regeocode['formatted_address'];
-        
-        print('获取到的地址信息：$regeocode');
+      // 获取详细的地址信息
+      try {
+        var response = await Dio().get(
+          'https://restapi.amap.com/v3/geocode/regeo',
+          queryParameters: {
+            'key': ConstConfig.webKey,
+            'location': '${poi.latLng?.longitude},${poi.latLng?.latitude}',
+            'extensions': 'base',
+            'radius': 50,
+          },
+        );
 
-        // 构造位置信息，使用 POI 的名称和逆地理编码的地址信息
+        if (response.data['status'] == '1' &&
+            response.data['regeocode'] != null) {
+          var regeocode = response.data['regeocode'];
+          var addressComponent = regeocode['addressComponent'];
+          var formatted_address = matchAddress(regeocode['formatted_address']);
+
+          print('获取到的地址信息：$regeocode');
+
+          // 构造位置信息，使用 POI 的名称和逆地理编码的地址信息
+          Map<String, dynamic> locationInfo = {
+            'name': poi.name,
+            // POI 点的名称
+            'address': formatted_address,
+            // 完整地址
+            'pname': addressComponent['province'] ?? '',
+            'cityname': addressComponent['city'] ?? '',
+            'adname': addressComponent['district'] ?? '',
+            'location': '${poi.latLng?.longitude},${poi.latLng?.latitude}',
+            // 保存经纬度信息
+            'latLng': [poi.latLng?.longitude, poi.latLng?.latitude],
+            // 保存为数组格式
+          };
+
+          // 显示确认对话框
+          _showLocationConfirmDialog(locationInfo);
+        }
+      } catch (e) {
+        print('获取地址详细信息失败: $e');
+
+        // 如果获取详细地址失败，至少显示 POI 的基本信息
         Map<String, dynamic> locationInfo = {
-          'name': poi.name,  // POI 点的名称
-          'address': formatted_address,  // 完整地址
-          'pname': addressComponent['province'] ?? '',
-          'cityname': addressComponent['city']?[0] ?? '',
-          'adname': addressComponent['district'] ?? '',
-          'location': '${poi.latLng?.longitude},${poi.latLng?.latitude}', // 保存经纬度信息
-          'latLng': [poi.latLng?.longitude, poi.latLng?.latitude], // 保存为数组格式
+          'name': poi.name,
+          'address': poi.name,
+          'pname': '',
+          'cityname': '',
+          'adname': '',
+          'location': '${poi.latLng?.longitude},${poi.latLng?.latitude}',
+          'latLng': [poi.latLng?.longitude, poi.latLng?.latitude],
         };
-
-        // 显示确认对话框
         _showLocationConfirmDialog(locationInfo);
       }
-    } catch (e) {
-      print('获取地址详细信息失败: $e');
-      
-      // 如果获取详细地址失败，至少显示 POI 的基本信息
-      Map<String, dynamic> locationInfo = {
-        'name': poi.name,
-        'address': poi.name,
-        'pname': '',
-        'cityname': '',
-        'adname': '',
-        'location': '${poi.latLng?.longitude},${poi.latLng?.latitude}',
-        'latLng': [poi.latLng?.longitude, poi.latLng?.latitude],
-      };
-      _showLocationConfirmDialog(locationInfo);
-    }
+    });
+
   }
 
   void _showLocationConfirmDialog(Map<String, dynamic> locationInfo) {
+    // 如果对话框正在显示，先关闭它
+    if (_isDialogShowing && _dialogContext != null) {
+      Navigator.pop(_dialogContext!);
+    }
+
+    _isDialogShowing = true;
+    
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
+        _dialogContext = dialogContext;  // 保存新对话框的context
         return AlertDialog(
           title: Text('确认选择'),
           content: Column(
@@ -273,29 +325,40 @@ class _MapPageState extends State<MapPage> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                _dialogContext = null;
+                _isDialogShowing = false;  // 重置标记
+              },
               child: Text('取消'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // 关闭对话框
+                Navigator.pop(dialogContext);
                 Navigator.pop(context, {
                   'address': '${locationInfo['name']}, ${locationInfo['address']}',
                   'latitude': markerLatitude,
                   'longitude': markerLongitude,
                   'locationDetail': locationInfo,
                 });
+                _dialogContext = null;
+                _isDialogShowing = false;  // 重置标记
               },
               child: Text('确定'),
             ),
           ],
         );
       },
-    );
+    ).then((_) {
+      // 确保对话框关闭时重置状态
+      _dialogContext = null;
+      _isDialogShowing = false;
+    });
   }
 
   //需要先设置一个空的map赋值给AMapWidget的markers，否则后续无法添加marker
   final Map<String, Marker> _markers = <String, Marker>{};
+
   //添加一个marker
   void _addMarker(LatLng markPostion) async {
     _removeAll();
@@ -326,11 +389,7 @@ class _MapPageState extends State<MapPage> {
     mapController?.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: markPostion,
-          zoom: zoom ?? 15,
-          tilt: 30,
-          bearing: 0
-        ),
+            target: markPostion, zoom: zoom ?? 15, tilt: 30, bearing: 0),
       ),
       animated: true,
     );
@@ -338,8 +397,16 @@ class _MapPageState extends State<MapPage> {
 
   @override
   void dispose() {
-    _addressController.dispose();
+    // 确保在页面销毁时关闭对话框
+    if (_isDialogShowing && _dialogContext != null) {
+      Navigator.pop(_dialogContext!);
+    }
+    _poiDebounceTimer?.cancel();
+    _debounceTimer?.cancel();
+    location?.stopLocation();
     location?.destroy();
+    mapController?.disponse();
+    _addressController.dispose();
     super.dispose();
   }
 
@@ -356,132 +423,126 @@ class _MapPageState extends State<MapPage> {
           currentLocation == null
               ? Container()
               : Column(
-            children: [
-              // 搜索框
-              Container(
-                padding: EdgeInsets.all(16),
-                color: Colors.white,
-                child: TextField(
-                  controller: _addressController,
-                  decoration: InputDecoration(
-                    hintText: '请输入详细地址（如：河北师范大学）',
-                    prefixIcon: Icon(Icons.search),
-                    suffixIcon: _addressController.text.isNotEmpty
-                        ? IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: () {
-                        setState(() {
-                          _addressController.clear();
-                          _searchResults.clear();
-                        });
-                      },
-                    )
-                        : null,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      _searchAddress();
-                    } else {
-                      setState(() {
-                        _searchResults.clear();
-                      });
-                    }
-                  },
-                ),
-              ),
-              // 地图
-              Expanded(
-                child: Stack(
                   children: [
-                    AMapWidget(
-                      privacyStatement: ConstConfig.amapPrivacyStatement,
-                      apiKey: ConstConfig.amapApiKeys,
-                      initialCameraPosition: currentLocation!,
-                      myLocationStyleOptions: MyLocationStyleOptions(true),
-                      mapType: MapType.normal,
-                      minMaxZoomPreference: const MinMaxZoomPreference(3, 20),
-                      onPoiTouched: _onMapPoiTouched,
-                      onTap: _onMapTap,
-                      markers: Set<Marker>.of(_markers.values),
-                      onMapCreated: (AMapController controller) {
-                        mapController = controller;
-                      },
-                    ),
-                    // 搜索结果覆盖层
-                    if (_searchResults.isNotEmpty)
-                      Container(
-                        color: Colors.white,
-                        child: ListView.separated(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: _searchResults.length,
-                          separatorBuilder: (context, index) => Divider(height: 1),
-                          itemBuilder: (context, index) {
-                            final result = _searchResults[index];
-                            return ListTile(
-                              title: Text(result['name']),
-                              subtitle: Text(
-                                '${result['pname']}${result['cityname']}${result['adname']}${result['address']}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              onTap: () {
-                                List<String> location = result['location'].split(',');
-                                double longitude = double.parse(location[0]);
-                                double latitude = double.parse(location[1]);
-
-                                setState(() {
-                                  markerLatitude = latitude;
-                                  markerLongitude = longitude;
-                                  _searchResults.clear();
-                                  _addMarker(LatLng(latitude, longitude));
-                                  _changeCameraPosition(LatLng(latitude, longitude));
-                                });
-
-                                _showLocationConfirmDialog(result);
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              // 周边位置列表
-              Container(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '周边位置',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
+                    // 搜索框
                     Container(
-                      height: 200,
-                      child: ListView.builder(
-                        itemCount: poisData.length,
-                        itemBuilder: (context, index) {
-                          final poi = poisData[index];
-                          return ListTile(
-                            title: Text(poi['name']),
-                            subtitle: Text(poi['address']),
-                            onTap: () => _showLocationConfirmDialog(poi),
-                          );
+                      padding: EdgeInsets.all(16),
+                      color: Colors.white,
+                      child: TextField(
+                        controller: _addressController,
+                        decoration: InputDecoration(
+                          hintText: '请输入详细地址（如：河北师范大学）',
+                          prefixIcon: Icon(Icons.search),
+                          suffixIcon: _addressController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(Icons.clear),
+                                  onPressed: () {
+                                    setState(() {
+                                      _addressController.clear();
+                                      _searchResults.clear();
+                                    });
+                                  },
+                                )
+                              : null,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            _searchAddress();
+                          } else {
+                            setState(() {
+                              _searchResults.clear();
+                            });
+                          }
                         },
                       ),
                     ),
+                    // 地图和周边位置
+                    Expanded(
+                      child: Column(
+                        children: [
+                          // 地图部分
+                          Expanded(
+                            flex: 2,
+                            child: _buildMap(),
+                          ),
+                          // 周边位置列表
+                          Container(
+                            padding: EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('周边位置',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Container(
+                                  height: 200,
+                                  child: ListView.builder(
+                                    itemCount: poisData.length,
+                                    itemBuilder: (context, index) {
+                                      final poi = poisData[index];
+                                      return ListTile(
+                                        title: Text(poi['name']),
+                                        subtitle: Text(poi['address'] ?? ''),
+                                        onTap: () => _showLocationConfirmDialog(poi),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
+          // 搜索结果覆盖层
+          if (_searchResults.isNotEmpty)
+            Positioned(
+              top: 80,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                color: Colors.white,
+                child: ListView.separated(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: _searchResults.length,
+                  separatorBuilder: (context, index) => Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final result = _searchResults[index];
+                    return ListTile(
+                      title: Text(result['name']),
+                      subtitle: Text(
+                        '${result['pname']}${result['cityname']}${result['adname']}${result['address']}',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      onTap: () {
+                        List<String> location = result['location'].split(',');
+                        double longitude = double.parse(location[0]);
+                        double latitude = double.parse(location[1]);
+                        setState(() {
+                          markerLatitude = latitude;
+                          markerLongitude = longitude;
+                          _searchResults.clear();
+                          _addMarker(LatLng(latitude, longitude));
+                          _changeCameraPosition(LatLng(latitude, longitude));
+                        });
+                        _showLocationConfirmDialog(result);
+                      },
+                    );
+                  },
+                ),
               ),
-            ],
-          ),
+            ),
         ],
       ),
     );
@@ -489,45 +550,55 @@ class _MapPageState extends State<MapPage> {
 
   /// 获取周边数据
   bool _isLoadingPois = false;
+  Timer? _poiDebounceTimer;
 
   Future<void> _getPoisData() async {
-    if (_isLoadingPois) return;
-    
-    setState(() {
-      _isLoadingPois = true;
-      poisData = [];
-    });
+    // 如果正在加载或组件已销毁，直接返回
+    if (_isLoadingPois || !mounted) return;
 
-    try {
-      var response = await Dio().get(
-        'https://restapi.amap.com/v3/place/around',
-        queryParameters: {
-          'key': ConstConfig.webKey,
-          'location': '$markerLongitude,$markerLatitude',
-          'radius': '500',  // 缩小搜索半径到500米
-          'types': '120201|120302|120303', // 添加类型过滤：住宅区|楼宇|住宅小区
-          'offset': '20',
-          'page': '1',
-          'extensions': 'all',  // 返回详细信息
-          'sortrule': 'distance'  // 按距离排序
-        },
-      );
-      
-      if (response.data['status'] == '1' && response.data['pois'] != null) {
-        setState(() {
-          poisData = response.data['pois'];
-          if (poisData.isNotEmpty && widget.initialLatitude == null) {
-            _showLocationConfirmDialog(poisData[0]);
-          }
-        });
-      }
-    } catch (e) {
-      print('获取周边数据失败: $e');
-    } finally {
+    // 取消之前的定时器
+    _poiDebounceTimer?.cancel();
+    
+    // 设置新的定时器
+    _poiDebounceTimer = Timer(Duration(milliseconds: 500), () async {
       setState(() {
-        _isLoadingPois = false;
+        _isLoadingPois = true;
+        poisData = [];
       });
-    }
+
+      try {
+        var response = await Dio().get(
+          'https://restapi.amap.com/v3/place/around',
+          queryParameters: {
+            'key': ConstConfig.webKey,
+            'location': '$markerLongitude,$markerLatitude',
+            'radius': '2000',
+            'types': '120000|130000|141200',
+            'offset': '20',
+            'page': '1',
+            'extensions': 'all',
+            'sortrule': 'distance'
+          },
+        );
+
+        if (mounted && response.data['status'] == '1' && response.data['pois'] != null) {
+          setState(() {
+            poisData = response.data['pois'];
+            if (poisData.isNotEmpty && widget.initialLatitude == null) {
+              _showLocationConfirmDialog(poisData[0]);
+            }
+          });
+        }
+      } catch (e) {
+        print('获取周边数据失败: $e');
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoadingPois = false;
+          });
+        }
+      }
+    });
   }
 
   // 添加搜索地址方法
@@ -542,16 +613,55 @@ class _MapPageState extends State<MapPage> {
           'keywords': _addressController.text,
           'city': '全国',
           'extensions': 'all',
+          'types': '120000|130000|141200',
         },
       );
 
       if (response.data['status'] == '1' && response.data['pois'] != null) {
         setState(() {
-          _searchResults = List<Map<String, dynamic>>.from(response.data['pois']);
+          _searchResults =
+              List<Map<String, dynamic>>.from(response.data['pois']);
         });
       }
     } catch (e) {
       print('搜索地址失败: $e');
     }
+  }
+
+   // 匹配地址
+  String matchAddress(String address) {
+
+     String pattern = r'([省|市|自治区])(.*)';
+     RegExp regExp = RegExp(pattern) ;
+     RegExpMatch? match = regExp.firstMatch(address);
+     if (match != null) {
+       String matchedAddress = match.group(2)!;
+       return matchedAddress;
+     } else {
+       return address;
+     }
+  }
+
+
+  // 优化地图构建
+  Widget _buildMap() {
+    return RepaintBoundary(
+      child: AMapWidget(
+        privacyStatement: ConstConfig.amapPrivacyStatement,
+        apiKey: ConstConfig.amapApiKeys,
+        initialCameraPosition: currentLocation!,
+        myLocationStyleOptions: MyLocationStyleOptions(true,),
+        mapType: MapType.normal,
+        minMaxZoomPreference: const MinMaxZoomPreference(3, 20),
+        onPoiTouched: _onMapPoiTouched,
+        onTap: _onMapTap,
+        markers: Set<Marker>.of(_markers.values),
+        onMapCreated: (AMapController controller) {
+          if (mounted) {
+            mapController = controller;
+          }
+        },
+      ),
+    );
   }
 }
