@@ -79,7 +79,7 @@ class _OrderPageState extends State<OrderPage> {
                     color: Colors.black, fontWeight: FontWeight.bold)),
                 SizedBox(width: 10),
                 Container(
-                  width: 70, // 设置容器宽度为50
+                  width: 70, // 设置容器宽度为70
                   child: Text(
                     "${commissionData.commissionId}",
                     style: TextStyle(
@@ -107,7 +107,6 @@ class _OrderPageState extends State<OrderPage> {
                   _ => Text("未知", style: TextStyle(color: Colors.redAccent,
                       fontWeight: FontWeight.bold)),
                 },
-                Expanded(child: SizedBox()),
               ],
             ),
             SizedBox(height: 10),
@@ -118,7 +117,7 @@ class _OrderPageState extends State<OrderPage> {
                 Text("家政员ID:", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
                 SizedBox(width: 10),
                 Container(
-                  width: 70, // 设置容器宽度为90
+                  width: 70, // 设置容器宽度为70
                   child: Text(
                     "${commissionData.keeperId}",
                     style: TextStyle(
@@ -132,8 +131,18 @@ class _OrderPageState extends State<OrderPage> {
                 SizedBox(width: 5,),
                 Text("委托类型:", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),maxLines: 1,overflow: TextOverflow.ellipsis,),
                 SizedBox(width: 10),
-                Text("保姆月嫂（长期）",style: TextStyle(color: Colors.amber[900],fontWeight: FontWeight.bold),),
-                Expanded(child: SizedBox()),
+                Container(
+                  width: 70, // 设置容器宽度为70
+                  child: Text(
+                    "保姆月嫂",
+                    style: TextStyle(
+                      color: Colors.amber[900],
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ]
             ),
 
@@ -142,16 +151,15 @@ class _OrderPageState extends State<OrderPage> {
               children: [
                 Text("服务地址:", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
                 SizedBox(width: 10),
-                Text("${commissionData.province}"),
-                SizedBox(width: 5,),
-                Text("${commissionData.city}"),
-                SizedBox(width: 5,),
-                Text("${commissionData.county}"),
-                SizedBox(width: 5,),
-                Text("${commissionData.commissionAddress}"),
-                Expanded(child: SizedBox()),
+                Text("${commissionData.province} ${commissionData.city} ${commissionData.county}"),
               ]
             ),
+            SizedBox(height: 10),
+            Row(children: [
+              Text("详细地址:", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold)),
+              SizedBox(width: 10),
+              Text("${commissionData.commissionAddress}"),
+            ],),
           ],
         ),
       );
