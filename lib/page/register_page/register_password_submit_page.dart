@@ -159,7 +159,7 @@ class _RegisterPasswordSubmitPageState
               SizedBox(height: 20.h),
               ElevatedButton(
                 onPressed: _setPassword,
-                child: Text('更改密码',
+                child: Text('注册',
                     style: TextStyle(fontSize: 18, color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).primaryColor,
