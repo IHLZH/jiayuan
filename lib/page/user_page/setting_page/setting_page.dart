@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiayuan/http/dio_instance.dart';
+import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/utils/constants.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
@@ -62,7 +64,7 @@ class _SettingPageState extends State<SettingPage> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         // 使用 Container 包裹 AppBar 以实现渐变背景
         flexibleSpace: Container(
@@ -113,6 +115,8 @@ class _SettingPageState extends State<SettingPage> {
                   _buildOption(Icons.email_outlined, '邮箱地址'),
                   _line(),
                   _buildOption(Icons.phone, '手机号码'),
+                  _line(),
+                  _buildOption(Icons.lock, '修改密码'),
                 ],
               ),
             ),
