@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/buttons/red_button.dart';
 import 'package:jiayuan/page/commission_center_page/commission_center_vm.dart';
+import 'package:jiayuan/route/route_path.dart';
+import 'package:jiayuan/route/route_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_ui/chart/indicator.dart';
@@ -206,12 +208,17 @@ class _CommissionCenterState extends State<CommissionCenterPage>{
                     fontWeight: FontWeight.w600
                   ),
                 ),
-                Text(
-                  "更多",
-                  style: TextStyle(
-                      fontSize: 16.sp,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w600
+                GestureDetector(
+                  onTap: (){
+                    RouteUtils.pushForNamed(context, RoutePath.centerOrder);
+                  },
+                  child: Text(
+                    "更多",
+                    style: TextStyle(
+                        fontSize: 16.sp,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w600
+                    ),
                   ),
                 )
               ],
