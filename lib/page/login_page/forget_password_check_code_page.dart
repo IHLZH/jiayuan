@@ -30,6 +30,8 @@ class _ForgetPasswordCheckCodePageState
   int _secondsRemaining = 0;
   Timer? _timer;
 
+  bool _isSending = false;
+
   @override
   void initState() {
     super.initState();
@@ -97,18 +99,31 @@ class _ForgetPasswordCheckCodePageState
         ? UrlPath.getEmailCodeUrl + "?email=$input&purpose=forget"
         : UrlPath.getPhoneCodeUrl + "?phone=$input&purpose=forget";
 
+    _isSending = true;
+
     try {
       final response = await DioInstance.instance().get(path: url);
-      if (response.statusCode == 200&&response.data['code']==200) {
-        // 验证码发送成功，计时
-        showToast('验证码已发送', duration: Duration(seconds: 1));
-        _startTimer();
+      if (response.statusCode == 200) {
+        if (response.data["code"] == 200) {
+          // 验证码发送成功，计时
+          showToast('验证码已发送', duration: Duration(seconds: 1));
+          _isSending = false;
+          _startTimer();
+        } else {
+          showToast(response.data['message'], duration: Duration(seconds: 1));
+          _isSending = false;
+          _secondsRemaining = 0;
+        }
       } else {
-        // 验证码发送失败，显示错误信息
-        showToast(response.data['message'], duration: Duration(seconds: 1));
+        showToast("无法连接服务器", duration: Duration(seconds: 1));
+        _isSending = false;
+        _secondsRemaining = 0;
       }
     } catch (e) {
       if (isProduction) print("error: $e");
+      showToast("系统异常", duration: Duration(seconds: 1));
+      _isSending = false;
+      _secondsRemaining = 0;
     }
   }
 
@@ -123,22 +138,24 @@ class _ForgetPasswordCheckCodePageState
       return;
     }
     String url = _isEmail
-        ? UrlPath.checkPasswordEmailCodeUrl + "?email=$input&emailCode=$verificationCode"
-        : UrlPath.checkPasswordPhoneCodeUrl + "?phone=$input&smsCode=$verificationCode";
+        ? UrlPath.checkPasswordEmailCodeUrl +
+            "?email=$input&emailCode=$verificationCode"
+        : UrlPath.checkPasswordPhoneCodeUrl +
+            "?phone=$input&smsCode=$verificationCode";
 
-    try{
+    try {
       final response = await DioInstance.instance().post(path: url);
-      if(response.statusCode==200){
-        if(response.data["code"]==200){
+      if (response.statusCode == 200) {
+        if (response.data["code"] == 200) {
           // showToast("验证码正确", duration: Duration(seconds: 1));
           _jumpToNext(input);
-        }else{
+        } else {
           showToast(response.data["message"], duration: Duration(seconds: 1));
         }
-      }else{
+      } else {
         showToast(response.data["message"], duration: Duration(seconds: 1));
       }
-    }catch(e){
+    } catch (e) {
       print("error : $e");
     }
   }
@@ -188,7 +205,11 @@ class _ForgetPasswordCheckCodePageState
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
-                      child: Text('使用邮箱',style: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.bold),),
+                      child: Text(
+                        '使用邮箱',
+                        style: TextStyle(
+                            fontSize: 16.sp, fontWeight: FontWeight.bold),
+                      ),
                     ),
                     TextButton(
                       onPressed: () => _toggleInputType(false),
@@ -202,7 +223,11 @@ class _ForgetPasswordCheckCodePageState
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
-                      child: Text('使用手机号',style: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.bold),),
+                      child: Text(
+                        '使用手机号',
+                        style: TextStyle(
+                            fontSize: 16.sp, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
@@ -286,30 +311,30 @@ class _ForgetPasswordCheckCodePageState
                       child: Center(
                         child: TextButton(
                           style: ButtonStyle(
-                            side:
-                            MaterialStateProperty.all<BorderSide>(
+                            side: MaterialStateProperty.all<BorderSide>(
                               BorderSide(
-                                  color:
-                                  Theme.of(context).primaryColor,
+                                  color: Theme.of(context).primaryColor,
                                   width: 1.0),
                             ),
                             shape: MaterialStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    10.0), // 设置小幅度的圆角
+                                borderRadius:
+                                    BorderRadius.circular(10.0), // 设置小幅度的圆角
                               ),
                             ),
                           ),
-                          onPressed: _secondsRemaining > 0
+                          onPressed: _secondsRemaining > 0 || _isSending
                               ? null
                               : _getVerificationCode,
                           child: Container(
                             alignment: Alignment.center,
                             child: Text(
-                              _secondsRemaining > 0
-                                  ? "重新获取 ($_secondsRemaining)"
-                                  : "获取验证码",
+                              _isSending
+                                  ? "发送中..."
+                                  : _secondsRemaining > 0
+                                      ? "重新获取 ($_secondsRemaining)"
+                                      : "获取验证码",
                               style: TextStyle(
                                 fontSize: 17,
                                 color: Theme.of(context).primaryColor,

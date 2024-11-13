@@ -30,6 +30,7 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
   FocusNode _emailFocusNode = FocusNode();
   FocusNode _codeFocusNode = FocusNode();
   bool _isAgreed = false; // 新增变量，用于控制协议同意状态
+  bool _isSending = false;
 
   @override
   void initState() {
@@ -75,6 +76,8 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
     final String email = _emailController.text;
     final String url = UrlPath.getEmailCodeUrl + "?email=$email&purpose=login";
 
+    _isSending = true;
+
     try {
       final response = await DioInstance.instance().get(path: url);
       if (response.statusCode == 200) {
@@ -82,18 +85,25 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
           // final data = response.data;
 
           showToast("获取验证码成功", duration: const Duration(seconds: 1));
-
+          _isSending = false;
           _startTimer();
         } else {
           showToast(response.data['message'],
               duration: const Duration(seconds: 1));
+          _secondsRemaining = 0;
+          _isSending = false;
         }
       } else {
         showToast("无法连接服务器", duration: const Duration(seconds: 1));
+        _secondsRemaining = 0;
+        _isSending = false;
       }
     } catch (e) {
       if (isProduction) {
         print('Error: $e');
+        showToast("系统异常",duration: const Duration(seconds: 1));
+        _secondsRemaining = 0;
+        _isSending = false;
       }
     }
   }
@@ -290,15 +300,17 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
                                         ),
                                       ),
                                     ),
-                                    onPressed: _secondsRemaining > 0
+                                    onPressed: _secondsRemaining > 0 || _isSending
                                         ? null
                                         : _getVerificationCode,
                                     child: Container(
                                       alignment: Alignment.center,
                                       child: Text(
-                                        _secondsRemaining > 0
-                                            ? "重新获取 ($_secondsRemaining)"
-                                            : "获取验证码",
+                                        _isSending
+                                            ? "发送中..."
+                                            : _secondsRemaining > 0
+                                                ? "重新获取 ($_secondsRemaining)"
+                                                : "获取验证码",
                                         style: TextStyle(
                                           fontSize: 17,
                                           color: Theme.of(context).primaryColor,

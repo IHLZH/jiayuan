@@ -30,6 +30,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
   FocusNode _phoneFocusNode = FocusNode();
   FocusNode _codeFocusNode = FocusNode();
   bool _isAgreed = false; // 新增变量，用于控制协议同意状态
+  bool _isSending = false;
 
   @override
   void initState() {
@@ -78,25 +79,35 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
     final String phone = _phoneController.text;
     final String url = UrlPath.getPhoneCodeUrl + "?phone=$phone&purpose=login";
 
+    _isSending = true;
+
     try {
       final response = await DioInstance.instance().get(path: url);
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
           // 显示提示信息
           showToast("获取验证码成功");
+          _isSending = false;
 
           // 启动倒计时
           _startTimer();
         } else {
           showToast(response.data['message'],
               duration: const Duration(seconds: 1));
+          _isSending = false;
+          _secondsRemaining = 0;
         }
       } else {
         showToast("无法连接服务器", duration: const Duration(seconds: 1));
+        _isSending = false;
+        _secondsRemaining = 0;
       }
     } catch (e) {
       if (isProduction) {
         print('Error: $e');
+        _isSending = false;
+        _secondsRemaining = 0;
+        showToast("系统异常", duration: const Duration(seconds: 1));
       }
     }
   }
@@ -291,15 +302,17 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                                         ),
                                       ),
                                     ),
-                                    onPressed: _secondsRemaining > 0
+                                    onPressed: _secondsRemaining > 0 || _isSending
                                         ? null
                                         : _getVerificationCode,
                                     child: Container(
                                       alignment: Alignment.center,
                                       child: Text(
-                                        _secondsRemaining > 0
-                                            ? "重新获取 ($_secondsRemaining)"
-                                            : "获取验证码",
+                                        _isSending
+                                            ? "发送中..."
+                                            : _secondsRemaining > 0
+                                                ? "重新获取 ($_secondsRemaining)"
+                                                : "获取验证码",
                                         style: TextStyle(
                                           fontSize: 17,
                                           color: Theme.of(context).primaryColor,
