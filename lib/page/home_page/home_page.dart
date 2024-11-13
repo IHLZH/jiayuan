@@ -174,7 +174,7 @@ class _HomePageState extends State<HomePage>
                     //Response: {status: 1, count: 1, info: OK, infocode: 10000, lives: [{province: 河北, city: 裕华区, adcode: 130108, weather: 小雨, temperature: 11, winddirection: 西北, windpower: ≤3, humidity: 97, reporttime: 2024-11-13 09:02:57, temperature_float: 11.0, humidity_float: 97.0}]
                     // homeViewModel.weatherData != null  ?Text('${DateFormat("MM月dd日EEEE", "zh_CN").format(DateFormat("yyyy-MM-dd").parse(homeViewModel.weatherData['reporttime']))}'
                     //     ' ${homeViewModel.weatherData['weather']}'):Text(''),
-                    homeViewModel.weatherData != null
+                    homeViewModel.weatherData['weather'] != null
                         ? Text(
                             '${weatherData['city']}，${weatherData['weather']}，${weatherData['temperature']}℃',
                             style: TextStyle(
