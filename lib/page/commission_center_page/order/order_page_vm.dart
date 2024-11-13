@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
+import 'package:jiayuan/utils/common_data.dart';
 
 
 class OrderPageViewModel with ChangeNotifier{
@@ -15,13 +16,13 @@ class OrderPageViewModel with ChangeNotifier{
 
   List<Commission> getStatusOrder(int id){
     switch(id){
-      case 1:
-        return unServed;
       case 2:
-        return inService;
+        return unServed;
       case 3:
-        return unPay;
+        return inService;
       case 4:
+        return unPay;
+      case 5:
         return down;
       default: return [];
     }
@@ -40,7 +41,7 @@ class OrderPageViewModel with ChangeNotifier{
           price: 255.25,
           expectTime: DateTime(2024,11,2,12,30),
           estimatedTime: 2,
-          commissionStatus: 1,
+          commissionStatus: 2,
           isLong: false
       ),
       Commission(
@@ -54,7 +55,7 @@ class OrderPageViewModel with ChangeNotifier{
           price: 255.25,
           expectTime: DateTime(2024,11,3,12,30),
           estimatedTime: 2,
-          commissionStatus: 1,
+          commissionStatus: 2,
           isLong: false
       ),
       Commission(
@@ -68,7 +69,7 @@ class OrderPageViewModel with ChangeNotifier{
           price: 255.25,
           expectTime: DateTime(2024,11,4,12,30),
           estimatedTime: 2,
-          commissionStatus: 1,
+          commissionStatus: 2,
           isLong: false
       ),
     ];
@@ -84,8 +85,9 @@ class OrderPageViewModel with ChangeNotifier{
         distance: 1.5,
         price: 255.25,
         expectTime: DateTime(2024,11,4,12,30),
+        realStartTime: DateTime(2024,11,2,13,30),
         estimatedTime: 2,
-        commissionStatus: 2,
+        commissionStatus: 3,
         isLong: false
     ),
       Commission(
@@ -98,8 +100,9 @@ class OrderPageViewModel with ChangeNotifier{
           distance: 1.5,
           price: 255.25,
           expectTime: DateTime(2024,11,5,12,30),
+          realStartTime: DateTime(2024,11,2,13,30),
           estimatedTime: 2,
-          commissionStatus: 2,
+          commissionStatus: 3,
           isLong: false
       ),];
 
@@ -114,8 +117,9 @@ class OrderPageViewModel with ChangeNotifier{
           distance: 1.5,
           price: 255.25,
           expectTime: DateTime(2024,11,2,12,30),
+          realStartTime: DateTime(2024,11,2,13,30),
           estimatedTime: 2,
-          commissionStatus: 3,
+          commissionStatus: 4,
           isLong: false
       ),
       Commission(
@@ -128,8 +132,9 @@ class OrderPageViewModel with ChangeNotifier{
           distance: 1.5,
           price: 255.25,
           expectTime: DateTime(2024,11,2,12,30),
+          realStartTime: DateTime(2024,11,2,13,30),
           estimatedTime: 2,
-          commissionStatus: 3,
+          commissionStatus: 4,
           isLong: false
       ),
     ];
@@ -145,8 +150,9 @@ class OrderPageViewModel with ChangeNotifier{
           distance: 1.5,
           price: 255.25,
           expectTime: DateTime(2024,11,3,12,30),
+          realStartTime: DateTime(2024,11,2,13,30),
           estimatedTime: 2,
-          commissionStatus: 4,
+          commissionStatus: 5,
           isLong: false
       ),
       Commission(
@@ -159,11 +165,16 @@ class OrderPageViewModel with ChangeNotifier{
           distance: 1.5,
           price: 255.25,
           expectTime: DateTime(2024,11,4,12,30),
+          realStartTime: DateTime(2024,11,2,13,30),
           estimatedTime: 2,
-          commissionStatus: 4,
+          commissionStatus: 5,
           isLong: false
       ),
     ];
+  }
+
+  String getCountyAddress(Commission commission){
+    return commission.county + " " + commission.address + "河北师范大学诚朴园三号楼204";
   }
 
 }

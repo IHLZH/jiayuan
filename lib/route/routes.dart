@@ -108,7 +108,7 @@ class Routes {
       case RoutePath.certCertified:
         return pageRoute(CertCertifiedPage());
       case RoutePath.centerOrder:
-        return pageRoute(CenterOrderPage());
+        return pageRoute(CenterOrderPage(),settings: settings);
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

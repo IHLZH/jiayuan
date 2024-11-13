@@ -6,6 +6,8 @@ import 'package:jiayuan/common_ui/buttons/red_button.dart';
 import 'package:jiayuan/page/commission_center_page/commission_center_vm.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/utils/common_data.dart';
+import 'package:jiayuan/utils/string_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_ui/chart/indicator.dart';
@@ -227,14 +229,59 @@ class _CommissionCenterState extends State<CommissionCenterPage>{
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _TitleIcon(Icons.access_time_rounded, "待服务"),
-                _TitleIcon(Icons.hourglass_empty, "服务中"),
-                _TitleIcon(Icons.monetization_on_outlined, "待支付"),
-                _TitleIcon(Icons.download_done, "已完成"),
+                _orderStatuIcon(Icons.access_time_rounded, 0),
+                _orderStatuIcon(Icons.hourglass_empty, 1),
+                _orderStatuIcon(Icons.monetization_on_outlined, 2),
+                _orderStatuIcon(Icons.download_done, 3),
               ],
             ),
             SizedBox(height: 5.h,),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _orderStatuIcon(IconData icon, int index){
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: (){
+          RouteUtils.pushForNamed(
+              context,
+              RoutePath.centerOrder,
+              arguments: index
+          );
+        },
+        splashColor: Colors.grey[300],
+        highlightColor: Theme.of(context).primaryColor.withAlpha(30),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          child: Column(
+            children: [
+              ShaderMask(
+                shaderCallback: (Rect bounds) {
+                  return LinearGradient(
+                    colors: <Color>[AppColors.appColor, AppColors.endColor],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ).createShader(bounds);
+                },
+                child: Icon(
+                    icon,
+                    size: 32,
+                    color: Colors.white
+                ),
+              ),
+              Text(
+                CommonData.orderStatus[index + 2],
+                style: TextStyle(
+                    fontSize: 14.sp
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -245,7 +292,8 @@ class _CommissionCenterState extends State<CommissionCenterPage>{
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        onTap: (){},
+        onTap: (){
+        },
         splashColor: Colors.grey[300],
         highlightColor: Theme.of(context).primaryColor.withAlpha(30),
         borderRadius: BorderRadius.circular(16),

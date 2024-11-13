@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
 import '../../../route/route_utils.dart';
+import '../../../utils/common_data.dart';
 
 class CenterOrderPage extends StatefulWidget{
   @override
@@ -34,6 +35,12 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+
+    int index = (ModalRoute.of(context)?.settings.arguments ?? 0) as int;
+    setState(() {
+      _tabController.index = index;
+    });
+
     return ChangeNotifierProvider(
         create: (context){
           return _orderViewModel;
@@ -111,10 +118,10 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                           child: TabBarView(
                             controller: _tabController,
                             children: [
-                              _orderList(1),
                               _orderList(2),
                               _orderList(3),
                               _orderList(4),
+                              _orderList(5),
                             ]
                           )
                       )
@@ -139,7 +146,6 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
 
   Widget _orderCard(Commission commission){
     return Container(
-      height: 150.h,
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       decoration: BoxDecoration(
@@ -147,29 +153,49 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                padding: EdgeInsets.only(top: 4,bottom: 4,left: 4),
-                child: Text(
-                  "开始时间：",
-                  style: TextStyle(
-                    color: AppColors.textColor2b
+              Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 4,bottom: 4,left: 4),
+                    child: Text(
+                      commission.commissionStatus == 2 ? "指定时间：" : "开始时间：",
+                      style: TextStyle(
+                          color: AppColors.textColor2b
+                      ),
+                    ),
                   ),
-                ),
+                  Container(
+                    padding: EdgeInsets.only(top: 4,bottom: 4,right: 4),
+                    child: Text(
+                      commission.commissionStatus == 2 ?
+                      DateFormat('yyyy-MM-dd HH:mm:ss').format(commission.expectTime) :
+                      DateFormat('yyyy-MM-dd HH:mm:ss').format(commission.realStartTime!),
+                      style: TextStyle(
+                          color: AppColors.textColor2b
+                      ),
+                    ),
+                  )
+                ],
               ),
+
               Container(
-                padding: EdgeInsets.only(top: 4,bottom: 4,right: 4),
                 child: Text(
-                  DateFormat('yyyy-MM-dd HH:mm:ss').format(commission.expectTime),
+                  CommonData.orderStatus[commission.commissionStatus],
                   style: TextStyle(
-                      color: AppColors.textColor2b
+                      color: Colors.red
                   ),
                 ),
               )
             ],
           ),
+
+          SizedBox(height: 5.h,),
+
           Row(
             children: [
               Container(
@@ -203,31 +229,39 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
               )
             ],
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.location_on_outlined,
-                    size: 18,
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 4,bottom: 4),
-                    child: Text(
-                      commission.distance.toString() + "km",
-                      style: TextStyle(
-                          color: AppColors.textColor2b
+
+          SizedBox(height: 5.h,),
+
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.backgroundColor2,
+              borderRadius: BorderRadius.circular(8.r)
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_on_outlined,
+                      size: 18,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 4,bottom: 4),
+                      child: Text(
+                        commission.distance.toString() + "km.",
+                        style: TextStyle(
+                            color: AppColors.textColor2b
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Expanded(
+                  ],
+                ),
+                Expanded(
                   child: Container(
-                    padding: EdgeInsets.only(top: 4,bottom: 4,left: 4),
+                    padding: EdgeInsets.only(top: 4,bottom: 4),
                     child: Text(
-                      commission.county + " " + commission.address + "sdmaosdmaosikdm",
+                      _orderViewModel.getCountyAddress(commission),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -235,12 +269,71 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                       ),
                     ),
                   ),
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
 
+          SizedBox(height: 10.h,),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              getOrderButton(commission)
+            ],
+          )
         ],
       ),
     );
+  }
+
+  Widget getOrderButton(Commission commission){
+    if(commission.commissionStatus == 2){
+      return Container(
+          padding: EdgeInsets.all(4),
+          decoration: BoxDecoration(
+              border: Border.all(
+                  color: AppColors.appColor,
+                  width: 1
+              ),
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          child: Text("开始服务")
+      );
+    }else if(commission.commissionStatus == 3){
+      return Container(
+          padding: EdgeInsets.all(4),
+          decoration: BoxDecoration(
+              border: Border.all(
+                  color: AppColors.appColor,
+                  width: 1
+              ),
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          child: Text("完成服务")
+      );
+    }else if(commission.commissionStatus == 4){
+      return Container(
+          padding: EdgeInsets.all(4),
+          decoration: BoxDecoration(
+              border: Border.all(
+                  color: AppColors.appColor,
+                  width: 1
+              ),
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          child: Text("提醒用户")
+      );
+    }else{
+      return Container(
+          padding: EdgeInsets.all(4),
+          child: Text(
+              "收入 ￥" + commission.price.toString(),
+            style: TextStyle(
+              color: Colors.red
+            ),
+          )
+      );
+    }
   }
 }
