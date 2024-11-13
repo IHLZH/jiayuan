@@ -1,7 +1,10 @@
 import 'dart:ffi';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jiayuan/config.dart';
+import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/repository/api/keeper_api.dart';
 import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
 
@@ -11,8 +14,14 @@ import '../../utils/global.dart';
 import '../commission_page/commission_vm.dart';
 
 class HomeViewModel with ChangeNotifier{
+
    // 轮播图数据
   List<String?>? bannerData = [];
+
+  Map<String, dynamic>  weatherData = {};
+
+  //家政员表
+  List<Housekeeper> housekeepers = [];
 
   //委托类型表
   static List<CommissionType> CommissionTypes = [
@@ -76,8 +85,7 @@ class HomeViewModel with ChangeNotifier{
       StandardPrice(referencePrice: 140, lowestPrice: 120, typeId: 10),
     ];
   }
-  //家政员表
-   List<Housekeeper> housekeepers = [];
+
 
   //获取首页banner数据
   Future<void> getBannerData() async{
@@ -96,6 +104,36 @@ class HomeViewModel with ChangeNotifier{
     List<Housekeeper>? temp;
     temp = await KeeperApi.instance.getHousekeeperData(Global.location!.longitude!,Global.location!.longitude!) ;
     housekeepers = temp!;
+    notifyListeners();
+  }
+
+  Future<void> getWeatherData() async {
+    print('市区状态码 ${Global.location?.adCode}');
+    try {
+
+      final response = await Dio().get(
+        UrlPath.weatherUrl,
+        queryParameters: {
+          'key': ConstConfig.webKey,
+          'city': Global.location?.adCode,
+          'extensions': 'base'
+        },
+      );
+      weatherData = response.data['lives'][0];
+      print('Response: ${response.data}');
+    } catch (e) {
+      if (e is DioError) {
+        // 处理DioError
+        if (e.response != null) {
+          print('Error Response: ${e.response!.statusCode} - ${e.response!.data}');
+        } else {
+          print('Error Message: ${e.message}');
+        }
+      } else {
+        // 处理其他类型的错误
+        print('Unexpected Error: $e');
+      }
+    }
     notifyListeners();
   }
 }

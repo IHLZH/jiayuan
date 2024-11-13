@@ -5,6 +5,7 @@ class UrlPath {
 
   static const String testBaseUrl = "http://10.7.89.171:8080";
 
+  static const String yuwenBaseUrl = "http://192.168.153.44:8080";
   //Token登录
   static const String loginAutoUrl = "/login/autoLogin";
 
@@ -77,4 +78,10 @@ class UrlPath {
 
   //根据userId和commissionId获取委托信息接口
   static const String getCommissionInfoByIdUrl = "/release/comissionByUserId";
+
+  //发送委托的接口
+  static const String sendCommissionUrl = "/release/add";
+
+  //高德地图天气接口
+  static const String weatherUrl = "https://restapi.amap.com/v3/weather/weatherInfo";
 }

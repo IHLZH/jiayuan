@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/route/routes.dart';
+import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
 /// 设计尺寸
@@ -48,6 +50,14 @@ class MyApp extends StatelessWidget {
           navigatorKey: RouteUtils.navigatorKey,
           onGenerateRoute: Routes.generateRoute,
           initialRoute: RoutePath.startPage,
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate
+          ],
+          supportedLocales: [
+            const Locale("zh", "CH"),
+            const Locale("en", "US")
+          ],
           debugShowCheckedModeBanner: false,
         );
       },
