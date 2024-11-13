@@ -6,9 +6,11 @@ import 'package:jiayuan/page/send_commission_page/send_commision_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../../common_ui/banner/home_banner_widget.dart';
 import '../../repository/model/Housekeeper _data.dart';
+import '../../utils/global.dart';
 import 'home_vm.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,7 +50,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void dispose() {
     _controller.dispose();
     _pageController.dispose();
-    homeViewModel.dispose();
     super.dispose();
   }
 
@@ -188,7 +189,10 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         color: Colors.white,
         child: InkWell(
           borderRadius: BorderRadius.circular(10.0),
-          onTap: () {
+          onTap: () async{
+            //设置插入策略
+            housekeeper.createdTime = DateTime.now();
+            await Global.dbUtil?.db.insert('browser_history', housekeeper.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
             RouteUtils.pushForNamed(
               context, 
               RoutePath.KeeperPage,
@@ -306,7 +310,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           mainAxisAlignment: MainAxisAlignment.center,
           children: List.generate(2, (index) {
             return Container(
-              margin: EdgeInsets.only(left: 5, right: 5, top: 5),
+              margin: EdgeInsets.only(left: 5.w, right: 5.w, top: 5.h),
               width: _currentPage == index ? 8.0.w : 4.0.w,
               height: 4.0.h,
               decoration: BoxDecoration(
@@ -324,7 +328,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         Row(
           children: [
             Container(
-              padding: EdgeInsets.only(left: 20, right: 15, top: 10),
+              padding: EdgeInsets.only(left: 20.w, right: 15.w
+                  , top: 10),
               child: Text(
                 "服务类型",
                 style: TextStyle(
@@ -339,8 +344,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         Container(
           height: 180.h,
           width: double.infinity,
-          padding: EdgeInsets.only(left: 0, right: 0, top: 10, bottom: 10),
-          margin: EdgeInsets.only(left: 15, right: 15,top: 10,bottom: 10),
+          padding: EdgeInsets.only(left: 0.w, right: 0.w, top: 10.h, bottom: 10.h),
+          margin: EdgeInsets.only(left: 15.w, right: 15.w,top: 10.h,bottom: 10.h),
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(color: Colors.grey.withOpacity(0.2),width: 2),
@@ -394,15 +399,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       CType(8),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       CType(9),
                       CType(10),
                       Container(
-                        width: 50,
-                        height: 50,
+                        width: 50.w,
+                        height: 50.h,
                       )
                     ],
                   ),
@@ -429,14 +434,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         child: Column(
           children: [
             Container(
-              width: 50,
-              height: 50,
+              width: 50.w,
+              height: 50.h,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
+                  borderRadius: BorderRadius.circular(25.r),
                   color: AppColors.appColor),
               child: Icon(
                 HomeViewModel.CommissionTypes[index].icon,
-                size: 30,
+                size: 30.h,
                 color: Colors.white,
               ),
             ),

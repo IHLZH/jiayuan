@@ -111,6 +111,7 @@ class KeeperApi{
       ),
       Housekeeper(
           realName: "徐静磊",
+          age: 18,
           keeperId: 2,
           avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
           workExperience: 5,
@@ -120,7 +121,7 @@ class KeeperApi{
 
       Housekeeper(
           realName: "李小明",
-          keeperId: 2,
+          keeperId: 3,
           age: 18,
           avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
           workExperience: 5,
@@ -130,7 +131,17 @@ class KeeperApi{
 
       Housekeeper(
           realName: "李小明",
-          keeperId: 2,
+          keeperId: 4,
+          age: 18,
+          avatar: "https://th.bing.com/th?id=OIP.Lk_V7thpko1MZPfobakoiQAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2",
+          workExperience: 5,
+          rating: 5,
+          highlight: "家电维修，，价格实惠"
+      ),
+
+      Housekeeper(
+          realName: "李小明",
+          keeperId: 5,
           age: 18,
           avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
           workExperience: 5,
@@ -140,19 +151,9 @@ class KeeperApi{
 
       Housekeeper(
           realName: "李小明",
-          keeperId: 2,
+          keeperId: 6,
           age: 18,
-          avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
-          workExperience: 5,
-          rating: 5,
-          highlight: "家电维修，，价格实惠"
-      ),
-
-      Housekeeper(
-          realName: "李小明",
-          keeperId: 2,
-          age: 18,
-          avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
+          avatar: "https://th.bing.com/th?id=OIP.yp-D-KHI3e2nN4eMBJcEVAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2",
           workExperience: 5,
           rating: 5,
           highlight: "家电维修，，价格实惠"

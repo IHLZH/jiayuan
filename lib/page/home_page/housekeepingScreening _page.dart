@@ -4,10 +4,12 @@ import 'package:jiayuan/page/home_page/home_vm.dart';
 import 'package:jiayuan/page/home_page/housekeepingScreening_vm.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../../repository/model/Housekeeper _data.dart';
 import '../../route/route_path.dart';
 import '../../route/route_utils.dart';
+import '../../utils/global.dart';
 
 class HouseKeepingScreeningPage extends StatefulWidget {
   const HouseKeepingScreeningPage({super.key});
@@ -82,7 +84,6 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("重建页面: currentIndex = ${_houseKeepingScreeningVM.currentIndex}");
     return ChangeNotifierProvider<HouseKeepingScreeningVM>(
       create: (context) => _houseKeepingScreeningVM,
       child: Scaffold(
@@ -120,7 +121,6 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
                             itemCount: HomeViewModel.CommissionTypes.length,
                             onPageChanged: (index) async {
                               await _houseKeepingScreeningVM.loadHouseKeepers(index);
-                              print('切换到了$index 页');
                             },
                             itemBuilder: (context, index) {
                               List housekeepers = _houseKeepingScreeningVM
@@ -174,7 +174,9 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
         color: Colors.white,
         child: InkWell(
           borderRadius: BorderRadius.circular(10.0),
-          onTap: () {
+          onTap: () async{
+            housekeeper.createdTime = DateTime.now();
+            await Global.dbUtil?.db.insert('browser_history', housekeeper.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
             RouteUtils.pushForNamed(context, RoutePath.KeeperPage,
                 arguments: housekeeper.keeperId);
           },

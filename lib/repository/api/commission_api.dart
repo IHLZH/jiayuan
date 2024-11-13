@@ -82,9 +82,8 @@ class CommissionApi{
   }
 
   //发送委托
-  Future<String> sendCommission(Commission commission) async{
-      // Response response = await DioInstance.instance().post(path: "/commission/add",data: commission.toJson(), options: Options(headers: {'Content-Type': 'application/json'}),);
-    // return response.statusCode.toString();
-    return "200";
+  Future<String> sendCommission(Commission commission,int serviceType) async{
+       Response response = await DioInstance.instance().post(path: "/release/add",data: commission.toJson(),queryParameters: {"serviceId":serviceType});
+       return response.data['code'].toString();
   }
 }

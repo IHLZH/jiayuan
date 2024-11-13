@@ -30,7 +30,6 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
   }
 
   void dispose() {
-    keeperViewModel.dispose();
     super.dispose();
   }
 

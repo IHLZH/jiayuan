@@ -30,19 +30,19 @@ class CommissionSearchViewModel with ChangeNotifier{
   }
 
   Future<void> deleteSearchHistory() async {
-    await Global.dbUtil?.open();
+
     int row = await Global.dbUtil?.delete("delete from search_history", []) ?? -1;
     if(row >= 0){
       print("历史搜索删除成功");
     }else{
       print("历史搜索删除失败");
     }
-    await Global.dbUtil?.close();
+
   }
 
 
   Future<void> getSearchHistory() async {
-    await Global.dbUtil?.open();
+
     searchHistory = [
 
     ];
@@ -55,11 +55,9 @@ class CommissionSearchViewModel with ChangeNotifier{
     }else{
       print("历史搜索" + "查询失败");
     }
-    await Global.dbUtil?.close();
   }
 
   Future<void> saveSearchHistory(String searchMsg) async {
-    await Global.dbUtil?.open();
     Map<String, String> msg = Map<String, String>();
     msg["search_msg"] = searchMsg;
     int row = await Global.dbUtil?.insertByHelper("search_history", msg) ?? 0;
@@ -68,7 +66,6 @@ class CommissionSearchViewModel with ChangeNotifier{
     }else{
       print("历史搜索：" + searchMsg + " 插入失败");
     }
-    await Global.dbUtil?.close();
   }
 
   void searchCommission(String searchMessage){

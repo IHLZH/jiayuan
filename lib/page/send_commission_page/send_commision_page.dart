@@ -26,6 +26,7 @@ class SendCommissionPage extends StatefulWidget {
 }
 
 class _SendCommissionPageState extends State<SendCommissionPage> {
+  bool _isProcessing = false;
 
   late CommissionType commissionType;
 
@@ -55,6 +56,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
     _focusNodeDoorNumber.dispose();
     _priceController.dispose();
     _tempPriceController.dispose();
+    super.dispose();
   }
 
 
@@ -181,10 +183,15 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
               borderRadius: BorderRadius.circular(35),
               onTap: () async{
                 // 获取验证结果
+              if(_isProcessing )
+                return ;
+              setState(() {
+                _isProcessing = true;
+              });
+              try{
                 String? errorMessage = context
                     .read<SendCommissionViewModel>()
                     .validateCommission();
-
                 if (errorMessage != null) {
                   // 显示错误提示
                   showDialog(
@@ -203,11 +210,20 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                 } else {
                   // 验证通过，执行发布操作
                   if(await _sendCommissionViewModel.sendCommission()){
+                    showToast('发布成功');
                     Navigator.pop(context);
                   }else{
                     showToast("发布失败");
                   }
                 }
+              }finally{
+                setState(() {
+                  _isProcessing = false;
+                });
+              }
+
+
+
               },
               child: Center(
                 child: Text(
