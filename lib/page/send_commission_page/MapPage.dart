@@ -66,36 +66,43 @@ class _MapPageState extends State<MapPage> {
   FocusNode _addressFocusNode = FocusNode();
   bool _isDialogShowing = false;
 
+  bool _hasInitialized = false;
+  bool _isUserInteracting = false;
+  Timer? _locationTimer;
+
   @override
   void initState() {
     super.initState();
     _mapType = MapType.normal;
 
-    /// 设置Android和iOS的apikey，
     AMapFlutterLocation.setApiKey(ConstConfig.androidKey, ConstConfig.iosKey);
-
-    /// 设置是否已经取得用户同意，如果未取得用户同意，高德定位SDK将不会工作,这里传true
-    /// 设置是否已经取得用户同意，如果未取得用户同意，高德定位SDK将不会工作,这里传true
     AMapFlutterLocation.updatePrivacyAgree(true);
-
-    /// 设置是否已经包含高德隐私政策并弹窗展示显示用户查看，如果未包含或者没有弹窗展示，高德定位SDK将不会工作,这里传true
     AMapFlutterLocation.updatePrivacyShow(true, true);
 
     if (widget.initialLatitude != null && widget.initialLongitude != null) {
-      markerLatitude = widget.initialLatitude;
-      markerLongitude = widget.initialLongitude;
-
-      currentLocation = CameraPosition(
-        target: LatLng(widget.initialLatitude!, widget.initialLongitude!),
-        zoom: 15,
+      _initializeWithLocation(
+        widget.initialLatitude!,
+        widget.initialLongitude!,
       );
-
-      Future.delayed(Duration(milliseconds: 500), () {
-        _addMarker(LatLng(widget.initialLatitude!, widget.initialLongitude!));
-        _getPoisData();
-      });
     } else {
       requestPermission();
+    }
+  }
+
+  void _initializeWithLocation(double latitude, double longitude) {
+    markerLatitude = latitude;
+    markerLongitude = longitude;
+    currentLocation = CameraPosition(
+      target: LatLng(latitude, longitude),
+      zoom: 15,
+    );
+
+    if (mounted) {
+      setState(() {});
+      Future.delayed(Duration(milliseconds: 500), () {
+        _addMarker(LatLng(latitude, longitude));
+        _getPoisData();
+      });
     }
   }
 
@@ -121,71 +128,50 @@ class _MapPageState extends State<MapPage> {
 
   /// 请求位置
   void requestLocation() {
-    bool hasInitialized = false; // 添加标记，确保只初始化一次
-
     location = AMapFlutterLocation()
       ..setLocationOption(AMapLocationOption(
-        onceLocation: true,
-        locationMode: AMapLocationMode.Battery_Saving,
+        onceLocation: true,  // 只定位一次
+        locationMode: AMapLocationMode.Hight_Accuracy,  // 使用高精度模式
+        needAddress: true,  // 需要地址信息
       ))
       ..onLocationChanged().listen((event) {
-        // 如果已经初始化过，直接返回
-        if (hasInitialized) return;
+        if (_hasInitialized || !mounted) return;
 
         print("位置更新: $event");
         double? latitude = double.tryParse(event['latitude'].toString());
         double? longitude = double.tryParse(event['longitude'].toString());
 
         if (latitude != null && longitude != null) {
-          hasInitialized = true; // 标记已初始化
-
-          if (!mounted) return;
-          setState(() {
-            markerLatitude = latitude;
-            markerLongitude = longitude;
-            meLatitude = latitude;
-            meLongitude = longitude;
-            currentLocation = CameraPosition(
-              target: LatLng(latitude, longitude),
-              zoom: 15,
-            );
-          });
-
-          _addMarker(LatLng(latitude, longitude));
-          // 只在初始化时获取一次POI数据
-          _getPoisData();
-
-          // 获取完位置后立即停止定位
+          _hasInitialized = true;
+          _initializeWithLocation(latitude, longitude);
           location?.stopLocation();
+          location?.destroy();
         }
       });
 
-    // 开始定位
     location?.startLocation();
+
+
   }
 
   void _onMapTap(LatLng position) {
     // 使用防抖处理状态更新
     if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
     _debounceTimer = Timer(Duration(milliseconds: 500), () {
-      var _markerLatitude;
       if (!mounted) return;
       setState(() {
         markerLatitude = position.latitude;
-        _markerLatitude = position.latitude;
         markerLongitude = position.longitude;
         _addMarker(position);
       });
-      if(_markerLatitude!=markerLatitude){
-        return;
-      }
       _getPoisData();
       _getAddressFromLocation(position.latitude, position.longitude);
     });
   }
 
   // 添加根据坐标获取地址信息的方法
-  Future<void> _getAddressFromLocation(double latitude, double longitude) async {
+  Future<void> _getAddressFromLocation(
+      double latitude, double longitude) async {
     try {
       var response = await Dio().get(
         'https://restapi.amap.com/v3/geocode/regeo',
@@ -200,8 +186,11 @@ class _MapPageState extends State<MapPage> {
           response.data['regeocode'] != null) {
         var regeocode = response.data['regeocode'];
         var addressComponent = regeocode['addressComponent'];
-        var formatted_address = matchAddress(regeocode['formatted_address']);
-
+        var formatted_address = regeocode['formatted_address'];
+        String opp = addressComponent['province'] +
+            addressComponent['city'] +
+            addressComponent['district'];
+        formatted_address = formatted_address.replaceAll(opp, '');
         // 构造位置信息
         Map<String, dynamic> locationInfo = {
           'name': formatted_address,
@@ -222,10 +211,10 @@ class _MapPageState extends State<MapPage> {
   void _onMapPoiTouched(AMapPoi poi) async {
     if (null == poi) return;
 
-    if(_debounceTimer?.isActive ?? false){
+    if (_debounceTimer?.isActive ?? false) {
       _debounceTimer!.cancel();
     }
-    _debounceTimer = Timer(Duration(milliseconds: 500), () async{
+    _debounceTimer = Timer(Duration(milliseconds: 500), () async {
       var poiData = poi.toJson();
       print('获取到的poi信息：$poiData');
 
@@ -253,8 +242,11 @@ class _MapPageState extends State<MapPage> {
             response.data['regeocode'] != null) {
           var regeocode = response.data['regeocode'];
           var addressComponent = regeocode['addressComponent'];
-          var formatted_address = matchAddress(regeocode['formatted_address']);
-
+          var formatted_address = regeocode['formatted_address'];
+          String opp = addressComponent['province'] +
+              addressComponent['city'] +
+              addressComponent['district'];
+          formatted_address = formatted_address.replaceAll(opp, '');
           print('获取到的地址信息：$regeocode');
 
           // 构造位置信息，使用 POI 的名称和逆地理编码的地址信息
@@ -291,7 +283,6 @@ class _MapPageState extends State<MapPage> {
         _showLocationConfirmDialog(locationInfo);
       }
     });
-
   }
 
   void _showLocationConfirmDialog(Map<String, dynamic> locationInfo) {
@@ -301,11 +292,11 @@ class _MapPageState extends State<MapPage> {
     }
 
     _isDialogShowing = true;
-    
+
     showDialog(
       context: context,
       builder: (dialogContext) {
-        _dialogContext = dialogContext;  // 保存新对话框的context
+        _dialogContext = dialogContext; // 保存新对话框的context
         return AlertDialog(
           title: Text('确认选择'),
           content: Column(
@@ -329,7 +320,7 @@ class _MapPageState extends State<MapPage> {
               onPressed: () {
                 Navigator.pop(dialogContext);
                 _dialogContext = null;
-                _isDialogShowing = false;  // 重置标记
+                _isDialogShowing = false; // 重置标记
               },
               child: Text('取消'),
             ),
@@ -337,13 +328,14 @@ class _MapPageState extends State<MapPage> {
               onPressed: () {
                 Navigator.pop(dialogContext);
                 Navigator.pop(context, {
-                  'address': '${locationInfo['name']}, ${locationInfo['address']}',
+                  'address':
+                      '${locationInfo['name']}, ${locationInfo['address']}',
                   'latitude': markerLatitude,
                   'longitude': markerLongitude,
                   'locationDetail': locationInfo,
                 });
                 _dialogContext = null;
-                _isDialogShowing = false;  // 重置标记
+                _isDialogShowing = false; // 重置标记
               },
               child: Text('确定'),
             ),
@@ -365,7 +357,7 @@ class _MapPageState extends State<MapPage> {
     _removeAll();
     final Marker marker = Marker(
       position: markPostion,
-      //使用默认hue的方式设置Marker的图标
+      //使用默认hue的方式设置Marker��图标
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
     //调用setState触发AMapWidget的更新，从而完成marker的添加
@@ -387,10 +379,17 @@ class _MapPageState extends State<MapPage> {
 
   /// 改变中心点
   void _changeCameraPosition(LatLng markPostion, {double? zoom}) {
+    // 如果用户正在交互，不改变相机位置
+    if (_isUserInteracting) return;
+
     mapController?.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-            target: markPostion, zoom: zoom ?? 15, tilt: 30, bearing: 0),
+          target: markPostion,
+          zoom: zoom ?? 15,
+          tilt: 0,  // 移除倾斜
+          bearing: 0,  // 移除方向
+        ),
       ),
       animated: true,
     );
@@ -402,7 +401,7 @@ class _MapPageState extends State<MapPage> {
     if (_isDialogShowing && _dialogContext != null) {
       Navigator.pop(_dialogContext!);
     }
-    _poiDebounceTimer?.cancel();
+    _locationTimer?.cancel();
     _debounceTimer?.cancel();
     location?.stopLocation();
     location?.destroy();
@@ -483,7 +482,8 @@ class _MapPageState extends State<MapPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('周边位置',
+                                Text(
+                                  '周边位置',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -498,8 +498,11 @@ class _MapPageState extends State<MapPage> {
                                       final poi = poisData[index];
                                       return ListTile(
                                         title: Text(poi['name']),
-                                        subtitle: poi['address'] is List ? Text(poi['address'].join('\n')) : Text(poi['address']),
-                                        onTap: () => _showLocationConfirmDialog(poi),
+                                        subtitle: poi['address'] is List
+                                            ? Text(poi['address'].join('\n'))
+                                            : Text(poi['address']),
+                                        onTap: () =>
+                                            _showLocationConfirmDialog(poi),
                                       );
                                     },
                                   ),
@@ -560,6 +563,7 @@ class _MapPageState extends State<MapPage> {
   /// 获取周边数据
   bool _isLoadingPois = false;
   Timer? _poiDebounceTimer;
+  bool _isFirstLoad = false;
 
   Future<void> _getPoisData() async {
     // 如果正在加载或组件已销毁，直接返回
@@ -567,7 +571,7 @@ class _MapPageState extends State<MapPage> {
 
     // 取消之前的定时器
     _poiDebounceTimer?.cancel();
-    
+
     // 设置新的定时器
     _poiDebounceTimer = Timer(Duration(milliseconds: 500), () async {
       setState(() {
@@ -590,12 +594,15 @@ class _MapPageState extends State<MapPage> {
           },
         );
 
-        if (mounted && response.data['status'] == '1' && response.data['pois'] != null) {
+        if (mounted &&
+            response.data['status'] == '1' &&
+            response.data['pois'] != null) {
           setState(() {
             poisData = response.data['pois'];
-            poisData.forEach((e) => print(e));
-            poisData.forEach((e) =>  e['address'] = e['adname']+ e['address']?.split('|')?.map((e) => e.trim())?.join('\n')  );
-            if (poisData.isNotEmpty && widget.initialLatitude == null) {
+            if (poisData.isNotEmpty &&
+                widget.initialLatitude == null &&
+                !_isFirstLoad) {
+              _isFirstLoad = true;
               _showLocationConfirmDialog(poisData[0]);
             }
           });
@@ -639,20 +646,12 @@ class _MapPageState extends State<MapPage> {
     }
   }
 
-   // 匹配地址
+  // 匹配地址
   String matchAddress(String address) {
-
-     String pattern = r'([省|市|自治区])(.*)';
-     RegExp regExp = RegExp(pattern) ;
-     RegExpMatch? match = regExp.firstMatch(address);
-     if (match != null) {
-       String matchedAddress = match.group(2)!;
-       return matchedAddress;
-     } else {
-       return address;
-     }
+    // 匹配省、市、自治区，市/区/县，并提取其后面的地址
+    RegExp regExp = RegExp(r'(北京市|天津市|上海市|重庆市|[^省市自治区]+省|[^市区县]+市|[^市区县]+区)');
+    return address.replaceAll(regExp, '').trim();
   }
-
 
   // 优化地图构建
   Widget _buildMap() {
@@ -661,11 +660,17 @@ class _MapPageState extends State<MapPage> {
         privacyStatement: ConstConfig.amapPrivacyStatement,
         apiKey: ConstConfig.amapApiKeys,
         initialCameraPosition: currentLocation!,
-        myLocationStyleOptions: MyLocationStyleOptions(true,),
+        myLocationStyleOptions: MyLocationStyleOptions(
+          true, // 使用Marker样式显示定位点
+        ),
         mapType: MapType.normal,
         minMaxZoomPreference: const MinMaxZoomPreference(3, 20),
         onPoiTouched: _onMapPoiTouched,
         onTap: _onMapTap,
+        onCameraMove: (_) => _isUserInteracting = true,
+        onCameraMoveEnd: (_) {
+          _isUserInteracting = false;
+        },
         markers: Set<Marker>.of(_markers.values),
         onMapCreated: (AMapController controller) {
           if (mounted) {
