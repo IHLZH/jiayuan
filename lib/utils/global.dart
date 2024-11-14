@@ -38,7 +38,7 @@ class Global {
   static String? password;
 
   // 价格标准
-  static List<StandardPrice>? standPrices;
+  static List<StandardPrice> standPrices = [];
 
   static bool isLogin = false;
 

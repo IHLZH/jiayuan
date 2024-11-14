@@ -7,9 +7,7 @@ import 'package:jiayuan/config.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/repository/api/keeper_api.dart';
 import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
-
-
-import '../../repository/model/standardPrice.dart';
+import '../../repository/api/commission_api.dart';
 import '../../utils/global.dart';
 import '../commission_page/commission_vm.dart';
 
@@ -70,6 +68,7 @@ class HomeViewModel with ChangeNotifier{
         typeText: "家庭保健"
     ),
   ];
+
   void loadingStandardPrice() async{
     Global.standPrices = await CommissionApi.instance.getAllPrice();
   }
