@@ -124,7 +124,17 @@ class _UserPageState extends State<UserPage> {
 
     // 委托中心
     Future<void> _jumpToCommissionCenterPage() async {
-      RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
+      if(isProduction)RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
+      else{
+        switch (Global.userInfoNotifier.value!.userType) {
+          case 0:
+            showToast("请先成为家政员", duration: Duration(seconds: 1));
+            break;
+          case 1:
+            RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
+            break;
+        }
+      }
     }
 
     // 设置
