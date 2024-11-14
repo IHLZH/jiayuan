@@ -59,12 +59,12 @@ class CommissionApi{
   }
 
   //请求委托
-  Future<List<CommissionData1>> getCommission({required String path, required Map<String, dynamic> param}) async{
+  Future<List<CommissionData1>> getCommission(Map<String, dynamic> param) async{
     List<CommissionData1> commissionList = [];
 
     try{
       final Response response = await DioInstance.instance().get(
-          path: path,
+          path: "/searchList_by_money_distance",
           param: param
       );
 
