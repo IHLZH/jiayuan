@@ -11,6 +11,7 @@ import 'package:jiayuan/page/login_page/forget_password_check_code_page.dart';
 import 'package:jiayuan/page/login_page/forget_password_page.dart';
 import 'package:jiayuan/page/login_page/forget_password_submit_page.dart';
 import 'package:jiayuan/page/login_page/login_page.dart';
+import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page.dart';
 import 'package:jiayuan/page/register_page/register_check_code_page.dart';
 import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
 import 'package:jiayuan/page/start_page.dart';
@@ -59,6 +60,7 @@ class Routes {
       //委托搜索页
       case RoutePath.commissionSearch:
         return pageRoute(CommissionSearchPage());
+      //委托发布页
       case RoutePath.sendCommissionPage:
         return pageRoute(SendCommissionPage(id: 1));
       //注册验证码页
@@ -83,7 +85,12 @@ class Routes {
       case RoutePath.orderPage:
         final args = settings.arguments as Map<String, dynamic>;
         final status = args['status'] as int;
-        return pageRoute(OrderPage(status: status,));
+        return pageRoute(OrderPage(
+          status: status,
+        ));
+      //订单详情页
+      case RoutePath.orderDetailPage:
+        return pageRoute(OrderDetailPage());
       //设置页
       case RoutePath.settingPage:
         return pageRoute(SettingPage());
@@ -109,8 +116,9 @@ class Routes {
       //证书认证页
       case RoutePath.certCertified:
         return pageRoute(CertCertifiedPage());
+      //委托中心订单页
       case RoutePath.centerOrder:
-        return pageRoute(CenterOrderPage(),settings: settings);
+        return pageRoute(CenterOrderPage(), settings: settings);
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

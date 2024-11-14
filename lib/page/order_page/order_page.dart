@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
+import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page_vm.dart';
 import 'package:jiayuan/repository/model/full_order.dart';
+import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
@@ -37,6 +39,11 @@ class _OrderPageState extends State<OrderPage> {
   void initState() {
     _fetchOrders();
     super.initState();
+  }
+
+  Future<void> _jumpToOrderDetailPage(int index) async {
+    OrderDetailPageVm.nowOrder = _orderDataList[index];
+    RouteUtils.pushForNamed(context, RoutePath.orderDetailPage);
   }
 
   Future<void> _fetchOrders() async {
@@ -132,258 +139,266 @@ class _OrderPageState extends State<OrderPage> {
       }
 
       final commissionData = _orderDataList[index];
-      return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, 0),
-            ),
-          ],
-        ),
-        padding: EdgeInsets.all(16),
-        margin: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Text(
-                  "订单时间: ${safeSubstring(commissionData.createTime.toString(), 0, 19)}",
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Container(child: Divider(),),
-            SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+      return GestureDetector(
+        onTap: () => _jumpToOrderDetailPage(index),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 5,
+                offset: Offset(0, 0),
+              ),
+            ],
+          ),
+          padding: EdgeInsets.all(16),
+          margin: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
                 children: [
-                  Text("订单编号:",
+                  Text(
+                    "订单时间: ${safeSubstring(commissionData.createTime.toString(), 0, 19)}",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              Container(
+                child: Divider(),
+              ),
+              SafeArea(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("订单编号:",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold)),
+                    SizedBox(width: 10),
+                    Container(
+                      width: 55,
+                      child: Text(
+                        "${commissionData.commissionId}",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    Text("订单状态:",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold)),
+                    SizedBox(width: 10),
+                    switch (commissionData.commissionStatus) {
+                      0 => Text("待接取",
+                          style: TextStyle(
+                              color: Colors.blue, fontWeight: FontWeight.bold)),
+                      1 => Text("待确认",
+                          style: TextStyle(
+                              color: Colors.redAccent,
+                              fontWeight: FontWeight.bold)),
+                      2 => Text("待服务",
+                          style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold)),
+                      3 => Text("服务中",
+                          style: TextStyle(
+                              color: Colors.orange,
+                              fontWeight: FontWeight.bold)),
+                      4 => Text("待支付",
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold)),
+                      5 => Text("已完成",
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold)),
+                      6 => Text("已取消",
+                          style: TextStyle(
+                              color: Colors.grey, fontWeight: FontWeight.bold)),
+                      // 7 => Text("待验收",
+                      //     style: TextStyle(
+                      //         color: Colors.red, fontWeight: FontWeight.bold)),
+                      // 8 => Text(
+                      //     "待确认",
+                      //     style: TextStyle(
+                      //         color: Colors.orange, fontWeight: FontWeight.bold),
+                      //   ),
+                      _ => Text("未知",
+                          style: TextStyle(
+                              color: Colors.redAccent,
+                              fontWeight: FontWeight.bold)),
+                    },
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
+              SafeArea(
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("家政员:",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                      SizedBox(width: 10),
+                      Container(
+                        width: 70,
+                        child: Text(
+                          "${commissionData.keeperName == null ? "无" : commissionData.keeperName == '' ? "无" : commissionData.keeperName}",
+                          style: TextStyle(
+                              color: Colors.blue[800],
+                              fontWeight: FontWeight.bold),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      SizedBox(width: 5),
+                      Text("委托类型:",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                      SizedBox(width: 10),
+                      Container(
+                        width: 80,
+                        child: Text(
+                          "${commissionData.serviceName}",
+                          style: TextStyle(
+                              color: Colors.teal[800],
+                              fontWeight: FontWeight.bold),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ]),
+              ),
+              SizedBox(height: 10),
+              Row(children: [
+                Text("服务地址:",
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold)),
+                SizedBox(width: 10),
+                Text(
+                  "${commissionData.province} ${commissionData.city} ${commissionData.county}",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ]),
+              SizedBox(height: 10),
+              Row(
+                children: [
+                  Text("详细地址:",
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold)),
                   SizedBox(width: 10),
                   Container(
-                    width: 55,
+                    width: 200,
                     child: Text(
-                      "${commissionData.commissionId}",
+                      "${commissionData.commissionAddress}",
                       style: TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  SizedBox(width: 5),
-                  Text("订单状态:",
-                      style: TextStyle(
-                          color: Colors.black, fontWeight: FontWeight.bold)),
-                  SizedBox(width: 10),
-                  switch (commissionData.commissionStatus) {
-                    0 => Text("待接取",
-                        style: TextStyle(
-                            color: Colors.blue, fontWeight: FontWeight.bold)),
-                    1 => Text("待确认",
-                        style: TextStyle(
-                            color: Colors.redAccent,
-                            fontWeight: FontWeight.bold)),
-                    2 => Text("待服务",
-                        style: TextStyle(
-                            color: Colors.blueAccent,
-                            fontWeight: FontWeight.bold)),
-                    3 => Text("服务中",
-                        style: TextStyle(
-                            color: Colors.orange,
-                            fontWeight: FontWeight.bold)),
-                    4 => Text("待支付",
-                        style: TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold)),
-                    5 => Text("已完成",
-                        style: TextStyle(
-                            color: Colors.green, fontWeight: FontWeight.bold)),
-                    6 => Text("已取消",
-                        style: TextStyle(
-                            color: Colors.grey, fontWeight: FontWeight.bold)),
-                    // 7 => Text("待验收",
-                    //     style: TextStyle(
-                    //         color: Colors.red, fontWeight: FontWeight.bold)),
-                    // 8 => Text(
-                    //     "待确认",
-                    //     style: TextStyle(
-                    //         color: Colors.orange, fontWeight: FontWeight.bold),
-                    //   ),
-                    _ => Text("未知",
-                        style: TextStyle(
-                            color: Colors.redAccent,
-                            fontWeight: FontWeight.bold)),
-                  },
                 ],
               ),
-            ),
-            SizedBox(height: 10),
-            SafeArea(
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("家政员:",
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold)),
-                    SizedBox(width: 10),
-                    Container(
-                      width: 70,
-                      child: Text(
-                        "${commissionData.keeperName == null ? "无" : commissionData.keeperName == '' ? "无" : commissionData.keeperName}",
-                        style: TextStyle(
-                            color: Colors.blue[800], fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SizedBox(width: 5),
-                    Text("委托类型:",
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold)),
-                    SizedBox(width: 10),
-                    Container(
-                      width: 80,
-                      child: Text(
-                        "${commissionData.serviceName}",
-                        style: TextStyle(
-                            color: Colors.teal[800],
-                            fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ]),
-            ),
-            SizedBox(height: 10),
-            Row(children: [
-              Text("服务地址:",
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold)),
-              SizedBox(width: 10),
-              Text(
-                "${commissionData.province} ${commissionData.city} ${commissionData.county}",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ]),
-            SizedBox(height: 10),
-            Row(
-              children: [
-                Text("详细地址:",
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold)),
-                SizedBox(width: 10),
-                Container(
-                  width: 200,
-                  child: Text(
-                    "${commissionData.commissionAddress}",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            SafeArea(
-                child: switch (commissionData.commissionStatus) {
-              0 => SafeArea(child: Column()),
-              1 => SafeArea(child: Column()),
-              2 => SafeArea(child: Column()),
-              3 => SafeArea(child: Column()),
-              4 => SafeArea(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(child: SizedBox()),
-                          ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                                side: BorderSide(
-                                    color: AppColors.orangeBtnColor,
-                                    width: 1.0),
+              SafeArea(
+                  child: switch (commissionData.commissionStatus) {
+                0 => SafeArea(child: Column()),
+                1 => SafeArea(child: Column()),
+                2 => SafeArea(child: Column()),
+                3 => SafeArea(child: Column()),
+                4 => SafeArea(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(child: SizedBox()),
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  side: BorderSide(
+                                      color: AppColors.orangeBtnColor,
+                                      width: 1.0),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                elevation: 3.0,
+                                splashFactory: InkRipple.splashFactory,
+                                overlayColor: AppColors.orangeBtnColor,
                               ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              elevation: 3.0,
-                              splashFactory: InkRipple.splashFactory,
-                              overlayColor: AppColors.orangeBtnColor,
-                            ),
-                            icon: Icon(Icons.monetization_on_outlined,
-                                color: AppColors.orangeBtnColor),
-                            label: Text('去支付',
-                                style: TextStyle(
-                                    color: AppColors.orangeBtnColor,
-                                    fontWeight: FontWeight.normal)),
-                            onPressed: () {
-                              print('用户点击了去支付按钮');
-                            },
-                          )
-                        ],
-                      ),
-                    ],
+                              icon: Icon(Icons.monetization_on_outlined,
+                                  color: AppColors.orangeBtnColor),
+                              label: Text('去支付',
+                                  style: TextStyle(
+                                      color: AppColors.orangeBtnColor,
+                                      fontWeight: FontWeight.normal)),
+                              onPressed: () {
+                                print('用户点击了去支付按钮');
+                              },
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              5 => SafeArea(
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(child: SizedBox()),
-                          ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                                side: BorderSide(
-                                    color: AppColors.appColor, width: 1.0),
+                5 => SafeArea(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(child: SizedBox()),
+                            ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  side: BorderSide(
+                                      color: AppColors.appColor, width: 1.0),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                elevation: 3.0,
+                                splashFactory: InkRipple.splashFactory,
+                                overlayColor: AppColors.appColor,
                               ),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              elevation: 3.0,
-                              splashFactory: InkRipple.splashFactory,
-                              overlayColor: AppColors.appColor,
-                            ),
-                            icon: Icon(Icons.rate_review_outlined,
-                                color: AppColors.appColor),
-                            label: Text('去评价',
-                                style: TextStyle(
-                                    color: AppColors.appColor,
-                                    fontWeight: FontWeight.normal)),
-                            onPressed: () {
-                              print('用户点击了去评价按钮');
-                            },
-                          )
-                        ],
-                      ),
-                    ],
+                              icon: Icon(Icons.rate_review_outlined,
+                                  color: AppColors.appColor),
+                              label: Text('去评价',
+                                  style: TextStyle(
+                                      color: AppColors.appColor,
+                                      fontWeight: FontWeight.normal)),
+                              onPressed: () {
+                                print('用户点击了去评价按钮');
+                              },
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              //TODO
-              6 => SafeArea(child: Column()),
-              7 => SafeArea(child: Column()),
-              8 => SafeArea(child: Column()),
-              _ => Text("记录问题"),
-            }),
-          ],
+                //TODO
+                6 => SafeArea(child: Column()),
+                7 => SafeArea(child: Column()),
+                8 => SafeArea(child: Column()),
+                _ => Text("记录问题"),
+              }),
+            ],
+          ),
         ),
       );
     }
