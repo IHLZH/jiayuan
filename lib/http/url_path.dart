@@ -85,6 +85,10 @@ class UrlPath {
   //发送委托的接口
   static const String sendCommissionUrl = "/release/add";
 
+  //或缺委托价格的接口
+  static const String getAllPriceUrl = "/release/add/price";
+
   //高德地图天气接口
   static const String weatherUrl = "https://restapi.amap.com/v3/weather/weatherInfo";
+
 }

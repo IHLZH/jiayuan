@@ -71,19 +71,7 @@ class HomeViewModel with ChangeNotifier{
     ),
   ];
   void loadingStandardPrice() async{
-    Global.standPrices = [
-      StandardPrice(referencePrice: 50, lowestPrice: 30, typeId: 0),
-      StandardPrice(referencePrice: 50, lowestPrice: 30, typeId: 1),
-      StandardPrice(referencePrice: 60, lowestPrice: 40, typeId: 2),
-      StandardPrice(referencePrice: 70, lowestPrice: 50, typeId: 3),
-      StandardPrice(referencePrice: 80, lowestPrice: 60, typeId: 4),
-      StandardPrice(referencePrice: 90, lowestPrice: 70, typeId: 5),
-      StandardPrice(referencePrice: 100, lowestPrice: 80, typeId: 6),
-      StandardPrice(referencePrice: 110, lowestPrice: 90, typeId: 7),
-      StandardPrice(referencePrice: 120, lowestPrice: 100, typeId: 8),
-      StandardPrice(referencePrice: 130, lowestPrice: 110, typeId: 9),
-      StandardPrice(referencePrice: 140, lowestPrice: 120, typeId: 10),
-    ];
+    Global.standPrices = await CommissionApi.instance.getAllPrice();
   }
 
 
@@ -102,7 +90,7 @@ class HomeViewModel with ChangeNotifier{
   Future<void> getHousekeeperData() async{
     //获取家政员数据
     List<Housekeeper>? temp;
-    temp = await KeeperApi.instance.getHousekeeperData(Global.location!.longitude!,Global.location!.longitude!) ;
+    temp = await KeeperApi.instance.getHousekeeperData(Global.location!.longitude!,Global.location!.latitude!) ;
     housekeepers = temp!;
     notifyListeners();
   }

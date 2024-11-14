@@ -451,7 +451,7 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
                                   ),
                                 ),
                                 Text(
-                                  '   ${keeperViewModel.keeperData?.evaluations?[index].nickname}',
+                                  '   ${keeperViewModel.keeperData?.evaluations?[index].nickName}',
                                   style: TextStyle(color: Colors.black),
                                 ),
                               ],

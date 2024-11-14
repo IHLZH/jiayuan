@@ -72,13 +72,13 @@ class HousekeeperDataDetail {
      highlight = data['highlight'];
      rating = data['rating'];
      city = data['city'];
-     completedOrders = data['completedOrders'];
+     completedOrders = data['completeSingularNumber'];
       tags = data['tags'].cast<String>();
       keeperImages = data['keeperImages'].cast<String>();
       introduction = data['introduction'];
-      certificates = data['certificates'];
-      contact = data['contact'];
-      evaluations = data['evaluations'].map<Evaluation>((item) => Evaluation.fromJson(item)).toList();
+      certificates = data['certificatePicUrl'];
+      contact = data['phoneNumber'];
+      evaluations = data['userCommentResults'].map<Evaluation>((item) => Evaluation.fromJson(item)).toList();
    }
 }
 
@@ -91,7 +91,7 @@ class Evaluation{
   String? avatar;
 
   //评价者昵称
-  String? nickname;
+  String? nickName;
 
   //评价时间
   DateTime? time;
@@ -109,7 +109,7 @@ class Evaluation{
   Evaluation({
     this.userId,
     this.avatar,
-    this.nickname,
+    this.nickName,
     this.content,
     this.time,
     this.images,
@@ -118,11 +118,11 @@ class Evaluation{
 
   Evaluation.fromJson(item) {
     userId = item['userId'];
-    avatar = item['avatar'];
-    nickname = item['nickname'];
-    content = item['content'];
-    time = DateTime.parse(item['time']);
-    images = item['images'].cast<String>();
-    rating = item['rating'];
+    avatar = item['userAvatar'];
+    nickName = item['nickName'];
+    content = item['comment'];
+    time = DateTime.parse(item['createTime']);
+    images = item['commentPicUrl'].cast<String>();
+    rating = item['star '];
   }
 }
