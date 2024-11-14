@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:jiayuan/common_ui/buttons/red_button.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_vm.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
+import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +30,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
   @override
   Widget build(BuildContext context) {
 
-    _commissionDetailViewModel.commission = ModalRoute.of(context)?.settings.arguments as Commission;
+    _commissionDetailViewModel.commissionData = ModalRoute.of(context)?.settings.arguments as CommissionData1;
     _commissionDetailViewModel.getUserById(0);
 
     return ChangeNotifierProvider(
@@ -105,10 +107,13 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                   )
                                 ),
                               ),
+                              SizedBox(width: 10,),
                               Text(
-                                vm.user?.nickName ?? "数据获取失败",
+                                vm.commissionData.userName,
                                 style: TextStyle(
-                                    color: AppColors.textColor2b
+                                    color: AppColors.textColor2b,
+                                  fontSize: 20.sp,
+                                    fontWeight: FontWeight.w500
                                 ),
                               ),
                             ],
@@ -117,7 +122,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                vm.commission.price.toString(),
+                                "￥" + vm.commissionData.commissionBudget.toString(),
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontSize: 20.sp,
@@ -159,7 +164,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                 borderRadius: BorderRadius.circular(16.r)
                             ),
                             child: Text(
-                              CommissionViewModel.CommissionTypes[vm.commission.commissionType].typeText,
+                              CommissionViewModel.CommissionTypes[vm.commissionData.typeId].typeText,
                               style: TextStyle(
                                   color: Colors.black45,
                                   fontSize: 16.sp,
@@ -181,7 +186,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                           ),
                           SizedBox(width: 10.w,),
                           Text(
-                            vm.commission.expectTime.toString(),
+                            DateFormat('yyyy-MM-dd HH:mm:ss').format(vm.commissionData.expectStartTime),
                             style: TextStyle(
                               color: AppColors.textColor2b,
                               fontSize: 16.sp,
@@ -204,10 +209,10 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                               child: Wrap(
                                 children: [
                                   Text(
-                                    (vm.commission.province + vm.commission.city + vm.commission.county + vm.commission.address),
+                                    (vm.commissionData.province + vm.commissionData.city + vm.commissionData.county + vm.commissionData.commissionAddress),
                                     style: TextStyle(
                                       color: AppColors.textColor2b,
-                                      fontSize: 14.sp,
+                                      fontSize: 16.sp,
                                     ),
                                   ),
                                 ],
@@ -234,7 +239,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                               ),
                             ),
                             Text(
-                              vm.user?.userPhoneNumber ?? "数据获取失败",
+                              vm.commissionData.userPhoneNumber,
                               style: TextStyle(
                                   color: AppColors.textColor2b,
                                   fontSize: 16.sp,
@@ -287,7 +292,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                             child: Wrap(
                               children: [
                                 Text(
-                                  "这是一条备注~",
+                                  vm.commissionData.commissionDescription,
                                   style: TextStyle(
                                     color: AppColors.textColor2b,
                                     fontSize: 14.sp,

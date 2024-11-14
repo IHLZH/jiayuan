@@ -9,6 +9,7 @@ class CommissionViewModel with ChangeNotifier{
 
   //委托类型表
   static List<CommissionType> CommissionTypes = [
+    CommissionType(icon: Icons.import_contacts, typeText: ""),
     CommissionType(
         icon: Icons.house,
         typeText: "日常保洁"
@@ -55,183 +56,30 @@ class CommissionViewModel with ChangeNotifier{
     ),
   ];
 
-  List<Commission> testCommissions =  [
-    Commission(
-        commissionType: 1,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
-        distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,2,12,30),
-        estimatedTime: 2,
-        commissionStatus: 0,
-        isLong: false
-    ),
-    Commission(
-        commissionType: 1,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
-        distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,3,12,30),
-        estimatedTime: 2,
-        commissionStatus: 0,
-        isLong: false
-    ),
-    Commission(
-        commissionType: 1,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
-        distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,4,12,30),
-        estimatedTime: 2,
-        commissionStatus: 0,
-        isLong: false
-    ),
-    Commission(
-        commissionType: 1,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
-        distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,5,12,30),
-        estimatedTime: 2,
-        commissionStatus: 0,
-        isLong: false
-    ),
-    Commission(
-        commissionType: 1,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
-        distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,2,12,30),
-        estimatedTime: 2,
-        commissionStatus: 0,
-        isLong: false
-    ),
-    Commission(
-        commissionType: 1,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
-        distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,2,12,30),
-        estimatedTime: 2,
-        commissionStatus: 0,
-        isLong: false
-    ),
-    Commission(
-        commissionType: 1,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
-        distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,3,12,30),
-        estimatedTime: 2,
-        commissionStatus: 0,
-        isLong: false
-    ),
-    Commission(
-        commissionType: 1,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
-        distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,4,12,30),
-        estimatedTime: 2,
-        commissionStatus: 0,
-        isLong: false
-    ),
-    Commission(
-        commissionType: 1,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
-        distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,2,12,30),
-        estimatedTime: 2,
-        commissionStatus: 0,
-        isLong: false
-    ),
-    Commission(
-        commissionType: 1,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
-        distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,3,12,30),
-        estimatedTime: 2,
-        commissionStatus: 0,
-        isLong: false
-    ),
-    Commission(
-        commissionType: 1,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
-        distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,4,12,30),
-        estimatedTime: 2,
-        commissionStatus: 0,
-        isLong: false
-    ),
-  ];
-
-  List<Commission> commissions = [];
-
+  //推荐委托表
   List<CommissionData1> commissionDataList = [];
-
-  //模拟网络请求
-  void getCommissionData(){
-    this.commissions = testCommissions;
-  }
 
   //分页请求
   int startPage = 0;
   int endPage = 0;
   int size = 11;
+  bool hasMoreData = true;
 
   Future<void> getRecommendComission(Map<String, dynamic> param) async {
-    List<CommissionData1> commissionData = await CommissionApi.instance.getRecommendCommission(param);
+    List<CommissionData1> commissionData = await CommissionApi.instance.getCommission(param);
     if(!commissionData.isEmpty){
       this.commissionDataList = commissionData;
     }else{
       print("数据为空");
+    }
+  }
+
+  Future<void> loadingComission(Map<String, dynamic> param) async {
+    List<CommissionData1> commissionData = await CommissionApi.instance.getCommission(param);
+    if(!commissionData.isEmpty){
+      this.commissionDataList.addAll(commissionData);
+    }else{
+      endPage = -1;
     }
   }
 }

@@ -10,6 +10,7 @@ import 'package:jiayuan/page/Test.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
 import 'package:jiayuan/page/commission_page/type/commission_type_page.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
+import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/global.dart';
@@ -59,15 +60,62 @@ class _CommissionPageState extends State<CommissionPage>{
   void initState() {
     super.initState();
     //请求委托数据
-    _viewModel.getCommissionData();
-    _viewModel.getRecommendComission({
-      "search":" ",
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    await _viewModel.getRecommendComission({
       "longitude":Global.location?.longitude ?? 0.0,
       "latitude":Global.location?.latitude ?? 0.0,
       "distance":10,
       "page": _viewModel.startPage,
       "size": _viewModel.size
     });
+    setState(() {
+    });
+  }
+
+  Future<void> _onLoading() async {
+    if(_viewModel.hasMoreData){
+      _viewModel.endPage++;
+      await _viewModel.loadingComission({
+        "longitude":Global.location?.longitude ?? 0.0,
+        "latitude":Global.location?.latitude ?? 0.0,
+        "distance":10,
+        "page": _viewModel.endPage,
+        "size": _viewModel.size
+      });
+      if(_viewModel.commissionDataList.length >= 110){
+        _viewModel.hasMoreData = false;
+        _refreshController.loadNoData();
+      }else{
+        setState(() {
+        });
+        _refreshController.loadComplete();
+      }
+    }else{
+      _refreshController.loadNoData();
+    }
+  }
+
+  Future<void> _onRefresh() async {
+    _viewModel.startPage++;
+    _viewModel.endPage = _viewModel.startPage;
+    await _viewModel.getRecommendComission({
+      "longitude":Global.location?.longitude ?? 0.0,
+      "latitude":Global.location?.latitude ?? 0.0,
+      "distance":10,
+      "page": _viewModel.startPage,
+      "size": _viewModel.size
+    });
+    if(_viewModel.commissionDataList.isEmpty){
+      _viewModel.startPage = 0;
+      _viewModel.endPage = _viewModel.startPage;
+    }
+    setState(() {
+      _viewModel.hasMoreData = true;
+    });
+    _refreshController.refreshCompleted();
   }
 
   @override
@@ -93,8 +141,8 @@ class _CommissionPageState extends State<CommissionPage>{
                     enablePullDown: true,
                     header: ClassicHeader(),
                     footer: ClassicFooter(),
-                    onLoading: (){},
-                    onRefresh: (){},
+                    onLoading: _onLoading,
+                    onRefresh: _onRefresh,
                     child: CustomScrollView(
                       slivers: [
                         SliverToBoxAdapter(
@@ -116,20 +164,20 @@ class _CommissionPageState extends State<CommissionPage>{
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                                               children: [
-                                                CType(index: 0),
                                                 CType(index: 1),
                                                 CType(index: 2),
                                                 CType(index: 3),
+                                                CType(index: 4),
                                               ],
                                             ),
                                             SizedBox(height: 10),
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                                               children: [
-                                                CType(index: 4),
                                                 CType(index: 5),
                                                 CType(index: 6),
                                                 CType(index: 7),
+                                                CType(index: 8),
                                               ],
                                             ),
                                           ],
@@ -139,20 +187,20 @@ class _CommissionPageState extends State<CommissionPage>{
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                                               children: [
-                                                CType(index: 8),
                                                 CType(index: 9),
                                                 CType(index: 10),
-                                                CType(index: 1),
+                                                CType(index: 11),
+                                                CType(index: 2),
                                               ],
                                             ),
                                             SizedBox(height: 10),
                                             Row(
                                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                                               children: [
-                                                CType(index: 2),
                                                 CType(index: 3),
                                                 CType(index: 4),
                                                 CType(index: 5),
+                                                CType(index: 6),
                                               ],
                                             ),
                                           ],
@@ -195,12 +243,12 @@ class _CommissionPageState extends State<CommissionPage>{
                               return SliverToBoxAdapter(
                                 child: MasonryGridView.count(
                                   crossAxisCount: 2,
-                                  itemCount: vm.commissions.length,
+                                  itemCount: vm.commissionDataList.length,
                                   itemBuilder: (context, index){
                                     return Container(
                                       height: (index % 2 == 0) ? 250.h : 300.h,
                                       padding: EdgeInsets.all(10),
-                                      child: CommissionCard(vm.commissions[index]),
+                                      child: CommissionCard(vm.commissionDataList[index]),
                                     );
                                   },
                                   shrinkWrap: true,
@@ -220,7 +268,7 @@ class _CommissionPageState extends State<CommissionPage>{
   }
 
 
-  Widget CommissionCard(Commission commission){
+  Widget CommissionCard(CommissionData1 commission){
     return Material(
       elevation: 5,
       color: Colors.white,
@@ -243,7 +291,9 @@ class _CommissionPageState extends State<CommissionPage>{
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    (commission.days ?? "") + commission.expectTime.hour.toString() + ":" + commission.expectTime.minute.toString(),
+                    (commission.days ?? "今天") +
+                        (commission.expectStartTime.hour.toString().length > 1 ? commission.expectStartTime.hour.toString() : ("0" + commission.expectStartTime.hour.toString())) +
+                        ":" + (commission.expectStartTime.minute.toString().length > 1 ? commission.expectStartTime.minute.toString() : ("0" + commission.expectStartTime.minute.toString())),
                     style: TextStyle(
                         color: Colors.red,
                         fontSize: 14.sp,
@@ -257,7 +307,7 @@ class _CommissionPageState extends State<CommissionPage>{
                         size: 14,
                       ),
                       Text(
-                        commission.distance.toString() + "km",
+                        commission.commissionId.toString() + "km",
                         style: TextStyle(
                             color: AppColors.textColor2b,
                             fontSize: 12.sp,
@@ -285,7 +335,7 @@ class _CommissionPageState extends State<CommissionPage>{
                         borderRadius: BorderRadius.circular(16.r)
                     ),
                     child: Text(
-                      CommissionViewModel.CommissionTypes[commission.commissionType].typeText,
+                      CommissionViewModel.CommissionTypes[commission.typeId].typeText,
                       style: TextStyle(
                           color: Colors.black45,
                           fontSize: 16.sp,
@@ -310,7 +360,7 @@ class _CommissionPageState extends State<CommissionPage>{
                   ),
                   SizedBox(width: 5.w,),
                   Text(
-                    commission.estimatedTime.toString() + (commission.isLong ? "月" : "小时"),
+                    commission.specifyServiceDuration.toString() + (commission.isLong ? "月" : "小时"),
                     style: TextStyle(
                         color: AppColors.textColor2b,
                         fontSize: 14.sp,
@@ -336,7 +386,7 @@ class _CommissionPageState extends State<CommissionPage>{
                   SizedBox(width: 5.w,),
                   Expanded(
                     child: Text(
-                      commission.address,
+                      commission.commissionAddress,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
                       style: TextStyle(
@@ -355,7 +405,7 @@ class _CommissionPageState extends State<CommissionPage>{
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    commission.price.toString(),
+                    commission.commissionBudget.toString(),
                     style: TextStyle(
                         color: Colors.red,
                         fontSize: 20.sp,

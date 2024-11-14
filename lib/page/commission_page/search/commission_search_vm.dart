@@ -3,6 +3,7 @@ import 'package:jiayuan/repository/api/commission_api.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/utils/global.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class CommissionSearchViewModel with ChangeNotifier{
 
@@ -12,21 +13,221 @@ class CommissionSearchViewModel with ChangeNotifier{
 
   List<CommissionData1> searchCommissionList = [];
 
-  double? minPrice;
-  double? maxPrice;
-  double? distance;
+  //刷新控制器
+  RefreshController refreshController = RefreshController();
 
-  Future<void> getSearchCommission(Map<String, dynamic>? param) async {
-    List<CommissionData1> searchCommissionData = await CommissionApi.instance.getSearchCommission(param);
+  double minPrice = 0.0;
+  double maxPrice = 999999;
+  double distance = 10;
+
+  bool isSearch = false;
+  String? searchMessage;
+
+  bool? synthesisCheck; //选择综合排序
+  bool? priceCheck; //选择价格排序
+  bool? distanceCheck; //选择距离排序
+
+  bool? priceHigh; //价格是否从高到低
+
+  int order = 0;
+
+  //分页请求
+  int startPage = 1;
+  int endPage = 1;
+  int size = 11;
+  bool hasMoreData = true;
+
+
+  Future<void> search(String searchMessage) async {
+    isSearch = true;
+    synthesisCheck = true;
+    priceCheck = false;
+    distanceCheck = false;
+    this.searchMessage = searchMessage;
+    order = 0;
+    if(searchMessage != "")saveSearchHistory(searchMessage);
+    await getSearchCommission({
+      "search":searchMessage,
+      "page":startPage,
+      "size":size,
+      "min":minPrice,
+      "max":maxPrice,
+      "distance":distance,
+      "order":order
+    });
+    notifyListeners();
+  }
+
+  Future<void> getHisory() async {
+    await getSearchHistory();
+    notifyListeners();
+  }
+
+  Future<void> deleteHistory() async {
+    await deleteSearchHistory();
+    await getHisory();
+    notifyListeners();
+  }
+
+  //点击综合排序
+  Future<void> checkSynthesis() async {
+    if(synthesisCheck!)return;
+    synthesisCheck = true;
+    priceCheck = false;
+    distanceCheck = false;
+    order = 0;
+
+    await getSearchCommission({
+      "search":searchMessage,
+      "page":startPage,
+      "size":size,
+      "min":minPrice,
+      "max":maxPrice,
+      "distance":distance,
+      "order":order
+    });
+
+    notifyListeners();
+  }
+
+  Future<void> checkPrice() async {
+    if(priceCheck!){
+      priceHigh = !(priceHigh!);
+    }else{
+      priceCheck = true;
+      priceHigh = false;
+      synthesisCheck = false;
+      distanceCheck = false;
+    }
+
+    order = priceHigh! ? 2 : 1;
+
+    await getSearchCommission({
+      "search":searchMessage,
+      "page":startPage,
+      "size":size,
+      "min":minPrice,
+      "max":maxPrice,
+      "distance":distance,
+      "order": order,
+    });
+
+    notifyListeners();
+  }
+
+  Future<void> checkDistance() async {
+    if(distanceCheck!)return;
+    distanceCheck = true;
+    priceCheck = false;
+    synthesisCheck = false;
+
+    order = 3;
+
+    await getSearchCommission({
+      "search":searchMessage,
+      "page":startPage,
+      "size":size,
+      "min":minPrice,
+      "max":maxPrice,
+      "distance":distance,
+      "order": order,
+    });
+
+    notifyListeners();
+  }
+
+  Future<void> getSearchCommission(Map<String, dynamic> param) async {
+    List<CommissionData1> searchCommissionData = await CommissionApi.instance.searchCommission(param);
     if(!searchCommissionData.isEmpty){
       searchCommissionList = searchCommissionData;
       print("接收到" + searchCommissionList.length.toString() + "条数据");
-      for (var value in searchCommissionList) {
-        print(value.toString());
-      }
     }else{
+      searchCommissionList.clear();
       print("数据为空");
     }
+  }
+
+  Future<void> refreshCommission(Map<String, dynamic> param) async {
+    List<CommissionData1> commissionData = await CommissionApi.instance.searchCommission(param);
+    if(!commissionData.isEmpty){
+      searchCommissionList = commissionData;
+    }else{
+      if(startPage == 1)return;
+      startPage = 1;
+      param["page"] = startPage;
+      await refreshCommission(param);
+    }
+  }
+
+  Future<void> loadingCommission(Map<String, dynamic> param) async {
+    List<CommissionData1> commissionData = await CommissionApi.instance.searchCommission(param);
+    if(!commissionData.isEmpty){
+      searchCommissionList.addAll(commissionData);
+    }else{
+      if(endPage == 1)return;
+      endPage = 1;
+      param["page"] = endPage;
+      await loadingCommission(param);
+    }
+  }
+
+  Future<void> onLoading() async {
+    if(hasMoreData){
+      endPage++;
+      await loadingCommission({
+        "search":searchMessage,
+        "page":endPage,
+        "size":size,
+        "min":minPrice,
+        "max":maxPrice,
+        "distance":distance,
+        "order": order,
+      });
+      if(searchCommissionList.length >= 110){
+        hasMoreData = false;
+        refreshController.loadNoData();
+        notifyListeners();
+      }else{
+        refreshController.loadComplete();
+        notifyListeners();
+      }
+    }else{
+      refreshController.loadNoData();
+      notifyListeners();
+    }
+  }
+
+  Future<void> onRefresh() async {
+    startPage++;
+    endPage = startPage;
+    await refreshCommission({
+      "search":searchMessage,
+      "page":startPage,
+      "size":size,
+      "min":minPrice,
+      "max":maxPrice,
+      "distance":distance,
+      "order": order,
+    });
+    hasMoreData = true;
+    refreshController.resetNoData();
+    refreshController.refreshCompleted();
+    notifyListeners();
+  }
+
+  Future<void> siftCommission() async {
+    startPage = 1;
+    endPage = 1;
+    await getSearchCommission({
+      "search":searchMessage,
+      "page":startPage,
+      "size":size,
+      "min":minPrice,
+      "max":maxPrice,
+      "distance":distance,
+      "order": order,
+    });
+    notifyListeners();
   }
 
   Future<void> deleteSearchHistory() async {

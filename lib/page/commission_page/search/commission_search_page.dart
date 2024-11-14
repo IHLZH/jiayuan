@@ -34,60 +34,21 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
   final TextEditingController _distanceController = TextEditingController();
 
   CommissionSearchViewModel _commissionSearchViewModel = CommissionSearchViewModel();
-  //刷新控制器
-  RefreshController _refreshController = RefreshController();
+
 
   late TabController _tabController;
-
-  bool isSearch = false;
-
-  bool? synthesisCheck; //选择综合排序
-  bool? priceCheck; //选择价格排序
-  bool? distanceCheck; //选择距离排序
-
-  bool? priceHigh; //价格是否从高到低
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _getHisory();
+    _commissionSearchViewModel.getHisory();
   }
 
-  Future<void> _getHisory() async {
-    await _commissionSearchViewModel.getSearchHistory();
-    setState(() {
-    });
-  }
-
-  Future<void> _deleteHistory() async {
-    await _commissionSearchViewModel.deleteSearchHistory();
-    setState(() {
-      _getHisory();
-    });
-  }
-
-  Future<void> _search(String searchMessage) async {
-    isSearch = true;
-    synthesisCheck = true;
-    priceCheck = false;
-    distanceCheck = false;
-    if(searchMessage != "")_commissionSearchViewModel.saveSearchHistory(searchMessage);
-    Loading.showLoading();
-    await _commissionSearchViewModel.getSearchCommission({
-      "search":searchMessage,
-      "page":1,
-      "size":11
-    });
-    setState(() {
-      Loading.dismissAll();
-    });
-  }
-
-  void _back(){
-    if(isSearch){
-      isSearch = false;
-      _getHisory();
+  Future<void> _back() async {
+    if(_commissionSearchViewModel.isSearch){
+      _commissionSearchViewModel.isSearch = false;
+      await _commissionSearchViewModel.getHisory();
       setState(() {
       });
     }else{
@@ -95,45 +56,16 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
     }
   }
 
-  //点击综合排序
-  void _checkSynthesis(){
-    if(synthesisCheck!)return;
-    synthesisCheck = true;
-    priceCheck = false;
-    distanceCheck = false;
-
-    //发起网络请求
-
-    setState(() {
-    });
+  Future<void> _search() async {
+    Loading.showLoading();
+    await _commissionSearchViewModel.search(_searchController.text);
+    Loading.dismissAll();
   }
 
-  void _checkPrice(){
-    if(priceCheck!){
-      priceHigh = !(priceHigh!);
-    }else{
-      priceCheck = true;
-      priceHigh = false;
-      synthesisCheck = false;
-      distanceCheck = false;
-    }
-
-    //发起网络请求
-
-    setState(() {
-    });
-  }
-
-  void _checkDistance(){
-    if(distanceCheck!)return;
-    distanceCheck = true;
-    priceCheck = false;
-    synthesisCheck = false;
-
-    //发起网络请求
-
-    setState(() {
-    });
+  Future<void> _siftCommission() async {
+    Loading.showLoading();
+    await _commissionSearchViewModel.siftCommission();
+    Loading.dismissAll();
   }
 
   @override
@@ -183,7 +115,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                               ),
                               TextButton(
                                   onPressed: (){
-                                    _search(_searchController.text);
+                                    _search();
                                   },
                                   child: Text(
                                     "搜索",
@@ -207,7 +139,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                       decoration: BoxDecoration(
                           color: Colors.white
                       ),
-                      child: isSearch ? _Result(vm) : _History(vm),
+                      child: vm.isSearch ? _Result(vm) : _History(vm),
                     )
                 ),
               endDrawer: Drawer(
@@ -336,20 +268,26 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                             SizedBox(
                               height: 10.h,
                             ),
-                            AppButton(
-                              onTap: (){
-                                vm.distance = double.tryParse(_distanceController.text) ?? 99999.0;
-                                double minPrice = double.tryParse(_minPriceController.text) ?? 0.0;
-                                double maxPrice = double.tryParse(_maxPriceController.text) ?? 999999.99;
-                                if(maxPrice >= minPrice){
-                                  vm.maxPrice = maxPrice;
-                                  vm.minPrice = minPrice;
-                                }else{
-                                  showToast("价格区间填写有误，请检查！");
+                            Builder(
+                                builder: (context){
+                                  return AppButton(
+                                    onTap: (){
+                                      vm.distance = double.tryParse(_distanceController.text) ?? 99999.0;
+                                      double minPrice = double.tryParse(_minPriceController.text) ?? 0.0;
+                                      double maxPrice = double.tryParse(_maxPriceController.text) ?? 999999.99;
+                                      if(maxPrice >= minPrice){
+                                        vm.maxPrice = maxPrice;
+                                        vm.minPrice = minPrice;
+                                        _siftCommission();
+                                        Scaffold.of(context).closeEndDrawer();
+                                      }else{
+                                        showToast("价格区间填写有误，请检查！");
+                                      }
+                                    },
+                                    type: AppButtonType.main,
+                                    buttonText: "确定",
+                                  );
                                 }
-                              },
-                              type: AppButtonType.main,
-                              buttonText: "确定",
                             ),
                             SizedBox(
                               height: 20.h,
@@ -408,7 +346,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                               SizedBox(height: 5.h,),
                               AppButton(
                                 onTap: (){
-                                  _deleteHistory();
+                                  vm.deleteHistory();
                                   Navigator.of(context).pop();
                                 },
                                 type: AppButtonType.main,
@@ -451,44 +389,44 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
           children: [
             TextButton(
                 onPressed: (){
-                  _checkSynthesis();
+                  vm.checkSynthesis();
                 },
                 child: Text(
                     "综合排序",
                   style: TextStyle(
-                    color: synthesisCheck! ? AppColors.appColor : AppColors.textColor2b,
+                    color: vm.synthesisCheck! ? AppColors.appColor : AppColors.textColor2b,
                     fontWeight: FontWeight.w500
                   ),
                 )
             ),
             TextButton(
                 onPressed: (){
-                  _checkPrice();
+                  vm.checkPrice();
                 },
                 child: Row(
                   children: [
                     Text(
                       "价格",
                       style: TextStyle(
-                          color: priceCheck! ? AppColors.appColor : AppColors.textColor2b,
+                          color: vm.priceCheck! ? AppColors.appColor : AppColors.textColor2b,
                           fontWeight: FontWeight.w500
                       ),
                     ),
                     Icon(
                       _getPriceIcon(),
-                      color: priceCheck! ? AppColors.appColor : AppColors.textColor2b,
+                      color: vm.priceCheck! ? AppColors.appColor : AppColors.textColor2b,
                     )
                   ],
                 ),
             ),
             TextButton(
                 onPressed: (){
-                  _checkDistance();
+                  vm.checkDistance();
                 },
                 child: Text(
                     "距离",
                   style: TextStyle(
-                      color: distanceCheck! ? AppColors.appColor : AppColors.textColor2b,
+                      color: vm.distanceCheck! ? AppColors.appColor : AppColors.textColor2b,
                       fontWeight: FontWeight.w500
                   ),
                 )
@@ -529,25 +467,21 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
   }
 
   IconData _getPriceIcon(){
-    if(priceCheck!){
-      return (priceHigh!) ? Icons.arrow_drop_down_outlined : Icons.arrow_drop_up_outlined;
+    if(_commissionSearchViewModel.priceCheck!){
+      return (_commissionSearchViewModel.priceHigh!) ? Icons.arrow_drop_down_outlined : Icons.arrow_drop_up_outlined;
     }
     return Icons.arrow_right;
   }
 
   Widget _SearchResult(){
     return SmartRefresher(
-      controller: _refreshController,
+      controller: _commissionSearchViewModel.refreshController,
       enablePullUp: true,
       enablePullDown: true,
       header: ClassicHeader(),
       footer: ClassicFooter(),
-      onLoading: (){
-        print("loading...");
-      },
-      onRefresh: (){
-        print("refresh...");
-      },
+      onLoading: _commissionSearchViewModel.onLoading,
+      onRefresh: _commissionSearchViewModel.onRefresh,
       child: ListView.builder(
         itemCount: _commissionSearchViewModel.searchCommissionList.length,
         itemBuilder: (context, index) {
@@ -577,7 +511,9 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            (commission.days ?? "今天") + commission.expectStartTime!.hour.toString() + ":" + commission.expectStartTime!.minute.toString(),
+                            (commission.days ?? "今天") +
+                                (commission.expectStartTime.hour.toString().length > 1 ? commission.expectStartTime.hour.toString() : ("0" + commission.expectStartTime.hour.toString())) +
+                                ":" + (commission.expectStartTime.minute.toString().length > 1 ? commission.expectStartTime.minute.toString() : ("0" + commission.expectStartTime.minute.toString())),
                             style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 14.sp,
@@ -623,7 +559,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                                 borderRadius: BorderRadius.circular(16.r)
                             ),
                             child: Text(
-                              CommissionViewModel.CommissionTypes[commission.keeperId ?? 0].typeText,
+                              CommissionViewModel.CommissionTypes[commission.typeId ?? 0].typeText,
                               style: TextStyle(
                                   color: Colors.black45,
                                   fontSize: 16.sp,
@@ -704,7 +640,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
         GestureDetector(
           onTap: (){
             _searchController.text = value;
-            _search(value);
+            _search();
           },
           child: Container(
               padding: EdgeInsets.all(5),

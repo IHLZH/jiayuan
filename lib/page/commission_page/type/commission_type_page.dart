@@ -8,6 +8,7 @@ import 'package:jiayuan/common_ui/dialog/loading.dart';
 import 'package:jiayuan/common_ui/input/app_input.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/commission_page/type/commission_type_vm.dart';
+import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -15,6 +16,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../repository/model/commission_data.dart';
 import '../../../route/route_path.dart';
 import '../../../route/route_utils.dart';
+import '../../../utils/global.dart';
 import '../commission_vm.dart';
 
 class CommissionTypePage extends StatefulWidget{
@@ -44,13 +46,84 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
     super.initState();
     Loading.showLoading();
     _commissionTypeViewModel.getCommissionByType(widget.id);
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    await _commissionTypeViewModel.getTypeComission({
+      "typeId": widget.id,
+      "distance":10,
+      "page": _commissionTypeViewModel.startPage,
+      "size": _commissionTypeViewModel.size,
+    });
+    setState(() {
+      Loading.dismissAll();
+    });
+  }
+
+  Future<void> _onLoading() async {
+    if(_commissionTypeViewModel.hasMoreData){
+      _commissionTypeViewModel.endPage++;
+      await _commissionTypeViewModel.loadingComission({
+        "typeId":widget.id,
+        "distance":_commissionTypeViewModel.distance,
+        "page": _commissionTypeViewModel.endPage,
+        "size": _commissionTypeViewModel.size,
+        "min": _commissionTypeViewModel.minPrice,
+        "max":_commissionTypeViewModel.maxPrice,
+      });
+      if(_commissionTypeViewModel.commissionDataList.length >= 110){
+        _commissionTypeViewModel.hasMoreData = false;
+        setState(() {
+        });
+        _refreshController.loadNoData();
+      }else{
+        setState(() {
+        });
+        _refreshController.loadComplete();
+      }
+    }else{
+      _refreshController.loadNoData();
+    }
+  }
+
+  Future<void> _onRefresh() async {
+    _commissionTypeViewModel.startPage++;
+    await _commissionTypeViewModel.refreshComission({
+      "typeId":widget.id,
+      "distance":_commissionTypeViewModel.distance,
+      "page": _commissionTypeViewModel.startPage,
+      "size": _commissionTypeViewModel.size,
+      "min": _commissionTypeViewModel.minPrice,
+      "max":_commissionTypeViewModel.maxPrice,
+    });
+    setState(() {
+      print("界面刷新");
+      _commissionTypeViewModel.hasMoreData = true;
+      _refreshController.resetNoData();
+    });
+    _refreshController.refreshCompleted();
+  }
+
+  Future<void> _siftCommission() async {
+    Loading.showLoading();
+    _commissionTypeViewModel.startPage = 1;
+    _commissionTypeViewModel.endPage = 1;
+    await _commissionTypeViewModel.getTypeComission({
+      "typeId":widget.id,
+      "distance":_commissionTypeViewModel.distance,
+      "page": _commissionTypeViewModel.startPage,
+      "size": _commissionTypeViewModel.size,
+      "min": _commissionTypeViewModel.minPrice,
+      "max":_commissionTypeViewModel.maxPrice,
+    });
+    setState(() {
+      Loading.dismissAll();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((duration){
-      Loading.dismissAll();
-    });
     return ChangeNotifierProvider(
       create: (BuildContext context) {
         return _commissionTypeViewModel;
@@ -131,12 +204,8 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                             enablePullDown: true,
                             header: ClassicHeader(),
                             footer: ClassicFooter(),
-                            onLoading: (){
-                              print("loading...");
-                            },
-                            onRefresh: (){
-                              print("refresh...");
-                            },
+                            onLoading: _onLoading,
+                            onRefresh: _onRefresh,
                             child: CustomScrollView(
                               slivers: [
                                 SliverToBoxAdapter(
@@ -156,7 +225,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                                       ),
                                       SizedBox(width: 5.w,),
                                       Text(
-                                        (vm.commissionList.length > 999) ? "999+" : (vm.commissionList.length.toString()) + "个相关委托",
+                                        (vm.commissionDataList.length > 999) ? "999+" : (vm.commissionDataList.length.toString()) + "个相关委托",
                                         style: TextStyle(
                                             color: AppColors.textColor2b
                                         ),
@@ -168,12 +237,12 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                                 SliverToBoxAdapter(
                                   child: MasonryGridView.count(
                                     crossAxisCount: 2,
-                                    itemCount: vm.commissionList.length,
+                                    itemCount: vm.commissionDataList.length,
                                     itemBuilder: (context, index){
                                       return Container(
                                         height: (index % 2 == 0) ? 250.h : 300.h,
                                         padding: EdgeInsets.all(10),
-                                        child: CommissionCard(vm.commissionList[index]),
+                                        child: CommissionCard(vm.commissionDataList[index]),
                                       );
                                     },
                                     shrinkWrap: true,
@@ -314,21 +383,26 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                           SizedBox(
                             height: 10.h,
                           ),
-                          AppButton(
-                            onTap: (){
-                              vm.distance = double.tryParse(_distanceController.text) ?? 99999.0;
-                              double minPrice = double.tryParse(_minPriceController.text) ?? 0.0;
-                              double maxPrice = double.tryParse(_maxPriceController.text) ?? 999999.99;
-                              if(maxPrice >= minPrice){
-                                vm.maxPrice = maxPrice;
-                                vm.minPrice = minPrice;
-                              }else{
-                                showToast("价格区间填写有误，请检查！");
-                              }
-                            },
-                            type: AppButtonType.main,
-                            buttonText: "确定",
-                          ),
+                          Builder(builder: (context){
+                            return AppButton(
+                              onTap: (){
+                                vm.distance = double.tryParse(_distanceController.text) ?? 99999.0;
+                                double minPrice = double.tryParse(_minPriceController.text) ?? 0.0;
+                                double maxPrice = double.tryParse(_maxPriceController.text) ?? 999999.99;
+                                if(maxPrice >= minPrice){
+                                  vm.maxPrice = maxPrice;
+                                  vm.minPrice = minPrice;
+                                  _siftCommission();
+                                  Scaffold.of(context).closeEndDrawer();
+
+                                }else{
+                                  showToast("价格区间填写有误，请检查！");
+                                }
+                              },
+                              type: AppButtonType.main,
+                              buttonText: "确定",
+                            );
+                          }),
                           SizedBox(
                             height: 20.h,
                           ),
@@ -345,7 +419,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
     );
   }
 
-  Widget CommissionCard(Commission commission){
+  Widget CommissionCard(CommissionData1 commission){
     return Material(
       elevation: 5,
       color: Colors.white,
@@ -368,7 +442,9 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    (commission.days ?? "") + commission.expectTime.hour.toString() + ":" + commission.expectTime.minute.toString(),
+                    (commission.days ?? "今天") +
+                        (commission.expectStartTime.hour.toString().length > 1 ? commission.expectStartTime.hour.toString() : ("0" + commission.expectStartTime.hour.toString())) +
+                        ":" + (commission.expectStartTime.minute.toString().length > 1 ? commission.expectStartTime.minute.toString() : ("0" + commission.expectStartTime.minute.toString())),
                     style: TextStyle(
                         color: Colors.red,
                         fontSize: 14.sp,
@@ -382,7 +458,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                         size: 14,
                       ),
                       Text(
-                        commission.distance.toString() + "km",
+                        commission.commissionId.toString() + "km",
                         style: TextStyle(
                             color: AppColors.textColor2b,
                             fontSize: 12.sp,
@@ -410,7 +486,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                         borderRadius: BorderRadius.circular(16.r)
                     ),
                     child: Text(
-                      CommissionViewModel.CommissionTypes[commission.commissionType].typeText,
+                      commission.typeName,
                       style: TextStyle(
                           color: Colors.black45,
                           fontSize: 16.sp,
@@ -435,7 +511,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                   ),
                   SizedBox(width: 5.w,),
                   Text(
-                    commission.estimatedTime.toString() + (commission.isLong ? "月" : "小时"),
+                    commission.specifyServiceDuration.toString() + (commission.isLong ? "月" : "小时"),
                     style: TextStyle(
                         color: AppColors.textColor2b,
                         fontSize: 14.sp,
@@ -461,7 +537,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                   SizedBox(width: 5.w,),
                   Expanded(
                     child: Text(
-                      commission.address + "诚朴园三号楼204",
+                      commission.commissionAddress,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
                       style: TextStyle(
@@ -480,7 +556,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    commission.price.toString(),
+                    commission.commissionBudget.toString(),
                     style: TextStyle(
                         color: Colors.red,
                         fontSize: 20.sp,

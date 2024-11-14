@@ -71,7 +71,31 @@ class CommissionApi{
 
       if(response.statusCode == 200){
         int total = response.data['total'];
-        print("共请求到" + total.toString() + "条数据");
+        print("第" + param["page"].toString() + "页" + " " + "共请求到" + total.toString() + "条数据");
+        for(int i = 0; i < total; i++){
+          commissionList.add(CommissionData1.fromJson(response.data['results'][i]));
+        }
+      }
+    }catch(e){
+      print("网络错误error:" + e.toString());
+    }
+
+    return commissionList;
+  }
+
+  //请求委托
+  Future<List<CommissionData1>> searchCommission(Map<String, dynamic> param) async{
+    List<CommissionData1> commissionList = [];
+
+    try{
+      final Response response = await DioInstance.instance().get(
+          path: "/search_list_by_order",
+          param: param
+      );
+
+      if(response.statusCode == 200){
+        int total = response.data['total'];
+        print("第" + param["page"].toString() + "页" + " " + "共请求到" + total.toString() + "条数据");
         for(int i = 0; i < total; i++){
           commissionList.add(CommissionData1.fromJson(response.data['results'][i]));
         }

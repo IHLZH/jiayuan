@@ -1,3 +1,6 @@
+import 'package:jiayuan/repository/model/user.dart';
+import 'package:jiayuan/utils/common_data.dart';
+
 /// commissionId : 0
 /// userId : 0
 /// keeperId : 0
@@ -63,7 +66,9 @@ class CommissionData1 {
   CommissionData1.fromJson(dynamic json) {
     _commissionId = json['commissionId'];
     _userId = json['userId'];
-    _keeperId = json['keeperId'];
+    _userName = User.fromJson(json['user']).nickName;
+    _keeperId = json['keeperId'] ?? 0;
+    _typeName = json['service'];
     _commissionBudget = json['commissionBudget'].toDouble();
     _commissionDescription = json['commissionDescription'];
     _province = json['province'];
@@ -75,33 +80,42 @@ class CommissionData1 {
     _userPhoneNumber = json['userPhoneNumber'];
     _createTime = DateTime.parse(json['createTime']);
     _updatedTime = DateTime.parse(json['updatedTime']);
-    _expectStartTime = DateTime.parse(json['expectStartTime']);
-    _realStartTime = DateTime.parse(json['realStartTime']);
-    _endTime = DateTime.parse(json['endTime']);
+    _expectStartTime = DateTime.parse(json['expectStartTime'] ?? "1999-01-01T01:00:00.000+00:00");
+    _realStartTime = DateTime.parse(json['realStartTime'] ?? "1999-01-01T01:00:00.000+00:00");
+    _endTime = DateTime.parse(json['endTime'] ?? "1999-01-01T01:00:00.000+00:00");
     _specifyServiceDuration = json['specifyServiceDuration'];
     _commissionStatus = json['commissionStatus'];
 
     _initDays();
+    _initType();
+  }
+
+  void _initType(){
+
   }
 
   void _initDays(){
-    _isLong = commissionId! > 6 ? true : false;
+    _typeId = CommonData.TypeId[_typeName];
+    _isLong = typeId > 6 ? true : false;
 
     DateTime currentTime = DateTime.now();
     int currentMonth = currentTime.month;
     int currentDay = currentTime.day;
 
-    if(expectStartTime?.month == currentMonth && expectStartTime?.day == currentDay){
+    if(expectStartTime.month == currentMonth && expectStartTime.day == currentDay){
       _days = "今天";
     }else{
-      _days = ((expectStartTime!.month - currentMonth) * 30 + (expectStartTime!.day - currentDay)).toString() + "天后";
+      _days = ((expectStartTime.month - currentMonth) * 30 + (expectStartTime.day - currentDay)).toString() + "天后";
     }
   }
 
 
   int? _commissionId;
   int? _userId;
+  String? _userName;
   int? _keeperId;
+  int? _typeId;
+  String? _typeName;
   double? _commissionBudget;
   String? _commissionDescription;
   String? _province;
@@ -163,27 +177,30 @@ CommissionData1 copyWith({
   specifyServiceDuration: specifyServiceDuration ?? _specifyServiceDuration,
   commissionStatus: commissionStatus ?? _commissionStatus,
 );
-  int? get commissionId => _commissionId;
-  int? get userId => _userId;
-  int? get keeperId => _keeperId;
-  double? get commissionBudget => _commissionBudget;
-  String? get commissionDescription => _commissionDescription;
-  String? get province => _province;
-  String? get city => _city;
-  String? get county => _county;
-  String? get commissionAddress => _commissionAddress;
-  double? get lng => _lng;
-  double? get lat => _lat;
-  String? get userPhoneNumber => _userPhoneNumber;
-  DateTime? get createTime => _createTime;
-  DateTime? get updatedTime => _updatedTime;
-  DateTime? get expectStartTime => _expectStartTime;
-  DateTime? get realStartTime => _realStartTime;
-  DateTime? get endTime => _endTime;
-  String? get specifyServiceDuration => _specifyServiceDuration;
-  int? get commissionStatus => _commissionStatus;
-  bool? get isLong => _isLong;
-  String? get days => _days;
+  int get commissionId => _commissionId ?? 1;
+  int get userId => _userId ?? 0;
+  String get userName => _userName ?? "";
+  int get keeperId => _keeperId ?? 0;
+  int get typeId => _typeId ?? 1;
+  String get typeName => _typeName ?? "";
+  double get commissionBudget => _commissionBudget ?? 999999;
+  String get commissionDescription => _commissionDescription ?? "";
+  String get province => _province ?? "";
+  String get city => _city ?? "";
+  String get county => _county ?? "";
+  String get commissionAddress => _commissionAddress ?? "";
+  double get lng => _lng ?? 0.0;
+  double get lat => _lat ?? 0.0;
+  String get userPhoneNumber => _userPhoneNumber ?? "";
+  DateTime get createTime => _createTime ?? DateTime(1999,1,1,0,0,0);
+  DateTime get updatedTime => _updatedTime ?? DateTime(1999,1,1,0,0,0);
+  DateTime get expectStartTime => _expectStartTime ?? DateTime(1999,1,1,0,0,0);
+  DateTime get realStartTime => _realStartTime ?? DateTime(1999,1,1,0,0,0);
+  DateTime get endTime => _endTime ?? DateTime(1999,1,1,0,0,0);
+  String get specifyServiceDuration => _specifyServiceDuration ?? "";
+  int get commissionStatus => _commissionStatus ?? 0;
+  bool get isLong => _isLong ?? false;
+  String get days => _days ?? "";
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
+import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/repository/model/user.dart';
 
 class CommissionDetailViewModel with ChangeNotifier{
@@ -19,6 +20,8 @@ class CommissionDetailViewModel with ChangeNotifier{
       commissionStatus: 0,
       isLong: false
   );
+
+  CommissionData1 commissionData = CommissionData1();
 
   void getUserById(int id){
     user = User(
