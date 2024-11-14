@@ -160,7 +160,7 @@ class _OrderPageState extends State<OrderPage> {
                 ),
               ],
             ),
-            SizedBox(height: 10),
+            Container(child: Divider(),),
             SafeArea(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -439,7 +439,7 @@ class _OrderPageState extends State<OrderPage> {
           },
           child: ListView.builder(
             padding: EdgeInsets.all(10),
-            itemCount: _orderDataList.length + 1, //TODO
+            itemCount: _orderDataList.length + 1,
             itemBuilder: (context, index) {
               return _itemBuilder(context, index);
             },
