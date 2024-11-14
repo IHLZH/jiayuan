@@ -283,11 +283,12 @@ class _UserPageState extends State<UserPage> {
                 ShaderMask(
                   shaderCallback: (Rect bounds) {
                     return LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
+                      begin: Alignment.bottomLeft,
+                      end: Alignment.topRight,
                       colors: [
                         Theme.of(context).primaryColor,
                         AppColors.appColor,
+                        AppColors.endDeepColor,
                       ],
                     ).createShader(bounds);
                   },
@@ -361,11 +362,12 @@ class _UserPageState extends State<UserPage> {
                 : ShaderMask(
                     shaderCallback: (Rect bounds) {
                       return LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.topRight,
                         colors: [
                           Theme.of(context).primaryColor,
                           AppColors.appColor,
+                          AppColors.endDeepColor,
                         ],
                       ).createShader(bounds);
                     },
