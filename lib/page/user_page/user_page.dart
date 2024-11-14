@@ -122,22 +122,27 @@ class _UserPageState extends State<UserPage> {
       }
     }
 
+    // 委托中心
     Future<void> _jumpToCommissionCenterPage() async {
       RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
     }
 
+    // 设置
     Future<void> _jumpToSettingPage() async {
       RouteUtils.pushForNamed(context, RoutePath.settingPage);
     }
 
+    // 成为家政员
     Future<void> _jumpToKeeperCertified() async {
       RouteUtils.pushForNamed(context, RoutePath.keeperCertified);
     }
 
+    // 证书认证
     Future<void> _jumpToCertCertified() async {
       RouteUtils.pushForNamed(context, RoutePath.certCertified);
     }
 
+    // 订单
     Future<void> _jumpToOrderPage(int status) async {
       RouteUtils.pushForNamed(context, RoutePath.orderPage,
           arguments: {"status": status});
@@ -235,7 +240,7 @@ class _UserPageState extends State<UserPage> {
                 if (title == "服务订单") {
                   _jumpToOrderPage(-1);
                 } else {
-                  //TODO
+                  _jumpToCommissionCenterPage();
                 }
               },
               child: Text(
