@@ -132,4 +132,8 @@ class FullOrder {
         'serviceName: $serviceName'
         '}';
   }
+
+  static List<FullOrder> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((json) => FullOrder.fromJson(json)).toList();
+  }
 }

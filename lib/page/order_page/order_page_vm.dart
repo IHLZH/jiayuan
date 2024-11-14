@@ -49,7 +49,7 @@ class OrderPageVM {
           realStartTime: DateTime.now(),
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
-          commissionStatus: 0,
+          commissionStatus: 1,
           keeperName: null,
           serviceName: "家电维修"),
       FullOrder(
@@ -72,7 +72,7 @@ class OrderPageVM {
           realStartTime: DateTime.now(),
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
-          commissionStatus: 1,
+          commissionStatus: 2,
           keeperName: "dm",
           serviceName: "保姆月嫂（长期）（单位为 元/月）"),
       FullOrder(
@@ -95,7 +95,7 @@ class OrderPageVM {
           realStartTime: DateTime.now(),
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
-          commissionStatus: 1,
+          commissionStatus: 3,
           keeperName: "dm",
           serviceName: "家电维修"),
       FullOrder(
@@ -118,7 +118,7 @@ class OrderPageVM {
           realStartTime: DateTime.now(),
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
-          commissionStatus: 2,
+          commissionStatus: 4,
           keeperName: "dm",
           serviceName: "家电维修"),
       FullOrder(
@@ -141,7 +141,7 @@ class OrderPageVM {
           realStartTime: DateTime.now(),
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
-          commissionStatus: 2,
+          commissionStatus: 5,
           keeperName: "dm",
           serviceName: "家电维修"),
       FullOrder(
@@ -164,7 +164,7 @@ class OrderPageVM {
           realStartTime: DateTime.now(),
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
-          commissionStatus: 3,
+          commissionStatus: 6,
           keeperName: "dm",
           serviceName: "家电维修"),
       FullOrder(
@@ -187,7 +187,7 @@ class OrderPageVM {
           realStartTime: DateTime.now(),
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
-          commissionStatus: 3,
+          commissionStatus: 7,
           keeperName: "dm",
           serviceName: "家电维修"),
       FullOrder(
@@ -210,7 +210,7 @@ class OrderPageVM {
           realStartTime: DateTime.now(),
           endTime: DateTime.now(),
           specifyServiceDuration: "2",
-          commissionStatus: 4,
+          commissionStatus: 8,
           keeperName: "dm",
           serviceName: "家电维修"),
       FullOrder(
