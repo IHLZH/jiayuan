@@ -10,4 +10,10 @@ class StandardPrice {
     required this.lowestPrice,
     required int typeId,
   });
+
+  StandardPrice.fromJson(Map<String, dynamic> json) {
+    referencePrice = json['averagePrice'];
+    lowestPrice = json['minPrice'];
+    typeId = json['serviceId'];
+  }
 }

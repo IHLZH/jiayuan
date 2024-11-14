@@ -14,6 +14,7 @@ import '../../utils/global.dart';
 import '../commission_page/commission_vm.dart';
 
 class HomeViewModel with ChangeNotifier{
+  Timer ?_timer ;
 
    // 轮播图数据
   List<String?>? bannerData = [];
@@ -96,6 +97,14 @@ class HomeViewModel with ChangeNotifier{
   }
 
   Future<void> getWeatherData() async {
+    weatherTask();
+     _timer =  Timer.periodic(Duration(minutes: 10), (timer) async{
+       weatherTask();
+     });
+  }
+
+  void weatherTask() async{
+    //获取天气数据
     print('市区状态码 ${Global.location?.adCode}');
     try {
 
@@ -123,6 +132,11 @@ class HomeViewModel with ChangeNotifier{
       }
     }
     notifyListeners();
+  }
+
+  void dispose(){
+    _timer?.cancel();
+    super.dispose();
   }
 }
 
