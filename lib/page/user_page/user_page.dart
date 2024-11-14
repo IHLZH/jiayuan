@@ -122,7 +122,7 @@ class _UserPageState extends State<UserPage> {
       }
     }
 
-    Future<void> _jumpToCommissionCenterPage () async {
+    Future<void> _jumpToCommissionCenterPage() async {
       RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
     }
 
@@ -138,8 +138,9 @@ class _UserPageState extends State<UserPage> {
       RouteUtils.pushForNamed(context, RoutePath.certCertified);
     }
 
-    Future<void> _jumpToOrderPage() async {
-      RouteUtils.pushForNamed(context, RoutePath.orderPage);
+    Future<void> _jumpToOrderPage(int status) async {
+      RouteUtils.pushForNamed(context, RoutePath.orderPage,
+          arguments: {"status": status});
     }
 
     // 水平图标1.0
@@ -223,13 +224,16 @@ class _UserPageState extends State<UserPage> {
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 16, color: Colors.grey[800],fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[800],
+                  fontWeight: FontWeight.bold),
             ),
             Expanded(child: SizedBox()),
             TextButton(
               onPressed: () {
                 if (title == "服务订单") {
-                  _jumpToOrderPage();
+                  _jumpToOrderPage(-1);
                 } else {
                   //TODO
                 }
@@ -251,11 +255,23 @@ class _UserPageState extends State<UserPage> {
         child: SafeArea(
           child: InkWell(
             onTap: () {
-              if(title=='委托中心'){
+              if (title == '待接取') {
+                _jumpToOrderPage(0);
+              } else if (title == '待确认') {
+                _jumpToOrderPage(1);
+              } else if (title == '待服务') {
+                _jumpToOrderPage(2);
+              } else if (title == '服务中') {
+                _jumpToOrderPage(3);
+              } else if (title == '待支付') {
+                _jumpToOrderPage(4);
+              } else if (title == '已完成') {
+                _jumpToOrderPage(5);
+              } else if (title == '委托中心') {
                 _jumpToCommissionCenterPage();
-              }else if(title=='成为家政员'){
+              } else if (title == '成为家政员') {
                 _jumpToKeeperCertified();
-              }else if(title=='证书认证'){
+              } else if (title == '证书认证') {
                 _jumpToCertCertified();
               }
             },
@@ -267,19 +283,22 @@ class _UserPageState extends State<UserPage> {
                 ShaderMask(
                   shaderCallback: (Rect bounds) {
                     return LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                       colors: [
                         Theme.of(context).primaryColor,
                         AppColors.appColor,
-                        AppColors.whiteColor80,
                       ],
                     ).createShader(bounds);
                   },
                   child: Icon(icon, size: 35, color: Colors.white),
                 ),
                 SizedBox(height: 8),
-                Text(title, style: TextStyle(color:Theme.of(context).primaryColor,fontSize: 14,fontWeight: FontWeight.bold)),
+                Text(title,
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold)),
               ],
             ),
           ),
@@ -326,10 +345,9 @@ class _UserPageState extends State<UserPage> {
               _showLogoutDialog(context, onCheck);
             } else if (icon == Icons.settings) {
               _jumpToSettingPage();
-            } else if(icon == Icons.favorite_border){
-
+            } else if (icon == Icons.favorite_border) {
               // 其他选项的点击事件处理
-            } else if(icon == Icons.history){
+            } else if (icon == Icons.history) {
               RouteUtils.pushForNamed(context, RoutePath.browseHistoryPage);
             }
           },
@@ -343,12 +361,11 @@ class _UserPageState extends State<UserPage> {
                 : ShaderMask(
                     shaderCallback: (Rect bounds) {
                       return LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
                         colors: [
                           Theme.of(context).primaryColor,
                           AppColors.appColor,
-                          AppColors.whiteColor80,
                         ],
                       ).createShader(bounds);
                     },
@@ -415,8 +432,7 @@ class _UserPageState extends State<UserPage> {
                                   ).createShader(bounds);
                                 },
                                 child: Text(
-                                  userInfo?.nickName ??
-                                      '未命名',
+                                  userInfo?.nickName ?? '未命名',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -439,11 +455,9 @@ class _UserPageState extends State<UserPage> {
                           child: InkWell(
                             onTap: () => _jumpToProfileEditPage(),
                             // 水波纹颜色
-                            splashColor:
-                                Colors.grey[300],
+                            splashColor: Colors.grey[300],
                             // 高亮颜色
-                            highlightColor:
-                                Colors.grey[300],
+                            highlightColor: Colors.grey[300],
                             // 设置水波纹为圆形
                             customBorder: CircleBorder(),
                             child: Icon(Icons.chevron_right_outlined, size: 40),
@@ -488,9 +502,12 @@ class _UserPageState extends State<UserPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           _buildManagementOption(Icons.pending_outlined, '待接取'),
-                          _buildManagementOption(Icons.hourglass_empty, '服务中'),
-                          _buildManagementOption(Icons.monetization_on_outlined, '待支付'),
-                          _buildManagementOption(Icons.done_all_outlined, '已完成'),
+                          _buildManagementOption(
+                              Icons.check_box_outlined, '待确认'),
+                          _buildManagementOption(
+                              Icons.monetization_on_outlined, '待支付'),
+                          _buildManagementOption(
+                              Icons.done_all_outlined, '已完成'),
                         ],
                       ),
                     ),
