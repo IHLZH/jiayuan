@@ -81,7 +81,9 @@ class Routes {
         return pageRoute(ProfileEditPage());
       //订单页
       case RoutePath.orderPage:
-        return pageRoute(OrderPage());
+        final args = settings.arguments as Map<String, dynamic>;
+        final status = args['status'] as int;
+        return pageRoute(OrderPage(status: status,));
       //设置页
       case RoutePath.settingPage:
         return pageRoute(SettingPage());
