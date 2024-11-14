@@ -44,7 +44,6 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
   void initState() {
     _sendCommissionViewModel.id = widget.id;
     super.initState();
-    Loading.showLoading();
     commissionType = HomeViewModel.CommissionTypes[widget.id];
     print(commissionType.typeText);
   }
@@ -62,10 +61,6 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((duration) {
-      Loading.dismissAll();
-    });
-
     return ChangeNotifierProvider<SendCommissionViewModel>(
       create: (context) => _sendCommissionViewModel,
       child: Scaffold(

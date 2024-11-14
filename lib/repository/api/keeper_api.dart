@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:dio/dio.dart';
 import 'package:jiayuan/repository/model/HouseKeeper_data_detail.dart';
 import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
+import 'package:jiayuan/utils/global.dart';
 
 import '../../http/dio_instance.dart';
 
@@ -13,17 +14,17 @@ class KeeperApi{
   //根据家政员id获取家政员详细信息
   Future<HousekeeperDataDetail> getKeeperDataDetail(int id) async{
     HousekeeperDataDetail housekeeperDataDetail = HousekeeperDataDetail();
-    // try{
-    //   final Response response = await DioInstance.instance().get(
-    //       path: "/housekeeper/detail",
-    //       param: {"keeperId": id}
-    //   );
-    //   if(response.statusCode == 200){
-    //     housekeeperDataDetail = HousekeeperDataDetail.fromJson(response.data);
-    //   }
-    // }catch(e){
-    //   print("网络错误error:" + e.toString());
-    // }
+    try{
+      final Response response = await DioInstance.instance().get(
+          path: "/release/keeper",
+          param: {"keeperId": id,}
+      );
+      if(response.statusCode == 200){
+        housekeeperDataDetail = HousekeeperDataDetail.fromJson(response.data);
+      }
+    }catch(e){
+      print("网络错误error:" + e.toString());
+    }
     housekeeperDataDetail = HousekeeperDataDetail(
         keeperId: id,
         realName: "刘子恒",
@@ -54,7 +55,7 @@ class KeeperApi{
               userId: 1,
               avatar:
               'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-              nickname: "王女士",
+              nickName: "王女士",
               content: "服务态度很好，态度很好",
               time: DateTime(2021,2,23),
               images: [
@@ -67,7 +68,7 @@ class KeeperApi{
               userId: 2,
               avatar:
               'https://ts4.cn.mm.bing.net/th?id=OIP-C.mPGy-QSWMXym-J4zC_MJfwAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-              nickname: "张先生",
+              nickName: "张先生",
               content: "服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意",
               time: DateTime(2024,2,25),
               images: [
@@ -88,14 +89,11 @@ class KeeperApi{
   Future<List<Housekeeper>?> getHousekeeperData(double? lng, double? lat, {int? id}) async{
     List<Housekeeper>  housekeepers = [];
     // try {
-    //   final Response response = await DioInstance.instance().get(path: "/houkeepers", param: {"id":id}) ;
-    //   if(response.statusCode == 200){
-    //     for (var item in response.data['result']){
-    //       housekeepers.add(Housekeeper.fromJson(item));
-    //     }
-    //   }else{
-    //     print("请求失败");
-    //   }
+    //   print('推荐的参数${lng},${lat}');
+    //   final Response response = await DioInstance.instance().get(path: "/release/keeper/list",  param: {"longitude": lng, "latitude": lat, "typeId": id}) ;
+    //   housekeepers = (response.data["data"] as List).map((e) => Housekeeper.fromJson(e)).toList();
+    //   housekeepers.forEach((item)=>print(item.realName));
+    //   print('获取到的推荐数据${response.data["data"]}');
     // }catch(e){
     //   print("请求失败"+e.toString());
     // }

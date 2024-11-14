@@ -57,7 +57,7 @@ class Housekeeper {
       'createdTime': createdTime?.toIso8601String(),
     };
   }
-
+//用于本地数据库的解析
   static Housekeeper fromMap(Map map) {
     Housekeeper housekeeper = Housekeeper(
       realName: map['realName'],

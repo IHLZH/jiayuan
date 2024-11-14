@@ -39,7 +39,6 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
     _refreshControllers.forEach((element) {
       element.dispose();
     });
-    _houseKeepingScreeningVM.dispose();
     super.dispose();
   }
 
