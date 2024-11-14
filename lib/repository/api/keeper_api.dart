@@ -20,7 +20,8 @@ class KeeperApi{
           param: {"keeperId": id,}
       );
       if(response.statusCode == 200){
-        housekeeperDataDetail = HousekeeperDataDetail.fromJson(response.data);
+        housekeeperDataDetail = HousekeeperDataDetail.fromJson(response.data['data']);
+        print('获取到的家政员详细信息:${response.data['data']}');
       }
     }catch(e){
       print("网络错误error:" + e.toString());
