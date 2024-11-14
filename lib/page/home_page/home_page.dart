@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:jiayuan/common_ui/sliver/sliver_header.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/send_commission_page/send_commision_page.dart';
@@ -18,8 +19,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
-
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   final HomeViewModel homeViewModel = HomeViewModel();
 
   final PageController _pageController = PageController();
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       }
     });
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
+    homeViewModel.getWeatherData();
     homeViewModel.getBannerData();
     homeViewModel.getHousekeeperData();
     homeViewModel.loadingStandardPrice();
@@ -62,7 +64,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               title: Row(children: [
                 Icon(Icons.location_on, color: Colors.black),
                 SizedBox(width: 10.w),
-                Text("石家庄市", style: TextStyle(fontSize: 15.sp))
+                Text("${Global.location?.city}",
+                    style: TextStyle(fontSize: 15.sp))
               ]),
               backgroundColor: AppColors.appColor,
             ),
@@ -74,15 +77,20 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 SliverToBoxAdapter(child: _banner()),
                 //委托服务类型
                 SliverToBoxAdapter(child: _PageViewWidget()),
+                //天气卡片
+                SliverToBoxAdapter(child: _ServiceViewWidget()),
                 //固定头部
                 SliverHeader(children: _buildHeaderList()),
                 //推荐
-                SliverToBoxAdapter(child: SizedBox(height: 8),),
+                SliverToBoxAdapter(
+                  child: SizedBox(height: 8),
+                ),
                 _HouseKeeperRecommendedWidget(),
               ],
             )));
   }
-  List <Widget> _buildHeaderList() {
+
+  List<Widget> _buildHeaderList() {
     return [
       SizedBox(height: 10),
       Row(
@@ -127,7 +135,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             Spacer(),
             InkWell(
               onTap: () {
-                RouteUtils.pushForNamed(context, RoutePath.houseKeepingScreeningPage);
+                RouteUtils.pushForNamed(
+                    context, RoutePath.houseKeepingScreeningPage);
               },
               child: Text("更多",
                   style: TextStyle(
@@ -144,19 +153,65 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 // 服务图片
 
   Widget _ServiceViewWidget() {
-    return Container(
-      height: 180,
-      width: double.infinity,
-      margin: EdgeInsets.only(left: 12, right: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        image: DecorationImage(
-          image: NetworkImage(
-              "https://tse3-mm.cn.bing.net/th/id/OIP-C.bbgILfd3FNOY4F6CG6cs4gHaE8?w=303&h=202&c=7&r=0&o=5&dpr=1.3&pid=1.7"),
-          fit: BoxFit.cover, // 可选，根据需要调整图片填充方式
-        ),
-      ),
+    return Selector<HomeViewModel, Map<String, dynamic>>(
+      selector: (context, homeViewModel) => homeViewModel.weatherData,
+      builder: (context, weatherData, child) {
+        return Container(
+          child: Container(
+            margin: EdgeInsets.only(left: 14.w, right: 14.w),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      '今日关注',
+                      style: TextStyle(
+                        fontSize: 17.sp,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Spacer(),
+                    //Response: {status: 1, count: 1, info: OK, infocode: 10000, lives: [{province: 河北, city: 裕华区, adcode: 130108, weather: 小雨, temperature: 11, winddirection: 西北, windpower: ≤3, humidity: 97, reporttime: 2024-11-13 09:02:57, temperature_float: 11.0, humidity_float: 97.0}]
+                    // homeViewModel.weatherData != null  ?Text('${DateFormat("MM月dd日EEEE", "zh_CN").format(DateFormat("yyyy-MM-dd").parse(homeViewModel.weatherData['reporttime']))}'
+                    //     ' ${homeViewModel.weatherData['weather']}'):Text(''),
+                    homeViewModel.weatherData['weather'] != null
+                        ? Text(
+                            '${weatherData['city']}，${weatherData['weather']}，${weatherData['temperature']}℃',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.black54,
+                            ),
+                          )
+                        : Text('')
+                  ],
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Material(
+                  elevation: 5,
+                  borderOnForeground: false,
+                  borderRadius:BorderRadius.circular(10),
+                  child: Container(
+                      height: 120.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white,width: 0.5),
+                        borderRadius: BorderRadius.circular(10),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: AssetImage('assets/images/weather2.jpg'),
+                        ),
+                      )),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
+
+    ;
   }
 
 // 家政员推荐
@@ -189,15 +244,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         color: Colors.white,
         child: InkWell(
           borderRadius: BorderRadius.circular(10.0),
-          onTap: () async{
+          onTap: () async {
             //设置插入策略
             housekeeper.createdTime = DateTime.now();
-            await Global.dbUtil?.db.insert('browser_history', housekeeper.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
-            RouteUtils.pushForNamed(
-              context, 
-              RoutePath.KeeperPage,
-              arguments: housekeeper.keeperId
-            );
+            await Global.dbUtil?.db.insert(
+                'browser_history', housekeeper.toMap(),
+                conflictAlgorithm: ConflictAlgorithm.replace);
+            RouteUtils.pushForNamed(context, RoutePath.KeeperPage,
+                arguments: housekeeper.keeperId);
           },
           child: Container(
               padding: EdgeInsets.all(10),
@@ -270,10 +324,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         ),
                         Expanded(
                             child: Text(
-                              " ${housekeeper.highlight}",
-                              style: TextStyle(color: Colors.black45,
-                                  fontSize: 12),
-                            ))
+                          " ${housekeeper.highlight}",
+                          style: TextStyle(color: Colors.black45, fontSize: 12),
+                        ))
                       ],
                     ),
                   ),
@@ -292,8 +345,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         return BannerWidget(
           dotType: BannerDotType.circle,
           bannerData: bannerData,
-          height: 181.h,
-          margin: EdgeInsets.only(top: 2.h, left: 12.w, right: 12.w),
+          height: 181,
+          margin: EdgeInsets.only(top: 2, left: 12, right: 12.w),
         );
       },
     );
@@ -301,7 +354,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   //服务滑动页
   Widget _PageViewWidget() {
-
     //指示器
     Widget _buildIndicator() {
       return Container(
@@ -328,8 +380,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         Row(
           children: [
             Container(
-              padding: EdgeInsets.only(left: 20.w, right: 15.w
-                  , top: 10),
+              padding: EdgeInsets.only(left: 20.w, right: 15.w, top: 10),
               child: Text(
                 "服务类型",
                 style: TextStyle(
@@ -344,11 +395,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         Container(
           height: 180.h,
           width: double.infinity,
-          padding: EdgeInsets.only(left: 0.w, right: 0.w, top: 10.h, bottom: 10.h),
-          margin: EdgeInsets.only(left: 15.w, right: 15.w,top: 10.h,bottom: 10.h),
+          padding:
+              EdgeInsets.only(left: 0.w, right: 0.w, top: 10.h, bottom: 10.h),
+          margin:
+              EdgeInsets.only(left: 15.w, right: 15.w, top: 10.h, bottom: 10.h),
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Colors.grey.withOpacity(0.2),width: 2),
+            border: Border.all(color: Colors.grey.withOpacity(0.2), width: 2),
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
@@ -375,7 +428,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       CType(0),
                       CType(1),
                       CType(2),
-
                     ],
                   ),
                   SizedBox(height: 10),
@@ -429,7 +481,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         onTap: () {
           // HomeViewModel.CommissionTypes[index].typeText
           //将委托名字作为参数传递给另一个页面
-         RouteUtils.push(context, SendCommissionPage(id: index));
+          RouteUtils.push(context, SendCommissionPage(id: index));
         },
         child: Column(
           children: [

@@ -7,6 +7,7 @@ import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:amap_flutter_map/amap_flutter_map.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -56,13 +57,13 @@ class _MapPageState extends State<MapPage> {
 
   final TextEditingController _addressController = TextEditingController();
   List<Map<String, dynamic>> _searchResults = [];
-  bool _isSearching = false;
 
   // 当前选中的地址信息
   Map<String, dynamic>? _selectedLocation;
 
   Timer? _debounceTimer;
 
+  FocusNode _addressFocusNode = FocusNode();
   bool _isDialogShowing = false;
 
   @override
@@ -430,6 +431,14 @@ class _MapPageState extends State<MapPage> {
                       color: Colors.white,
                       child: TextField(
                         controller: _addressController,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(50),
+                        ],
+                        autofocus: false,
+                        focusNode: _addressFocusNode,
+                        onTapOutside: (event) {
+                          _addressFocusNode.unfocus();
+                        },
                         decoration: InputDecoration(
                           hintText: '请输入详细地址（如：河北师范大学）',
                           prefixIcon: Icon(Icons.search),
@@ -489,7 +498,7 @@ class _MapPageState extends State<MapPage> {
                                       final poi = poisData[index];
                                       return ListTile(
                                         title: Text(poi['name']),
-                                        subtitle: Text(poi['address'] ?? ''),
+                                        subtitle: poi['address'] is List ? Text(poi['address'].join('\n')) : Text(poi['address']),
                                         onTap: () => _showLocationConfirmDialog(poi),
                                       );
                                     },
@@ -584,6 +593,8 @@ class _MapPageState extends State<MapPage> {
         if (mounted && response.data['status'] == '1' && response.data['pois'] != null) {
           setState(() {
             poisData = response.data['pois'];
+            poisData.forEach((e) => print(e));
+            poisData.forEach((e) =>  e['address'] = e['adname']+ e['address']?.split('|')?.map((e) => e.trim())?.join('\n')  );
             if (poisData.isNotEmpty && widget.initialLatitude == null) {
               _showLocationConfirmDialog(poisData[0]);
             }

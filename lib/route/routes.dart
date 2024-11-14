@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jiayuan/page/certified_page/cert/cert_certified_page.dart';
 import 'package:jiayuan/page/certified_page/keeper/keeper_certified_page.dart';
 import 'package:jiayuan/page/commission_center_page/commission_center_page.dart';
+import 'package:jiayuan/page/commission_center_page/order/order_page.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_page.dart';
 import 'package:jiayuan/page/home_page/housekeepingScreening%20_page.dart';
@@ -106,6 +107,8 @@ class Routes {
       //证书认证页
       case RoutePath.certCertified:
         return pageRoute(CertCertifiedPage());
+      case RoutePath.centerOrder:
+        return pageRoute(CenterOrderPage(),settings: settings);
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

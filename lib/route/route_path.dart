@@ -71,6 +71,8 @@ class RoutePath {
   //委托中心页
   static const String commissionCenter = "/commissionCenter";
 
+  //委托中心订单页
+  static const String centerOrder = "/centerOrder";
 
   //浏览历史页面
   static const String browseHistoryPage = "/browseHistoryPage";
