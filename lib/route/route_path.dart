@@ -47,6 +47,9 @@ class RoutePath {
   //订单页
   static const String orderPage = "/orderPage";
 
+  //订单详情页
+  static const String orderDetailPage = "/orderDetailPage";
+
   //设置页
   static const String settingPage = "/settingPage";
 
