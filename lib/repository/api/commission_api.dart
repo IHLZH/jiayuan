@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:jiayuan/http/url_path.dart';
+import 'package:jiayuan/utils/global.dart';
 
 import '../../http/dio_instance.dart';
 import '../model/Commission.dart';
@@ -83,11 +84,14 @@ class CommissionApi{
     return commissionList;
   }
 
+  //发布委托
   Future<String> sendCommission(Commission commission, int serviceType) async {
     Response response = await DioInstance.instance().post(
         path: UrlPath.sendCommissionUrl,
         data: commission.toJson(),
-        queryParameters: {"serviceId": serviceType});
+        queryParameters: {"serviceId": serviceType},
+       options: Options(headers: {"token":Global.token})
+    );
     return response.data['code'].toString();
   }
 

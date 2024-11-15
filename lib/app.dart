@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
           initialRoute: RoutePath.startPage,
           localizationsDelegates: [
             GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate, // 添加这一行
             GlobalWidgetsLocalizations.delegate
           ],
           supportedLocales: [
