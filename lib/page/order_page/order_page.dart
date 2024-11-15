@@ -3,6 +3,7 @@ import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page_vm.dart';
+import 'package:jiayuan/page/order_page/order_page_vm.dart';
 import 'package:jiayuan/repository/model/full_order.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/constants.dart';
@@ -38,6 +39,7 @@ class _OrderPageState extends State<OrderPage> {
   @override
   void initState() {
     _fetchOrders();
+    // _orderDataList = OrderPageVM.getFullOrderList();
     super.initState();
   }
 

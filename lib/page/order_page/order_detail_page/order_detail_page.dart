@@ -9,7 +9,7 @@ import '../../../route/route_utils.dart';
 
 bool isProduction = Constants.IS_Production;
 
-class OrderDetailPage extends StatefulWidget{
+class OrderDetailPage extends StatefulWidget {
   const OrderDetailPage({Key? key}) : super(key: key);
 
   @override
@@ -18,6 +18,28 @@ class OrderDetailPage extends StatefulWidget{
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
   FullOrder _order = OrderDetailPageVm.nowOrder!;
+
+  Widget _buildIconButton(IconData icon, String title, Color color) {
+    return ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+          side: BorderSide(color: color, width: 1.0),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        elevation: 3.0,
+        splashFactory: InkRipple.splashFactory,
+        overlayColor: color,
+      ),
+      icon: Icon(icon, color: color),
+      label: Text(title,
+          style: TextStyle(color: color, fontWeight: FontWeight.normal)),
+      onPressed: () {
+        print('用户点击了${title}按钮');
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +71,54 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(child: Column(),),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [],
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        height: 60,
+        padding: EdgeInsets.only(top: 5, bottom: 5),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(color: Colors.grey, width: 0.5),
+          ),
+        ),
+        child: SafeArea(
+          child: // 底部操作按钮
+              Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(child: SizedBox()),
+              _buildIconButton(Icons.edit, '修改信息', Colors.green),
+              Expanded(child: SizedBox()),
+              switch (_order.commissionStatus) {
+                0 => Container(child: _buildIconButton(Icons.delete_forever_outlined, '取消订单', Colors.red),),
+                1 => Container(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildIconButton(Icons.check_circle_outline, '同意',
+                            Colors.lightGreen),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        _buildIconButton(Icons.cancel, '不同意', Colors.red),
+                      ],
+                    ),
+                  ),
+                4 => _buildIconButton(
+                    Icons.payment, '去支付', AppColors.orangeBtnColor),
+                5 => _buildIconButton(
+                    Icons.rate_review_outlined, '去评价', AppColors.appColor),
+                _ => Container(),
+              },
+              Expanded(child: SizedBox()),
+            ],
+          ),
+        ),
       ),
     );
   }
