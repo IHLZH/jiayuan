@@ -49,7 +49,6 @@ class SendCommissionViewModel with ChangeNotifier{
   Future<bool> sendCommission() async{
     try{
       commission = Commission(
-          userId: 1,
           commissionBudget: price,
           downPayment: price/10.0,
           commissionDescription: remark,
