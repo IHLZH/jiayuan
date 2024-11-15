@@ -49,10 +49,18 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
     _initData();
   }
 
+
+  void dispose(){
+    Loading.dismissAll();
+    super.dispose();
+  }
+
   Future<void> _initData() async {
     await _commissionTypeViewModel.getTypeComission({
       "typeId": widget.id,
-      "distance":10,
+      "distance":_commissionTypeViewModel.distance,
+      "latitude":Global.location?.latitude ?? 39.906217,
+      "longitude":Global.location?.longitude ?? 116.3912757,
       "page": _commissionTypeViewModel.startPage,
       "size": _commissionTypeViewModel.size,
     });
@@ -67,6 +75,8 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
       await _commissionTypeViewModel.loadingComission({
         "typeId":widget.id,
         "distance":_commissionTypeViewModel.distance,
+        "latitude":Global.location?.latitude ?? 39.906217,
+        "longitude":Global.location?.longitude ?? 116.3912757,
         "page": _commissionTypeViewModel.endPage,
         "size": _commissionTypeViewModel.size,
         "min": _commissionTypeViewModel.minPrice,
@@ -74,9 +84,9 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
       });
       if(_commissionTypeViewModel.commissionDataList.length >= 110){
         _commissionTypeViewModel.hasMoreData = false;
+        _refreshController.loadNoData();
         setState(() {
         });
-        _refreshController.loadNoData();
       }else{
         setState(() {
         });
@@ -92,6 +102,8 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
     await _commissionTypeViewModel.refreshComission({
       "typeId":widget.id,
       "distance":_commissionTypeViewModel.distance,
+      "latitude":Global.location?.latitude ?? 39.906217,
+      "longitude":Global.location?.longitude ?? 116.3912757,
       "page": _commissionTypeViewModel.startPage,
       "size": _commissionTypeViewModel.size,
       "min": _commissionTypeViewModel.minPrice,
@@ -112,6 +124,8 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
     await _commissionTypeViewModel.getTypeComission({
       "typeId":widget.id,
       "distance":_commissionTypeViewModel.distance,
+      "latitude":Global.location?.latitude ?? 39.906217,
+      "longitude":Global.location?.longitude ?? 116.3912757,
       "page": _commissionTypeViewModel.startPage,
       "size": _commissionTypeViewModel.size,
       "min": _commissionTypeViewModel.minPrice,
@@ -442,9 +456,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    (commission.days ?? "今天") +
-                        (commission.expectStartTime.hour.toString().length > 1 ? commission.expectStartTime.hour.toString() : ("0" + commission.expectStartTime.hour.toString())) +
-                        ":" + (commission.expectStartTime.minute.toString().length > 1 ? commission.expectStartTime.minute.toString() : ("0" + commission.expectStartTime.minute.toString())),
+                    (commission.days ?? "今天"),
                     style: TextStyle(
                         color: Colors.red,
                         fontSize: 14.sp,
@@ -458,7 +470,9 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                         size: 14,
                       ),
                       Text(
-                        commission.commissionId.toString() + "km",
+                        commission.distance < 1
+                            ? "${(commission.distance * 1000).round()}m"
+                            : "${commission.distance.toStringAsFixed(1)}km",
                         style: TextStyle(
                             color: AppColors.textColor2b,
                             fontSize: 12.sp,
@@ -467,8 +481,8 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                       ),
                     ],
                   ),
-
-                ],),
+                ],
+              ),
 
               //SizedBox(height: 10.h,),
 

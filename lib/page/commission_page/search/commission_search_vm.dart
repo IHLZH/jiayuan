@@ -18,7 +18,7 @@ class CommissionSearchViewModel with ChangeNotifier{
 
   double minPrice = 0.0;
   double maxPrice = 999999;
-  double distance = 10;
+  double distance = 9999;
 
   bool isSearch = false;
   String? searchMessage;
@@ -28,6 +28,9 @@ class CommissionSearchViewModel with ChangeNotifier{
   bool? distanceCheck; //选择距离排序
 
   bool? priceHigh; //价格是否从高到低
+
+  //是否展示加载动画
+  bool isLoading = false;
 
   int order = 0;
 
@@ -50,6 +53,8 @@ class CommissionSearchViewModel with ChangeNotifier{
       "search":searchMessage,
       "page":startPage,
       "size":size,
+      "latitude":Global.location?.latitude ?? 39.906217,
+      "longitude":Global.location?.longitude ?? 116.3912757,
       "min":minPrice,
       "max":maxPrice,
       "distance":distance,
@@ -77,15 +82,23 @@ class CommissionSearchViewModel with ChangeNotifier{
     distanceCheck = false;
     order = 0;
 
+    isLoading = true;
+
+    notifyListeners();
+
     await getSearchCommission({
       "search":searchMessage,
       "page":startPage,
       "size":size,
+      "latitude":Global.location?.latitude ?? 39.906217,
+      "longitude":Global.location?.longitude ?? 116.3912757,
       "min":minPrice,
       "max":maxPrice,
       "distance":distance,
       "order":order
     });
+
+    isLoading = false;
 
     notifyListeners();
   }
@@ -101,17 +114,22 @@ class CommissionSearchViewModel with ChangeNotifier{
     }
 
     order = priceHigh! ? 2 : 1;
+    isLoading = true;
+    notifyListeners();
 
     await getSearchCommission({
       "search":searchMessage,
       "page":startPage,
       "size":size,
+      "latitude":Global.location?.latitude ?? 39.906217,
+      "longitude":Global.location?.longitude ?? 116.3912757,
       "min":minPrice,
       "max":maxPrice,
       "distance":distance,
       "order": order,
     });
 
+    isLoading = false;
     notifyListeners();
   }
 
@@ -122,16 +140,22 @@ class CommissionSearchViewModel with ChangeNotifier{
     synthesisCheck = false;
 
     order = 3;
+    isLoading = true;
+    notifyListeners();
 
     await getSearchCommission({
       "search":searchMessage,
       "page":startPage,
       "size":size,
+      "latitude":Global.location?.latitude ?? 39.906217,
+      "longitude":Global.location?.longitude ?? 116.3912757,
       "min":minPrice,
       "max":maxPrice,
       "distance":distance,
       "order": order,
     });
+
+    isLoading = false;
 
     notifyListeners();
   }
@@ -178,6 +202,8 @@ class CommissionSearchViewModel with ChangeNotifier{
         "search":searchMessage,
         "page":endPage,
         "size":size,
+        "latitude":Global.location?.latitude ?? 39.906217,
+        "longitude":Global.location?.longitude ?? 116.3912757,
         "min":minPrice,
         "max":maxPrice,
         "distance":distance,
@@ -204,6 +230,8 @@ class CommissionSearchViewModel with ChangeNotifier{
       "search":searchMessage,
       "page":startPage,
       "size":size,
+      "latitude":Global.location?.latitude ?? 39.906217,
+      "longitude":Global.location?.longitude ?? 116.3912757,
       "min":minPrice,
       "max":maxPrice,
       "distance":distance,
@@ -222,6 +250,8 @@ class CommissionSearchViewModel with ChangeNotifier{
       "search":searchMessage,
       "page":startPage,
       "size":size,
+      "latitude":Global.location?.latitude ?? 39.906217,
+      "longitude":Global.location?.longitude ?? 116.3912757,
       "min":minPrice,
       "max":maxPrice,
       "distance":distance,

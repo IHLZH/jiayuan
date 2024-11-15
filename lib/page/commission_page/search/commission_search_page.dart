@@ -482,7 +482,9 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
       footer: ClassicFooter(),
       onLoading: _commissionSearchViewModel.onLoading,
       onRefresh: _commissionSearchViewModel.onRefresh,
-      child: ListView.builder(
+      child: _commissionSearchViewModel.isLoading ? Center(
+        child: CircularProgressIndicator(),
+      ) : ListView.builder(
         itemCount: _commissionSearchViewModel.searchCommissionList.length,
         itemBuilder: (context, index) {
           CommissionData1 commission = _commissionSearchViewModel.searchCommissionList[index];
@@ -568,15 +570,17 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                             ),
                           ),
                           SizedBox(width: 5.w,),
-                          Text(
-                            "内容：" + (commission.commissionDescription ?? "家政员招募中~"),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
-                            style: TextStyle(
-                                color: AppColors.textColor2b,
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500
-                            ),
+                          Expanded(
+                              child: Text(
+                                "内容：" + (commission.commissionDescription ?? "家政员招募中~"),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
+                                style: TextStyle(
+                                    color: AppColors.textColor2b,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w500
+                                ),
+                              )
                           )
                         ],
                       ),
@@ -585,7 +589,9 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                         children: [
                           Icon(Icons.location_on_outlined),
                           Text(
-                            commission.commissionId.toString() + "km",
+                            commission.distance < 1
+                                ? "${(commission.distance * 1000).round()}m"
+                                : "${commission.distance.toStringAsFixed(1)}km",
                             style: TextStyle(
                                 color: AppColors.textColor2b,
                                 fontSize: 12.sp,

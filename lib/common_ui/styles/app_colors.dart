@@ -9,6 +9,8 @@ class AppColors {
   static const endColor = Color(0xFFcbf2ed);
   static const endDeepColor = Color(0xFF71FFEB);
 
+  static const beginColor1 = Color(0xffc4fdea);
+  static const endColor1 = Color(0xffe0fdcf);
   //偏白色背景色
   static const backgroundColor = Color(0xFAFAFAFF);
 

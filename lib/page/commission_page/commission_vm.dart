@@ -60,26 +60,42 @@ class CommissionViewModel with ChangeNotifier{
   List<CommissionData1> commissionDataList = [];
 
   //分页请求
-  int startPage = 0;
-  int endPage = 0;
+  int startPage = 1;
+  int endPage = 1;
   int size = 11;
   bool hasMoreData = true;
 
+  double distance = 10;
+
   Future<void> getRecommendComission(Map<String, dynamic> param) async {
-    List<CommissionData1> commissionData = await CommissionApi.instance.getCommission(param);
+    List<CommissionData1> commissionData = await CommissionApi.instance.recommendCommission(param);
     if(!commissionData.isEmpty){
       this.commissionDataList = commissionData;
     }else{
+      commissionDataList.clear();
       print("数据为空");
     }
   }
 
+  Future<void> refreshComission(Map<String, dynamic> param) async {
+    List<CommissionData1> commissionData = await CommissionApi.instance.recommendCommission(param);
+    if(!commissionData.isEmpty){
+      this.commissionDataList = commissionData;
+    }else{
+      startPage = 1;
+      param["page"] = startPage;
+      await refreshComission(param);
+    }
+  }
+
   Future<void> loadingComission(Map<String, dynamic> param) async {
-    List<CommissionData1> commissionData = await CommissionApi.instance.getCommission(param);
+    List<CommissionData1> commissionData = await CommissionApi.instance.recommendCommission(param);
     if(!commissionData.isEmpty){
       this.commissionDataList.addAll(commissionData);
     }else{
-      endPage = -1;
+      endPage = 1;
+      param["page"] = endPage;
+      await loadingComission(param);
     }
   }
 }

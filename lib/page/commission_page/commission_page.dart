@@ -88,6 +88,8 @@ class _CommissionPageState extends State<CommissionPage>{
       if(_viewModel.commissionDataList.length >= 110){
         _viewModel.hasMoreData = false;
         _refreshController.loadNoData();
+        setState(() {
+        });
       }else{
         setState(() {
         });
@@ -100,20 +102,16 @@ class _CommissionPageState extends State<CommissionPage>{
 
   Future<void> _onRefresh() async {
     _viewModel.startPage++;
-    _viewModel.endPage = _viewModel.startPage;
-    await _viewModel.getRecommendComission({
+    await _viewModel.refreshComission({
       "longitude":Global.location?.longitude ?? 0.0,
       "latitude":Global.location?.latitude ?? 0.0,
       "distance":10,
       "page": _viewModel.startPage,
       "size": _viewModel.size
     });
-    if(_viewModel.commissionDataList.isEmpty){
-      _viewModel.startPage = 0;
-      _viewModel.endPage = _viewModel.startPage;
-    }
     setState(() {
       _viewModel.hasMoreData = true;
+      _refreshController.resetNoData();
     });
     _refreshController.refreshCompleted();
   }
@@ -263,7 +261,7 @@ class _CommissionPageState extends State<CommissionPage>{
                 ),
               ],
             )
-        )
+        ),
     );
   }
 
@@ -291,9 +289,7 @@ class _CommissionPageState extends State<CommissionPage>{
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    (commission.days ?? "今天") +
-                        (commission.expectStartTime.hour.toString().length > 1 ? commission.expectStartTime.hour.toString() : ("0" + commission.expectStartTime.hour.toString())) +
-                        ":" + (commission.expectStartTime.minute.toString().length > 1 ? commission.expectStartTime.minute.toString() : ("0" + commission.expectStartTime.minute.toString())),
+                    (commission.days ?? "今天"),
                     style: TextStyle(
                         color: Colors.red,
                         fontSize: 14.sp,
@@ -307,7 +303,9 @@ class _CommissionPageState extends State<CommissionPage>{
                         size: 14,
                       ),
                       Text(
-                        commission.commissionId.toString() + "km",
+                        commission.distance < 1
+                            ? "${(commission.distance * 1000).round()}m"
+                            : "${commission.distance.toStringAsFixed(1)}km",
                         style: TextStyle(
                             color: AppColors.textColor2b,
                             fontSize: 12.sp,

@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:jiayuan/repository/model/user.dart';
 import 'package:jiayuan/utils/common_data.dart';
+import 'package:jiayuan/utils/global.dart';
 
 /// commissionId : 0
 /// userId : 0
@@ -88,14 +91,14 @@ class CommissionData1 {
 
     _initDays();
     _initType();
+    _initDistance();
   }
 
   void _initType(){
-
+    _typeId = CommonData.TypeId[_typeName];
   }
 
   void _initDays(){
-    _typeId = CommonData.TypeId[_typeName];
     _isLong = typeId > 6 ? true : false;
 
     DateTime currentTime = DateTime.now();
@@ -107,6 +110,29 @@ class CommissionData1 {
     }else{
       _days = ((expectStartTime.month - currentMonth) * 30 + (expectStartTime.day - currentDay)).toString() + "天后";
     }
+  }
+  
+  void _initDistance(){
+    _distance = calculateDistance(Global.location?.latitude ?? 39.906217, Global.location?.longitude ?? 116.3912757, lat, lng);
+  }
+
+  double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+    const R = 6371.0; // 地球半径，单位：公里
+
+    // 将纬度和经度从度转换为弧度
+    double radLat1 = lat1 * pi / 180;
+    double radLat2 = lat2 * pi / 180;
+    double deltaLat = radLat2 - radLat1;
+    double deltaLng = (lng2 - lng1) * pi / 180;
+
+    // Haversine公式
+    double a = sin(deltaLat / 2) * sin(deltaLat / 2) +
+        cos(radLat1) * cos(radLat2) *
+            sin(deltaLng / 2) * sin(deltaLng / 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double distance = R * c;
+
+    return distance; // 返回距离，单位为公里
   }
 
 
@@ -132,6 +158,7 @@ class CommissionData1 {
   DateTime? _endTime;
   String? _specifyServiceDuration;
   int? _commissionStatus;
+  double? _distance;
   bool? _isLong; //是否是长期
   String? _days;
 
@@ -199,6 +226,7 @@ CommissionData1 copyWith({
   DateTime get endTime => _endTime ?? DateTime(1999,1,1,0,0,0);
   String get specifyServiceDuration => _specifyServiceDuration ?? "";
   int get commissionStatus => _commissionStatus ?? 0;
+  double get distance => _distance ?? 0.0;
   bool get isLong => _isLong ?? false;
   String get days => _days ?? "";
 

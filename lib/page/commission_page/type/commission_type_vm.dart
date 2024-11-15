@@ -14,7 +14,7 @@ class CommissionTypeViewModel with ChangeNotifier{
 
   double minPrice = 0.0;
   double maxPrice = 999999;
-  double distance = 10;
+  double distance = 9999;
 
   //分页请求
   int startPage = 1;
