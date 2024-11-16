@@ -46,6 +46,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
   }
 
   Future<void> _back() async {
+    _reset();
     if(_commissionSearchViewModel.isSearch){
       _commissionSearchViewModel.isSearch = false;
       await _commissionSearchViewModel.getHisory();
@@ -59,13 +60,21 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
   Future<void> _search() async {
     Loading.showLoading();
     await _commissionSearchViewModel.search(_searchController.text);
+    _commissionSearchViewModel.refreshList();
     Loading.dismissAll();
   }
 
   Future<void> _siftCommission() async {
-    Loading.showLoading();
     await _commissionSearchViewModel.siftCommission();
-    Loading.dismissAll();
+  }
+
+  void _reset(){
+    _distanceController.clear();
+    _maxPriceController.clear();
+    _minPriceController.clear();
+    _commissionSearchViewModel.distance = 9999;
+    _commissionSearchViewModel.minPrice = 0.0;
+    _commissionSearchViewModel.maxPrice = 999999;
   }
 
   @override
@@ -109,6 +118,13 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                               Expanded(
                                   child: AppSearchBar(
                                     controller: _searchController,
+                                    onChanged: (value){
+                                      if(value.length == 0){
+                                        vm.isSearch = false;
+                                        setState(() {
+                                        });
+                                      }
+                                    },
                                     showLeftMenu: false,
                                     searchType: SearchType.circle,
                                   )
@@ -255,9 +271,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                           children: [
                             AppButton(
                               onTap: (){
-                                _distanceController.clear();
-                                _maxPriceController.clear();
-                                _minPriceController.clear();
+                                _reset();
                               },
                               type: AppButtonType.minor,
                               buttonText: "重置",
@@ -483,8 +497,12 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
       onLoading: _commissionSearchViewModel.onLoading,
       onRefresh: _commissionSearchViewModel.onRefresh,
       child: _commissionSearchViewModel.isLoading ? Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          backgroundColor: AppColors.appColor,
+          valueColor: AlwaysStoppedAnimation<Color>(AppColors.endColor),
+        ),
       ) : ListView.builder(
+        controller: _commissionSearchViewModel.scrollController,
         itemCount: _commissionSearchViewModel.searchCommissionList.length,
         itemBuilder: (context, index) {
           CommissionData1 commission = _commissionSearchViewModel.searchCommissionList[index];
@@ -561,7 +579,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                                 borderRadius: BorderRadius.circular(16.r)
                             ),
                             child: Text(
-                              CommissionViewModel.CommissionTypes[commission.typeId ?? 0].typeText,
+                              commission.typeName,
                               style: TextStyle(
                                   color: Colors.black45,
                                   fontSize: 16.sp,

@@ -38,102 +38,36 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
   final TextEditingController _distanceController = TextEditingController();
 
   CommissionTypeViewModel _commissionTypeViewModel = CommissionTypeViewModel();
-  //刷新控制器
-  RefreshController _refreshController = RefreshController();
+
 
   @override
   void initState() {
     super.initState();
-    Loading.showLoading();
-    _commissionTypeViewModel.getCommissionByType(widget.id);
+    _commissionTypeViewModel.isLoading = true;
+    _commissionTypeViewModel.typeId = widget.id;
     _initData();
   }
 
 
   void dispose(){
-    Loading.dismissAll();
     super.dispose();
   }
 
   Future<void> _initData() async {
-    await _commissionTypeViewModel.getTypeComission({
-      "typeId": widget.id,
-      "distance":_commissionTypeViewModel.distance,
-      "latitude":Global.location?.latitude ?? 39.906217,
-      "longitude":Global.location?.longitude ?? 116.3912757,
-      "page": _commissionTypeViewModel.startPage,
-      "size": _commissionTypeViewModel.size,
-    });
-    setState(() {
-      Loading.dismissAll();
-    });
+    await _commissionTypeViewModel.initData();
+    _commissionTypeViewModel.isLoading = false;
   }
 
   Future<void> _onLoading() async {
-    if(_commissionTypeViewModel.hasMoreData){
-      _commissionTypeViewModel.endPage++;
-      await _commissionTypeViewModel.loadingComission({
-        "typeId":widget.id,
-        "distance":_commissionTypeViewModel.distance,
-        "latitude":Global.location?.latitude ?? 39.906217,
-        "longitude":Global.location?.longitude ?? 116.3912757,
-        "page": _commissionTypeViewModel.endPage,
-        "size": _commissionTypeViewModel.size,
-        "min": _commissionTypeViewModel.minPrice,
-        "max":_commissionTypeViewModel.maxPrice,
-      });
-      if(_commissionTypeViewModel.commissionDataList.length >= 110){
-        _commissionTypeViewModel.hasMoreData = false;
-        _refreshController.loadNoData();
-        setState(() {
-        });
-      }else{
-        setState(() {
-        });
-        _refreshController.loadComplete();
-      }
-    }else{
-      _refreshController.loadNoData();
-    }
+    await _commissionTypeViewModel.onLoading();
   }
 
   Future<void> _onRefresh() async {
-    _commissionTypeViewModel.startPage++;
-    await _commissionTypeViewModel.refreshComission({
-      "typeId":widget.id,
-      "distance":_commissionTypeViewModel.distance,
-      "latitude":Global.location?.latitude ?? 39.906217,
-      "longitude":Global.location?.longitude ?? 116.3912757,
-      "page": _commissionTypeViewModel.startPage,
-      "size": _commissionTypeViewModel.size,
-      "min": _commissionTypeViewModel.minPrice,
-      "max":_commissionTypeViewModel.maxPrice,
-    });
-    setState(() {
-      print("界面刷新");
-      _commissionTypeViewModel.hasMoreData = true;
-      _refreshController.resetNoData();
-    });
-    _refreshController.refreshCompleted();
+    await _commissionTypeViewModel.onRefresh();
   }
 
   Future<void> _siftCommission() async {
-    Loading.showLoading();
-    _commissionTypeViewModel.startPage = 1;
-    _commissionTypeViewModel.endPage = 1;
-    await _commissionTypeViewModel.getTypeComission({
-      "typeId":widget.id,
-      "distance":_commissionTypeViewModel.distance,
-      "latitude":Global.location?.latitude ?? 39.906217,
-      "longitude":Global.location?.longitude ?? 116.3912757,
-      "page": _commissionTypeViewModel.startPage,
-      "size": _commissionTypeViewModel.size,
-      "min": _commissionTypeViewModel.minPrice,
-      "max":_commissionTypeViewModel.maxPrice,
-    });
-    setState(() {
-      Loading.dismissAll();
-    });
+    await _commissionTypeViewModel.siftCommission();
   }
 
   @override
@@ -213,7 +147,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                       children: [
                         Expanded(
                           child: SmartRefresher(
-                            controller: _refreshController,
+                            controller: vm.refreshController,
                             enablePullUp: true,
                             enablePullDown: true,
                             header: ClassicHeader(),
@@ -248,21 +182,22 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                                   ),
                                 ),
 
-                                SliverToBoxAdapter(
-                                  child: MasonryGridView.count(
-                                    crossAxisCount: 2,
-                                    itemCount: vm.commissionDataList.length,
-                                    itemBuilder: (context, index){
-                                      return Container(
-                                        height: (index % 2 == 0) ? 250.h : 300.h,
-                                        padding: EdgeInsets.all(10),
-                                        child: CommissionCard(vm.commissionDataList[index]),
-                                      );
-                                    },
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(), // 禁止内部滚动
+                                vm.isLoading ? SliverToBoxAdapter(
+                                  child: Center(
+                                    heightFactor: 10.h,
+                                    child: CircularProgressIndicator(
+                                      backgroundColor: AppColors.appColor,
+                                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.endColor),
+                                    ),
                                   ),
-                                )
+                                ) : SliverList(
+                                    delegate: SliverChildBuilderDelegate(
+                                            (context, index){
+                                          return CommissionCard(vm.commissionDataList[index]);
+                                        },
+                                        childCount: vm.commissionDataList.length
+                                    )
+                                ),
                               ],
                             ),
                           ),
@@ -408,7 +343,6 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                                   vm.minPrice = minPrice;
                                   _siftCommission();
                                   Scaffold.of(context).closeEndDrawer();
-
                                 }else{
                                   showToast("价格区间填写有误，请检查！");
                                 }
@@ -434,160 +368,142 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
   }
 
   Widget CommissionCard(CommissionData1 commission){
-    return Material(
-      elevation: 5,
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        onTap: (){
-          RouteUtils.pushForNamed(
-              context,
-              RoutePath.commissionDetail,
-              arguments: commission
-          );
-        },
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Material(
+        elevation: 5,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    (commission.days ?? "今天"),
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600
+        child: InkWell(
+          onTap: (){
+            RouteUtils.pushForNamed(
+                context,
+                RoutePath.commissionDetail,
+                arguments: commission
+            );
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: EdgeInsets.all(10),
+            height: 125.h,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      (commission.days ?? "今天") +
+                          (commission.expectStartTime.hour.toString().length > 1 ? commission.expectStartTime.hour.toString() : ("0" + commission.expectStartTime.hour.toString())) +
+                          ":" + (commission.expectStartTime.minute.toString().length > 1 ? commission.expectStartTime.minute.toString() : ("0" + commission.expectStartTime.minute.toString())),
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: 14,
-                      ),
-                      Text(
-                        commission.distance < 1
-                            ? "${(commission.distance * 1000).round()}m"
-                            : "${commission.distance.toStringAsFixed(1)}km",
-                        style: TextStyle(
-                            color: AppColors.textColor2b,
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w600
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          commission.commissionBudget.toString(),
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w600
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                        Text(
+                          "元",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w600
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
 
-              //SizedBox(height: 10.h,),
-
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                          gradient: LinearGradient(
                             colors: [
                               AppColors.appColor, // 渐变起始颜色
                               AppColors.endColor,      // 渐变结束颜色
                             ],
+                          ),
+                          borderRadius: BorderRadius.circular(16.r)
+                      ),
+                      child: Text(
+                        commission.typeName,
+                        style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600
                         ),
-                        borderRadius: BorderRadius.circular(16.r)
+                      ),
                     ),
-                    child: Text(
-                      commission.typeName,
+                    SizedBox(width: 5.w,),
+                    Expanded(
+                        child: Text(
+                          "内容：" + (commission.commissionDescription ?? "家政员招募中~"),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
+                          style: TextStyle(
+                              color: AppColors.textColor2b,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w500
+                          ),
+                        )
+                    )
+                  ],
+                ),
+
+                Row(
+                  children: [
+                    Icon(Icons.location_on_outlined),
+                    Text(
+                      commission.distance < 1
+                          ? "${(commission.distance * 1000).round()}m"
+                          : "${commission.distance.toStringAsFixed(1)}km",
                       style: TextStyle(
-                          color: Colors.black45,
-                          fontSize: 16.sp,
+                          color: AppColors.textColor2b,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w600
                       ),
                     ),
-                  )
-                ],
-              ),
-
-              //SizedBox(height: 10.h,),
-
-              Row(
-                children: [
-                  Text(
-                    commission.isLong ? "服务周期: " : "服务时长: ",
-                    style: TextStyle(
-                        color: AppColors.textColor2b,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600
-                    ),
-                  ),
-                  SizedBox(width: 5.w,),
-                  Text(
-                    commission.specifyServiceDuration.toString() + (commission.isLong ? "月" : "小时"),
-                    style: TextStyle(
-                        color: AppColors.textColor2b,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600
-                    ),
-                  ),
-                ],
-              ),
-
-              //SizedBox(height: 10.h),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    commission.county,
-                    style: TextStyle(
-                        color: AppColors.textColor2b,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500
-                    ),
-                  ),
-                  SizedBox(width: 5.w,),
-                  Expanded(
-                    child: Text(
-                      commission.commissionAddress,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
+                    SizedBox(width: 5.w,),
+                    Text(
+                      commission.county ?? "",
                       style: TextStyle(
                           color: AppColors.textColor2b,
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500
                       ),
                     ),
-                  )
-                ],
-              ),
-
-              //SizedBox(height: 5.h),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    commission.commissionBudget.toString(),
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w600
-                    ),
-                  ),
-                  Text(
-                    "元",
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600
-                    ),
-                  )
-                ],
-              )
-            ],
+                    SizedBox(width: 5.w,),
+                    Expanded(
+                      child: Text(
+                        commission.commissionAddress ?? "",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
+                        style: TextStyle(
+                            color: AppColors.textColor2b,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

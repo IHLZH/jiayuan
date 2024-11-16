@@ -164,7 +164,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                 borderRadius: BorderRadius.circular(16.r)
                             ),
                             child: Text(
-                              CommissionViewModel.CommissionTypes[vm.commissionData.typeId].typeText,
+                              vm.commissionData.typeName,
                               style: TextStyle(
                                   color: Colors.black45,
                                   fontSize: 16.sp,
@@ -247,7 +247,9 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                               ),
                             ),
                             IconButton(
-                                onPressed: (){},
+                                onPressed: (){
+                                  vm.makePhoneCall(vm.commissionData.userPhoneNumber);
+                                },
                                 icon: ShaderMask(
                                   shaderCallback: (Rect bounds) {
                                     return LinearGradient(
@@ -282,7 +284,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                           SizedBox(height: 5.w,),
                           Container(
                             width: double.infinity,
-                            height: 300.h,
+                            height: 280.h,
                             padding: EdgeInsets.symmetric(horizontal: 5),
                             decoration: BoxDecoration(
                                 color: Colors.white,
@@ -295,7 +297,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                   vm.commissionData.commissionDescription,
                                   style: TextStyle(
                                     color: AppColors.textColor2b,
-                                    fontSize: 14.sp,
+                                    fontSize: 16.sp,
                                   ),
                                 )
                               ],
@@ -318,6 +320,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                           child: AppButton(
                             type: AppButtonType.minor,
                             buttonText: "与ta联系",
+                            radius: 8.r,
                             buttonTextStyle: TextStyle(
                               color: AppColors.textColor2b
                             ),
@@ -328,6 +331,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                           child: AppButton(
                             type: AppButtonType.main,
                             buttonText: "我想接",
+                            radius: 8.r,
                           )
                       ),
                     ],
