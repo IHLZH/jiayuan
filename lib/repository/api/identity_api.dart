@@ -21,7 +21,7 @@ class IdentityApi{
 
   String IdCardBackAuthPath = "/thirdnode/ImageAI/idcardbackrecongnition";
 
-  String appCode = "ad39e2a665a04127a665de70ab1a6c2d";
+  String appCode = "b5320fa7a56b4d7a96c36525bb051be2";
 
   final _defaultTimeout = const Duration(seconds: 30);
 

@@ -41,17 +41,18 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
               return Scaffold(
                 resizeToAvoidBottomInset: false, // 禁止布局被键盘顶掉
                 appBar: PreferredSize(
-                    preferredSize: Size.fromHeight(kToolbarHeight),
+                    preferredSize: Size.fromHeight(45.0),
                     child: Container(
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.appColor, // 渐变起始颜色
-                              Colors.white,      // 渐变结束颜色
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
+                          color: Colors.white
+                          // gradient: LinearGradient(
+                          //   colors: [
+                          //     AppColors.appColor, // 渐变起始颜色
+                          //     Colors.white,      // 渐变结束颜色
+                          //   ],
+                          //   begin: Alignment.topCenter,
+                          //   end: Alignment.bottomCenter,
+                          // ),
                         ),
                         child: Container(
                           height: 200.h,
@@ -87,7 +88,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                   child: Container(
                     //padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                       decoration: BoxDecoration(
-                          color: AppColors.backgroundColor2
+                          color: AppColors.backgroundColor3
                       ),
                       child: Column(
                         children: [
