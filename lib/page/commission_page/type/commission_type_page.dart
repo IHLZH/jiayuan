@@ -16,6 +16,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../repository/model/commission_data.dart';
 import '../../../route/route_path.dart';
 import '../../../route/route_utils.dart';
+import '../../../utils/common_data.dart';
 import '../../../utils/global.dart';
 import '../commission_vm.dart';
 
@@ -150,8 +151,15 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                             controller: vm.refreshController,
                             enablePullUp: true,
                             enablePullDown: true,
-                            header: ClassicHeader(),
-                            footer: ClassicFooter(),
+                            header: MaterialClassicHeader(
+                              color: AppColors.appColor,
+                              backgroundColor: AppColors.endColor,
+                            ),
+                            footer: ClassicFooter(
+                              canLoadingText: "松开加载更多~",
+                              loadingText: "努力加载中~",
+                              noDataText: "已经到底了~",
+                            ),
                             onLoading: _onLoading,
                             onRefresh: _onRefresh,
                             child: CustomScrollView(
@@ -166,7 +174,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                                       ),
                                       SizedBox(width: 5.w,),
                                       Text(
-                                        CommissionViewModel.CommissionTypes[widget.id].typeText,
+                                        CommonData.CommissionTypes[widget.id].typeText,
                                         style: TextStyle(
                                             color: AppColors.textColor2b
                                         ),
@@ -528,7 +536,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
         ),
       ),
       child: Icon(
-        CommissionViewModel.CommissionTypes[index].icon,
+        CommonData.CommissionTypes[index].icon,
         size: 30,
         color: Colors.white,
       ),

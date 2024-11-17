@@ -58,14 +58,25 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
   }
 
   Future<void> _search() async {
-    Loading.showLoading();
-    await _commissionSearchViewModel.search(_searchController.text);
-    _commissionSearchViewModel.refreshList();
-    Loading.dismissAll();
+    if(_searchController.text != ""){
+      Loading.showLoading();
+      await _commissionSearchViewModel.search(_searchController.text);
+      _commissionSearchViewModel.refreshList();
+      Loading.dismissAll();
+    }else{
+      showToast("请输入搜索内容");
+    }
   }
 
   Future<void> _siftCommission() async {
     await _commissionSearchViewModel.siftCommission();
+  }
+
+  Future<void> _backToHistory() async {
+    _commissionSearchViewModel.isSearch = false;
+    await _commissionSearchViewModel.getHisory();
+    setState(() {
+    });
   }
 
   void _reset(){
@@ -120,9 +131,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                                     controller: _searchController,
                                     onChanged: (value){
                                       if(value.length == 0){
-                                        vm.isSearch = false;
-                                        setState(() {
-                                        });
+                                        _backToHistory();
                                       }
                                     },
                                     showLeftMenu: false,
@@ -374,7 +383,6 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                   icon: Icon(Icons.delete)
               )
             ),
-
           ],
         ),
         Row(
@@ -396,7 +404,26 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
   }
 
   Widget _Result(CommissionSearchViewModel vm){
-    return Column(
+    return vm.searchCommissionList.isEmpty ? Center(
+      child: Container(
+        child: Column(
+          children: [
+            Image.asset(
+              height: 200.h,
+              width: 200.w,
+              "assets/images/search_no_result.png",
+            ),
+            Text(
+              "没有找到你想要的委托/(ㄒoㄒ)/~~",
+              style: TextStyle(
+                color: AppColors.appColor,
+                fontSize: 16.sp
+              ),
+            )
+          ],
+        ),
+      )
+    ) : Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -492,8 +519,15 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
       controller: _commissionSearchViewModel.refreshController,
       enablePullUp: true,
       enablePullDown: true,
-      header: ClassicHeader(),
-      footer: ClassicFooter(),
+      header: MaterialClassicHeader(
+        color: AppColors.appColor,
+        backgroundColor: AppColors.endColor,
+      ),
+      footer: ClassicFooter(
+        canLoadingText: "松开加载更多~",
+        loadingText: "努力加载中~",
+        noDataText: "已经到底了~",
+      ),
       onLoading: _commissionSearchViewModel.onLoading,
       onRefresh: _commissionSearchViewModel.onRefresh,
       child: _commissionSearchViewModel.isLoading ? Center(

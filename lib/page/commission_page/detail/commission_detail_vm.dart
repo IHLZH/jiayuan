@@ -28,22 +28,11 @@ class CommissionDetailViewModel with ChangeNotifier{
     }
   }
 
-  void getUserById(int id){
-    user = User(
-        userId: id,
-        userName: "userName",
-        nickName: "用户114514号",
-        userPassword: "",
-        userAvatar: "https://i1.hdslb.com/bfs/face/ff445d09efe51be21b6d8170e746699899fb9c52.jpg@92w_92h.avif",
-        userSex: 0,
-        userPhoneNumber: "11451419198",
-        createdTime: "createdTime",
-        updatedTime: "updatedTime",
-        loginIp: "loginIp",
-        loginTime: "loginTime",
-        userType: 0,
-        userStatus: 0
-    );
+  String obfuscatePhoneNumber(String phoneNumber) {
+    if (phoneNumber.length >= 7) {
+      return phoneNumber.replaceRange(3, 7, "****");
+    }
+    return phoneNumber; // 如果号码长度不足，不处理
   }
 
 }

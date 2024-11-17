@@ -13,6 +13,7 @@ import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/utils/common_data.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -98,8 +99,15 @@ class _CommissionPageState extends State<CommissionPage>{
                       controller: _viewModel.refreshController,
                       enablePullUp: true,
                       enablePullDown: true,
-                      header: ClassicHeader(),
-                      footer: ClassicFooter(),
+                      header: MaterialClassicHeader(
+                        color: AppColors.appColor,
+                        backgroundColor: AppColors.endColor,
+                      ),
+                      footer: ClassicFooter(
+                        canLoadingText: "松开加载更多~",
+                        loadingText: "努力加载中~",
+                        noDataText: "已经到底了~",
+                      ),
                       onLoading: _onLoading,
                       onRefresh: _onRefresh,
                       child: CustomScrollView(
@@ -396,13 +404,13 @@ class _CommissionPageState extends State<CommissionPage>{
               ),
             ),
             child: Icon(
-              CommissionViewModel.CommissionTypes[index].icon,
+              CommonData.CommissionTypes[index].icon,
               size: 30,
               color: Colors.white,
             ),
           ),
           Text(
-            CommissionViewModel.CommissionTypes[index].typeText,
+            CommonData.CommissionTypes[index].typeText,
             style: TextStyle(color: AppColors.textColor2b),
           )
         ],
