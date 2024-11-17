@@ -50,13 +50,12 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
             _keeperViewModel.idCardFront = pickedFile;
             break;
           case 1:
-            _keeperViewModel.idCardOther = pickedFile;
+            _keeperViewModel.idCardBack = pickedFile;
             break;
           case 2:
             _keeperViewModel.selfAvatar = pickedFile;
             break;
         }
-
       });
     }
   }
@@ -70,7 +69,7 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
             _keeperViewModel.idCardFront = pickedFile;
             break;
           case 1:
-            _keeperViewModel.idCardOther = pickedFile;
+            _keeperViewModel.idCardBack = pickedFile;
             break;
           case 2:
             _keeperViewModel.selfAvatar = pickedFile;
@@ -138,8 +137,11 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
   void _authenticated(){
     if(isNameCorrect && isIdCorrect && isPhoneCorrect){
       if(_keeperViewModel.name != "" && _keeperViewModel.idCard != "" && _keeperViewModel.phoneNumber != ""){
-        if(_keeperViewModel.idCardFront != null && _keeperViewModel.idCardOther != null && _keeperViewModel.selfAvatar != null){
-          //发送网络请求
+        if(_keeperViewModel.idCardFront != null && _keeperViewModel.idCardBack != null && _keeperViewModel.selfAvatar != null){
+
+          _keeperViewModel.getCardNoAuth();
+          _keeperViewModel.getIdCardFrontAuth();
+          _keeperViewModel.getIdCardBackAuth();
         }else{
           showToast("照片不能为空");
         }
@@ -338,7 +340,7 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                                     child: Image(
                                         width: 150.w,
                                         height: 90.w,
-                                        image: vm.idCardFront != null ? FileImage(File(vm.idCardFront!.path)) : AssetImage('assets/images/upload2.jpg')
+                                        image: vm.idCardFront.path != "" ? FileImage(File(vm.idCardFront.path)) : AssetImage('assets/images/upload2.jpg')
                                     ),
                                   ),
                                   GestureDetector(
@@ -348,7 +350,7 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                                     child: Image(
                                         width: 150.w,
                                         height: 90.w,
-                                        image: vm.idCardOther != null ? FileImage(File(vm.idCardOther!.path)) : AssetImage('assets/images/upload2.jpg')
+                                        image: vm.idCardBack.path != "" ? FileImage(File(vm.idCardBack.path)) : AssetImage('assets/images/upload2.jpg')
                                     ),
                                   ),
                                 ],
