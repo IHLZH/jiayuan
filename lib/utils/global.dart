@@ -50,6 +50,7 @@ class Global {
 
   //委托类型表
   static List<CommissionType> CommissionTypes = [
+    CommissionType(icon: Icons.import_contacts, typeText: "typeText"),
     CommissionType(
         icon: Icons.house,
         typeText: "日常保洁"

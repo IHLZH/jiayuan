@@ -16,6 +16,9 @@ class CommissionSearchViewModel with ChangeNotifier{
   //刷新控制器
   RefreshController refreshController = RefreshController();
 
+  //listview的华东控制器
+  ScrollController scrollController = ScrollController();
+
   double minPrice = 0.0;
   double maxPrice = 999999;
   double distance = 9999;
@@ -40,6 +43,12 @@ class CommissionSearchViewModel with ChangeNotifier{
   int size = 11;
   bool hasMoreData = true;
 
+  void refreshList(){
+    if(searchCommissionList.isNotEmpty){
+      scrollController.jumpTo(0.0);
+      notifyListeners();
+    }
+  }
 
   Future<void> search(String searchMessage) async {
     isSearch = true;
@@ -73,7 +82,6 @@ class CommissionSearchViewModel with ChangeNotifier{
     await getHisory();
     notifyListeners();
   }
-
   //点击综合排序
   Future<void> checkSynthesis() async {
     if(synthesisCheck!)return;
@@ -246,6 +254,11 @@ class CommissionSearchViewModel with ChangeNotifier{
   Future<void> siftCommission() async {
     startPage = 1;
     endPage = 1;
+
+    isLoading = true;
+
+    notifyListeners();
+
     await getSearchCommission({
       "search":searchMessage,
       "page":startPage,
@@ -257,6 +270,9 @@ class CommissionSearchViewModel with ChangeNotifier{
       "distance":distance,
       "order": order,
     });
+
+    isLoading = false;
+
     notifyListeners();
   }
 
@@ -270,7 +286,6 @@ class CommissionSearchViewModel with ChangeNotifier{
     }
 
   }
-
 
   Future<void> getSearchHistory() async {
 

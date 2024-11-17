@@ -89,8 +89,8 @@ class CommissionData1 {
     _specifyServiceDuration = json['specifyServiceDuration'];
     _commissionStatus = json['commissionStatus'];
 
-    _initDays();
     _initType();
+    _initDays();
     _initDistance();
   }
 
@@ -209,7 +209,7 @@ CommissionData1 copyWith({
   String get userName => _userName ?? "";
   int get keeperId => _keeperId ?? 0;
   int get typeId => _typeId ?? 1;
-  String get typeName => _typeName ?? "";
+  String get typeName => _typeName ?? "家政服务";
   double get commissionBudget => _commissionBudget ?? 999999;
   String get commissionDescription => _commissionDescription ?? "";
   String get province => _province ?? "";
