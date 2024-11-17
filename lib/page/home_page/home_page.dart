@@ -247,6 +247,7 @@ class _HomePageState extends State<HomePage>
           onTap: () async {
             //设置插入策略
             housekeeper.createdTime = DateTime.now();
+            housekeeper.userId = Global.userInfo?.userId;
             await Global.dbUtil?.db.insert(
                 'browser_history', housekeeper.toMap(),
                 conflictAlgorithm: ConflictAlgorithm.replace);

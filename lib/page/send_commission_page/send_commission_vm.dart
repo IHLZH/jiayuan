@@ -63,9 +63,8 @@ class SendCommissionViewModel with ChangeNotifier{
           expectStartTime: selectedDate
       );
      // print(commission?.toJson());
-      var res = await CommissionApi.instance.sendCommission(commission!,id!);
+      var res = await CommissionApi.instance.sendCommission(commission!,id!+1);
       if(res == "200"){
-        showToast("发布成功");
         return true;
       }else{
         return false;

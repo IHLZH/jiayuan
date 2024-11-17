@@ -1,4 +1,5 @@
 class Housekeeper {
+
   //真实姓名
   String? realName;
 
@@ -23,7 +24,11 @@ class Housekeeper {
   //创建时间
   DateTime? createdTime;
 
+  //用户id
+  int? userId;
+
   Housekeeper({
+    this.userId,
     this.realName,
     this.keeperId,
     this.age,
@@ -47,6 +52,7 @@ class Housekeeper {
   //用于本地数据库的解析
   Map<String, dynamic> toMap() {
     return {
+      'userId': userId,
       'realName': realName,
       'keeperid': keeperId,
       'age': age,
@@ -60,6 +66,7 @@ class Housekeeper {
 //用于本地数据库的解析
   static Housekeeper fromMap(Map map) {
     Housekeeper housekeeper = Housekeeper(
+      userId: map['userId'],
       realName: map['realName'],
       keeperId: map['keeperid'],
       age: map['age'],

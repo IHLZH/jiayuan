@@ -8,7 +8,8 @@ class BrowseHistoryViewModel with ChangeNotifier{
 
 
   Future<void> getBrowseHistory()async{
-    final result =  await Global.dbUtil?.db.query('browser_history',orderBy: 'createdTime DESC');
+    //,
+    final result =  await Global.dbUtil?.db.query('browser_history',orderBy: 'createdTime DESC',where: 'userId = ?',whereArgs: [Global.userInfo?.userId]);
     browseHistory = result!.map((e) => Housekeeper.fromMap(Map.from(e))).toList();
     browseHistory.forEach((item)=> print(item.createdTime));
     notifyListeners();

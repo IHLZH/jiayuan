@@ -67,6 +67,7 @@ class _BrowseHistoryPageState extends State<BrowseHistoryPage> {
           borderRadius: BorderRadius.circular(10.0),
           onTap: () async{
             housekeeper.createdTime = DateTime.now();
+            housekeeper.userId = Global.userInfo?.userId;
             await Global.dbUtil?.db.insert('browser_history', housekeeper.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
             RouteUtils.pushForNamed(
                 context,
