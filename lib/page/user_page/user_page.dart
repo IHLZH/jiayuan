@@ -284,7 +284,7 @@ class _UserPageState extends State<UserPage> {
                 _jumpToOrderPage(4);
               } else if (title == '已完成') {
                 _jumpToOrderPage(5);
-              } else if (title == '委托中心') {
+              } else if (title == '服务中心') {
                 _jumpToCommissionCenterPage();
               } else if (title == '成为家政员') {
                 _jumpToKeeperCertified();
@@ -611,8 +611,8 @@ class _UserPageState extends State<UserPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           _buildManagementOption(Icons.person_add, '成为家政员'),
-                          _buildManagementOption(Icons.edit, '修改信息'),
-                          _buildManagementOption(Icons.assignment, '委托中心'),
+                          _buildManagementOption(Icons.assignment, '已接订单'),
+                          _buildManagementOption(Icons.format_align_center_outlined, '服务中心'),
                           _buildManagementOption(Icons.verified_user, '证书认证'),
                         ],
                       ),
