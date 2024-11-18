@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/repository/api/identity_api.dart';
+import 'package:jiayuan/route/route_utils.dart';
 import 'package:oktoast/oktoast.dart';
 
 class KeeperCertifiedPageViewModel with ChangeNotifier{
@@ -21,7 +22,8 @@ class KeeperCertifiedPageViewModel with ChangeNotifier{
   bool _isNameCorrect = true;
   bool _isIdCorrect = true;
 
-
+  bool _cardNoWay = false;
+  bool _cardImgWay = false;
 
   Future<void> authenticated() async {
     if(isNameCorrect && isIdCorrect){
@@ -44,10 +46,30 @@ class KeeperCertifiedPageViewModel with ChangeNotifier{
     }
   }
 
+  void back(BuildContext context){
+    if(_cardImgWay || _cardNoWay){
+      cardImgWay = false;
+      cardNoWay = false;
+      notifyListeners();
+    }else{
+      RouteUtils.pop(context);
+    }
+  }
+
   void reAuth(){
     isFail = false;
     name = "";
     idCard = "";
+    notifyListeners();
+  }
+
+  void toCardNo(){
+    _cardNoWay = true;
+    notifyListeners();
+  }
+
+  void toCardImg(){
+    _cardImgWay = true;
     notifyListeners();
   }
 
@@ -134,5 +156,17 @@ class KeeperCertifiedPageViewModel with ChangeNotifier{
 
   set isNameCorrect(bool value) {
     _isNameCorrect = value;
+  }
+
+  bool get cardImgWay => _cardImgWay;
+
+  set cardImgWay(bool value) {
+    _cardImgWay = value;
+  }
+
+  bool get cardNoWay => _cardNoWay;
+
+  set cardNoWay(bool value) {
+    _cardNoWay = value;
   }
 }

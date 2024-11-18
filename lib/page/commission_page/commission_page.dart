@@ -208,12 +208,33 @@ class _CommissionPageState extends State<CommissionPage>{
                           Consumer<CommissionViewModel>(
                               builder: (context, vm, child){
                                 return vm.isLoading ? SliverToBoxAdapter(
-                                  child:  Center(
+                                  child: Center(
                                     heightFactor: 10.h,
                                     child: CircularProgressIndicator(
                                       backgroundColor: AppColors.appColor,
                                       valueColor: AlwaysStoppedAnimation<Color>(AppColors.endColor),
                                     ),
+                                  ),
+                                ) : vm.commissionDataList.isEmpty ? SliverToBoxAdapter(
+                                  child: Center(
+                                      child: Container(
+                                        child: Column(
+                                          children: [
+                                            Image.asset(
+                                              height: 200.h,
+                                              width: 200.w,
+                                              "assets/images/search_no_result.png",
+                                            ),
+                                            Text(
+                                              "您周围没有合适的委托/(ㄒoㄒ)/~~",
+                                              style: TextStyle(
+                                                  color: AppColors.appColor,
+                                                  fontSize: 16.sp
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      )
                                   ),
                                 ) : SliverList(
                                     delegate: SliverChildBuilderDelegate(

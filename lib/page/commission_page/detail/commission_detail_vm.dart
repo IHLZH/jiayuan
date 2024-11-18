@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/repository/model/user.dart';
+import 'package:jiayuan/utils/global.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -10,6 +11,16 @@ class CommissionDetailViewModel with ChangeNotifier{
   User? user;
 
   CommissionData1 commissionData = CommissionData1();
+
+  int receiveCommission(){
+    if((Global.userInfo?.userType ?? 0) == 1){
+
+
+      return 1;
+    }else{
+      return 0;
+    }
+  }
 
   Future<void> makePhoneCall(String phoneNumber) async {
     var status = await Permission.phone.status;

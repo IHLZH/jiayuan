@@ -92,6 +92,7 @@ class CommissionViewModel with ChangeNotifier{
     if(!commissionData.isEmpty && commissionData.length == size){
       this.commissionDataList = commissionData;
     }else{
+      if(startPage == 1)return;
       startPage = 1;
       param["page"] = startPage;
       await refreshComission(param);
@@ -103,6 +104,7 @@ class CommissionViewModel with ChangeNotifier{
     if(!commissionData.isEmpty){
       this.commissionDataList.addAll(commissionData);
     }else{
+      if(endPage == 1)return;
       endPage = 1;
       param["page"] = endPage;
       await loadingComission(param);

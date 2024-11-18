@@ -1,4 +1,4 @@
 
 class TabPageViewModel {
-  int currentIndex = 0;
+  static int currentIndex = 0;
 }
