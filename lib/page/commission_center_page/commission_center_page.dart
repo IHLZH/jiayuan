@@ -356,7 +356,7 @@ class _CommissionCenterState extends State<CommissionCenterPage>{
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _TitleIcon(Icons.account_circle, "认证信息"),
+                _TitleIcon(Icons.account_circle, "个人信息"),
                 _TitleIcon(Icons.history, "浏览记录"),
                 _TitleIcon(Icons.menu_book, "我的证书"),
                 _TitleIcon(Icons.comment, "用户评论"),

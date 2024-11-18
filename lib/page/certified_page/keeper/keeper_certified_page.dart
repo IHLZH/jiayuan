@@ -8,6 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/common_ui/buttons/red_button.dart';
 import 'package:jiayuan/common_ui/input/app_input.dart';
 import 'package:jiayuan/page/certified_page/keeper/keeper_certified_page_vm.dart';
+import 'package:jiayuan/route/route_path.dart';
+import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -27,19 +29,6 @@ class KeeperCertifiedPage extends StatefulWidget{
 
 class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
   KeeperCertifiedPageViewModel _keeperViewModel = KeeperCertifiedPageViewModel();
-  // 请求权限
-  Future<bool> _requestPermissions() async {
-    final statusCamera = await Permission.photos.request();
-    //final statusStorage = await Permission.storage.request();
-
-    // if (statusCamera.isGranted) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
-
-    return true;
-  }
 
   Future<void> _uploadFromCamera(int id) async {
     final pickedFile = await ImageUtils.getCameraImage();
@@ -110,17 +99,12 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
     );
   }
 
-  bool isNameCorrect = true;
-  bool isIdCorrect = true;
-  bool isPhoneCorrect = true;
-
   //检验身份证号
   bool _validateIDCard(String idCard) {
     // 正则表达式：前 17 位为数字，最后一位可以为数字或 X
     RegExp idCardRegex = RegExp(r"^[1-9]\d{5}(19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|(3[0-1]))\d{3}(\d|X|x)$");
     return idCardRegex.hasMatch(idCard);
   }
-
   //检验电话号码
   bool _validatePhoneNumber(String phoneNumber) {
     // 正则表达式：以 13-19 的数字开头，后接 9 位数字
@@ -132,23 +116,6 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
     // 正则表达式：支持 2-10 个字符的中文或英文字符
     RegExp nameRegex = RegExp(r"^[\u4e00-\u9fa5a-zA-Z]{2,20}$");
     return nameRegex.hasMatch(name);
-  }
-
-  void _authenticated(){
-    if(isNameCorrect && isIdCorrect && isPhoneCorrect){
-      if(_keeperViewModel.name != "" && _keeperViewModel.idCard != "" && _keeperViewModel.phoneNumber != ""){
-        if(_keeperViewModel.idCardFront != null && _keeperViewModel.idCardBack != null && _keeperViewModel.selfAvatar != null){
-
-          _keeperViewModel.getCardNoAuth();
-          _keeperViewModel.getIdCardFrontAuth();
-          _keeperViewModel.getIdCardBackAuth();
-        }else{
-          showToast("照片不能为空");
-        }
-      } else{
-        showToast("信息不能为空");
-      }
-    }
   }
 
   @override
@@ -204,250 +171,328 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                         )
                     )
                 ),
-                body: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white
-                    ),
-                    child: ListView(
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "一, 请填写真实的身份信息",
-                                    style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: AppColors.textColor2b
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "姓名：",
-                                    style: TextStyle(
-                                        fontSize: 18.sp,
-                                        color: AppColors.textColor2b
-                                    ),
-                                  ),
-                                  Expanded(
-                                      child: AppInput(
-                                        hintText: "请输入真实姓名",
-                                        onChanged: (name){
-                                          if(name != ""){
-                                            setState(() {
-                                              vm.name = name;
-                                              isNameCorrect = _validateName(name);
-                                            });
-                                          }else{
-                                            setState(() {
-                                              isNameCorrect = true;
-                                            });
-                                          }
-                                        },
-                                      )
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              child: isNameCorrect ? null : Text(
-                                "(请填写真实的姓名信息)",
-                                style: TextStyle(
-                                    fontSize: 16.sp,
-                                    color: Colors.red
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "身份证号：",
-                                    style: TextStyle(
-                                        fontSize: 18.sp,
-                                        color: AppColors.textColor2b
-                                    ),
-                                  ),
-                                  Expanded(
-                                      child: AppInput(
-                                        hintText: "请输入正确的身份证号",
-                                        onChanged: (id){
-                                          if(id != ""){
-                                            setState(() {
-                                              vm.idCard = id;
-                                              isIdCorrect = _validateIDCard(id);
-                                            });
-                                          }else{
-                                            setState(() {
-                                              isIdCorrect = true;
-                                            });
-                                          }
-                                        },
-                                      )
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              child: isIdCorrect ? null : Text(
-                                "(请填写真实的身份证号)",
-                                style: TextStyle(
-                                    fontSize: 16.sp,
-                                    color: Colors.red
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: 40.h,),
-
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "二, 核对身份(上传身份证照片)",
-                                    style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: AppColors.textColor2b
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black, width: 1),
-                                  borderRadius: BorderRadius.circular(16.r)
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  GestureDetector(
-                                    onTap: (){
-                                      _showPickerOptions(context, 0);
-                                    },
-                                    child: Image(
-                                        width: 150.w,
-                                        height: 90.w,
-                                        image: vm.idCardFront.path != "" ? FileImage(File(vm.idCardFront.path)) : AssetImage('assets/images/upload2.jpg')
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: (){
-                                      _showPickerOptions(context, 1);
-                                    },
-                                    child: Image(
-                                        width: 150.w,
-                                        height: 90.w,
-                                        image: vm.idCardBack.path != "" ? FileImage(File(vm.idCardBack.path)) : AssetImage('assets/images/upload2.jpg')
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            SizedBox(height: 40.h,),
-
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "三, 上传个人照片及联系方式",
-                                    style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: AppColors.textColor2b
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: 100,
-                              height: 100,
-                              padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: (){
-                                    _showPickerOptions(context, 2);
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 50,
-                                    backgroundImage: vm.selfAvatar != null ? FileImage(File(vm.selfAvatar!.path)) : null,
-                                    child: vm.selfAvatar == null ? Icon(Icons.person, size: 50,) : null,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "联系方式：",
-                                    style: TextStyle(
-                                        fontSize: 18.sp,
-                                        color: AppColors.textColor2b
-                                    ),
-                                  ),
-                                  Expanded(
-                                      child: AppInput(
-                                        hintText: "请输入电话号码(+86)",
-                                        onChanged: (phone){
-                                          if(phone != ""){
-                                            setState(() {
-                                              vm.phoneNumber = phone;
-                                              isPhoneCorrect = _validatePhoneNumber(phone);
-                                            });
-                                          }else{
-                                            setState(() {
-                                              isPhoneCorrect = true;
-                                            });
-                                          }
-                                        },
-                                      )
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              child: isPhoneCorrect ? null : Text(
-                                "(请填写正确的电话号码)",
-                                style: TextStyle(
-                                    fontSize: 16.sp,
-                                    color: Colors.red
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: 40.h,),
-
-                            AppButton(
-                              type: AppButtonType.main,
-                              buttonText: "认证完成>",
-                              onTap: (){
-                                _authenticated();
-                              },
-                            )
-                          ],
-                        )
-                      ],
-                    )
-                )
+                body: _AuthResult(),
               );
             }
         ),
+    );
+  }
+
+  Widget _AuthResult(){
+    if(_keeperViewModel.isSuccess || (Global.userInfo?.userType ?? 0) == 1){
+      return _Success();
+    }else if(_keeperViewModel.isFail){
+      return _Fail();
+    }else{
+      return Container(
+          decoration: BoxDecoration(
+              color: Colors.white
+          ),
+          child: ListView(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                    child: Row(
+                      children: [
+                        Text(
+                          "一, 请填写真实的身份信息",
+                          style: TextStyle(
+                              fontSize: 16.sp,
+                              color: AppColors.textColor2b
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    child: Row(
+                      children: [
+                        Text(
+                          "姓名：",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              color: AppColors.textColor2b
+                          ),
+                        ),
+                        Expanded(
+                            child: AppInput(
+                              hintText: "请输入真实姓名",
+                              onChanged: (name){
+                                if(name != ""){
+                                  setState(() {
+                                    _keeperViewModel.name = name;
+                                    _keeperViewModel.isNameCorrect = _validateName(name);
+                                  });
+                                }else{
+                                  setState(() {
+                                    _keeperViewModel.isNameCorrect = true;
+                                  });
+                                }
+                              },
+                            )
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: _keeperViewModel.isNameCorrect ? null : Text(
+                      "(请填写真实的姓名信息)",
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.red
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    child: Row(
+                      children: [
+                        Text(
+                          "身份证号：",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              color: AppColors.textColor2b
+                          ),
+                        ),
+                        Expanded(
+                            child: AppInput(
+                              hintText: "请输入正确的身份证号",
+                              onChanged: (id){
+                                if(id != ""){
+                                  setState(() {
+                                    _keeperViewModel.idCard = id;
+                                    _keeperViewModel.isIdCorrect = _validateIDCard(id);
+                                  });
+                                }else{
+                                  setState(() {
+                                    _keeperViewModel.isIdCorrect = true;
+                                  });
+                                }
+                              },
+                            )
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: _keeperViewModel.isIdCorrect ? null : Text(
+                      "(请填写真实的身份证号)",
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.red
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: 40.h,),
+
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                    child: Row(
+                      children: [
+                        Text(
+                          "二, 核对身份(上传身份证照片)",
+                          style: TextStyle(
+                              fontSize: 16.sp,
+                              color: AppColors.textColor2b
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(16.r)
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        GestureDetector(
+                          onTap: (){
+                            _showPickerOptions(context, 0);
+                          },
+                          child: Image(
+                              width: 150.w,
+                              height: 90.w,
+                              image: _keeperViewModel.idCardFront.path != "" ? FileImage(File(_keeperViewModel.idCardFront.path)) : AssetImage('assets/images/upload2.jpg')
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            _showPickerOptions(context, 1);
+                          },
+                          child: Image(
+                              width: 150.w,
+                              height: 90.w,
+                              image: _keeperViewModel.idCardBack.path != "" ? FileImage(File(_keeperViewModel.idCardBack.path)) : AssetImage('assets/images/upload2.jpg')
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 40.h,),
+
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                    child: Row(
+                      children: [
+                        Text(
+                          "三, 上传个人照片及联系方式",
+                          style: TextStyle(
+                              fontSize: 16.sp,
+                              color: AppColors.textColor2b
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 100,
+                    height: 100,
+                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: (){
+                          _showPickerOptions(context, 2);
+                        },
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: _keeperViewModel.selfAvatar.path != "" ? FileImage(File(_keeperViewModel.selfAvatar.path)) : null,
+                          child: _keeperViewModel.selfAvatar.path == "" ? Icon(Icons.person, size: 50,) : null,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    child: Row(
+                      children: [
+                        Text(
+                          "联系方式：",
+                          style: TextStyle(
+                              fontSize: 18.sp,
+                              color: AppColors.textColor2b
+                          ),
+                        ),
+                        Expanded(
+                            child: AppInput(
+                              hintText: "请输入电话号码(+86)",
+                              onChanged: (phone){
+                                if(phone != ""){
+                                  setState(() {
+                                    _keeperViewModel.phoneNumber = phone;
+                                    _keeperViewModel.isPhoneCorrect = _validatePhoneNumber(phone);
+                                  });
+                                }else{
+                                  setState(() {
+                                    _keeperViewModel.isPhoneCorrect = true;
+                                  });
+                                }
+                              },
+                            )
+                        )
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: _keeperViewModel.isPhoneCorrect ? null : Text(
+                      "(请填写正确的电话号码)",
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.red
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: 40.h,),
+
+                  AppButton(
+                    type: AppButtonType.main,
+                    buttonText: "认证完成>",
+                    onTap: (){
+                      _keeperViewModel.authenticated();
+                    },
+                  )
+                ],
+              )
+            ],
+          )
+      );
+    }
+  }
+
+  Widget _Success(){
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.white
+        ),
+        child: Center(
+          child: Column(
+            children: [
+              Image.asset(
+                height: 200.h,
+                width: 200.w,
+                "assets/images/auth_success.png",
+              ),
+              Text(
+                "认证成功",
+                style: TextStyle(
+                    fontSize: 25.sp
+                ),
+              ),
+              SizedBox(height: 20.h,),
+              AppButton(
+                onTap: (){
+                  RouteUtils.pushReplacementNamed(context, RoutePath.commissionCenter);
+                },
+                type: AppButtonType.main,
+                radius: 8.r,
+                buttonText: "前往委托中心>",
+              )
+            ],
+          ),
+        )
+    );
+  }
+
+  Widget _Fail(){
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white
+      ),
+      child: Center(
+        child: Column(
+          children: [
+            Image.asset(
+              height: 200.h,
+              width: 200.w,
+              "assets/images/auth_fail.png",
+            ),
+            Text(
+              "认证失败",
+              style: TextStyle(
+                  fontSize: 25.sp
+              ),
+            ),
+            SizedBox(height: 20.h,),
+            AppButton(
+              onTap: (){
+                _keeperViewModel.reAuth();
+              },
+              type: AppButtonType.main,
+              radius: 8.r,
+              buttonText: "重新认证>",
+            )
+          ],
+        ),
+      )
     );
   }
 }
