@@ -25,6 +25,7 @@ class CertCertifiedPage extends StatefulWidget{
 
 class _CertCertifiedPageState extends State<CertCertifiedPage>{
   CertCertifiedPageViewModel _certViewModel = CertCertifiedPageViewModel();
+  TextEditingController _certTextController = TextEditingController();
 
   Future<void> _uploadFromCamera() async {
     final pickedFile = await ImageUtils.getCameraImage();
@@ -75,8 +76,11 @@ class _CertCertifiedPageState extends State<CertCertifiedPage>{
   }
 
   void _authenticated(){
+    _certViewModel.certName = _certTextController.text;
     if(_certViewModel.certImage != null && _certViewModel.certName != null && _certViewModel.certName != ""){
       //发起网络请求
+      showToast("提交成功");
+      RouteUtils.pop(context);
     }else{
       showToast("信息不能为空");
     }
@@ -154,10 +158,9 @@ class _CertCertifiedPageState extends State<CertCertifiedPage>{
                     ),
                     Container(
                       child: AppInput(
-
+                        controller: _certTextController,
                       )
                     ),
-
                     SizedBox(height: 40.w,),
 
                     Container(
