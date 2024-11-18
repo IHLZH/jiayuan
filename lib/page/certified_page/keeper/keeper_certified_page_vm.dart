@@ -12,25 +12,21 @@ class KeeperCertifiedPageViewModel with ChangeNotifier{
 
   XFile idCardBack = XFile("");
 
-  XFile selfAvatar = XFile("");
-
   String name = "";
   String idCard = "";
-  String phoneNumber = "";
 
   bool _isSuccess = false;
   bool _isFail = false;
 
   bool _isNameCorrect = true;
   bool _isIdCorrect = true;
-  bool _isPhoneCorrect = true;
 
 
 
   Future<void> authenticated() async {
-    if(isNameCorrect && isIdCorrect && isPhoneCorrect){
-      if(name != "" && idCard != "" && phoneNumber != ""){
-        if(idCardFront.path != "" && idCardBack.path != "" && selfAvatar.path != ""){
+    if(isNameCorrect && isIdCorrect){
+      if(name != "" && idCard != ""){
+        if(idCardFront.path != "" && idCardBack.path != ""){
           if(await getCardNoAuth() && await getIdCardFrontAuth() && await getIdCardBackAuth()){
             isSuccess = true;
             //发起网络请求，赋予家政员身份
@@ -52,7 +48,6 @@ class KeeperCertifiedPageViewModel with ChangeNotifier{
     isFail = false;
     name = "";
     idCard = "";
-    phoneNumber = "";
     notifyListeners();
   }
 
@@ -133,12 +128,6 @@ class KeeperCertifiedPageViewModel with ChangeNotifier{
 
   set isIdCorrect(bool value) {
     _isIdCorrect = value;
-  }
-
-  bool get isPhoneCorrect => _isPhoneCorrect;
-
-  set isPhoneCorrect(bool value) {
-    _isPhoneCorrect = value;
   }
 
   bool get isNameCorrect => _isNameCorrect;
