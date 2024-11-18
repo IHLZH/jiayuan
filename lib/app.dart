@@ -24,7 +24,7 @@ Size get designSize {
       logicalShortestSide * scaleFactor, logicalLongestSide * scaleFactor);
 }
 
-class MyApp extends StatelessWidget {
+class  MyApp extends StatelessWidget {
 
 
   @override

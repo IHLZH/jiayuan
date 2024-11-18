@@ -273,7 +273,7 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: () {
-          RouteUtils.pushForNamed(context, RoutePath.personalKeeper);
+          //RouteUtils.pushForNamed(context, RoutePath.personalKeeper);
         },
         splashColor: Colors.grey[300],
         highlightColor: Theme.of(context).primaryColor.withAlpha(30),

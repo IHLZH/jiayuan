@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:jiayuan/common_ui/buttons/red_button.dart';
+import 'package:jiayuan/common_ui/dialog/dialog_factory.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_vm.dart';
+import 'package:jiayuan/page/tab_page/tab_page_vm.dart';
 import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
+import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
@@ -568,6 +572,89 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                       SizedBox(width: 5,),
                       Expanded(
                           child: AppButton(
+                            onTap: (){
+                              DialogFactory.instance.showParentDialog(
+                                touchOutsideDismiss: true,
+                                  context: context,
+                                  child: Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(16.r)
+                                    ),
+                                    width: 200,
+                                    height: 180,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "确认接取委托?",
+                                              style: TextStyle(
+                                                color: AppColors.textColor2b,
+                                                fontSize: 18.sp,
+                                                fontWeight: FontWeight.w500
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10,),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(horizontal: 5),
+                                          child: Wrap(
+                                            children: [
+                                              Text(
+                                                "接取委托后，需等待委托用户确认，即可开始服务",
+                                                style: TextStyle(
+                                                  fontSize: 16.sp,
+                                                  color: AppColors.textColor7d
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(height: 20,),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                                child: AppButton(
+                                                  onTap: (){
+                                                    RouteUtils.pop(context);
+                                                  },
+                                                  type: AppButtonType.minor,
+                                                  radius: 8.r,
+                                                  buttonText: "取消",
+                                                  buttonTextStyle: TextStyle(
+                                                    color: AppColors.textColor2b
+                                                  ),
+                                                ),
+                                            ),
+                                            Expanded(
+                                                child: AppButton(
+                                                  onTap: (){
+                                                    int result = _commissionDetailViewModel.receiveCommission();
+                                                    if(result == 0){
+                                                      TabPageViewModel.currentIndex = 3;
+                                                      RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
+                                                      showToast("请先认证！");
+                                                    }else if(result == 1){
+                                                      TabPageViewModel.currentIndex = 3;
+                                                      RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
+                                                      showToast("接取成功！");
+                                                    }
+                                                  },
+                                                  type: AppButtonType.main,
+                                                  radius: 8.r,
+                                                  buttonText: "确认",
+                                                )
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  )
+                              );
+                            },
                             type: AppButtonType.main,
                             buttonText: "我想接",
                             buttonTextStyle: TextStyle(

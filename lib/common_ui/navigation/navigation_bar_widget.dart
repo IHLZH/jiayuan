@@ -71,7 +71,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
   void initState() {
     super.initState();
     //第一次进入默认调用一次
-    widget.onItemChange?.call(tabPageViewModel.currentIndex);
+    widget.onItemChange?.call(TabPageViewModel.currentIndex);
   }
 
   @override
@@ -79,7 +79,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
     return Scaffold(
         backgroundColor: Colors.white,
         //tab页面
-        body: IndexedStack(index: tabPageViewModel.currentIndex, children: widget.tabItems),
+        body: IndexedStack(index: TabPageViewModel.currentIndex, children: widget.tabItems),
         //底部导航栏
         bottomNavigationBar: BottomNavigationBar(
             iconSize: 22.r,
@@ -90,15 +90,15 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
             selectedItemColor: AppColors.appColor,
             backgroundColor: Colors.white,
             type: widget.bottomNavigationBarType ?? BottomNavigationBarType.fixed,
-            currentIndex: tabPageViewModel.currentIndex,
+            currentIndex: TabPageViewModel.currentIndex,
             onTap: (index) {
               //重复事件不处理
-              if (tabPageViewModel.currentIndex == index) {
+              if (TabPageViewModel.currentIndex == index) {
                 return;
               }
               //点击切换page事件
               widget.onItemChange?.call(index);
-              tabPageViewModel.currentIndex = index;
+              TabPageViewModel.currentIndex = index;
               setState(() {});
             },
             items: _barItemList()

@@ -123,7 +123,7 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                           gradient: LinearGradient(
                             colors: [
                               AppColors.appColor, // 渐变起始颜色
-                              Colors.white,      // 渐变结束颜色
+                              getColor(),      // 渐变结束颜色
                             ],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
@@ -137,7 +137,7 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                               IconButton(
                                 icon: Icon(Icons.arrow_back_ios_new),
                                 onPressed: () {
-                                  RouteUtils.pop(context);
+                                  vm.back(context);
                                 },
                               ),
                               Text(
@@ -159,26 +159,138 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                         )
                     )
                 ),
-                body: _AuthResult(),
+                body: _KeeperPage()
               );
             }
         ),
     );
   }
 
-  Widget _AuthResult(){
+  Color getColor(){
+    if(_keeperViewModel.isSuccess || (Global.userInfo?.userType ?? 0) == 1 || _keeperViewModel.isFail){
+      return Colors.white;
+    }else return AppColors.backgroundColor3;
+  }
+
+  Widget _KeeperPage(){
     if(_keeperViewModel.isSuccess || (Global.userInfo?.userType ?? 0) == 1){
       return _Success();
     }else if(_keeperViewModel.isFail){
       return _Fail();
-    }else{
-      return Container(
-          decoration: BoxDecoration(
-              color: Colors.white
-          ),
-          child: ListView(
-            children: [
-              Column(
+    }else if(_keeperViewModel.cardImgWay || _keeperViewModel.cardNoWay){
+      return _AuthResult();
+    }else {
+      return _AuthWay();
+    }
+  }
+
+  Widget _AuthWay(){
+    return Container(
+      height: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundColor3
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text(
+                  "选择认证方式",
+                  style: TextStyle(
+                      color: AppColors.textColor2b,
+                      fontSize: 18.sp,
+                    fontWeight: FontWeight.w500
+                  ),
+                )
+              ],
+            ),
+            SizedBox(height: 10,),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              height: 120.h,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r)
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "身份证号码认证",
+                          style: TextStyle(
+                              color: AppColors.textColor2b,
+                              fontSize: 16.sp
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 20,
+                          color: AppColors.textColor2b,
+                        )
+                      ],
+                    ),
+                    onTap: (){
+                      _keeperViewModel.toCardNo();
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey,
+                  ),
+                  GestureDetector(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "身份证正反面认证",
+                          style: TextStyle(
+                              color: AppColors.textColor2b,
+                              fontSize: 16.sp
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 20,
+                          color: AppColors.textColor2b,
+                        )
+                      ],
+                    ),
+                    onTap: (){
+                      _keeperViewModel.toCardImg();
+                    },
+                  )
+                ],
+              ),
+            ),
+          ],
+        )
+      )
+    );
+  }
+
+  Widget _AuthResult(){
+    return _keeperViewModel.cardNoWay
+        ? Container(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        decoration: BoxDecoration(
+            color : AppColors.backgroundColor3
+        ),
+        child: ListView(
+          children: [
+            SizedBox(height: 10,),
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r)
+              ),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
@@ -278,6 +390,37 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
 
                   SizedBox(height: 40.h,),
 
+                  AppButton(
+                    type: AppButtonType.main,
+                    radius: 8.r,
+                    buttonText: "认证完成>",
+                    onTap: (){
+                      _keeperViewModel.authenticated();
+                    },
+                  )
+                ],
+              ),
+            )
+          ],
+        )
+    )
+        : Container(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        decoration: BoxDecoration(
+            color: AppColors.backgroundColor3
+        ),
+        child: ListView(
+          children: [
+            SizedBox(height: 10,),
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r)
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
                     child: Row(
@@ -336,11 +479,11 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                     },
                   )
                 ],
-              )
-            ],
-          )
-      );
-    }
+              ),
+            )
+          ],
+        )
+    );
   }
 
   Widget _Success(){
