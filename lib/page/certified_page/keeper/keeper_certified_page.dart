@@ -41,9 +41,6 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
           case 1:
             _keeperViewModel.idCardBack = pickedFile;
             break;
-          case 2:
-            _keeperViewModel.selfAvatar = pickedFile;
-            break;
         }
       });
     }
@@ -59,9 +56,6 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
             break;
           case 1:
             _keeperViewModel.idCardBack = pickedFile;
-            break;
-          case 2:
-            _keeperViewModel.selfAvatar = pickedFile;
             break;
         }
 
@@ -104,12 +98,6 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
     // 正则表达式：前 17 位为数字，最后一位可以为数字或 X
     RegExp idCardRegex = RegExp(r"^[1-9]\d{5}(19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|(3[0-1]))\d{3}(\d|X|x)$");
     return idCardRegex.hasMatch(idCard);
-  }
-  //检验电话号码
-  bool _validatePhoneNumber(String phoneNumber) {
-    // 正则表达式：以 13-19 的数字开头，后接 9 位数字
-    RegExp phoneRegex = RegExp(r"^(13|14|15|16|17|18|19)\d{9}$");
-    return phoneRegex.hasMatch(phoneNumber);
   }
 
   bool _validateName(String name) {
@@ -339,82 +327,9 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
 
                   SizedBox(height: 40.h,),
 
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                    child: Row(
-                      children: [
-                        Text(
-                          "三, 上传个人照片及联系方式",
-                          style: TextStyle(
-                              fontSize: 16.sp,
-                              color: AppColors.textColor2b
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: 100,
-                    height: 100,
-                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: (){
-                          _showPickerOptions(context, 2);
-                        },
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: _keeperViewModel.selfAvatar.path != "" ? FileImage(File(_keeperViewModel.selfAvatar.path)) : null,
-                          child: _keeperViewModel.selfAvatar.path == "" ? Icon(Icons.person, size: 50,) : null,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                    child: Row(
-                      children: [
-                        Text(
-                          "联系方式：",
-                          style: TextStyle(
-                              fontSize: 18.sp,
-                              color: AppColors.textColor2b
-                          ),
-                        ),
-                        Expanded(
-                            child: AppInput(
-                              hintText: "请输入电话号码(+86)",
-                              onChanged: (phone){
-                                if(phone != ""){
-                                  setState(() {
-                                    _keeperViewModel.phoneNumber = phone;
-                                    _keeperViewModel.isPhoneCorrect = _validatePhoneNumber(phone);
-                                  });
-                                }else{
-                                  setState(() {
-                                    _keeperViewModel.isPhoneCorrect = true;
-                                  });
-                                }
-                              },
-                            )
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: _keeperViewModel.isPhoneCorrect ? null : Text(
-                      "(请填写正确的电话号码)",
-                      style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.red
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 40.h,),
-
                   AppButton(
                     type: AppButtonType.main,
+                    radius: 8.r,
                     buttonText: "认证完成>",
                     onTap: (){
                       _keeperViewModel.authenticated();
