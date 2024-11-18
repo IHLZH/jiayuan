@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page_vm.dart';
@@ -54,7 +53,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   Widget _buildOrderInfoPrefix(String prefix) {
     return Container(
       padding: EdgeInsets.only(right: 10),
-      child: Text(prefix + ' : ',
+      child: Text(prefix + ':',
           style: TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.bold,
@@ -65,13 +64,49 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   // 构建订单信息，使用wrap
   Widget _buildOrderInfo(String content, Color color) {
     return Text(content,
+        softWrap: true,
         style: TextStyle(
             color: color, fontWeight: FontWeight.bold, fontSize: 17.sp));
   }
 
   Widget _buildStatusText(int status) {
     return switch (status) {
-      _ => Text('未知状态', style: TextStyle(color: Colors.red,fontSize: 17.sp,fontWeight: FontWeight.bold)),
+      0 => Text("待接取",
+          style: TextStyle(
+              color: Colors.blue,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.bold)),
+      1 => Text("待确认",
+          style: TextStyle(
+              color: Colors.redAccent,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.bold)),
+      2 => Text("待服务",
+          style: TextStyle(
+              color: Colors.blueAccent,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.bold)),
+      3 => Text("服务中",
+          style: TextStyle(
+              color: Colors.orange,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.bold)),
+      4 => Text("待支付",
+          style: TextStyle(
+              color: Colors.red, fontSize: 17.sp, fontWeight: FontWeight.bold)),
+      5 => Text("已完成",
+          style: TextStyle(
+              color: Colors.green,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.bold)),
+      6 => Text("已取消",
+          style: TextStyle(
+              color: Colors.grey,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.bold)),
+      _ => Text('未知状态',
+          style: TextStyle(
+              color: Colors.red, fontSize: 17.sp, fontWeight: FontWeight.bold)),
     };
   }
 
@@ -80,7 +115,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        // 使用 Container 包裹 AppBar 以实现渐变背景
+        // 使 Container 包裹 AppBar 以实现渐变背景
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -104,106 +139,414 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           },
         ),
       ),
-      body: SafeArea(
+      body: Container(
+        color: AppColors.backgroundColor,
+        padding: EdgeInsets.only(top: 10),
         child: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.only(top: 20),
-            child: Column(
-              children: [
-                Container(
-                  // height: 150,
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 0,
-                        blurRadius: 2,
-                        offset: Offset(0, 1),
-                      ),
-                    ],
-                    border: Border.all(color: Colors.grey, width: 1.w),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Wrap(
-                        children: [
-                          SizedBox(
-                            width: 10,
-                          ),
-                          _buildOrderInfoPrefix('订单类型'),
-                          _buildOrderInfo(
-                              _order.serviceName!, Colors.teal[800]!),
-                        ],
-                      ),
-                      Divider(),
-                      Row(children: [
-                        Container(
-                          width: 150,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/imageTmp.jpg'),
-                              // 替换成你的图片路径
-                              fit: BoxFit.cover,
-                            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                // height: 300,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(1.0),
+                      spreadRadius: 0,
+                      blurRadius: 2,
+                      offset: Offset(1, -1),
+                    ),
+                  ],
+                  border: Border.all(color: Colors.grey, width: 1.w),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Wrap(
+                      children: [
+                        SizedBox(
+                          width: 10,
+                        ),
+                        _buildOrderInfoPrefix('订单类型'),
+                        _buildOrderInfo(
+                            _order.serviceName == null
+                                ? '未确认'
+                                : _order.serviceName!,
+                            Colors.teal[800]!),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Divider(),
+                    SizedBox(height: 5),
+                    Row(children: [
+                      Container(
+                        // constraints: BoxConstraints(
+                        //   maxWidth: 300,
+                        //   minWidth: 150,
+                        //   maxHeight: 300,
+                        //   minHeight: 150,
+                        // ),
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/imageTmp.jpg'),
+                            // 替换成你的图片路径
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        SizedBox(width: 10),
-                        Container(
+                      ),
+                      SizedBox(width: 10),
+                      SafeArea(
+                        child: Container(
+                            // constraints: BoxConstraints(
+                            //   maxWidth: 300,
+                            //   minWidth: 140,
+                            //   maxHeight: 300,
+                            //   minHeight: 150,
+                            // ),
                             width: 140,
                             height: 150,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              // mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: ListView(
+                              padding: EdgeInsets.symmetric(vertical: 10),
                               children: [
-                                Wrap(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    _buildOrderInfoPrefix('订单编号'),
-                                    _buildOrderInfo(
-                                        _order.commissionId.toString(),
-                                        Colors.grey),
-                                  ],
-                                ),
-                                Wrap(
-                                  children: [
-                                    _buildOrderInfoPrefix('创建时间'),
-                                    _buildOrderInfo(
-                                        safeSubstring(
-                                            _order.createTime.toString(),
-                                            0,
-                                            19),
-                                        Colors.blueAccent),
-                                  ],
-                                ),
-                                Wrap(
-                                  children: [
-                                    _buildOrderInfoPrefix('预付金'),
-                                    _buildOrderInfo(
-                                        _order.downPayment == null ? '无' : '￥' + _order.downPayment.toString(),
-                                        Colors.redAccent),
+                                    Wrap(
+                                      children: [
+                                        _buildOrderInfoPrefix('订单编号'),
+                                        _buildOrderInfo(
+                                            _order.commissionId.toString(),
+                                            Colors.grey[600]!),
+                                      ],
+                                    ),
+                                    Wrap(
+                                      children: [
+                                        _buildOrderInfoPrefix('创建时间'),
+                                        _buildOrderInfo(
+                                            safeSubstring(
+                                                _order.createTime.toString(),
+                                                0,
+                                                19),
+                                            Colors.blueAccent),
+                                      ],
+                                    ),
+                                    Wrap(
+                                      children: [
+                                        _buildOrderInfoPrefix('预付金'),
+                                        _buildOrderInfo(
+                                            _order.downPayment == null
+                                                ? '未确定'
+                                                : '￥' +
+                                                    _order.downPayment
+                                                        .toString(),
+                                            Colors.redAccent),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ],
                             )),
-                      ]),
-                      Divider(),
-                      Row(children: [
+                      ),
+                    ]),
+                    SizedBox(height: 5),
+                    Divider(),
+                    SizedBox(height: 5),
+                    Row(
+                      children: [
+                        SizedBox(width: 10),
                         _buildOrderInfoPrefix('订单状态'),
                         Expanded(child: SizedBox()),
                         _buildStatusText(_order.commissionStatus!),
-                      ],),
-                    ],
-                  ),
+                        SizedBox(width: 10),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        SizedBox(width: 10),
+                        _buildOrderInfoPrefix('结算'),
+                        Expanded(child: SizedBox()),
+                        _buildOrderInfo(
+                            _order.commissionBudget == null
+                                ? '未确定'
+                                : '￥' + _order.commissionBudget.toString(),
+                            Colors.red),
+                        SizedBox(width: 10),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              SizedBox(height: 15),
+              Container(
+                // height: 300,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(1.0),
+                      spreadRadius: 0,
+                      blurRadius: 2,
+                      offset: Offset(1, -1),
+                    ),
+                  ],
+                  border: Border.all(color: Colors.grey, width: 1.w),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(width: 10),
+                        _buildOrderInfoPrefix('接单家政员'),
+                        Expanded(child: SizedBox()),
+                        _buildOrderInfo(
+                            _order.keeperName == null
+                                ? '未确认'
+                                : _order.keeperName!,
+                            Colors.purple[600]!),
+                        SizedBox(width: 10),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      children: [
+                        SizedBox(width: 10),
+                        _buildOrderInfoPrefix('服务时长'),
+                        Expanded(child: SizedBox()),
+                        _buildOrderInfo(
+                            _order.specifyServiceDuration == null
+                                ? '未确认'
+                                : _order.specifyServiceDuration! + '小时',
+                            Colors.grey[600]!),
+                        SizedBox(width: 10),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Divider(),
+                    SizedBox(height: 5),
+                    Row(
+                      children: [
+                        SizedBox(width: 10),
+                        _buildOrderInfoPrefix('服务地址'),
+                        Expanded(child: SizedBox()),
+                        _buildOrderInfo(
+                            _order.province == null ? '未确认' : _order.province!,
+                            Colors.grey[600]!),
+                        SizedBox(width: 10),
+                        _buildOrderInfo(
+                            _order.city == null ? '未确认' : _order.city!,
+                            Colors.grey[600]!),
+                        SizedBox(width: 10),
+                        _buildOrderInfo(
+                            _order.county == null ? '未确认' : _order.county!,
+                            Colors.grey[600]!),
+                        SizedBox(width: 10),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start, //垂直对齐
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: IntrinsicHeight(
+                            child: Row(
+                              children: [
+                                SizedBox(width: 10),
+                                _buildOrderInfoPrefix('详细地址'),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                            child: IntrinsicHeight(
+                          child: SizedBox(),
+                        )),
+                        Expanded(
+                          flex: 2,
+                          child: IntrinsicHeight(
+                            child: _buildOrderInfo(
+                                _order.commissionAddress == null
+                                    ? '未确认'
+                                    : _order.commissionAddress!,
+                                Colors.grey[600]!),
+                          ),
+                        ),
+                        // SizedBox(width: 10),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              SizedBox(height: 15),
+              Container(
+                // height: 300,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(1.0),
+                      spreadRadius: 0,
+                      blurRadius: 2,
+                      offset: Offset(1, -1),
+                    ),
+                  ],
+                  border: Border.all(color: Colors.grey, width: 1.w),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(width: 10),
+                        Text(
+                          "遇到困难？",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      color: Colors.transparent,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly, //水平均分
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              // 处理“联系家政员”点击事件
+                              print('联系家政员');
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.transparent, // 设置背景透明
+                              padding: EdgeInsets.all(10), // 添加内边距
+                              overlayColor: AppColors.appColor
+                                  .withOpacity(0.2), // 设置点击时的颜色
+                            ),
+                            child: Row(children: [
+                              Icon(
+                                Icons.phone,
+                                color: Theme.of(context).primaryColor,
+                                size: 35,
+                              ),
+                              SizedBox(width: 5),
+                              Text("联系家政员",
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).primaryColor)),
+                            ]),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // 处理“联系客服”点击事件
+                              print('联系客服');
+                            },
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.transparent, // 设置背景透明
+                              padding: EdgeInsets.all(10), // 添加内边距
+                              overlayColor: AppColors.appColor
+                                  .withOpacity(0.2), // 设置点击时的颜色
+                            ),
+                            child: Row(children: [
+                              Icon(
+                                Icons.support_agent_outlined,
+                                color: Theme.of(context).primaryColor,
+                                size: 35,
+                              ),
+                              SizedBox(width: 5),
+                              Text("联系客服",
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context).primaryColor)),
+                            ]),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+              SizedBox(height: 15),
+              Container(
+                // height: 300,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(1.0),
+                      spreadRadius: 0,
+                      blurRadius: 2,
+                      offset: Offset(1, -1),
+                    ),
+                  ],
+                  border: Border.all(color: Colors.grey, width: 1.w),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(width: 10),
+                        Text(
+                          "订单备注:",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 5),
+                    Divider(),
+                    SizedBox(height: 5),
+                    Container(
+                      child: Row(
+                        children: [
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              _order.commissionDescription ?? '无',
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.bold),
+                              softWrap: true,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -223,7 +566,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             children: [
               Expanded(child: SizedBox()),
               _buildIconButton(Icons.edit, '修改信息', Colors.green),
-              Expanded(child: SizedBox()),
+              if (_order.commissionStatus == 0 ||
+                  _order.commissionStatus == 1 ||
+                  _order.commissionStatus == 4 ||
+                  _order.commissionStatus == 5)
+                Expanded(child: SizedBox()),
               switch (_order.commissionStatus) {
                 0 => Container(
                     child: _buildIconButton(
