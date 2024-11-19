@@ -89,6 +89,33 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     }
   }
 
+  Future<void> _cancelOrder() async {
+    String url = UrlPath.updateOrderStatusUrl;
+
+    try {
+      final response =
+          await DioInstance.instance().put(path: url, queryParameters: {
+        'commissionId': _order.commissionId,
+        'new': 6,
+      });
+
+      if (response.statusCode == 200) {
+        if (response.data['code'] == 200) {
+          setState(() {
+            _order.commissionStatus = 6;
+          });
+          showToast('已取消', duration: Duration(seconds: 1));
+        } else {
+          if (isProduction) print("error: ${response.data['message']}");
+          showToast(response.data['message'], duration: Duration(seconds: 1));
+        }
+      }
+
+    }catch(e){
+      if (isProduction) print("error: $e");
+    }
+  }
+
   // 构建图标按钮
   Widget _buildIconButton(IconData icon, String title, Color color) {
     return ElevatedButton.icon(
@@ -114,6 +141,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             _disagreeOrder();
           case '去评价':
             _jumpToEvaluatePage();
+          case '取消订单':
+            _cancelOrder();
         }
       },
     );
