@@ -135,7 +135,9 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
                     ],
                   ),
                   AppButton(
-                    onTap: () {},
+                    onTap: () {
+                        RouteUtils.pushForNamed(context, RoutePath.personalKeeper);
+                    },
                     buttonHeight: 25.h,
                     buttonWidth: 90.w,
                     type: AppButtonType.main,
@@ -282,7 +284,7 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: () {
-          //RouteUtils.pushForNamed(context, RoutePath.personalKeeper);
+           if(title == "个人信息")  RouteUtils.pushForNamed(context, RoutePath.personalKeeper);
         },
         splashColor: Colors.grey[300],
         highlightColor: Theme.of(context).primaryColor.withAlpha(30),

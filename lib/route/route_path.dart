@@ -65,7 +65,7 @@ class RoutePath {
   //委托详情页
   static const String commissionDetail = "/commissionDetail";
 
-  //家政员个人页面
+  //家政员资料卡
   static const String KeeperPage = "/KeeperPage";
 
   //家政员分类页
@@ -88,7 +88,8 @@ class RoutePath {
 
   //证书认证页面
   static const String certCertified = "/certCertified";
-
-  //评价页面
+  //个人评价页面
   static const String evalutationPage = "/evaluatePage";
+  //家政员简历
+  static const String personalKeeper = "/personalKeeper";
 }

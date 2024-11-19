@@ -458,7 +458,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                     children: [
                       SizedBox(width: 20.w),
                       Text('手机号', style: TextStyle(fontSize: 16)),
-                      SizedBox(width: 95.w),
+                      Spacer(),
                       Icon(Icons.phone, color: AppColors.appColor),
                       SizedBox(width: 10.w),
                       Expanded(
