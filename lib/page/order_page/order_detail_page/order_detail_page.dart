@@ -40,23 +40,47 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       });
 
       if (response.statusCode == 200) {
-        if(response.data['code']==200){
+        if (response.data['code'] == 200) {
           setState(() {
-            _order.commissionStatus=2;
+            _order.commissionStatus = 2;
           });
-          showToast('已同意',duration: Duration(seconds: 1));
+          showToast('已同意', duration: Duration(seconds: 1));
+        } else {
+          if (isProduction) print("error: ${response.data['message']}");
+          showToast(response.data['message'], duration: Duration(seconds: 1));
         }
-        else{
-          if(isProduction)print("error: ${response.data['message']}");
-          showToast(response.data['message'],duration: Duration(seconds: 1));
-        }
-      }
-      else{
-        if(isProduction)print("error: ${response.data['message']}");
-        showToast('无法连接服务器',duration: Duration(seconds: 1));
+      } else {
+        if (isProduction) print("error: ${response.data['message']}");
+        showToast('无法连接服务器', duration: Duration(seconds: 1));
       }
     } catch (e) {
-      if(isProduction)print("error: $e");
+      if (isProduction) print("error: $e");
+    }
+  }
+
+  Future<void> _disagreeOrder() async {
+    String url = UrlPath.updateOrderStatusUrl;
+
+    try {
+      final response =
+          await DioInstance.instance().put(path: url, queryParameters: {
+        'commissionId': _order.commissionId,
+        'new': 0,
+      });
+
+      if (response.statusCode == 200) {
+        if (response.data['code'] == 200) {
+          setState(() {
+            _order.commissionStatus = 0;
+          });
+          showToast('已拒绝', duration: Duration(seconds: 1));
+        } else {
+          if (isProduction) print("error: ${response.data['message']}");
+          showToast(response.data['message'], duration: Duration(seconds: 1));
+        }
+      }
+    } catch (e) {
+      if (isProduction) print("error: $e");
     }
   }
 
@@ -81,6 +105,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         switch (title) {
           case '同意':
             _agreeOrder();
+          case '不同意':
+            _disagreeOrder();
         }
       },
     );
