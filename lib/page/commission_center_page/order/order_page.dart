@@ -6,8 +6,11 @@ import 'package:jiayuan/page/commission_center_page/order/order_page_vm.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/global.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
+import '../../../common_ui/buttons/red_button.dart';
+import '../../../common_ui/dialog/dialog_factory.dart';
 import '../../../common_ui/styles/app_colors.dart';
 import '../../../route/route_utils.dart';
 import '../../../utils/common_data.dart';
@@ -309,54 +312,98 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
     if(commission.commissionStatus == 2){
       return Row(
         children: [
-          Container(
-              padding: EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: AppColors.appColor,
-                      width: 1
+          Material(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            child: InkWell(
+              splashColor: AppColors.endColor,
+              borderRadius: BorderRadius.circular(16.r),
+              onTap: (){
+                _cancelCommission(commission);
+              },
+              child: Container(
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColors.appColor,
+                          width: 1
+                      ),
+                      borderRadius: BorderRadius.circular(16.r)
                   ),
-                  borderRadius: BorderRadius.circular(16.r)
+                  child: Text("取消服务")
               ),
-              child: Text("取消服务")
+            ),
           ),
           SizedBox(width: 5,),
-          Container(
-              padding: EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: AppColors.appColor,
-                      width: 1
+          Material(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            child: InkWell(
+              splashColor: AppColors.endColor,
+              borderRadius: BorderRadius.circular(16.r),
+              onTap: (){
+                _startCommission(commission);
+              },
+              child: Container(
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: AppColors.appColor,
+                          width: 1
+                      ),
+                      borderRadius: BorderRadius.circular(16.r)
                   ),
-                  borderRadius: BorderRadius.circular(16.r)
+                  child: Text("开始服务")
               ),
-              child: Text("开始服务")
+            ),
           ),
         ],
       );
     }else if(commission.commissionStatus == 3){
-      return Container(
-          padding: EdgeInsets.all(4),
-          decoration: BoxDecoration(
-              border: Border.all(
-                  color: AppColors.appColor,
-                  width: 1
+      return Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        child: InkWell(
+          splashColor: AppColors.endColor,
+          borderRadius: BorderRadius.circular(16.r),
+          onTap: (){
+            _finishCommission(commission);
+          },
+          child: Container(
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: AppColors.appColor,
+                      width: 1
+                  ),
+                  borderRadius: BorderRadius.circular(16.r)
               ),
-              borderRadius: BorderRadius.circular(16.r)
+              child: Text("完成服务")
           ),
-          child: Text("完成服务")
+        ),
       );
     }else if(commission.commissionStatus == 4){
-      return Container(
-          padding: EdgeInsets.all(4),
-          decoration: BoxDecoration(
-              border: Border.all(
-                  color: AppColors.appColor,
-                  width: 1
+      return Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        child: InkWell(
+          splashColor: AppColors.endColor,
+          borderRadius: BorderRadius.circular(16.r),
+          onTap: (){
+            _remind(commission);
+          },
+          child: Container(
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: AppColors.appColor,
+                      width: 1
+                  ),
+                  borderRadius: BorderRadius.circular(16.r)
               ),
-              borderRadius: BorderRadius.circular(16.r)
+              child: Text("提醒用户")
           ),
-          child: Text("提醒用户")
+        ),
       );
     }else{
       return Container(
@@ -369,5 +416,243 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
           )
       );
     }
+  }
+
+  //完成服务弹窗事件
+  void _finishCommission(CommissionData1 commission){
+    DialogFactory.instance.showParentDialog(
+        context: context,
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          width: 200,
+          height: 180,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "确认完成委托?",
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10,),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Wrap(
+                  children: [
+                    Text(
+                      "委托完成后，客户验收后即可支付，若对报酬不满意，请与客户进行议价",
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.textColor7d
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      onTap: (){
+                        RouteUtils.pop(context);
+                      },
+                      type: AppButtonType.minor,
+                      radius: 8.r,
+                      buttonText: "取消",
+                      buttonTextStyle: TextStyle(
+                          color: AppColors.textColor2b
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: AppButton(
+                        onTap: (){
+                          RouteUtils.pop(context);
+                          showToast("操作成功，委托已完成！");
+                          RouteUtils.pop(context);
+                        },
+                        type: AppButtonType.main,
+                        radius: 8.r,
+                        buttonText: "确认",
+                      )
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+    );
+  }
+
+  //提醒用户弹窗事件
+  void _remind(CommissionData1 commission){
+    //提醒用户
+  }
+
+  //取消服务
+  void _cancelCommission(CommissionData1 commission){
+    DialogFactory.instance.showParentDialog(
+        context: context,
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          width: 200,
+          height: 180,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "确认取消委托?",
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10,),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Wrap(
+                  children: [
+                    Text(
+                      "确保与客户沟通后取消委托，无故取消委托易遭客户投诉",
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.textColor7d
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      onTap: (){
+                        RouteUtils.pop(context);
+                      },
+                      type: AppButtonType.minor,
+                      radius: 8.r,
+                      buttonText: "取消",
+                      buttonTextStyle: TextStyle(
+                          color: AppColors.textColor2b
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: AppButton(
+                        onTap: (){
+                          RouteUtils.pop(context);
+                          showToast("操作成功，委托已取消");
+                          RouteUtils.pop(context);
+                        },
+                        type: AppButtonType.main,
+                        radius: 8.r,
+                        buttonText: "确认",
+                      )
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+    );
+  }
+
+  //开始服务
+  void _startCommission(CommissionData1 commission){
+    DialogFactory.instance.showParentDialog(
+        context: context,
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          width: 200,
+          height: 180,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "确认开始委托?",
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10,),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Wrap(
+                  children: [
+                    Text(
+                      commission.distance <= 0.5
+                          ? "检测到您已到达指定地点附近，是否确认开始委托?"
+                          : "检测到您当前位置与指定地点距离过远(1km以外)，是否确认开始委托?",
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.textColor7d
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      onTap: (){
+                        RouteUtils.pop(context);
+                      },
+                      type: AppButtonType.minor,
+                      radius: 8.r,
+                      buttonText: "取消",
+                      buttonTextStyle: TextStyle(
+                          color: AppColors.textColor2b
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: AppButton(
+                        onTap: (){
+                          RouteUtils.pop(context);
+                          showToast("操作成功，委托已开始");
+                          RouteUtils.pop(context);
+                        },
+                        type: AppButtonType.main,
+                        radius: 8.r,
+                        buttonText: "确认",
+                      )
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+    );
   }
 }

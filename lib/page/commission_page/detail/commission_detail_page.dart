@@ -49,14 +49,6 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                     child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white
-                          // gradient: LinearGradient(
-                          //   colors: [
-                          //     AppColors.appColor, // 渐变起始颜色
-                          //     Colors.white,      // 渐变结束颜色
-                          //   ],
-                          //   begin: Alignment.topCenter,
-                          //   end: Alignment.bottomCenter,
-                          // ),
                         ),
                         child: Container(
                           height: 200.h,
@@ -517,6 +509,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
     );
   }
 
+  //获取订单详情底部布局
   Widget _getBottom(int statuId){
     if(statuId == 2){
       return _UnService();
@@ -526,6 +519,8 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
       return _Finish();
     }
   }
+
+  //待服务的订单
   Widget _UnService(){
     return Container(
         height: 60.h,
@@ -574,7 +569,9 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
             ),
             Expanded(
                 child: AppButton(
-                  onTap: (){},
+                  onTap: (){
+                    _cancelCommission();
+                  },
                   type: AppButtonType.main,
                   color: CommonData.statusColor[2],
                   buttonText: "取消服务",
@@ -588,7 +585,9 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
             ),
             Expanded(
                 child: AppButton(
-                  onTap: (){},
+                  onTap: (){
+                    _startCommission();
+                  },
                   type: AppButtonType.main,
                   color: CommonData.statusColor[2],
                   buttonText: "开始服务",
@@ -605,6 +604,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
     );
   }
 
+  //已完成的订单
   Widget _Finish(){
     return Container(
         height: 60.h,
@@ -651,13 +651,12 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
     );
   }
 
+  //服务中，待解取，待支付的订单
   Widget _UnFinish(int statuId){
     String buttonText = "";
     if(statuId == 0){
       buttonText = "我想接";
-    }else if(statuId == 2){
-      buttonText = "开始服务";
-    }else if(statuId == 3){
+    } else if(statuId == 3){
       buttonText = "完成服务";
     }else if(statuId == 4){
       buttonText = "提醒用户";
@@ -711,87 +710,8 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
             Expanded(
                 child: AppButton(
                   onTap: (){
-                    DialogFactory.instance.showParentDialog(
-                        touchOutsideDismiss: true,
-                        context: context,
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16.r)
-                          ),
-                          width: 200,
-                          height: 180,
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    "确认接取委托?",
-                                    style: TextStyle(
-                                        color: AppColors.textColor2b,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w500
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10,),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 5),
-                                child: Wrap(
-                                  children: [
-                                    Text(
-                                      "接取委托后，需等待委托用户确认，即可开始服务",
-                                      style: TextStyle(
-                                          fontSize: 16.sp,
-                                          color: AppColors.textColor7d
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 20,),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: AppButton(
-                                      onTap: (){
-                                        RouteUtils.pop(context);
-                                      },
-                                      type: AppButtonType.minor,
-                                      radius: 8.r,
-                                      buttonText: "取消",
-                                      buttonTextStyle: TextStyle(
-                                          color: AppColors.textColor2b
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                      child: AppButton(
-                                        onTap: (){
-                                          int result = _commissionDetailViewModel.receiveCommission();
-                                          if(result == 0){
-                                            TabPageViewModel.currentIndex = 3;
-                                            RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
-                                            showToast("请先认证！");
-                                          }else if(result == 1){
-                                            TabPageViewModel.currentIndex = 3;
-                                            RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
-                                            showToast("接取成功！");
-                                          }
-                                        },
-                                        type: AppButtonType.main,
-                                        radius: 8.r,
-                                        buttonText: "确认",
-                                      )
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                    );
+                    //0 3 4
+                    _unFinishShowDialog(statuId);
                   },
                   type: AppButtonType.main,
                   color: CommonData.statusColor[statuId],
@@ -808,6 +728,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
     );
   }
 
+  //订单状态文本
   Widget _Status(int statuId){
     return Container(
       decoration: BoxDecoration(
@@ -823,6 +744,347 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
           ),
         ),
       ),
+    );
+  }
+
+  //接委托，完成服务，提醒用户，弹窗事件
+  void _unFinishShowDialog(int statuId){
+    switch(statuId){
+      case 0:
+        _receiveCommission();
+        break;
+      case 3:
+        _finishCommission();
+        break;
+      case 4:
+        _remind();
+        break;
+    }
+  }
+
+  //接委托弹窗事件
+  void _receiveCommission(){
+    DialogFactory.instance.showParentDialog(
+        touchOutsideDismiss: true,
+        context: context,
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          width: 200,
+          height: 180,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "确认接取委托?",
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10,),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Wrap(
+                  children: [
+                    Text(
+                      "接取委托后，需等待委托用户确认，即可开始服务",
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.textColor7d
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      onTap: (){
+                        RouteUtils.pop(context);
+                      },
+                      type: AppButtonType.minor,
+                      radius: 8.r,
+                      buttonText: "取消",
+                      buttonTextStyle: TextStyle(
+                          color: AppColors.textColor2b
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: AppButton(
+                        onTap: (){
+                          int result = _commissionDetailViewModel.receiveCommission();
+                          if(result == 0){
+                            TabPageViewModel.currentIndex = 3;
+                            RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
+                            showToast("请先认证！");
+                          }else if(result == 1){
+                            TabPageViewModel.currentIndex = 3;
+                            RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
+                            showToast("接取成功！");
+                          }
+                        },
+                        type: AppButtonType.main,
+                        radius: 8.r,
+                        buttonText: "确认",
+                      )
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+    );
+  }
+
+  //完成服务弹窗事件
+  void _finishCommission(){
+    DialogFactory.instance.showParentDialog(
+        context: context,
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          width: 200,
+          height: 180,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "确认完成委托?",
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10,),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Wrap(
+                  children: [
+                    Text(
+                      "委托完成后，客户验收后即可支付，若对报酬不满意，请与客户进行议价",
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.textColor7d
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      onTap: (){
+                        RouteUtils.pop(context);
+                      },
+                      type: AppButtonType.minor,
+                      radius: 8.r,
+                      buttonText: "取消",
+                      buttonTextStyle: TextStyle(
+                          color: AppColors.textColor2b
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: AppButton(
+                        onTap: (){
+                          RouteUtils.pop(context);
+                          showToast("操作成功，委托已完成！");
+                          RouteUtils.pop(context);
+                        },
+                        type: AppButtonType.main,
+                        radius: 8.r,
+                        buttonText: "确认",
+                        color: CommonData.statusColor[3],
+                      )
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+    );
+  }
+
+  //提醒用户弹窗事件
+  void _remind(){
+    //提醒用户
+  }
+
+  //取消服务
+  void _cancelCommission(){
+    DialogFactory.instance.showParentDialog(
+        context: context,
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          width: 200,
+          height: 180,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "确认取消委托?",
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10,),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Wrap(
+                  children: [
+                    Text(
+                      "确保与客户沟通后取消委托，无故取消委托易遭客户投诉",
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.textColor7d
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      onTap: (){
+                        RouteUtils.pop(context);
+                      },
+                      type: AppButtonType.minor,
+                      radius: 8.r,
+                      buttonText: "取消",
+                      buttonTextStyle: TextStyle(
+                          color: AppColors.textColor2b
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: AppButton(
+                        onTap: (){
+                          RouteUtils.pop(context);
+                          showToast("操作成功，委托已取消");
+                          RouteUtils.pop(context);
+                        },
+                        type: AppButtonType.main,
+                        radius: 8.r,
+                        buttonText: "确认",
+                        color: CommonData.statusColor[2],
+                      )
+                  )
+                ],
+              )
+            ],
+          ),
+        )
+    );
+  }
+
+  //开始服务
+  void _startCommission(){
+    DialogFactory.instance.showParentDialog(
+        context: context,
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          width: 200,
+          height: 180,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "确认开始委托?",
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10,),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Wrap(
+                  children: [
+                    Text(
+                      _commissionDetailViewModel.commissionData.distance <= 0.5
+                          ? "检测到您已到达指定地点附近，是否确认开始委托?"
+                          : "检测到您当前位置与指定地点距离过远(1km以外)，是否确认开始委托?",
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.textColor7d
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      onTap: (){
+                        RouteUtils.pop(context);
+                      },
+                      type: AppButtonType.minor,
+                      radius: 8.r,
+                      buttonText: "取消",
+                      buttonTextStyle: TextStyle(
+                          color: AppColors.textColor2b
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: AppButton(
+                        onTap: (){
+                          RouteUtils.pop(context);
+                          showToast("操作成功，委托已开始");
+                          RouteUtils.pop(context);
+                        },
+                        type: AppButtonType.main,
+                        radius: 8.r,
+                        buttonText: "确认",
+                        color: CommonData.statusColor[2],
+                      )
+                  )
+                ],
+              )
+            ],
+          ),
+        )
     );
   }
 }
