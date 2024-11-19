@@ -11,6 +11,7 @@ class CommissionDetailViewModel with ChangeNotifier{
 
   CommissionData1 commissionData = CommissionData1();
 
+  //委托接取
   int receiveCommission(){
     if((Global.userInfo?.userType ?? 0) == 1){
       //

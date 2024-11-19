@@ -415,7 +415,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          (commission.commissionBudget / commission.specifyServiceTime).toStringAsFixed(1),
+                          commission.commissionBudget.toString(),
                           style: TextStyle(
                               color: Colors.red,
                               fontSize: 20.sp,
@@ -423,7 +423,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                           ),
                         ),
                         Text(
-                          commission.isLong ? "元/月" : "元/小时",
+                          "元",
                           style: TextStyle(
                               color: Colors.red,
                               fontSize: 14.sp,
