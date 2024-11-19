@@ -88,5 +88,8 @@ class RoutePath {
 
   //证书认证页面
   static const String certCertified = "/certCertified";
-
+  //个人评价页面
+  static const String evalutationPage = "/evaluatePage";
+  //家政员简历
+  static const String personalKeeper = "/personalKeeper";
 }
