@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common_ui/styles/app_colors.dart';
 import '../page/commission_page/commission_vm.dart';
 
 //公共数据类
@@ -76,5 +77,14 @@ class CommonData{
     "待支付",
     "已完成",
     "已取消"
+  ];
+
+  static List<Color> statusColor = [
+    AppColors.appColor, //待接取
+    Colors.indigoAccent, //待确认
+    Colors.lightBlue, //待服务
+    Colors.orange, // 服务中
+    Colors.deepOrangeAccent, //待支付
+    Colors.lightGreen //已完成
   ];
 }

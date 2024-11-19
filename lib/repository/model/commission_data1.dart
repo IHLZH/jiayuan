@@ -44,7 +44,10 @@ class CommissionData1 {
     DateTime? realStartTime,
     DateTime? endTime,
       String? specifyServiceDuration,
-      int? commissionStatus,}){
+      int? commissionStatus,
+    double? distance,
+    String? typeName
+  }){
     _commissionId = commissionId;
     _userId = userId;
     _keeperId = keeperId;
@@ -64,6 +67,8 @@ class CommissionData1 {
     _endTime = endTime;
     _specifyServiceDuration = specifyServiceDuration;
     _commissionStatus = commissionStatus;
+    _distance = distance;
+    _typeName = typeName;
 }
 
   CommissionData1.fromJson(dynamic json) {
@@ -92,6 +97,20 @@ class CommissionData1 {
     _initType();
     _initDays();
     _initDistance();
+    _initspecifyServiceDuration();
+  }
+
+  void _initspecifyServiceDuration(){
+    _specifyServiceTime = extractLeadingNumber(specifyServiceDuration);
+  }
+
+  int? extractLeadingNumber(String input) {
+    final RegExp regex = RegExp(r'^\d+'); // 匹配开头的数字部分
+    final match = regex.firstMatch(input);
+    if (match != null) {
+      return int.parse(match.group(0)!); // 提取并转换为整数
+    }
+    return null; // 如果没有数字，返回 null
   }
 
   void _initType(){
@@ -161,6 +180,7 @@ class CommissionData1 {
   double? _distance;
   bool? _isLong; //是否是长期
   String? _days;
+  int? _specifyServiceTime;
 
 
 CommissionData1 copyWith({
@@ -229,6 +249,7 @@ CommissionData1 copyWith({
   double get distance => _distance ?? 0.0;
   bool get isLong => _isLong ?? false;
   String get days => _days ?? "";
+  int get specifyServiceTime => _specifyServiceTime ?? 1;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

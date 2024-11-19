@@ -1,20 +1,22 @@
 import 'package:flutter/widgets.dart';
-import 'package:jiayuan/repository/model/commission_data.dart';
+import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/utils/common_data.dart';
 
 
 class OrderPageViewModel with ChangeNotifier{
 
   //待服务
-  List<Commission> unServed = [];
+  List<CommissionData1> unServed = [];
   //服务中
-  List<Commission> inService = [];
+  List<CommissionData1> inService = [];
   //待支付
-  List<Commission> unPay = [];
+  List<CommissionData1> unPay = [];
   //已完成
-  List<Commission> down = [];
+  List<CommissionData1> down = [];
 
-  List<Commission> getStatusOrder(int id){
+  int? currentIndex;
+
+  List<CommissionData1> getStatusOrder(int id){
     switch(id){
       case 2:
         return unServed;
@@ -30,151 +32,137 @@ class OrderPageViewModel with ChangeNotifier{
 
   void getOrders(){
     unServed = [
-      Commission(
-          commissionType: 1,
+      CommissionData1(
+          commissionId: 1,
           province: "河北省",
           city: "石家庄",
           county: "裕华区",
-          address: "河北师范大学诚朴园三号楼204",
-          userPhone: "19358756689",
+          commissionAddress: "河北师范大学诚朴园三号楼204",
+          userPhoneNumber: "19358756689",
           distance: 1.5,
-          price: 255.25,
-          expectTime: DateTime(2024,11,2,12,30),
-          estimatedTime: 2,
+          commissionBudget: 255.25,
+          expectStartTime: DateTime(2024,11,2,12,30),
           commissionStatus: 2,
-          isLong: false
+          typeName: "日常保洁"
       ),
-      Commission(
-          commissionType: 1,
-          province: "河北省",
-          city: "石家庄",
-          county: "裕华区",
-          address: "河北师范大学诚朴园三号楼204",
-          userPhone: "19358756689",
-          distance: 1.5,
-          price: 255.25,
-          expectTime: DateTime(2024,11,3,12,30),
-          estimatedTime: 2,
-          commissionStatus: 2,
-          isLong: false
+      CommissionData1(
+        commissionId: 1,
+        province: "河北省",
+        city: "石家庄",
+        county: "裕华区",
+        commissionAddress: "河北师范大学诚朴园三号楼204",
+        userPhoneNumber: "19358756689",
+        distance: 1.5,
+        commissionBudget: 255.25,
+        expectStartTime: DateTime(2024,11,2,12,30),
+        commissionStatus: 2,
+          typeName: "日常保洁"
       ),
-      Commission(
-          commissionType: 1,
-          province: "河北省",
-          city: "石家庄",
-          county: "裕华区",
-          address: "河北师范大学诚朴园三号楼204",
-          userPhone: "19358756689",
-          distance: 1.5,
-          price: 255.25,
-          expectTime: DateTime(2024,11,4,12,30),
-          estimatedTime: 2,
-          commissionStatus: 2,
-          isLong: false
+      CommissionData1(
+        commissionId: 1,
+        province: "河北省",
+        city: "石家庄",
+        county: "裕华区",
+        commissionAddress: "河北师范大学诚朴园三号楼204",
+        userPhoneNumber: "19358756689",
+        distance: 1.5,
+        commissionBudget: 255.25,
+        expectStartTime: DateTime(2024,11,2,12,30),
+        commissionStatus: 2,
+          typeName: "日常保洁"
       ),
     ];
 
     inService = [
-      Commission(
-        commissionType: 1,
+      CommissionData1(
+        commissionId: 1,
         province: "河北省",
         city: "石家庄",
         county: "裕华区",
-        address: "河北师范大学诚朴园三号楼204",
-        userPhone: "19358756689",
+        commissionAddress: "河北师范大学诚朴园三号楼204",
+        userPhoneNumber: "19358756689",
         distance: 1.5,
-        price: 255.25,
-        expectTime: DateTime(2024,11,4,12,30),
-        realStartTime: DateTime(2024,11,2,13,30),
-        estimatedTime: 2,
+        commissionBudget: 255.25,
+        expectStartTime: DateTime(2024,11,2,12,30),
         commissionStatus: 3,
-        isLong: false
-    ),
-      Commission(
-          commissionType: 1,
-          province: "河北省",
-          city: "石家庄",
-          county: "裕华区",
-          address: "河北师范大学诚朴园三号楼204",
-          userPhone: "19358756689",
-          distance: 1.5,
-          price: 255.25,
-          expectTime: DateTime(2024,11,5,12,30),
-          realStartTime: DateTime(2024,11,2,13,30),
-          estimatedTime: 2,
-          commissionStatus: 3,
-          isLong: false
-      ),];
+          typeName: "日常保洁"
+      ),
+      CommissionData1(
+        commissionId: 1,
+        province: "河北省",
+        city: "石家庄",
+        county: "裕华区",
+        commissionAddress: "河北师范大学诚朴园三号楼204",
+        userPhoneNumber: "19358756689",
+        distance: 1.5,
+        commissionBudget: 255.25,
+        expectStartTime: DateTime(2024,11,2,12,30),
+        commissionStatus: 3,
+          typeName: "日常保洁"
+      ),
+    ];
 
     unPay = [
-      Commission(
-          commissionType: 1,
-          province: "河北省",
-          city: "石家庄",
-          county: "裕华区",
-          address: "河北师范大学诚朴园三号楼204",
-          userPhone: "19358756689",
-          distance: 1.5,
-          price: 255.25,
-          expectTime: DateTime(2024,11,2,12,30),
-          realStartTime: DateTime(2024,11,2,13,30),
-          estimatedTime: 2,
-          commissionStatus: 4,
-          isLong: false
+      CommissionData1(
+        commissionId: 1,
+        province: "河北省",
+        city: "石家庄",
+        county: "裕华区",
+        commissionAddress: "河北师范大学诚朴园三号楼204",
+        userPhoneNumber: "19358756689",
+        distance: 1.5,
+        commissionBudget: 255.25,
+        expectStartTime: DateTime(2024,11,2,12,30),
+        commissionStatus: 4,
+          typeName: "日常保洁"
       ),
-      Commission(
-          commissionType: 1,
-          province: "河北省",
-          city: "石家庄",
-          county: "裕华区",
-          address: "河北师范大学诚朴园三号楼204",
-          userPhone: "19358756689",
-          distance: 1.5,
-          price: 255.25,
-          expectTime: DateTime(2024,11,2,12,30),
-          realStartTime: DateTime(2024,11,2,13,30),
-          estimatedTime: 2,
-          commissionStatus: 4,
-          isLong: false
+      CommissionData1(
+        commissionId: 1,
+        province: "河北省",
+        city: "石家庄",
+        county: "裕华区",
+        commissionAddress: "河北师范大学诚朴园三号楼204",
+        userPhoneNumber: "19358756689",
+        distance: 1.5,
+        commissionBudget: 255.25,
+        expectStartTime: DateTime(2024,11,2,12,30),
+        commissionStatus: 4,
+          typeName: "日常保洁"
       ),
     ];
 
     down = [
-      Commission(
-          commissionType: 1,
-          province: "河北省",
-          city: "石家庄",
-          county: "裕华区",
-          address: "河北师范大学诚朴园三号楼204",
-          userPhone: "19358756689",
-          distance: 1.5,
-          price: 255.25,
-          expectTime: DateTime(2024,11,3,12,30),
-          realStartTime: DateTime(2024,11,2,13,30),
-          estimatedTime: 2,
-          commissionStatus: 5,
-          isLong: false
+      CommissionData1(
+        commissionId: 1,
+        province: "河北省",
+        city: "石家庄",
+        county: "裕华区",
+        commissionAddress: "河北师范大学诚朴园三号楼204",
+        userPhoneNumber: "19358756689",
+        distance: 1.5,
+        commissionBudget: 255.25,
+        expectStartTime: DateTime(2024,11,2,12,30),
+        commissionStatus: 5,
+          typeName: "日常保洁"
       ),
-      Commission(
-          commissionType: 1,
-          province: "河北省",
-          city: "石家庄",
-          county: "裕华区",
-          address: "河北师范大学诚朴园三号楼204",
-          userPhone: "19358756689",
-          distance: 1.5,
-          price: 255.25,
-          expectTime: DateTime(2024,11,4,12,30),
-          realStartTime: DateTime(2024,11,2,13,30),
-          estimatedTime: 2,
-          commissionStatus: 5,
-          isLong: false
+      CommissionData1(
+        commissionId: 1,
+        province: "河北省",
+        city: "石家庄",
+        county: "裕华区",
+        commissionAddress: "河北师范大学诚朴园三号楼204",
+        userPhoneNumber: "19358756689",
+        distance: 1.5,
+        commissionBudget: 255.25,
+        expectStartTime: DateTime(2024,11,2,12,30),
+        commissionStatus: 5,
+          typeName: "日常保洁"
       ),
     ];
   }
 
-  String getCountyAddress(Commission commission){
-    return commission.county + " " + commission.address + "河北师范大学诚朴园三号楼204";
+  String getCountyAddress(CommissionData1 commission){
+    return commission.county + " " + commission.commissionAddress + "河北师范大学诚朴园三号楼204";
   }
 
 }

@@ -1,7 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
-import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../repository/api/commission_api.dart';
@@ -9,8 +8,6 @@ import '../../../repository/model/commission_data1.dart';
 import '../../../utils/global.dart';
 
 class CommissionTypeViewModel with ChangeNotifier{
-
-  List<Commission> commissionList = [];
 
   List<CommissionData1> commissionDataList = [];
 
