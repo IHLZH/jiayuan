@@ -5,7 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/page/home_page/home_vm.dart';
 
 class PersonalKeeperVm with ChangeNotifier {
-  List<XFile>? image; //个人照片
+  XFile ? avatar; //本地头像
+  String? avatarUrl; //服务器头像
   String? phoneNumber; //手机号
   String? city; // 工作城市
   String? address; //地址
@@ -13,7 +14,7 @@ class PersonalKeeperVm with ChangeNotifier {
   String highlight = ""; // 个人优势
   String introduction = ""; //自我介绍
   List<String> tags = []; //工作标签
-
+  List<XFile>? image; //个人工作照片
   Map<String, bool> commissionTypeSelected = {
     for (int i = 0; i < 11; i++)
       HomeViewModel.CommissionTypes[i].typeText: false
@@ -75,5 +76,18 @@ class PersonalKeeperVm with ChangeNotifier {
   void updateImage(List<XFile>? image) {
     this.image = image;
   }
-
+ // 图库选择头像
+  Future <void> selectAvatarByGallery(){
+    return ImagePicker().pickImage(source: ImageSource.gallery).then((value) {
+      avatar = value;
+      notifyListeners();
+    });
+  }
+  // 相机选择头像
+  Future <void> selectAvatarByCamera(){
+    return ImagePicker().pickImage(source: ImageSource.camera).then((value) {
+      avatar = value;
+      notifyListeners();
+    });
+  }
 }

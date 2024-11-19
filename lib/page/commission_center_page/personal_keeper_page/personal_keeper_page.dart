@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:city_pickers/city_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/common_ui/MultiImageUpLoad/MultiImageUpLoad.dart';
 import 'package:jiayuan/page/commission_center_page/personal_keeper_page/personal_keeper_vm.dart';
 import 'package:jiayuan/page/home_page/home_vm.dart';
@@ -95,6 +98,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
                     children: [
                       AppBar(
                         backgroundColor: Colors.transparent,
+                        surfaceTintColor: Colors.transparent,
                         elevation: 0,
                         title: Text(
                           '我的简历',
@@ -130,46 +134,47 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
   }
 
   Widget _buildAvatarInfo() {
-    return Container(
-      margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 10.h, bottom: 10.h),
-      padding: EdgeInsets.all(15.w),
-      decoration: BoxDecoration(
-          border: Border.all(width: 1.w, color: Colors.white),
-          color: Colors.white.withOpacity(0.6),
-          borderRadius: BorderRadius.circular(20.w)),
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '头像',
-                style: TextStyle(fontSize: 16.sp, color: Colors.black),
+    return Selector<PersonalKeeperVm, XFile?>(
+        selector: (context, vm) => vm.avatar,
+        builder: (context, avatar, child) => Container(
+              margin: EdgeInsets.only(
+                  left: 20.w, right: 20.w, top: 10.h, bottom: 10.h),
+              padding: EdgeInsets.all(15.w),
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1.w, color: Colors.white),
+                  color: Colors.white.withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(20.w)),
+              child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '头像',
+                        style: TextStyle(fontSize: 16.sp, color: Colors.black),
+                      ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Text(
+                        '真实头像更容易提升接单的成功率',
+                        style: TextStyle(color: Colors.grey, fontSize: 13.sp),
+                      ),
+                    ],
+                  ),
+                  Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      _showPickerOptions();
+                    },
+                    child: CircleAvatar(
+                      radius: 40.w,
+                        backgroundImage: avatar != null ? FileImage(File(avatar.path)): _personalKeeperVm.avatarUrl != null ? NetworkImage(_personalKeeperVm.avatarUrl!):AssetImage('assets/images/drawkit-grape-pack-illustration-18.png'),
+                      ),
+                    ),
+                ],
               ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Text(
-                '真实头像更容易提升接单的成功率',
-                style: TextStyle(color: Colors.grey, fontSize: 13.sp),
-              ),
-            ],
-          ),
-          Spacer(),
-          ClipOval(
-            child: Container(
-              height: 80.h,
-              width: 80.w,
-              color: Colors.white,
-              child: Image.asset(
-                "assets/images/drawkit-grape-pack-illustration-18.png",
-                fit: BoxFit.cover,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+            ));
   }
 
   Widget _buildPhoneNumber() {
@@ -219,24 +224,26 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InkWell(
-                    onTap: () {
-                      showIntroductionBottomSheet();
-                    },
-                    child: _buildIntroduction()),
-                Divider(
-                  height: 1,
-                  thickness: 1,
-                  color: Colors.grey.withOpacity(0.2),
-                ),
-                InkWell(
                   onTap: () {
                     showTagsBottomSheet();
                   },
                   child: _buildWorkTag(),
                 ),
+                Divider(
+                  height: 1,
+                  thickness: 1,
+                  color: Colors.grey.withOpacity(0.2),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
                 InkWell(
-                  onTap: () {
-                  },
+                    onTap: () {
+                      showIntroductionBottomSheet();
+                    },
+                    child: _buildIntroduction()),
+                InkWell(
+                  onTap: () {},
                   child: _buildImages(),
                 )
               ],
@@ -244,7 +251,8 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
           );
         });
   }
- Widget _buildImages() {
+
+  Widget _buildImages() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -282,7 +290,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
           ],
         ),
         SizedBox(
-          height: 15,
+          height: 10,
         )
       ],
     );
@@ -699,6 +707,36 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
                 ),
               ),
             ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showPickerOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text("从相册选择"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _personalKeeperVm.selectAvatarByGallery();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.camera_alt),
+                title: Text("使用相机拍照"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _personalKeeperVm.selectAvatarByCamera();
+                },
+              ),
+            ],
           ),
         );
       },
