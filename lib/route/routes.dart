@@ -18,6 +18,7 @@ import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
+import '../page/evaluation_page/evalutation_page.dart';
 import '../page/keeper_page/KeeperPage.dart';
 import '../page/login_page/phone_login_page.dart';
 import '../page/order_page/order_page.dart';
@@ -119,6 +120,9 @@ class Routes {
       //委托中心订单页
       case RoutePath.centerOrder:
         return pageRoute(CenterOrderPage(), settings: settings);
+        //评价页
+      case RoutePath.evalutationPage:
+        return pageRoute(EvalutationPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

@@ -6,7 +6,6 @@ import 'package:jiayuan/common_ui/app_bar/app_search_bar.dart';
 import 'package:jiayuan/common_ui/dialog/dialog_factory.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_vm.dart';
-import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:oktoast/oktoast.dart';
@@ -579,7 +578,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                commission.commissionBudget.toString(),
+                                (commission.commissionBudget / commission.specifyServiceTime).toStringAsFixed(1),
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontSize: 20.sp,
@@ -587,10 +586,10 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                                 ),
                               ),
                               Text(
-                                "元",
+                                commission.isLong ? "元/月" : "元/小时",
                                 style: TextStyle(
                                     color: Colors.red,
-                                    fontSize: 12.sp,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.w600
                                 ),
                               )

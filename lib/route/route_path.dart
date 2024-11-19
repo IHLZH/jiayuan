@@ -89,4 +89,6 @@ class RoutePath {
   //证书认证页面
   static const String certCertified = "/certCertified";
 
+  //评价页面
+  static const String evalutationPage = "/evaluatePage";
 }

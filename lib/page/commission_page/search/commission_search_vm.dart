@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:jiayuan/repository/api/commission_api.dart';
-import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -8,8 +7,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class CommissionSearchViewModel with ChangeNotifier{
 
   List<String> searchHistory = [];
-
-  List<Commission> searchResult = [];
 
   List<CommissionData1> searchCommissionList = [];
 

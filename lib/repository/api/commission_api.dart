@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/utils/global.dart';
+import 'package:oktoast/oktoast.dart';
 
 import '../../http/dio_instance.dart';
 import '../model/Commission.dart';
@@ -28,6 +29,10 @@ class CommissionApi{
         for(int i = 0; i < total; i++){
           commissionList.add(CommissionData1.fromJson(response.data['results'][i]));
         }
+      }else{
+        showToast(
+          "网络错误，请检查网络连接"
+        );
       }
     }catch(e){
       print("网络错误error:" + e.toString());
@@ -52,6 +57,10 @@ class CommissionApi{
         for(int i = 0; i < total; i++){
           commissionList.add(CommissionData1.fromJson(response.data['results'][i]));
         }
+      }else{
+        showToast(
+            "网络错误，请检查网络连接"
+        );
       }
     }catch(e){
       print("网络错误error:" + e.toString());
@@ -76,6 +85,10 @@ class CommissionApi{
         for(int i = 0; i < total; i++){
           commissionList.add(CommissionData1.fromJson(response.data['results'][i]));
         }
+      }else{
+        showToast(
+            "网络错误，请检查网络连接"
+        );
       }
     }catch(e){
       print("网络错误error:" + e.toString());

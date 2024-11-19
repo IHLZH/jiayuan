@@ -5,6 +5,7 @@ import 'package:jiayuan/page/evaluation_page/evalutation_vm.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_ui/MultiImageUpLoad/MultiImageUpLoad.dart';
+import '../../route/route_utils.dart';
 
 class EvalutationPage extends StatefulWidget {
   @override
@@ -93,6 +94,12 @@ class _EvalutationPageState extends State<EvalutationPage>
                   backgroundColor: Colors.transparent,
                   title: Text("评价"),
                   centerTitle: true,
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                    onPressed: () {
+                      RouteUtils.pop(context);
+                    },
+                  ),
                 ),
               ),
               Expanded(
@@ -199,57 +206,65 @@ class _EvalutationPageState extends State<EvalutationPage>
                       Text('本次服务打分'),
                       Spacer(),
                       Text('满意请给5星哦'),
-                      data.isChanged ? Icon(Icons.arrow_drop_down): Icon(Icons.arrow_drop_up )
+                      data.isChanged
+                          ? Icon(Icons.arrow_drop_down)
+                          : Icon(Icons.arrow_drop_up)
                     ],
                   ),
                 ),
-                data.isChanged ? Container():ListView.builder(
-                  padding: EdgeInsets.all(0),
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: data.rating.length,
-                  itemBuilder: (context, rowIndex) {
-                    return Container(
-                      margin: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          switch (rowIndex) {
-                            0 => Text('服务质量'),
-                            1 => Text('服务态度'),
-                            2 => Text('服务满意度'),
-                            _ => Text('服务态度')
-                          },
-                          Spacer(),
-                          Row(
-                            children: List.generate(5, (starIndex) {
-                              return GestureDetector(
-                                onTap: () {
-                                  handleHitStar(rowIndex, starIndex);
+                data.isChanged
+                    ? Container()
+                    : ListView.builder(
+                        padding: EdgeInsets.all(0),
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: data.rating.length,
+                        itemBuilder: (context, rowIndex) {
+                          return Container(
+                            margin: EdgeInsets.all(10),
+                            child: Row(
+                              children: [
+                                switch (rowIndex) {
+                                  0 => Text('服务质量'),
+                                  1 => Text('服务态度'),
+                                  2 => Text('服务满意度'),
+                                  _ => Text('服务态度')
                                 },
-                                child: AnimatedBuilder(
-                                  animation: _animatedControllers[rowIndex]
-                                  [starIndex],
-                                  builder: (context, child) => Transform.scale(
-                                    // 使用 Transform.scale
-                                    scale:
-                                    _animations[rowIndex][starIndex].value,
-                                    child: Icon(
-                                      Icons.star_rounded,
-                                      color: starIndex < data.rating[rowIndex]
-                                          ? Colors.red
-                                          : Colors.grey,
-                                      size: 30, // 固定图标大小
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                          )
-                        ],
+                                Spacer(),
+                                Row(
+                                  children: List.generate(5, (starIndex) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        handleHitStar(rowIndex, starIndex);
+                                      },
+                                      child: AnimatedBuilder(
+                                        animation:
+                                            _animatedControllers[rowIndex]
+                                                [starIndex],
+                                        builder: (context, child) =>
+                                            Transform.scale(
+                                          // 使用 Transform.scale
+                                          scale: _animations[rowIndex]
+                                                  [starIndex]
+                                              .value,
+                                          child: Icon(
+                                            Icons.star_rounded,
+                                            color: starIndex <
+                                                    data.rating[rowIndex]
+                                                ? Colors.red
+                                                : Colors.grey,
+                                            size: 30, // 固定图标大小
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                )
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ],
             ),
           );
