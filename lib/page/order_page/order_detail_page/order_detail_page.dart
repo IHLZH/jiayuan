@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page_vm.dart';
 import 'package:jiayuan/repository/model/full_order.dart';
 import 'package:jiayuan/utils/constants.dart';
+import 'package:oktoast/oktoast.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
+import '../../../http/url_path.dart';
 import '../../../route/route_utils.dart';
 
 bool isProduction = Constants.IS_Production;
@@ -26,6 +29,37 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     return str.substring(start, end);
   }
 
+  Future<void> _agreeOrder() async {
+    String url = UrlPath.updateOrderStatusUrl;
+
+    try {
+      final response =
+          await DioInstance.instance().put(path: url, queryParameters: {
+        'commissionId': _order.commissionId,
+        'new': 2,
+      });
+
+      if (response.statusCode == 200) {
+        if(response.data['code']==200){
+          setState(() {
+            _order.commissionStatus=2;
+          });
+          showToast('已同意',duration: Duration(seconds: 1));
+        }
+        else{
+          if(isProduction)print("error: ${response.data['message']}");
+          showToast(response.data['message'],duration: Duration(seconds: 1));
+        }
+      }
+      else{
+        if(isProduction)print("error: ${response.data['message']}");
+        showToast('无法连接服务器',duration: Duration(seconds: 1));
+      }
+    } catch (e) {
+      if(isProduction)print("error: $e");
+    }
+  }
+
   // 构建图标按钮
   Widget _buildIconButton(IconData icon, String title, Color color) {
     return ElevatedButton.icon(
@@ -44,7 +78,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       label: Text(title,
           style: TextStyle(color: color, fontWeight: FontWeight.normal)),
       onPressed: () {
-        print('用户点击了${title}按钮');
+        switch (title) {
+          case '同意':
+            _agreeOrder();
+        }
       },
     );
   }
