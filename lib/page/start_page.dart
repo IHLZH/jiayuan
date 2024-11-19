@@ -1,21 +1,17 @@
-import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
-import 'package:jiayuan/utils/sp_utils.dart';
-import 'package:oktoast/oktoast.dart';
 import 'package:jiayuan/sqlite/dbutil.dart';
 import 'package:jiayuan/sqlite/tables_init.dart';
 import 'package:jiayuan/utils/global.dart';
+import 'package:jiayuan/utils/sp_utils.dart';
+import 'package:oktoast/oktoast.dart';
 
+import '../im/im_chat_api.dart';
 import '../repository/model/user.dart';
-import '../route/routes.dart';
-import '../utils/constants.dart';
-import '../utils/global.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -30,10 +26,14 @@ class _StartPageState extends State<StartPage> {
     super.initState();
     // 初始化CookieJar
     DioInstance.instance().initDio(baseUrl: "");
-    DioInstance.instance().changeBaseUrl(UrlPath.yuwenBaseUrl);
+    DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
+    // DioInstance.instance().changeBaseUrl(UrlPath.yuwenBaseUrl);
 
     //初始化sqlite数据库
     _initDB();
+
+    //初始化IM SDK
+    ImChatApi.getInstance().initSDK();
 
     // 设置延迟，2秒后跳转
     // 检验token是否存活
@@ -68,7 +68,7 @@ class _StartPageState extends State<StartPage> {
     TablesInit tables = TablesInit();
     await tables.init();
     Global.dbUtil = DBUtil();
-    await Global.dbUtil?.open();
+    // await Global.dbUtil?.open();
   }
 
   void _AutoLogin() async {
