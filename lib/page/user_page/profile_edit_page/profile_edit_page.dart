@@ -59,14 +59,14 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   Future<void> _updateUserInfo(User updatedUser) async {
-    //TODO: 新头像上传和更新
     String url = UrlPath.updateUserInfoUrl;
 
     try {
       final response = await DioInstance.instance().post(
-          path: url,
-          data: updatedUser.toMap(),
-          options: Options(headers: {"Authorization": Global.token!}));
+        path: url,
+        data: updatedUser.toMap(),
+        options: Options(headers: {"Authorization": Global.token!}),
+      );
 
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
@@ -85,6 +85,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
           if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
           if (isProduction) print("token: ${Global.token}");
+
+          //TODO:上传头像
+          // if (_pickedFile != null) {
+          //   saveAvatar(_pickedFile, Global.userInfoNotifier.value.userId);
+          // }
 
           _jumpToTab();
         } else {
@@ -121,7 +126,16 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     }
   }
 
-  void _saveChanges() {
+  //TODO:服务器上传头像
+  //服务器上传头像
+  // static Future<String> saveAvatar(
+  //   XFile image,
+  //   int userId,
+  // ) async {
+  //   String url = UrlPath.uploadAvatarUrl;
+  // }
+
+  void _saveChanges() async {
     // 创建一个新的 User 对象并更新
     User updatedUser = User(
       userId: Global.userInfo?.userId ?? 0,

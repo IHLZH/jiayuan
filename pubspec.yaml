@@ -103,7 +103,7 @@ dependencies:
   image_picker: ^1.1.2
 
   # 腾讯云IM SDK
-#  tencent_cloud_chat_sdk: ^8.0.5903
+  tencent_cloud_chat_sdk: ^8.2.6325+4
 
 dev_dependencies:
   flutter_test:

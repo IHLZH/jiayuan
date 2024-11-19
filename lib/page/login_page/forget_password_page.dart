@@ -14,10 +14,10 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _verificationCodeController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
-  TextEditingController();
+      TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _phoneFocusNode = FocusNode();
   final FocusNode _verificationCodeFocusNode = FocusNode();
@@ -83,7 +83,6 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
     });
   }
 
-  //TODO
   void _getVerificationCode() async {
     if (_isEmail) {
       final String email = _emailController.text;
@@ -115,7 +114,6 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
       return;
     }
 
-    //TODO
     try {
       // 假设你有一个 API 来处理密码重置
       // await DioInstance.instance().post(
@@ -157,8 +155,11 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   TextButton(
                     onPressed: () => _toggleInputType(true),
                     style: TextButton.styleFrom(
-                      foregroundColor: _isEmail ? Theme.of(context).primaryColor : Colors.grey,
-                      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                      foregroundColor: _isEmail
+                          ? Theme.of(context).primaryColor
+                          : Colors.grey,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 10.h),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.r),
                       ),
@@ -168,15 +169,17 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   TextButton(
                     onPressed: () => _toggleInputType(false),
                     style: TextButton.styleFrom(
-                      foregroundColor: !_isEmail ? Theme.of(context).primaryColor : Colors.grey,
-                      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                      foregroundColor: !_isEmail
+                          ? Theme.of(context).primaryColor
+                          : Colors.grey,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.w, vertical: 10.h),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                     ),
                     child: Text('使用手机号'),
                   ),
-
                 ],
               ),
               SizedBox(height: 20.h),
@@ -261,7 +264,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                     ElevatedButton(
                       onPressed: _getVerificationCode,
                       child:
-                      Text('获取验证码', style: TextStyle(color: Colors.white)),
+                          Text('获取验证码', style: TextStyle(color: Colors.white)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Theme.of(context).primaryColor,
                         padding: EdgeInsets.symmetric(
@@ -329,7 +332,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).primaryColor,
                   padding:
-                  EdgeInsets.symmetric(horizontal: 50.w, vertical: 15.h),
+                      EdgeInsets.symmetric(horizontal: 50.w, vertical: 15.h),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.r),
                   ),
