@@ -46,10 +46,9 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
           color: Colors.white,
           child: GridView.builder(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.only(top :10),
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: _imageFiles.length <= 5 ? _imageFiles.length + 1 : 6,
@@ -88,9 +87,12 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
                 return Stack(
                   children: [
                     Positioned.fill(
-                      child: Image.file(
-                        File(_imageFiles[index].path),
-                        fit: BoxFit.cover,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.file(
+                          File(_imageFiles[index].path),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     Positioned(
