@@ -578,7 +578,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                (commission.commissionBudget / commission.specifyServiceTime).toStringAsFixed(1),
+                              (_commissionSearchViewModel.priceCheck ?? false) ? commission.commissionBudget.toString() : (commission.commissionBudget / commission.specifyServiceTime).toStringAsFixed(1),
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontSize: 20.sp,
@@ -586,7 +586,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                                 ),
                               ),
                               Text(
-                                commission.isLong ? "元/月" : "元/小时",
+                                (_commissionSearchViewModel.priceCheck ?? false) ? "元" : commission.isLong ? "元/月" : "元/小时",
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontSize: 14.sp,

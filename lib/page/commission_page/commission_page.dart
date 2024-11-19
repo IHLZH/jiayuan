@@ -88,7 +88,7 @@ class _CommissionPageState extends State<CommissionPage>{
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        AppColors.endColor, // 渐变起始颜色
+                        Color.fromRGBO(70, 219, 201, 1), // 渐变起始颜色
                         AppColors.backgroundColor3,      // 渐变结束颜色
                       ],
                       begin: Alignment.topCenter,
@@ -218,14 +218,7 @@ class _CommissionPageState extends State<CommissionPage>{
                                         color: Colors.white,
                                         width: 1
                                       ),
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          AppColors.endColor, // 渐变起始颜色
-                                          Colors.white38,      // 渐变结束颜色
-                                        ],
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                      ),
+                                      color: Colors.white.withOpacity(0.6)
                                     ),
                                   )
                               ),
