@@ -45,7 +45,14 @@ class _OrderPageState extends State<OrderPage> {
 
   Future<void> _jumpToOrderDetailPage(int index) async {
     OrderDetailPageVm.nowOrder = _orderDataList[index];
-    RouteUtils.pushForNamed(context, RoutePath.orderDetailPage);
+    await RouteUtils.pushForNamed(context, RoutePath.orderDetailPage);
+
+    _refreshOrders();
+  }
+
+  Future<void> _jumpToEvaluatePage() async {
+    await RouteUtils.pushForNamed(context, RoutePath.evalutationPage);
+    _refreshOrders();
   }
 
   Future<void> _fetchOrders() async {
@@ -385,7 +392,8 @@ class _OrderPageState extends State<OrderPage> {
                                       color: AppColors.appColor,
                                       fontWeight: FontWeight.normal)),
                               onPressed: () {
-                                print('用户点击了去评价按钮');
+                                if(isProduction)print('用户点击了去评价按钮');
+                                _jumpToEvaluatePage();
                               },
                             )
                           ],
