@@ -53,6 +53,9 @@ class UrlPath {
   //个人信息修改接口
   static const String updateUserInfoUrl = "/update/userInfo";
 
+  //图片上传接口
+  static const String uploadAvatarUrl = "/profile/upload";
+
   //搜索委托接口
   static const String searchCommissionUrl = "/search";
 
