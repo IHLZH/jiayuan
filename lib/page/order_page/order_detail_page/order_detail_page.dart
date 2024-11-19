@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page_vm.dart';
 import 'package:jiayuan/repository/model/full_order.dart';
+import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -27,6 +28,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       return str; // 或者返回一个默认值
     }
     return str.substring(start, end);
+  }
+
+  Future<void> _jumpToEvaluatePage() async {
+    RouteUtils.pushForNamed(context, RoutePath.evalutationPage);
   }
 
   Future<void> _agreeOrder() async {
@@ -107,6 +112,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             _agreeOrder();
           case '不同意':
             _disagreeOrder();
+          case '去评价':
+            _jumpToEvaluatePage();
         }
       },
     );
