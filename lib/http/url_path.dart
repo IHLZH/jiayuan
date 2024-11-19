@@ -84,6 +84,9 @@ class UrlPath {
   //根据userId和status获取委托信息接口
   static const String getOrderInfoByUserIdAndStatusUrl = "/order/view/status";
 
+  //订单状态更改接口
+  static const String updateOrderStatusUrl = "/order/update/status";
+
   //发送委托的接口
   static const String sendCommissionUrl = "/release/add";
 
