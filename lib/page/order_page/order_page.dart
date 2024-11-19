@@ -3,7 +3,6 @@ import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page_vm.dart';
-import 'package:jiayuan/page/order_page/order_page_vm.dart';
 import 'package:jiayuan/repository/model/full_order.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/constants.dart';
@@ -392,7 +391,7 @@ class _OrderPageState extends State<OrderPage> {
                                       color: AppColors.appColor,
                                       fontWeight: FontWeight.normal)),
                               onPressed: () {
-                                if(isProduction)print('用户点击了去评价按钮');
+                                if (isProduction) print('用户点击了去评价按钮');
                                 _jumpToEvaluatePage();
                               },
                             )
@@ -401,7 +400,7 @@ class _OrderPageState extends State<OrderPage> {
                       ],
                     ),
                   ),
-                //TODO
+                //TODO:其他状态的下方按钮
                 6 => SafeArea(child: Column()),
                 7 => SafeArea(child: Column()),
                 8 => SafeArea(child: Column()),
