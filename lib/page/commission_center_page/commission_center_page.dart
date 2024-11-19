@@ -38,18 +38,27 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
         return Scaffold(
           body: Stack(
             children: [
-              Container(
-                height: 300.h,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.endColor, // 渐变起始颜色
-                      Theme.of(context).colorScheme.background, // 渐变结束颜色
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+              Column(
+                children: [
+                  Container(
+                    height: 300.h,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.endColor, // 渐变起始颜色
+                          AppColors.backgroundColor3, // 渐变结束颜色
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
                   ),
-                ),
+                  Expanded(
+                    child: Container(
+                      color: AppColors.backgroundColor3,
+                    ),
+                  )
+                ],
               ),
               Column(
                 children: [

@@ -9,7 +9,6 @@ import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/Test.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
 import 'package:jiayuan/page/commission_page/type/commission_type_page.dart';
-import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
@@ -80,179 +79,221 @@ class _CommissionPageState extends State<CommissionPage>{
         create: (context){
           return _viewModel;
         },
-        child: SafeArea(
-            child: Container(
-              decoration: BoxDecoration(
-                //color: AppColors.backgroundColor2
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Position(),
-                      Expanded(child: SearchTopBar()),
-                      SizedBox(width: 10.w)
-                    ],
-                  ),
-                  Expanded(
-                    child: SmartRefresher(
-                      controller: _viewModel.refreshController,
-                      enablePullUp: true,
-                      enablePullDown: true,
-                      header: MaterialClassicHeader(
-                        color: AppColors.appColor,
-                        backgroundColor: AppColors.endColor,
-                      ),
-                      footer: ClassicFooter(
-                        canLoadingText: "松开加载更多~",
-                        loadingText: "努力加载中~",
-                        noDataText: "已经到底了~",
-                      ),
-                      onLoading: _onLoading,
-                      onRefresh: _onRefresh,
-                      child: CustomScrollView(
-                        slivers: [
-                          SliverToBoxAdapter(
-                              child: Column(
-                                children: [
-                                  Container(
-                                      height: 180,
-                                      padding: EdgeInsets.only(left: 20, right: 20, top: 20,bottom: 10),
-                                      child: PageView(
-                                        controller: _pageController,
-                                        onPageChanged: (index) {
-                                          setState(() {
-                                            _currentPage = index;
-                                          });
-                                        },
-                                        children: [
-                                          Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                children: [
-                                                  CType(index: 1),
-                                                  CType(index: 2),
-                                                  CType(index: 3),
-                                                  CType(index: 4),
-                                                ],
-                                              ),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                children: [
-                                                  CType(index: 5),
-                                                  CType(index: 6),
-                                                  CType(index: 7),
-                                                  CType(index: 8),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                children: [
-                                                  CType(index: 9),
-                                                  CType(index: 10),
-                                                  CType(index: 11),
-                                                  CType(index: 2),
-                                                ],
-                                              ),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                children: [
-                                                  CType(index: 3),
-                                                  CType(index: 4),
-                                                  CType(index: 5),
-                                                  CType(index: 6),
-                                                ],
-                                              ),
-                                            ],
-                                          )
-                                        ],
-                                      )
-                                  ),
-                                  _buildIndicator(),
-                                ],
-                              )
-                          ),
-
-                          SliverAppBar(
-                              automaticallyImplyLeading: false,
-                              floating: false,
-                              pinned: true,
-                              elevation: 0,
-                              backgroundColor: Colors.white,
-                              title: Container(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "为您推荐:",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              flexibleSpace: Container(
-                                color: Colors.white,
-                              )
-                          ),
-
-                          Consumer<CommissionViewModel>(
-                              builder: (context, vm, child){
-                                return vm.isLoading ? SliverToBoxAdapter(
-                                  child: Center(
-                                    heightFactor: 10.h,
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: AppColors.appColor,
-                                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.endColor),
-                                    ),
-                                  ),
-                                ) : vm.commissionDataList.isEmpty ? SliverToBoxAdapter(
-                                  child: Center(
-                                      child: Container(
-                                        child: Column(
-                                          children: [
-                                            Image.asset(
-                                              height: 200.h,
-                                              width: 200.w,
-                                              "assets/images/search_no_result.png",
-                                            ),
-                                            Text(
-                                              "您周围没有合适的委托/(ㄒoㄒ)/~~",
-                                              style: TextStyle(
-                                                  color: AppColors.appColor,
-                                                  fontSize: 16.sp
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                  ),
-                                ) : SliverList(
-                                    delegate: SliverChildBuilderDelegate(
-                                            (context, index){
-                                          return CommissionCard(vm.commissionDataList[index]);
-                                        },
-                                        childCount: vm.commissionDataList.length
-                                    )
-                                );
-                              }
-                          ),
-                        ],
-                      ),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.endColor, // 渐变起始颜色
+                        AppColors.backgroundColor3,      // 渐变结束颜色
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
                   ),
-                ],
-              ),
+                ),
+                Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: AppColors.backgroundColor3
+                      ),
+                    ),
+                )
+              ],
+            ),
+            SafeArea(
+                child: Container(
+                  decoration: BoxDecoration(
+                    //color: AppColors.backgroundColor3
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Position(),
+                          Expanded(child: SearchTopBar()),
+                          SizedBox(width: 10.w)
+                        ],
+                      ),
+                      SizedBox(height: 5,),
+                      Expanded(
+                        child: SmartRefresher(
+                          controller: _viewModel.refreshController,
+                          enablePullUp: true,
+                          enablePullDown: true,
+                          header: MaterialClassicHeader(
+                            color: AppColors.appColor,
+                            backgroundColor: AppColors.endColor,
+                          ),
+                          footer: ClassicFooter(
+                            canLoadingText: "松开加载更多~",
+                            loadingText: "努力加载中~",
+                            noDataText: "已经到底了~",
+                          ),
+                          onLoading: _onLoading,
+                          onRefresh: _onRefresh,
+                          child: CustomScrollView(
+                            slivers: [
+                              SliverToBoxAdapter(
+                                child: SizedBox(
+                                  height: 10,
+                                ),
+                              ),
+
+                              SliverToBoxAdapter(
+                                  child: Container(
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                            height: 180,
+                                            padding: EdgeInsets.only(left: 10, right: 10, top: 20,bottom: 10),
+                                            child: PageView(
+                                              controller: _pageController,
+                                              onPageChanged: (index) {
+                                                setState(() {
+                                                  _currentPage = index;
+                                                });
+                                              },
+                                              children: [
+                                                Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                      children: [
+                                                        CType(index: 1),
+                                                        CType(index: 2),
+                                                        CType(index: 3),
+                                                        CType(index: 4),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 10),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                      children: [
+                                                        CType(index: 5),
+                                                        CType(index: 6),
+                                                        CType(index: 7),
+                                                        CType(index: 8),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                      children: [
+                                                        CType(index: 9),
+                                                        CType(index: 10),
+                                                        CType(index: 11),
+                                                        CType(index: 2),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 10),
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                      children: [
+                                                        CType(index: 3),
+                                                        CType(index: 4),
+                                                        CType(index: 5),
+                                                        CType(index: 6),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            )
+                                        ),
+                                        _buildIndicator(),
+                                      ],
+                                    ),
+                                    margin: EdgeInsets.symmetric(horizontal: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.r),
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 1
+                                      ),
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          AppColors.endColor, // 渐变起始颜色
+                                          Colors.white38,      // 渐变结束颜色
+                                        ],
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                      ),
+                                    ),
+                                  )
+                              ),
+
+                              SliverToBoxAdapter(
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                                  child: Text(
+                                    "为您推荐:",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              Consumer<CommissionViewModel>(
+                                  builder: (context, vm, child){
+                                    return vm.isLoading ? SliverToBoxAdapter(
+                                      child: Center(
+                                        heightFactor: 10.h,
+                                        child: CircularProgressIndicator(
+                                          backgroundColor: AppColors.appColor,
+                                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.endColor),
+                                        ),
+                                      ),
+                                    ) : vm.commissionDataList.isEmpty ? SliverToBoxAdapter(
+                                      child: Center(
+                                          child: Container(
+                                            child: Column(
+                                              children: [
+                                                Image.asset(
+                                                  height: 200.h,
+                                                  width: 200.w,
+                                                  "assets/images/search_no_result.png",
+                                                ),
+                                                Text(
+                                                  "您周围没有合适的委托/(ㄒoㄒ)/~~",
+                                                  style: TextStyle(
+                                                      color: AppColors.appColor,
+                                                      fontSize: 16.sp
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                      ),
+                                    ) : SliverList(
+                                        delegate: SliverChildBuilderDelegate(
+                                                (context, index){
+                                              return CommissionCard(vm.commissionDataList[index]);
+                                            },
+                                            childCount: vm.commissionDataList.length
+                                        )
+                                    );
+                                  }
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
             )
+          ],
         ),
     );
   }
@@ -260,9 +301,8 @@ class _CommissionPageState extends State<CommissionPage>{
 
   Widget CommissionCard(CommissionData1 commission){
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Material(
-        elevation: 5,
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
@@ -298,7 +338,7 @@ class _CommissionPageState extends State<CommissionPage>{
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          commission.commissionBudget.toString(),
+                        (commission.commissionBudget / commission.specifyServiceTime).toStringAsFixed(1),
                           style: TextStyle(
                               color: Colors.red,
                               fontSize: 20.sp,
@@ -306,10 +346,10 @@ class _CommissionPageState extends State<CommissionPage>{
                           ),
                         ),
                         Text(
-                          "元",
+                          commission.isLong ? "元/月" : "元/小时",
                           style: TextStyle(
                               color: Colors.red,
-                              fontSize: 12.sp,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w600
                           ),
                         )
@@ -432,7 +472,10 @@ class _CommissionPageState extends State<CommissionPage>{
           ),
           Text(
             CommonData.CommissionTypes[index].typeText,
-            style: TextStyle(color: AppColors.textColor2b),
+            style: TextStyle(
+              color: AppColors.textColor2b,
+              fontWeight: FontWeight.w500
+            ),
           )
         ],
       ),
@@ -452,11 +495,12 @@ class _CommissionPageState extends State<CommissionPage>{
             Icon(
               Icons.location_on_outlined,
               weight: 3,
-              color: AppColors.appColor,
+              color: AppColors.textColor2b,
             ),
             Text(
               Global.location?.city ?? "定位中..",
               style: TextStyle(
+                color: AppColors.textColor2b,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600
               ),

@@ -7,10 +7,10 @@ import 'package:jiayuan/common_ui/dialog/dialog_factory.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_vm.dart';
 import 'package:jiayuan/page/tab_page/tab_page_vm.dart';
-import 'package:jiayuan/repository/model/commission_data.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/utils/common_data.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
@@ -103,21 +103,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                             decoration: BoxDecoration(
                               color: Colors.white,
                             ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.r),
-                                color: AppColors.appColor
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "待接取",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 25.sp
-                                  ),
-                                ),
-                              ),
-                            )
+                            child: _Status(vm.commissionData.commissionStatus)
                           ),
 
                           SizedBox(height: 10.h,),
@@ -524,152 +510,319 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                       )
                   ),
                 ),
-                bottomNavigationBar: Container(
-                  height: 60.h,
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  decoration:BoxDecoration(
-                    color: Colors.white,
-                  ),
-                  child: Row(
+                bottomNavigationBar: _getBottom(vm.commissionData.commissionStatus),
+              );
+            }
+        ),
+    );
+  }
+
+  Widget _getBottom(int statuId){
+    if(statuId == 2){
+      return _UnService();
+    } else if(statuId < 5){
+      return _UnFinish(statuId);
+    }else{
+      return _Finish();
+    }
+  }
+  Widget _UnService(){
+    return Container(
+        height: 60.h,
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        decoration:BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
+                      Text(
+                        "￥" + _commissionDetailViewModel.commissionData.commissionBudget.toString(),
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 22.sp
+                        ),
+                      ),
+                      Icon(
+                        Icons.help_outline,
+                        color: Colors.black26,
+                        size: 20.sp,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "预估收入",
+                        style: TextStyle(
+                            color: Colors.black26,
+                            fontSize: 14.sp
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+                child: AppButton(
+                  onTap: (){},
+                  type: AppButtonType.main,
+                  color: CommonData.statusColor[2],
+                  buttonText: "取消服务",
+                  buttonTextStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.sp
+                  ),
+                  radius: 8.r,
+                  margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                )
+            ),
+            Expanded(
+                child: AppButton(
+                  onTap: (){},
+                  type: AppButtonType.main,
+                  color: CommonData.statusColor[2],
+                  buttonText: "开始服务",
+                  buttonTextStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.sp
+                  ),
+                  radius: 8.r,
+                  margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                )
+            ),
+          ],
+        )
+    );
+  }
+
+  Widget _Finish(){
+    return Container(
+        height: 60.h,
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        decoration:BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "总收入：",
+                        style: TextStyle(
+                            color: AppColors.textColor2b,
+                            fontSize: 22.sp
+                        ),
+                      ),
+                      Text(
+                        "￥" + _commissionDetailViewModel.commissionData.commissionBudget.toString(),
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 22.sp
+                        ),
+                      ),
+                      Icon(
+                        Icons.help_outline,
+                        color: Colors.black26,
+                        size: 20.sp,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        )
+    );
+  }
+
+  Widget _UnFinish(int statuId){
+    String buttonText = "";
+    if(statuId == 0){
+      buttonText = "我想接";
+    }else if(statuId == 2){
+      buttonText = "开始服务";
+    }else if(statuId == 3){
+      buttonText = "完成服务";
+    }else if(statuId == 4){
+      buttonText = "提醒用户";
+    }
+    return Container(
+        height: 60.h,
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        decoration:BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "￥" + _commissionDetailViewModel.commissionData.commissionBudget.toString(),
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 22.sp
+                        ),
+                      ),
+                      Icon(
+                        Icons.help_outline,
+                        color: Colors.black26,
+                        size: 20.sp,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "预估收入",
+                        style: TextStyle(
+                            color: Colors.black26,
+                            fontSize: 14.sp
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+            SizedBox(width: 5,),
+            Expanded(
+                child: AppButton(
+                  onTap: (){
+                    DialogFactory.instance.showParentDialog(
+                        touchOutsideDismiss: true,
+                        context: context,
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16.r)
+                          ),
+                          width: 200,
+                          height: 180,
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "￥" + vm.commissionData.commissionBudget.toString(),
+                                    "确认接取委托?",
                                     style: TextStyle(
-                                        color: Colors.red,
-                                        fontSize: 22.sp
+                                        color: AppColors.textColor2b,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.w500
                                     ),
-                                  ),
-                                  Icon(
-                                    Icons.help_outline,
-                                    color: Colors.black26,
-                                    size: 20.sp,
                                   ),
                                 ],
                               ),
+                              SizedBox(height: 10,),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                child: Wrap(
+                                  children: [
+                                    Text(
+                                      "接取委托后，需等待委托用户确认，即可开始服务",
+                                      style: TextStyle(
+                                          fontSize: 16.sp,
+                                          color: AppColors.textColor7d
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 20,),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    "预估收入",
-                                    style: TextStyle(
-                                        color: Colors.black26,
-                                        fontSize: 14.sp
+                                  Expanded(
+                                    child: AppButton(
+                                      onTap: (){
+                                        RouteUtils.pop(context);
+                                      },
+                                      type: AppButtonType.minor,
+                                      radius: 8.r,
+                                      buttonText: "取消",
+                                      buttonTextStyle: TextStyle(
+                                          color: AppColors.textColor2b
+                                      ),
                                     ),
                                   ),
+                                  Expanded(
+                                      child: AppButton(
+                                        onTap: (){
+                                          int result = _commissionDetailViewModel.receiveCommission();
+                                          if(result == 0){
+                                            TabPageViewModel.currentIndex = 3;
+                                            RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
+                                            showToast("请先认证！");
+                                          }else if(result == 1){
+                                            TabPageViewModel.currentIndex = 3;
+                                            RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
+                                            showToast("接取成功！");
+                                          }
+                                        },
+                                        type: AppButtonType.main,
+                                        radius: 8.r,
+                                        buttonText: "确认",
+                                      )
+                                  )
                                 ],
                               )
                             ],
                           ),
-                      ),
-                      SizedBox(width: 5,),
-                      Expanded(
-                          child: AppButton(
-                            onTap: (){
-                              DialogFactory.instance.showParentDialog(
-                                touchOutsideDismiss: true,
-                                  context: context,
-                                  child: Container(
-                                    padding: EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(16.r)
-                                    ),
-                                    width: 200,
-                                    height: 180,
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "确认接取委托?",
-                                              style: TextStyle(
-                                                color: AppColors.textColor2b,
-                                                fontSize: 18.sp,
-                                                fontWeight: FontWeight.w500
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 10,),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(horizontal: 5),
-                                          child: Wrap(
-                                            children: [
-                                              Text(
-                                                "接取委托后，需等待委托用户确认，即可开始服务",
-                                                style: TextStyle(
-                                                  fontSize: 16.sp,
-                                                  color: AppColors.textColor7d
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: 20,),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                                child: AppButton(
-                                                  onTap: (){
-                                                    RouteUtils.pop(context);
-                                                  },
-                                                  type: AppButtonType.minor,
-                                                  radius: 8.r,
-                                                  buttonText: "取消",
-                                                  buttonTextStyle: TextStyle(
-                                                    color: AppColors.textColor2b
-                                                  ),
-                                                ),
-                                            ),
-                                            Expanded(
-                                                child: AppButton(
-                                                  onTap: (){
-                                                    int result = _commissionDetailViewModel.receiveCommission();
-                                                    if(result == 0){
-                                                      TabPageViewModel.currentIndex = 3;
-                                                      RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
-                                                      showToast("请先认证！");
-                                                    }else if(result == 1){
-                                                      TabPageViewModel.currentIndex = 3;
-                                                      RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
-                                                      showToast("接取成功！");
-                                                    }
-                                                  },
-                                                  type: AppButtonType.main,
-                                                  radius: 8.r,
-                                                  buttonText: "确认",
-                                                )
-                                            )
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  )
-                              );
-                            },
-                            type: AppButtonType.main,
-                            buttonText: "我想接",
-                            buttonTextStyle: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14.sp
-                            ),
-                            radius: 8.r,
-                          )
-                      ),
-                    ],
-                  )
-                ),
-              );
-            }
+                        )
+                    );
+                  },
+                  type: AppButtonType.main,
+                  color: CommonData.statusColor[statuId],
+                  buttonText: buttonText,
+                  buttonTextStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14.sp
+                  ),
+                  radius: 8.r,
+                )
+            ),
+          ],
+        )
+    );
+  }
+
+  Widget _Status(int statuId){
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.r),
+          color: CommonData.statusColor[statuId]
+      ),
+      child: Center(
+        child: Text(
+          CommonData.orderStatus[statuId],
+          style: TextStyle(
+              color: Colors.white,
+              fontSize: 25.sp
+          ),
         ),
+      ),
     );
   }
 }

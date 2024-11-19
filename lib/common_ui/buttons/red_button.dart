@@ -41,6 +41,8 @@ class AppButton extends StatelessWidget {
   //按钮圆角度数
   final double? radius;
 
+  final Color? color;
+
   //按钮类型，必填
   final AppButtonType type;
 
@@ -56,6 +58,7 @@ class AppButton extends StatelessWidget {
     this.buttonText,
     this.buttonTextStyle,
     this.radius,
+    this.color
   });
 
   @override
@@ -66,7 +69,7 @@ class AppButton extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(radius ?? 0.r)),
               color:
-                  (type == AppButtonType.minor) ? AppColors.searchBgColor : AppColors.appColor),
+                  color ?? ((type == AppButtonType.minor) ? AppColors.searchBgColor : AppColors.appColor)),
           alignment: textAlignment ?? Alignment.center,
           width: buttonWidth ?? double.infinity,
           height: buttonHeight ?? 49.h,

@@ -12,8 +12,6 @@ import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-import '../../../repository/model/commission_data.dart';
 import '../../../route/route_path.dart';
 import '../../../route/route_utils.dart';
 import '../../../utils/common_data.dart';
@@ -176,14 +174,16 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                                       Text(
                                         CommonData.CommissionTypes[widget.id].typeText,
                                         style: TextStyle(
-                                            color: AppColors.textColor2b
+                                            color: AppColors.textColor2b,
+                                          fontSize: 16.sp
                                         ),
                                       ),
                                       SizedBox(width: 5.w,),
                                       Text(
                                         (vm.commissionDataList.length > 999) ? "999+" : (vm.commissionDataList.length.toString()) + "个相关委托",
                                         style: TextStyle(
-                                            color: AppColors.textColor2b
+                                            color: AppColors.textColor2b,
+                                            fontSize: 16.sp
                                         ),
                                       )
                                     ],
@@ -415,7 +415,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          commission.commissionBudget.toString(),
+                          (commission.commissionBudget / commission.specifyServiceTime).toStringAsFixed(1),
                           style: TextStyle(
                               color: Colors.red,
                               fontSize: 20.sp,
@@ -423,10 +423,10 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
                           ),
                         ),
                         Text(
-                          "元",
+                          commission.isLong ? "元/月" : "元/小时",
                           style: TextStyle(
                               color: Colors.red,
-                              fontSize: 12.sp,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w600
                           ),
                         )
