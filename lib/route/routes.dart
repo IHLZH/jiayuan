@@ -123,6 +123,8 @@ class Routes {
         //评价页
       case RoutePath.evalutationPage:
         return pageRoute(EvalutationPage());
+      case RoutePath.personalKeeper:
+        return pageRoute(PersonalKeeperPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

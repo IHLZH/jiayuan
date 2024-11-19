@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   # 状态管理
   provider: ^6.1.2
+  #城市选择器
+  city_pickers: ^1.3.0
   # 屏幕适配相关
   flutter_screenutil: ^5.9.3
   # 网络请求
