@@ -5,7 +5,6 @@ import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_ui/banner/home_banner_widget.dart';
-import '../../common_ui/dialog/loading.dart';
 import 'keeper_vm.dart';
 
 class Keeperpage extends StatefulWidget {
@@ -17,8 +16,8 @@ class Keeperpage extends StatefulWidget {
   State<Keeperpage> createState() => _KeeperpageState();
 }
 
-class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateMixin {
-
+class _KeeperpageState extends State<Keeperpage>
+    with SingleTickerProviderStateMixin {
   late final KeeperViewModel keeperViewModel;
 
   @override
@@ -119,15 +118,17 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
                     child: Container(
                       height: 60.h,
                       child: ElevatedButton(
-                        onPressed: () {
-                        },
+                        onPressed: () {},
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                          Icon(Icons.favorite_border),
-                          SizedBox(width: 5.w,),
-                          Text('加入收藏')
-                        ],),
+                            Icon(Icons.favorite_border),
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                            Text('加入收藏')
+                          ],
+                        ),
                         style: ButtonStyle(
                             backgroundColor:
                                 MaterialStateProperty.all(AppColors.appColor)),
@@ -142,26 +143,32 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
                       height: 60.h,
                       child: ElevatedButton(
                         onPressed: () async {
-                          final bool? isCancel = await showDialog<bool>(context: context, builder: (context) => AlertDialog(
-                            content: Text('确定拨打电话吗？'),
-                            actions: [
-                              TextButton(onPressed: (){
-                                Navigator.of(context).pop(false);
-                              }, child: Text('取消')),
-                              TextButton(onPressed: () {
-                                Navigator.of(context).pop(true);
-                              }, child: Text('确定'))
-                            ],
-                          ));
-                          if(isCancel == true){
+                          final bool? isCancel = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    content: Text('确定拨打电话吗？'),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(false);
+                                          },
+                                          child: Text('取消')),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(true);
+                                          },
+                                          child: Text('确定'))
+                                    ],
+                                  ));
+                          if (isCancel == true) {
                             try {
                               await keeperViewModel.makePhoneCall();
                             } catch (e) {
-                             if(mounted){
-                               ScaffoldMessenger.of(context).showSnackBar(
-                                 SnackBar(content: Text(e.toString())),
-                               );
-                             }
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.toString())),
+                                );
+                              }
                             }
                           }
                         },
@@ -169,12 +176,14 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.phone),
-                            SizedBox(width: 5.w,),
+                            SizedBox(
+                              width: 5.w,
+                            ),
                             Text('电话咨询'),
                           ],
                         ),
                         style: ButtonStyle(
-                          elevation: MaterialStateProperty.all(5),
+                            elevation: MaterialStateProperty.all(5),
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.white)),
                       ),
@@ -191,7 +200,7 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
 
   Widget _keeperDecoration() {
     return Container(
-      height: 400.h,
+      height: 420.h,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white),
         borderRadius: BorderRadius.circular(15.0),
@@ -207,7 +216,7 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
   Widget _keeperPersonInfo() {
     return Consumer<KeeperViewModel>(
         builder: (context, vm, child) => SizedBox(
-              height: 690.h,
+              height: 710.h,
               child: Stack(
                 children: [
                   BannerWidget(
@@ -237,22 +246,20 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
       margin: EdgeInsets.only(left: 12.w, right: 12.w),
       padding:
           EdgeInsets.only(left: 15.w, right: 15.w, top: 15.h, bottom: 15.h),
-      height: 400.h,
+      height: 420.h,
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(15)),
+          color: Colors.white, borderRadius: BorderRadius.circular(15.0.w)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(
           children: [
             //切割圆形
-            ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: Image.network(
-                keeperViewModel.keeperData?.avatar ?? "",
-                width: 50.w,
-                height: 50.h,
-                fit: BoxFit.cover,
-              ),
+            CircleAvatar(
+              radius: 40,
+              backgroundImage: keeperViewModel.keeperData?.avatar != null
+                  ? NetworkImage(keeperViewModel.keeperData!.avatar ?? '')
+                  : AssetImage(
+                          'assets/images/drawkit-grape-pack-illustration-18.png')
             ),
             Row(
               // 设置文本基线
@@ -334,6 +341,9 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
         //照片
         Container(
           height: 100.h,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15.0.w)
+          ),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: keeperViewModel.keeperData?.certificates?.length,
@@ -355,7 +365,7 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
 
   Widget _keeperIntroduction() {
     return Container(
-      margin: EdgeInsets.only(left: 15.w, right: 15.w, bottom: 15.h),
+      margin: EdgeInsets.only(left: 15.w, right: 15.w, bottom: 15.h,top: 15.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(13),
         color: Colors.white,
@@ -491,7 +501,8 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
                             SizedBox(height: 10),
                             Container(
                               child: GridView.builder(
-                                  padding: EdgeInsets.zero, // 确保没有额外的内边距
+                                  padding: EdgeInsets.zero,
+                                  // 确保没有额外的内边距
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
                                   itemCount: keeperViewModel.keeperData
@@ -501,9 +512,8 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
                                           crossAxisCount: 3,
                                           crossAxisSpacing: 10,
                                           mainAxisSpacing: 10,
-                                          childAspectRatio:1 ),
-                                  itemBuilder: (context, index1) =>
-                                      Container(
+                                          childAspectRatio: 1),
+                                  itemBuilder: (context, index1) => Container(
                                         child: Image.network(
                                           width: 50.h,
                                           height: 50.h,
@@ -514,8 +524,7 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
                                               '',
                                           fit: BoxFit.cover,
                                         ),
-                                      )
-                              ),
+                                      )),
                             )
                           ],
                         ),
@@ -525,4 +534,3 @@ class _KeeperpageState extends State<Keeperpage> with SingleTickerProviderStateM
     );
   }
 }
-
