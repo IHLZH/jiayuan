@@ -1,7 +1,10 @@
 import 'package:jiayuan/utils/constants.dart';
+import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimSDKListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/log_level_enum.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_callback.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_application.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_user_full_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_user_status.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_value_callback.dart';
@@ -35,25 +38,30 @@ class ImChatApi {
     return _instance;
   }
 
+  // 监听器
+  V2TimSDKListener? sdkListener; //sdk监听器
+  V2TimFriendshipListener? listener; //关系监听器
+
   Future<void> initSDK() async {
     // 1. 从即时通信 IM 控制台获取应用 SDKAppID。
     int sdkAppID = 1600061544;
     // 2. 添加 V2TimSDKListener 的事件监听器，sdkListener 是 V2TimSDKListener 的实现类
-    V2TimSDKListener sdkListener = V2TimSDKListener(
+    sdkListener = V2TimSDKListener(
       onConnectFailed: (int code, String error) {
         // 连接失败的回调函数
         // code 错误码
         // error 错误信息
 
-        if (isProduction) print("连接失败的回调函数 错误码 $code,错误信息 $error");
+        if (isProduction)
+          print("============= 连接失败的回调函数 错误码 $code,错误信息 $error ============");
       },
       onConnectSuccess: () {
         // SDK 已经成功连接到腾讯云服务器
-        if (isProduction) print("SDK 已经成功连接到腾讯云服务器");
+        if (isProduction) print("============= SDK 已经成功连接到腾讯云服务器 ============");
       },
       onConnecting: () {
         // SDK 正在连接到腾讯云服务器
-        if (isProduction) print("SDK 正在连接到腾讯云服务器");
+        if (isProduction) print("============= SDK 正在连接到腾讯云服务器 ============");
       },
       onKickedOffline: () {
         // 当前用户被踢下线，此时可以 UI 提示用户，并再次调用 V2TIMManager 的 login() 函数重新登录。
@@ -63,7 +71,7 @@ class ImChatApi {
       onSelfInfoUpdated: (V2TimUserFullInfo info) {
         // 登录用户的资料发生了更新
         // info登录用户的资料
-        if (isProduction) print("登录用户的资料发生了更新");
+        if (isProduction) print("============= 登录用户的资料发生了更新 ============");
       },
       onUserSigExpired: () {
         // 在线时票据过期：此时您需要生成新的 userSig 并再次调用 V2TIMManager 的 login() 函数重新登录。
@@ -84,11 +92,11 @@ class ImChatApi {
         await TencentImSDKPlugin.v2TIMManager.initSDK(
       sdkAppID: sdkAppID, // SDKAppID
       loglevel: LogLevelEnum.V2TIM_LOG_DEBUG, // 日志登记等级
-      listener: sdkListener, // 事件监听器
+      listener: sdkListener!, // 事件监听器
     );
     if (initSDKRes.code == 0) {
       // 初始化成功
-      if (isProduction) print("IM SDK 初始化成功");
+      if (isProduction) print("============= IM SDK 初始化成功 ============");
     }
   }
 
@@ -97,7 +105,51 @@ class ImChatApi {
         .login(userID: userID, userSig: userSig);
     if (loginRes.code == 0) {
       // 登录成功逻辑
-      if (isProduction) print("登录成功 UserID: $userID");
+      if (isProduction)
+        print("============= IM登录成功 UserID: $userID ============");
+
+      //关系监听
+      //设置关系链监听器
+      listener = V2TimFriendshipListener(
+        onBlackListAdd: (List<V2TimFriendInfo> infoList) async {
+          //黑名单列表新增用户的回调
+          //infoList 新增的用户信息列表
+        },
+        onBlackListDeleted: (List<String> userList) async {
+          //黑名单列表删除的回调
+          //userList 被删除的用户id列表
+        },
+        onFriendApplicationListAdded:
+            (List<V2TimFriendApplication> applicationList) async {
+          //好友请求数量增加的回调
+          //applicationList 新增的好友请求信息列表
+        },
+        onFriendApplicationListDeleted: (List<String> userIDList) async {
+          //好友请求数量减少的回调
+          //减少的好友请求的请求用户id列表
+        },
+        onFriendApplicationListRead: () async {
+          //好友请求已读的回调
+        },
+        onFriendInfoChanged: (List<V2TimFriendInfo> infoList) async {
+          //好友信息改变的回调
+          //infoList 好友信息改变的好友列表
+        },
+        onFriendListAdded: (List<V2TimFriendInfo> users) async {
+          //好友列表增加人员的回调
+          //users 新增的好友信息列表
+        },
+        onFriendListDeleted: (List<String> userList) async {
+          //好友列表减少人员的回调
+          //userList 减少的好友id列表
+        },
+      );
+      TencentImSDKPlugin.v2TIMManager
+          .getFriendshipManager()
+          .addFriendListener(listener: listener!); //添加关系链监听器
+
+      if (isProduction && listener != null)
+        print("============= IM设置关系链监听器成功 ============");
     } else {
       // 登录失败逻辑
       if (isProduction) print("登录失败");
@@ -111,7 +163,18 @@ class ImChatApi {
     V2TimCallback logoutRes = await TencentImSDKPlugin.v2TIMManager.logout();
     if (logoutRes.code == 0) {
       // 登出成功的逻辑
-      if (isProduction) print("登出成功");
+      if (isProduction) print("============= IM登出成功 ============");
+
+      //移除关系链监听器
+      //添加成功之后可移除
+      TencentImSDKPlugin.v2TIMManager
+          .getFriendshipManager()
+          .removeFriendListener(listener: listener!); //需要移除的关系链监听器
+
+      if (isProduction) print("============= IM移除关系链监听器成功 ============");
+    } else {
+      if (isProduction) print("============= IM登出失败 ============");
+      if (isProduction) print("错误码: ${logoutRes.code} 错误信息: ${logoutRes.desc}");
     }
   }
 
@@ -152,7 +215,7 @@ class ImChatApi {
         //TODO:用户角色设置与查找
       }
     } else {
-      if (isProduction) print("查询失败");
+      if (isProduction) print("============= IM查询失败 ============");
     }
   }
 
@@ -182,7 +245,7 @@ class ImChatApi {
         .setSelfInfo(userFullInfo: userFullInfo); //用户资料设置信息
     if (setSelfInfoRes.code == 0) {
       // 修改成功
-      if (isProduction) print("修改成功");
+      if (isProduction) print("============= IM修改成功 ============");
     } else {
       // 修改失败
       if (isProduction)
