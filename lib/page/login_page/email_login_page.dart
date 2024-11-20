@@ -8,6 +8,7 @@ import 'package:jiayuan/utils/sp_utils.dart';
 import 'package:oktoast/oktoast.dart';
 
 import '../../http/url_path.dart';
+import '../../im/im_chat_api.dart';
 import '../../repository/model/user.dart';
 import '../../route/route_path.dart';
 import '../../route/route_utils.dart';
@@ -157,6 +158,21 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
 
           if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
           if (isProduction) print("token: ${Global.token}");
+
+          //IM登录
+          String userSig = response.data['message'];
+
+          if (isProduction) print("userSig : $userSig");
+
+          await ImChatApi.getInstance()
+              .login(Global.userInfo!.userId.toString(), userSig);
+
+          await ImChatApi.getInstance().setSelfInfo(
+              Global.userInfo!.userId.toString(),
+              Global.userInfo!.nickName,
+              Global.userInfo!.userAvatar,
+              Global.userInfo!.userSex,
+              Global.userInfo!.userType);
 
           // 跳转
           _jumpToTab();

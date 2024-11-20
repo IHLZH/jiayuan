@@ -9,6 +9,7 @@ import 'package:oktoast/oktoast.dart';
 
 import '../../http/dio_instance.dart';
 import '../../http/url_path.dart';
+import '../../im/im_chat_api.dart';
 import '../../repository/model/user.dart';
 import '../../utils/constants.dart';
 import '../../utils/global.dart';
@@ -163,6 +164,21 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
 
           if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
           if (isProduction) print("token: ${Global.token}");
+
+          //IM登录
+          String userSig = response.data['message'];
+
+          if (isProduction) print("userSig : $userSig");
+
+          await ImChatApi.getInstance()
+              .login(Global.userInfo!.userId.toString(), userSig);
+
+          await ImChatApi.getInstance().setSelfInfo(
+              Global.userInfo!.userId.toString(),
+              Global.userInfo!.nickName,
+              Global.userInfo!.userAvatar,
+              Global.userInfo!.userSex,
+              Global.userInfo!.userType);
 
           // 跳转
           _jumpToTab();
