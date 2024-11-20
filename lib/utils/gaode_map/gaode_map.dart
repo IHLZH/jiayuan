@@ -163,7 +163,7 @@ class GaodeMap{
       locationOption.fullAccuracyPurposeKey = "AMapLocationScene";
 
       ///设置Android端连续定位的定位间隔
-      locationOption.locationInterval = 3600000;
+      locationOption.locationInterval = 60000;
 
       ///设置Android端的定位模式<br>
       ///可选值：<br>

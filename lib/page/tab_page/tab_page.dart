@@ -86,30 +86,6 @@ class _TabPageState extends State<TabPage>{
     });
   }
 
-  void _registerListener(){
-    // GaodeMap.instance.locationListener = _locationPlugin
-    //     .onLocationChanged()
-    //     .listen((Map<String, Object> result) {
-    //
-    //   print("位置信息为：" + result.toString());
-    //
-    //   Global.location = LocationData(
-    //       latitude: result["latitude"] as double,
-    //       longitude: result["longitude"]as double,
-    //       country: result['country'].toString(),
-    //       province: result['province'].toString(),
-    //       city: result['city'].toString(),
-    //       district: result['district'].toString(),
-    //       street: result['street'].toString(),
-    //       adCode: result['adCode'].toString(),
-    //       address: result['address'].toString(),
-    //       cityCode: result['cityCode'].toString()
-    //   );
-    //
-    //   print("定位信息为：" + Global.location.toString());
-    // });
-  }
-
   void _initTabItems(){
     print("111");
     _tabItems[0] = HomePage();

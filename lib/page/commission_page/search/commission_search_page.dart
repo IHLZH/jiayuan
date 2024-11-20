@@ -684,7 +684,6 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
     );
   }
 
-
   List<Widget> _SearchHistory(List<String> searchHistory){
     List<String> reverseSearchHistory = searchHistory.reversed.toList();
     Set<String> searchHistorySet = Set();
