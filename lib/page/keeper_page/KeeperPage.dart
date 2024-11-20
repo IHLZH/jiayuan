@@ -162,7 +162,7 @@ class _KeeperpageState extends State<Keeperpage>
                                   ));
                           if (isCancel == true) {
                             try {
-                              await keeperViewModel.makePhoneCall();
+                              await keeperViewModel.makePhoneCall(keeperViewModel.keeperData!.contact!);
                             } catch (e) {
                               if (mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(

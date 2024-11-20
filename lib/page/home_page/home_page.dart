@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage>
                 Text("${Global.location?.city}",
                     style: TextStyle(fontSize: 15.sp))
               ]),
-              backgroundColor: AppColors.appColor,
+              backgroundColor: Color.fromRGBO(70, 219, 201, 1),
             ),
             backgroundColor: Colors.white,
             body: CustomScrollView(

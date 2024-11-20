@@ -161,8 +161,35 @@ class _EvalutationPageState extends State<EvalutationPage>
           Spacer(),
           Material(
             child: InkWell(
-              onTap: () {
-                   _viewModel.makePhoneCall(_viewModel.order!.userPhoneNumber!);
+              onTap: ()async{
+                  final bool? isCancel = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    content: Text('确定拨打电话吗？'),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(false);
+                                          },
+                                          child: Text('取消')),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(true);
+                                          },
+                                          child: Text('确定'))
+                                    ],
+                                  ));
+                                            if (isCancel == true) {
+                            try {
+                              _viewModel.makePhoneCall(_viewModel.order!.userPhoneNumber!);
+                            } catch (e) {
+                              if (mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.toString())),
+                                );
+                              }
+                            }
+                          }
               },
               child: Icon(Icons.phone, color: Colors.black, size: 24),
             ),

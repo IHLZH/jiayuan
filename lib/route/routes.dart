@@ -19,9 +19,9 @@ import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
 import '../page/commission_center_page/personal_keeper_page/personal_keeper_page.dart';
-import '../page/evaluation_page/evalutation_page.dart';
 import '../page/keeper_page/KeeperPage.dart';
 import '../page/login_page/phone_login_page.dart';
+import '../page/order_page/evaluation_page/evalutation_page.dart';
 import '../page/order_page/order_page.dart';
 import '../page/send_commission_page/send_commision_page.dart';
 import '../page/tab_page/tab_page.dart';
@@ -99,7 +99,7 @@ class Routes {
       //家政员个人页面
       case RoutePath.KeeperPage:
         final keeperId = settings.arguments as int;
-        return pageRoute(Keeperpage(keeperId: keeperId), settings: settings);
+        return pageRoute(Keeperpage(keeperId: keeperId));
       //家政员分类页
       case RoutePath.houseKeepingScreeningPage:
         return pageRoute(HouseKeepingScreeningPage());
@@ -123,7 +123,7 @@ class Routes {
         return pageRoute(CenterOrderPage(), settings: settings);
         //评价页
       case RoutePath.evalutationPage:
-        return pageRoute(EvalutationPage());
+        return pageRoute(EvalutationPage(),settings: settings);
       case RoutePath.personalKeeper:
         return pageRoute(PersonalKeeperPage());
     }

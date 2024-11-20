@@ -17,7 +17,7 @@ class AppColors {
   //偏灰背景色
   static const backgroundColor2 = Color(0xfff9f9f9);
   static const backgroundColor3 = Color(0xfff3f4f6);
-
+  static const backgroundColor4 =  Color.fromRGBO(70, 219, 201, 1);
   //按钮红色背景
   static const redBtnColor = Color(0xFFFF3B3D);
   static const cursorColor = Color(0xFFE9AAAB);

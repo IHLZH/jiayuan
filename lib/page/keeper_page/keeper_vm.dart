@@ -29,10 +29,10 @@ class KeeperViewModel with ChangeNotifier {
     }
   }
 
-  //拨打电话
-  Future<void> makePhoneCall() async {
+      //拨打电话
+  Future<void> makePhoneCall(String phone) async {
     try {
-      if (keeperData?.contact == null) {
+      if (phone == null) {
         throw '电话号码不能为空';
       }
       var status = await Permission.phone.status;
@@ -43,10 +43,10 @@ class KeeperViewModel with ChangeNotifier {
         }
       }
 
-      final phoneNumber = keeperData?.contact?.replaceAll(RegExp(r'[^\d]'), '');
-      final Uri telUri = Uri.parse('tel:${keeperData?.contact}');
+      final phoneNumber = phone.replaceAll(RegExp(r'[^\d]'), '');
+      final Uri telUri = Uri.parse('tel:${phone}');
       print('准备拨打电话: ${telUri.toString()}');
-      
+
       if (await canLaunchUrl(telUri,)) {
         await launchUrl(telUri,mode: LaunchMode.externalApplication);
       } else {

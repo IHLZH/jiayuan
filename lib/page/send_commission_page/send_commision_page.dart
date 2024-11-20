@@ -484,7 +484,8 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
                             border: InputBorder.none,
                           ),
                         ),
-                      )
+                      ),
+                      SizedBox(width: 5.w)
                     ],
                   )
                 ],
