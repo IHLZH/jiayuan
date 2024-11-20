@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:jiayuan/repository/api/commission_api.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/repository/model/user.dart';
 import 'package:jiayuan/utils/global.dart';
@@ -12,13 +13,17 @@ class CommissionDetailViewModel with ChangeNotifier{
   CommissionData1 commissionData = CommissionData1();
 
   //委托接取
-  int receiveCommission(){
+  Future<int> changeCommissionStatus(int newStatu) async {
     if((Global.userInfo?.userType ?? 0) == 1){
-      //
-      return 1;
-    }else{
-      return 0;
+      bool result = await CommissionApi.instance.changeOrderStatus({
+        "commissionId":commissionData.commissionId,
+        "new":newStatu
+      });
+      if(result) {
+        return 1;
+      }
     }
+    return 0;
   }
 
   Future<void> makePhoneCall(String phoneNumber) async {

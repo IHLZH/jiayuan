@@ -33,7 +33,7 @@ class OrderPageViewModel with ChangeNotifier{
   void getOrders(){
     unServed = [
       CommissionData1(
-          commissionId: 1,
+          commissionId: 2,
           province: "河北省",
           city: "石家庄",
           county: "裕华区",
@@ -46,7 +46,7 @@ class OrderPageViewModel with ChangeNotifier{
           typeName: "日常保洁"
       ),
       CommissionData1(
-        commissionId: 1,
+        commissionId: 2,
         province: "河北省",
         city: "石家庄",
         county: "裕华区",
@@ -59,7 +59,7 @@ class OrderPageViewModel with ChangeNotifier{
           typeName: "日常保洁"
       ),
       CommissionData1(
-        commissionId: 1,
+        commissionId: 2,
         province: "河北省",
         city: "石家庄",
         county: "裕华区",
@@ -75,7 +75,7 @@ class OrderPageViewModel with ChangeNotifier{
 
     inService = [
       CommissionData1(
-        commissionId: 1,
+        commissionId: 2,
         province: "河北省",
         city: "石家庄",
         county: "裕华区",
@@ -88,7 +88,7 @@ class OrderPageViewModel with ChangeNotifier{
           typeName: "日常保洁"
       ),
       CommissionData1(
-        commissionId: 1,
+        commissionId: 2,
         province: "河北省",
         city: "石家庄",
         county: "裕华区",
@@ -104,7 +104,7 @@ class OrderPageViewModel with ChangeNotifier{
 
     unPay = [
       CommissionData1(
-        commissionId: 1,
+        commissionId: 2,
         province: "河北省",
         city: "石家庄",
         county: "裕华区",
@@ -117,7 +117,7 @@ class OrderPageViewModel with ChangeNotifier{
           typeName: "日常保洁"
       ),
       CommissionData1(
-        commissionId: 1,
+        commissionId: 2,
         province: "河北省",
         city: "石家庄",
         county: "裕华区",
@@ -133,7 +133,7 @@ class OrderPageViewModel with ChangeNotifier{
 
     down = [
       CommissionData1(
-        commissionId: 1,
+        commissionId: 2,
         province: "河北省",
         city: "石家庄",
         county: "裕华区",
@@ -146,7 +146,7 @@ class OrderPageViewModel with ChangeNotifier{
           typeName: "日常保洁"
       ),
       CommissionData1(
-        commissionId: 1,
+        commissionId: 2,
         province: "河北省",
         city: "石家庄",
         county: "裕华区",
