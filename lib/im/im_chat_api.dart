@@ -1,10 +1,16 @@
 import 'package:jiayuan/utils/constants.dart';
+import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
+import 'package:tencent_cloud_chat_sdk/enum/V2TimGroupListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimSDKListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/log_level_enum.dart';
+import 'package:tencent_cloud_chat_sdk/enum/message_elem_type.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_callback.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_application.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_message_receipt.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_msg_create_info_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_user_full_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_user_status.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_value_callback.dart';
@@ -26,6 +32,9 @@ bool isProduction = Constants.IS_Production;
 //修改2
 // ImChatApi.getInstance().setSelfInfo('19', 'null', 'www.null.jpg', 2, 1);
 
+//发送单聊文本消息
+// ImChatApi.getInstance().sendTextMessage(receiverID, text);//分别为接收人ID和文本
+
 class ImChatApi {
   // 私有化构造函数
   ImChatApi._();
@@ -40,7 +49,9 @@ class ImChatApi {
 
   // 监听器
   V2TimSDKListener? sdkListener; //sdk监听器
-  V2TimFriendshipListener? listener; //关系监听器
+  V2TimFriendshipListener? friendshipListener; //关系监听器
+  V2TimAdvancedMsgListener? advancedMsgListener; //高级消息监听器
+  V2TimGroupListener? groupListener; //群组监听器
 
   Future<void> initSDK() async {
     // 1. 从即时通信 IM 控制台获取应用 SDKAppID。
@@ -110,7 +121,7 @@ class ImChatApi {
 
       //关系监听
       //设置关系链监听器
-      listener = V2TimFriendshipListener(
+      friendshipListener = V2TimFriendshipListener(
         onBlackListAdd: (List<V2TimFriendInfo> infoList) async {
           //黑名单列表新增用户的回调
           //infoList 新增的用户信息列表
@@ -146,15 +157,155 @@ class ImChatApi {
       );
       TencentImSDKPlugin.v2TIMManager
           .getFriendshipManager()
-          .addFriendListener(listener: listener!); //添加关系链监听器
+          .addFriendListener(listener: friendshipListener!); //添加关系链监听器
 
-      if (isProduction && listener != null)
+      if (isProduction && friendshipListener != null)
         print("============= IM设置关系链监听器成功 ============");
     } else {
       // 登录失败逻辑
       if (isProduction) print("登录失败");
       if (isProduction) print("错误码: ${loginRes.code} 错误信息: ${loginRes.desc}");
     }
+
+    // 消息监听
+    // 设置高级消息监听器
+    // 创建消息监听器
+    advancedMsgListener = V2TimAdvancedMsgListener(
+      onRecvC2CReadReceipt: (List<V2TimMessageReceipt> receiptList) {
+        //单聊已读回调
+        if (isProduction) print("============单聊已读回调==========");
+      },
+      onRecvMessageModified: (V2TimMessage message) {
+        // msg 为被修改之后的消息对象
+      },
+      onRecvMessageReadReceipts: (List<V2TimMessageReceipt> receiptList) {
+        //群聊已读回调
+        receiptList.forEach((element) {
+          element.groupID; // 群id
+          element.msgID; // 已读回执消息 ID
+          element.readCount; // 群消息最新已读数
+          element.unreadCount; // 群消息最新未读数
+          element.userID; //  C2C 消息对方 ID
+        });
+      },
+      onRecvMessageRevoked: (String messageid) {
+        // 在本地维护的消息中处理被对方撤回的消息
+      },
+      onRecvNewMessage: (V2TimMessage message) async {
+        // 处理文本消息
+        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
+          String? text = message.textElem!.text;
+
+          if (isProduction) print("============获得新消息： ${text}=========");
+        }
+        // 使用自定义消息
+        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
+          message.customElem?.data;
+          message.customElem?.desc;
+          message.customElem?.extension;
+        }
+        // 使用图片消息
+        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_IMAGE) {
+          message.imageElem
+              ?.path; // 图片上传时的路径，消息发送者才会有这个字段，消息发送者可用这个字段将图片预先上屏，优化上屏体验。
+          message.imageElem?.imageList?.forEach((element) {
+            // 遍历大图、原图、缩略图
+            // 解析图片属性
+            element?.height;
+            element?.localUrl;
+            element?.size;
+            element?.type; // 大图 缩略图 原图
+            element?.url;
+            element?.uuid;
+            element?.width;
+          });
+        }
+        // 处理视频消息
+        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_VIDEO) {
+          // 解析视频消息属性，封面、播放地址、宽高、大小等。
+          message.videoElem?.UUID;
+          message.videoElem?.duration;
+          message.videoElem?.localSnapshotUrl;
+          message.videoElem?.localVideoUrl;
+          message.videoElem?.snapshotHeight;
+          message.videoElem?.snapshotPath;
+          // ...
+        }
+        // 处理音频消息
+        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_SOUND) {
+          // 解析语音消息 播放地址，本地地址，大小，时长等。
+          message.soundElem?.UUID;
+          message.soundElem?.dataSize;
+          message.soundElem?.duration;
+          message.soundElem?.localUrl;
+          message.soundElem?.url;
+          // ...
+        }
+        // 处理文件消息
+        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_FILE) {
+          // 解析文件消息 文件名、文件大小、url等
+          message.fileElem?.UUID;
+          message.fileElem?.fileName;
+          message.fileElem?.fileSize;
+          message.fileElem?.localUrl;
+          message.fileElem?.path;
+          message.fileElem?.url;
+        }
+        // 处理位置消息
+        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_LOCATION) {
+          // 解析地理位置消息，经纬度、描述等
+          message.locationElem?.desc;
+          message.locationElem?.latitude;
+          message.locationElem?.longitude;
+        }
+        // 处理表情消息
+        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_FACE) {
+          message.faceElem?.data;
+          message.faceElem?.index;
+        }
+        // 处理群组tips文本消息
+        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_GROUP_TIPS) {
+          message.groupTipsElem?.groupID; // 所属群组
+          message.groupTipsElem?.type; // 群Tips类型
+          message.groupTipsElem?.opMember; // 操作人资料
+          message.groupTipsElem?.memberList; // 被操作人资料
+          message.groupTipsElem?.groupChangeInfoList; // 群信息变更详情
+          message.groupTipsElem?.memberChangeInfoList; // 群成员变更信息
+          message.groupTipsElem?.memberCount; // 当前群在线人数
+        }
+        // 处理合并消息消息
+        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_MERGER) {
+          message.mergerElem?.abstractList;
+          message.mergerElem?.isLayersOverLimit;
+          message.mergerElem?.title;
+          V2TimValueCallback<List<V2TimMessage>> download =
+              await TencentImSDKPlugin.v2TIMManager
+                  .getMessageManager()
+                  .downloadMergerMessage(
+                    msgID: message.msgID!,
+                  );
+          if (download.code == 0) {
+            List<V2TimMessage>? messageList = download.data;
+          }
+        }
+        if (message.textElem?.nextElem != null) {
+          //通过第一个 Elem 对象的 nextElem 方法获取下一个 Elem 对象，如果下一个 Elem 对象存在，会返回 Elem 对象实例，如果不存在，会返回 null。
+        }
+      },
+      onSendMessageProgress: (V2TimMessage message, int progress) {
+        //文件上传进度回调
+      },
+    );
+    // 添加高级消息的事件监听器
+    TencentImSDKPlugin.v2TIMManager
+        .getMessageManager()
+        .addAdvancedMsgListener(listener: advancedMsgListener!);
+    if (isProduction) print("============= IM添加高级消息监听器成功 ============");
+
+    //获取信息
+
+    // 会话监听
+    //设置会话监听器
   }
 
   Future<void> logout() async {
@@ -169,9 +320,16 @@ class ImChatApi {
       //添加成功之后可移除
       TencentImSDKPlugin.v2TIMManager
           .getFriendshipManager()
-          .removeFriendListener(listener: listener!); //需要移除的关系链监听器
+          .removeFriendListener(listener: friendshipListener!); //需要移除的关系链监听器
 
       if (isProduction) print("============= IM移除关系链监听器成功 ============");
+
+      //移除消息监听器
+      TencentImSDKPlugin.v2TIMManager
+          .getMessageManager()
+          .removeAdvancedMsgListener(listener: advancedMsgListener);
+
+      if (isProduction) print("============= IM移除消息监听器成功 ============");
     } else {
       if (isProduction) print("============= IM登出失败 ============");
       if (isProduction) print("错误码: ${logoutRes.code} 错误信息: ${logoutRes.desc}");
@@ -252,4 +410,66 @@ class ImChatApi {
         print("修改失败，错误码: ${setSelfInfoRes.code}, 错误信息: ${setSelfInfoRes.desc}");
     }
   }
+
+  //单聊发送文本消息
+  Future<void> sendTextMessage(String receiverID, String text) async {
+    // 创建文本消息
+    V2TimValueCallback<V2TimMsgCreateInfoResult> createTextMessageRes =
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .createTextMessage(
+              text: text, // 文本信息
+            );
+    if (createTextMessageRes.code == 0) {
+      // 文本信息创建成功
+      String? id = createTextMessageRes.data?.id;
+      // 发送文本消息
+      // 在sendMessage时，若只填写receiver则发个人用户单聊消息
+      //                 若只填写groupID则发群组消息
+      //                 若填写了receiver与groupID则发群内的个人用户，消息在群聊中显示，只有指定receiver能看见
+      V2TimValueCallback<V2TimMessage> sendMessageRes = await TencentImSDKPlugin
+          .v2TIMManager
+          .getMessageManager()
+          .sendMessage(id: id!, receiver: receiverID, groupID: '');
+      if (sendMessageRes.code == 0) {
+        // 发送成功
+        if (isProduction) print("============= 发送成功 => ${text} ============");
+      } else {
+        if (isProduction)
+          print(
+              "发送失败，错误码: ${sendMessageRes.code}, 错误信息: ${sendMessageRes.desc}");
+      }
+    }
+  }
+
+  //群聊发送文本消息
+  Future<void> sendGroupTextMessage(String groupID, String text) async {
+    // 创建文本消息
+    V2TimValueCallback<V2TimMsgCreateInfoResult> createTextMessageRes =
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .createTextMessage(
+              text: text, // 文本信息
+            );
+    if (createTextMessageRes.code == 0) {
+      // 文本信息创建成功
+      String? id = createTextMessageRes.data?.id;
+      // 发送文本消息
+      // 在sendMessage时，若只填写receiver则发个人用户单聊消息
+      //                 若只填写groupID则发群组消息
+      //                 若填写了receiver与groupID则发群内的个人用户，消息在群聊中显示，只有指定receiver能看见
+      V2TimValueCallback<V2TimMessage> sendMessageRes = await TencentImSDKPlugin
+          .v2TIMManager
+          .getMessageManager()
+          .sendMessage(id: id!, receiver: "", groupID: groupID);
+      if (sendMessageRes.code == 0) {
+        // 发送成功
+      }
+    }
+  }
+
+  //获取文本消息
+  // Future<void> getTextMessage() async{
+  //   advancedMsgListener.re
+  // }
 }
