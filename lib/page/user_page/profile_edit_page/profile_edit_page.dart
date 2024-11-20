@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
+import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/repository/model/user.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
@@ -90,6 +91,13 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           // if (_pickedFile != null) {
           //   saveAvatar(_pickedFile, Global.userInfoNotifier.value.userId);
           // }
+
+          await ImChatApi.getInstance().setSelfInfo(
+              Global.userInfo!.userId.toString(),
+              Global.userInfo!.nickName,
+              Global.userInfo!.userAvatar,
+              Global.userInfo!.userSex,
+              Global.userInfo!.userType);
 
           _jumpToTab();
         } else {
