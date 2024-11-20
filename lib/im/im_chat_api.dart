@@ -18,10 +18,10 @@ bool isProduction = Constants.IS_Production;
 
 //修改用户信息
 // ImChatApi.getInstance()
-//     .setSelfInfo('ikunhuaji', '19', 'www.ikun.jpg', 1);
+//     .setSelfInfo('19', 'ikunhuaji', 'www.ikun.jpg', 1, 0);
 
 //修改2
-// ImChatApi.getInstance().setSelfInfo('null', '19', 'www.null.jpg', 2);
+// ImChatApi.getInstance().setSelfInfo('19', 'null', 'www.null.jpg', 2, 1);
 
 class ImChatApi {
   // 私有化构造函数
@@ -101,6 +101,7 @@ class ImChatApi {
     } else {
       // 登录失败逻辑
       if (isProduction) print("登录失败");
+      if (isProduction) print("错误码: ${loginRes.code} 错误信息: ${loginRes.desc}");
     }
   }
 
@@ -155,18 +156,26 @@ class ImChatApi {
     }
   }
 
-  Future<void> setSelfInfo(
-      String nickName, String userID, String faceUrl, int gender) async {
+  Future<void> setSelfInfo(String userID, String nickName, String userAvatar,
+      int userSex, int userType) async {
     //用户资料设置信息
     V2TimUserFullInfo userFullInfo = V2TimUserFullInfo(
-      nickName: nickName, // 用户昵称
-      allowType: 0, //用户的好友验证方式 0:允许所有人加我好友 1:不允许所有人加我好友 2:加我好友需我确认
-      birthday: 0, //用户生日
-      faceUrl: faceUrl, //用户头像 url
-      gender: gender, //用户的性别 1:男 2:女
-      level: 0, //用户的等级
-      role: 0, //用户的角色
-      selfSignature: "", //用户的签名
+      nickName: nickName,
+      // 用户昵称
+      allowType: 0,
+      //用户的好友验证方式 0:允许所有人加我好友 1:不允许所有人加我好友 2:加我好友需我确认
+      birthday: 0,
+      //用户生日
+      faceUrl: userAvatar,
+      //用户头像 url
+      gender: userSex,
+      //用户的性别 1:男 2:女
+      level: 0,
+      //用户的等级
+      role: userType,
+      //用户的角色
+      selfSignature: "",
+      //用户的签名
       userID: userID, //用户 ID
     );
     V2TimCallback setSelfInfoRes = await TencentImSDKPlugin.v2TIMManager
