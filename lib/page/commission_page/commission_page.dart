@@ -225,6 +225,7 @@ class _CommissionPageState extends State<CommissionPage>{
 
                               SliverToBoxAdapter(
                                 child: Container(
+                                  margin: EdgeInsets.only(top: 10, bottom: 5),
                                   padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                                   child: Text(
                                     "为您推荐:",

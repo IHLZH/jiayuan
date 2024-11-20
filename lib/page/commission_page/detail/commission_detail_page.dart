@@ -196,7 +196,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                           ),
                                           SizedBox(width: 20.w,),
                                           Text(
-                                            DateFormat('yyyy-MM-dd HH:mm:ss').format(vm.commissionData.createTime),
+                                            DateFormat('yyyy-MM-dd HH:mm:ss').format(vm.commissionData.createTime ?? DateTime(1999, 1, 1, 12, 0)),
                                             style: TextStyle(
                                                 color: Colors.black87
                                             ),

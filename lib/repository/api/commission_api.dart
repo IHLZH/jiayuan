@@ -4,7 +4,6 @@ import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
 import '../../http/dio_instance.dart';
-import '../model/Commission.dart';
 import '../model/standardPrice.dart';
 import '../model/commission_data1.dart';
 
@@ -98,10 +97,10 @@ class CommissionApi{
   }
 
   //发布委托
-  Future<String> sendCommission(Commission commission, int serviceType) async {
+  Future<String> sendCommission(CommissionData1 commission, int serviceType) async {
     Response response = await DioInstance.instance().post(
         path: UrlPath.sendCommissionUrl,
-        data: commission.toJson(),
+        data: commission.toJsonForSend(),
         queryParameters: {"serviceId": serviceType},
        options: Options(headers: {"token":Global.token})
     );
