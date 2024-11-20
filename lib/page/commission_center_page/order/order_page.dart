@@ -189,7 +189,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                       child: Text(
                         commission.commissionStatus == 2 ?
                         DateFormat('yyyy-MM-dd HH:mm:ss').format(commission.expectStartTime) :
-                        DateFormat('yyyy-MM-dd HH:mm:ss').format(commission.realStartTime),
+                        DateFormat('yyyy-MM-dd HH:mm:ss').format(commission.realStartTime ?? DateTime(1999, 1, 1, 12, 0)),
                         style: TextStyle(
                             color: AppColors.textColor2b
                         ),
