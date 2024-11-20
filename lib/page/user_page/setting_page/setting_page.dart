@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
+import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
 
@@ -19,14 +20,33 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
+
+    Future<void> _test() async{
+
+      // 获取当前日期
+      DateTime now = DateTime.now();
+
+      // 格式化日期为字符串，例如 "2024-11-20"
+      String formattedDate = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+
+      ImChatApi.getInstance().sendTextMessage('21', formattedDate);
+    }
+
     Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
       return Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            if (icon == Icons.email_outlined) {
-            } else {
-              // 其他选项的点击事件处理
+            switch (title) {
+              case '邮箱地址':
+                break;
+              case '手机号码':
+                break;
+              case '修改密码':
+                break;
+              case 'TEST':
+                _test();
+                break;
             }
           },
           splashColor: Colors.grey[300],
@@ -118,6 +138,8 @@ class _SettingPageState extends State<SettingPage> {
                   _buildOption(Icons.phone, '手机号码'),
                   _line(),
                   _buildOption(Icons.lock, '修改密码'),
+                  _line(),
+                  _buildOption(Icons.send_outlined, 'TEST'),
                 ],
               ),
             ),
