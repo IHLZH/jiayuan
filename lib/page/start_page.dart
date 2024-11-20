@@ -93,8 +93,25 @@ class _StartPageState extends State<StartPage> {
                 response.headers["Authorization"] as List<String>;
             Global.token = token.first;
 
+            if (isProduction) print("token : ${Global.token}");
+
             //持久化
             await SpUtils.saveString("token", Global.token!);
+
+            //IM登录
+            String userSig = response.data['message'];
+
+            if (isProduction) print("userSig : $userSig");
+
+            await ImChatApi.getInstance()
+                .login(Global.userInfo!.userId.toString(), userSig);
+
+            await ImChatApi.getInstance().setSelfInfo(
+                Global.userInfo!.userId.toString(),
+                Global.userInfo!.nickName,
+                Global.userInfo!.userAvatar,
+                Global.userInfo!.userSex,
+                Global.userInfo!.userType);
 
             showToast("自动登录成功", duration: const Duration(seconds: 1));
             _jumpToTab();

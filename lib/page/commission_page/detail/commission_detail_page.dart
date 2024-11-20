@@ -196,7 +196,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                           ),
                                           SizedBox(width: 20.w,),
                                           Text(
-                                            DateFormat('yyyy-MM-dd HH:mm:ss').format(vm.commissionData.createTime),
+                                            DateFormat('yyyy-MM-dd HH:mm:ss').format(vm.commissionData.createTime ?? DateTime(1999, 1, 1, 12, 0)),
                                             style: TextStyle(
                                                 color: Colors.black87
                                             ),
@@ -822,8 +822,8 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                   ),
                   Expanded(
                       child: AppButton(
-                        onTap: (){
-                          int result = _commissionDetailViewModel.receiveCommission();
+                        onTap: () async {
+                          int result = await _commissionDetailViewModel.changeCommissionStatus(1);
                           if(result == 0){
                             TabPageViewModel.currentIndex = 3;
                             RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
@@ -906,10 +906,15 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                   ),
                   Expanded(
                       child: AppButton(
-                        onTap: (){
-                          RouteUtils.pop(context);
-                          showToast("操作成功，委托已完成！");
-                          RouteUtils.pop(context);
+                        onTap: () async {
+                          int result = await _commissionDetailViewModel.changeCommissionStatus(4);
+                          if(result == 1){
+                            RouteUtils.pop(context);
+                            showToast("操作成功，委托已完成！");
+                            RouteUtils.pop(context);
+                          }else{
+                            showToast("操作失败，请稍后再试");
+                          }
                         },
                         type: AppButtonType.main,
                         radius: 8.r,
@@ -989,10 +994,15 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                   ),
                   Expanded(
                       child: AppButton(
-                        onTap: (){
-                          RouteUtils.pop(context);
-                          showToast("操作成功，委托已取消");
-                          RouteUtils.pop(context);
+                        onTap: () async {
+                          int result = await _commissionDetailViewModel.changeCommissionStatus(0);
+                          if(result == 1){
+                            RouteUtils.pop(context);
+                            showToast("操作成功，委托已取消");
+                            RouteUtils.pop(context);
+                          }else{
+                            showToast("操作失败，请稍后再试");
+                          }
                         },
                         type: AppButtonType.main,
                         radius: 8.r,
@@ -1069,10 +1079,15 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                   ),
                   Expanded(
                       child: AppButton(
-                        onTap: (){
-                          RouteUtils.pop(context);
-                          showToast("操作成功，委托已开始");
-                          RouteUtils.pop(context);
+                        onTap: () async {
+                          int result = await _commissionDetailViewModel.changeCommissionStatus(3);
+                          if(result == 1){
+                            RouteUtils.pop(context);
+                            showToast("操作成功，委托已开始");
+                            RouteUtils.pop(context);
+                          }else{
+                            showToast("操作失败，请稍后再试");
+                          }
                         },
                         type: AppButtonType.main,
                         radius: 8.r,

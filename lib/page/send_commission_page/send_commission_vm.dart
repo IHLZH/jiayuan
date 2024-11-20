@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:jiayuan/repository/model/Commission.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -8,7 +7,7 @@ import '../../repository/model/commission_data1.dart';
 import '../../repository/model/standardPrice.dart';
 
 class SendCommissionViewModel with ChangeNotifier{
-  Commission? commission ;
+  CommissionData1? commission ;
   //手机号格式验证
   RegExp reg_tel = RegExp(r'^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$');
   int? selectedDuration ; //服务时长
@@ -48,13 +47,13 @@ class SendCommissionViewModel with ChangeNotifier{
    //发布委托
   Future<bool> sendCommission() async{
     try{
-      commission = Commission(
+      commission = CommissionData1(
           commissionBudget: price,
           downPayment: price/10.0,
           commissionDescription: remark,
           commissionAddress: _address!+doorNumber.toString(),
-          lng: _longitude?.toString(),
-          lat: _latitude?.toString(),
+          lng: _longitude,
+          lat: _latitude,
           province: _province,
           city: _city,
           county: _district,

@@ -4,7 +4,6 @@ import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
 import '../../http/dio_instance.dart';
-import '../model/Commission.dart';
 import '../model/standardPrice.dart';
 import '../model/commission_data1.dart';
 
@@ -13,13 +12,13 @@ class CommissionApi{
 
   CommissionApi._();
 
-  //请求委托
+  //分类请求委托
   Future<List<CommissionData1>> getCommission(Map<String, dynamic> param) async{
     List<CommissionData1> commissionList = [];
 
     try{
       final Response response = await DioInstance.instance().get(
-          path: "/searchList_by_money_distance",
+          path: UrlPath.getTypeCommission,
           param: param
       );
 
@@ -41,13 +40,13 @@ class CommissionApi{
     return commissionList;
   }
 
-  //请求委托
+  //搜索请求委托
   Future<List<CommissionData1>> searchCommission(Map<String, dynamic> param) async{
     List<CommissionData1> commissionList = [];
 
     try{
       final Response response = await DioInstance.instance().get(
-          path: "/search_list_by_order",
+          path: UrlPath.searchCommission,
           param: param
       );
 
@@ -69,13 +68,13 @@ class CommissionApi{
     return commissionList;
   }
 
-  //请求委托
+  //推荐请求委托
   Future<List<CommissionData1>> recommendCommission(Map<String, dynamic> param) async{
     List<CommissionData1> commissionList = [];
 
     try{
       final Response response = await DioInstance.instance().get(
-          path: "/search_by_distance",
+          path: UrlPath.getRecommendCommission,
           param: param
       );
 
@@ -97,11 +96,36 @@ class CommissionApi{
     return commissionList;
   }
 
+  //更改订单状态
+  Future<bool> changeOrderStatus(Map<String, dynamic> param) async {
+    try{
+      final Response response = await DioInstance.instance().put(
+        path: UrlPath.changeOrderStatus,
+        queryParameters: param
+      );
+
+      if(response.statusCode == 200){
+        if(response.data['code'] == 200){
+          return true;
+        }else{
+          return false;
+        }
+      }else{
+        showToast(
+            "网络错误，请检查网络连接"
+        );
+      }
+    }catch(e){
+      print("网络错误error:" + e.toString());
+    }
+    return false;
+  }
+
   //发布委托
-  Future<String> sendCommission(Commission commission, int serviceType) async {
+  Future<String> sendCommission(CommissionData1 commission, int serviceType) async {
     Response response = await DioInstance.instance().post(
         path: UrlPath.sendCommissionUrl,
-        data: commission.toJson(),
+        data: commission.toJsonForSend(),
         queryParameters: {"serviceId": serviceType},
        options: Options(headers: {"token":Global.token})
     );

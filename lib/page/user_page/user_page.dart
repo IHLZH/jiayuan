@@ -9,6 +9,7 @@ import 'package:oktoast/oktoast.dart';
 
 import '../../http/dio_instance.dart';
 import '../../http/url_path.dart';
+import '../../im/im_chat_api.dart';
 import '../../route/route_path.dart';
 import '../../route/route_utils.dart';
 import '../../utils/global.dart';
@@ -75,6 +76,9 @@ class _UserPageState extends State<UserPage> {
               Global.password = null;
               Global.userInfoNotifier.value = null;
 
+              //IM注销登录
+              await ImChatApi.getInstance().logout();
+
               await SpUtils.saveString("password", "");
 
               RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
@@ -99,7 +103,7 @@ class _UserPageState extends State<UserPage> {
     }
 
     Future<void> _jumpToProfileEditPage() async {
-      if(isProduction){
+      if(false){
         final result = await RouteUtils.pushForNamed(
           context,
           RoutePath.profileEditPage,

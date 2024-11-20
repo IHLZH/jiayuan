@@ -46,7 +46,8 @@ class CommissionData1 {
       String? specifyServiceDuration,
       int? commissionStatus,
     double? distance,
-    String? typeName
+    String? typeName,
+    double? downPayment
   }){
     _commissionId = commissionId;
     _userId = userId;
@@ -181,6 +182,7 @@ class CommissionData1 {
   bool? _isLong; //是否是长期
   String? _days;
   int? _specifyServiceTime;
+  double? _downPayment;
 
 
 CommissionData1 copyWith({
@@ -239,17 +241,18 @@ CommissionData1 copyWith({
   double get lng => _lng ?? 0.0;
   double get lat => _lat ?? 0.0;
   String get userPhoneNumber => _userPhoneNumber ?? "";
-  DateTime get createTime => _createTime ?? DateTime(1999,1,1,0,0,0);
-  DateTime get updatedTime => _updatedTime ?? DateTime(1999,1,1,0,0,0);
+  DateTime? get createTime => _createTime;
+  DateTime? get updatedTime => _updatedTime;
   DateTime get expectStartTime => _expectStartTime ?? DateTime(1999,1,1,0,0,0);
-  DateTime get realStartTime => _realStartTime ?? DateTime(1999,1,1,0,0,0);
-  DateTime get endTime => _endTime ?? DateTime(1999,1,1,0,0,0);
+  DateTime? get realStartTime => _realStartTime;
+  DateTime? get endTime => _endTime;
   String get specifyServiceDuration => _specifyServiceDuration ?? "";
   int get commissionStatus => _commissionStatus ?? 0;
   double get distance => _distance ?? 0.0;
   bool get isLong => _isLong ?? false;
   String get days => _days ?? "";
   int get specifyServiceTime => _specifyServiceTime ?? 1;
+  double get downPayment => _downPayment ?? 0.0;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -273,6 +276,32 @@ CommissionData1 copyWith({
     map['specifyServiceDuration'] = _specifyServiceDuration.toString();
     map['commissionStatus'] = _commissionStatus.toString();
     return map;
+  }
+
+  //发布委托所需
+  Map<String, dynamic> toJsonForSend() {
+    return {
+      'commissionId': commissionId,
+      'userId': userId,
+      'keeperId': keeperId,
+      'commissionBudget': commissionBudget,
+      'down_payment': downPayment,
+      'commissionDescription': commissionDescription,
+      'province': province,
+      'city': city,
+      'county': county,
+      'commissionAddress': commissionAddress,
+      'lng': lng,
+      'lat': lat,
+      'userPhoneNumber': userPhoneNumber,
+      'createTime': createTime,
+      'updatedTime': updatedTime,
+      'expectStartTime': expectStartTime.toIso8601String(),
+      'realStartTime': realStartTime,
+      'endTime': endTime,
+      'specifyServiceDuration': specifyServiceDuration,
+      'commissionStatus': commissionStatus,
+    };
   }
 
   @override

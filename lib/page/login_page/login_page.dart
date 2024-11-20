@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -101,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
   void _jumpToTab() async {
     await Global.dbUtil!.open();
 
+    //TODO:用户数据保存方法
     //await Global.dbUtil!.deleteAllByHelper('tbl_user');
     // await Global.dbUtil!.insertByHelper("tbl_user", Global.userTmp!.toMap());
     // if (Global.isLogin)
@@ -184,6 +186,21 @@ class _LoginPageState extends State<LoginPage> {
 
           if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
           if (isProduction) print("token: ${Global.token}");
+
+          //IM登录
+          String userSig = response.data['message'];
+
+          if (isProduction) print("userSig : $userSig");
+
+          await ImChatApi.getInstance()
+              .login(Global.userInfo!.userId.toString(), userSig);
+
+          await ImChatApi.getInstance().setSelfInfo(
+              Global.userInfo!.userId.toString(),
+              Global.userInfo!.nickName,
+              Global.userInfo!.userAvatar,
+              Global.userInfo!.userSex,
+              Global.userInfo!.userType);
 
           showToast("登陆成功", duration: Duration(seconds: 1));
 
