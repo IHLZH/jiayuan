@@ -56,25 +56,6 @@ class UrlPath {
   //图片上传接口
   static const String uploadAvatarUrl = "/profile/upload";
 
-  //搜索委托接口
-  static const String searchCommissionUrl = "/search";
-
-  //搜索后根据距离筛选委托接口
-  static const String searchCommissionByDistanceUrl = "/search_by_distance";
-
-  //搜索后根据金额刷选委托接口
-  static const String searchCommissionByMoneyUrl = "/search_by_money";
-
-  //根据分类获取委托接口
-  static const String getcommissionByTypeUrl = "/commission";
-
-  //根据分类获取委托后根据距离筛选委托
-  static const String getcommissionByTypeDistanceUrl =
-      "/search_by_typeId_distance";
-
-  //根据分类获取委托后根据金额筛选委托
-  static const String getcommissionByTypeMoneyUrl = "/search_by_money_typeId";
-
   //接取委托接口
   static const String receiveCommissionUrl = "/receive";
 
@@ -98,5 +79,17 @@ class UrlPath {
 
   //高德地图天气接口
   static const String weatherUrl = "https://restapi.amap.com/v3/weather/weatherInfo";
+
+  //分类请求委托
+  static const String getTypeCommission = "/searchList_by_money_distance";
+
+  //首页推荐委托
+  static const String getRecommendCommission = "/search_by_distance";
+
+  //搜索委托
+  static const String searchCommission = "/search_list_by_order";
+
+  //更改订单状态
+  static const String changeOrderStatus = "/order/update/status";
 
 }
