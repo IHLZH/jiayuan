@@ -21,7 +21,7 @@ class _EvalutationPageState extends State<EvalutationPage>
   late List<List<AnimationController>> _animatedControllers;
   late List<List<Animation<double>>> _animations;
 
-  void _ImageChanged(List<XFile> images) {
+  void _ImageChanged(List<String> images) {
     _viewModel.imageUrls = images;
   }
 
@@ -106,6 +106,17 @@ class _EvalutationPageState extends State<EvalutationPage>
                       RouteUtils.pop(context);
                     },
                   ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+
+                      },
+                      child: Text(
+                        "提交",
+                        style: TextStyle(fontSize: 20, color: Colors.red),
+                      ),
+                    )
+                  ],
                 ),
               ),
               Expanded(
@@ -152,14 +163,15 @@ class _EvalutationPageState extends State<EvalutationPage>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(Icons.person, color: Colors.black, size: 24),
+          Icon(Icons.person, color: Colors.black, size: 30),
           SizedBox(width: 8),
           Text(
-            "刘子恒",
-            style: TextStyle(fontSize: 16, color: Colors.black),
+            "${_viewModel.order?.keeperName}",
+            style: TextStyle(fontSize: 18, color: Colors.black),
           ),
           Spacer(),
           Material(
+            color: Colors.white,
             child: InkWell(
               onTap: ()async{
                   final bool? isCancel = await showDialog<bool>(
@@ -191,7 +203,7 @@ class _EvalutationPageState extends State<EvalutationPage>
                             }
                           }
               },
-              child: Icon(Icons.phone, color: Colors.black, size: 24),
+              child: Icon(Icons.phone, color: Colors.black, size: 30),
             ),
           )
         ],

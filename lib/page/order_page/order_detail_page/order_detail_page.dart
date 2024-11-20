@@ -32,7 +32,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   // 去评价
   Future<void> _jumpToEvaluatePage() async {
-    RouteUtils.pushForNamed(context, RoutePath.evalutationPage);
+
+       RouteUtils.pushForNamed(context, RoutePath.evalutationPage,arguments: _order);
+
   }
 
   // 同意操作

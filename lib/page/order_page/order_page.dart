@@ -49,8 +49,9 @@ class _OrderPageState extends State<OrderPage> {
     _refreshOrders();
   }
 
-  Future<void> _jumpToEvaluatePage() async {
-    await RouteUtils.pushForNamed(context, RoutePath.evalutationPage);
+  Future<void> _jumpToEvaluatePage(int index ) async {
+        OrderDetailPageVm.nowOrder = _orderDataList[index];
+    await RouteUtils.pushForNamed(context, RoutePath.evalutationPage,arguments: _orderDataList[index]);
     _refreshOrders();
   }
 
@@ -392,7 +393,7 @@ class _OrderPageState extends State<OrderPage> {
                                       fontWeight: FontWeight.normal)),
                               onPressed: () {
                                 if (isProduction) print('用户点击了去评价按钮');
-                                _jumpToEvaluatePage();
+                                _jumpToEvaluatePage(index);
                               },
                             )
                           ],

@@ -89,15 +89,17 @@ class KeeperApi{
   //根据委托类型推荐
   Future<List<Housekeeper>?> getHousekeeperData(double? lng, double? lat, {int? id}) async{
     List<Housekeeper>  housekeepers = [];
-    // try {
-    //   print('推荐的参数${lng},${lat}');
-    //   final Response response = await DioInstance.instance().get(path: "/release/keeper/list",  param: {"longitude": lng, "latitude": lat, "typeId": id}) ;
-    //   housekeepers = (response.data["data"] as List).map((e) => Housekeeper.fromJson(e)).toList();
-    //   housekeepers.forEach((item)=>print(item.realName));
-    //   print('获取到的推荐数据${response.data["data"]}');
-    // }catch(e){
-    //   print("请求失败"+e.toString());
-    // }
+    try {
+      print('推荐的参数${lng},${lat}');
+      print('token参数');
+      print('${Global.token}');
+      final Response response = await DioInstance.instance().get(path: "/release/keeper/list",  param: {"longitude": lng, "latitude": lat, "typeId": id},options: Options(headers: {"token": Global.token})) ;
+       housekeepers = (response.data["data"] as List).map((e) => Housekeeper.fromJson(e)).toList();
+       housekeepers.forEach((item)=>print(item.realName));
+     print('获取到的推荐数据${response.data["data"]}');
+    }catch(e){
+      print("请求失败ss"+e.toString());
+    }
     housekeepers =  [
       Housekeeper(
           realName: "刘子恒",

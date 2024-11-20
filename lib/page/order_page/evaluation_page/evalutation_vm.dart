@@ -7,7 +7,7 @@ import '../../../repository/model/full_order.dart';
 
 class EvalutationViewModel with ChangeNotifier{
   // 评价图片
-  List<XFile>? imageUrls;
+  List<String>? imageUrls;
   //评论内容
   String? evaluationContent ;
   //总评分

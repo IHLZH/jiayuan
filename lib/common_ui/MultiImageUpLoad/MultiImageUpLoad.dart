@@ -3,18 +3,22 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jiayuan/repository/api/uploadImage_api.dart';
 
 class MultiImageUploadWidget extends StatefulWidget {
   @override
   _MultiImageUploadWidgetState createState() => _MultiImageUploadWidgetState();
-  //传入一个回调函数，通过回调函数来拿到图片数据
-  final Function(List<XFile>) onImageSelected;
+
+  //传入一个回调函数，通过回调函数来拿到服务器上传到的图片地址
+  final Function(List<String> imageUrls) onImageSelected;
+
   MultiImageUploadWidget(this.onImageSelected);
 }
 
 class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
   final ImagePicker _picker = ImagePicker();
   List<XFile> _imageFiles = [];
+  final List<String> _imageUrls = [];
 
   void initState() {
     super.initState();
@@ -23,13 +27,16 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
   //从相册选择图片
   Future<void> _pickImages() async {
     final pickedFiles = await _picker.pickMultiImage();
+    // 确保总数不超过6张
     if (pickedFiles != null) {
+      _imageUrls.addAll(await UploadImageApi.instance.uploadMultipleImages(
+          pickedFiles.take(6 - _imageFiles.length).toList()));
+      _imageFiles.addAll(pickedFiles.take(6 - _imageFiles.length));
       setState(() {
-        // 确保总数不超过6张
-        _imageFiles.addAll(pickedFiles.take(6 - _imageFiles.length));
+
       });
     }
-    widget.onImageSelected(_imageFiles);
+    widget.onImageSelected(_imageUrls);
   }
 
   void _removeImage(int index) {
@@ -38,7 +45,7 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
       _imageFiles.removeAt(index);
     });
     // 调用回调函数将图片传递到父组件
-    widget.onImageSelected(_imageFiles);
+    widget.onImageSelected(_imageUrls);
   }
 
   @override
@@ -48,7 +55,7 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
         Container(
           color: Colors.white,
           child: GridView.builder(
-            padding: EdgeInsets.only(top :10),
+            padding: EdgeInsets.only(top: 10),
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: _imageFiles.length <= 5 ? _imageFiles.length + 1 : 6,
@@ -76,9 +83,9 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
                               Icon(Icons.add),
                               _imageFiles.length >= 1
                                   ? Text(
-                                      "还可上传 ${6 - _imageFiles.length}张",
-                                      style: TextStyle(fontSize: 12),
-                                    )
+                                "还可上传 ${6 - _imageFiles.length}张",
+                                style: TextStyle(fontSize: 12),
+                              )
                                   : Text("上传图片"),
                             ],
                           ),

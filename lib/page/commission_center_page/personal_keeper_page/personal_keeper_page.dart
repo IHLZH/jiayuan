@@ -134,9 +134,9 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
   }
 
   Widget _buildAvatarInfo() {
-    return Selector<PersonalKeeperVm, XFile?>(
-        selector: (context, vm) => vm.avatar,
-        builder: (context, avatar, child) => Container(
+    return Selector<PersonalKeeperVm, String?>(
+        selector: (context, vm) => vm.avatarUrl,
+        builder: (context, avatarUrl, child) => Container(
               margin: EdgeInsets.only(
                   left: 20.w, right: 20.w, top: 10.h, bottom: 10.h),
               padding: EdgeInsets.all(15.w),
@@ -169,7 +169,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
                     },
                     child: CircleAvatar(
                       radius: 40.w,
-                        backgroundImage: avatar != null ? FileImage(File(avatar.path)): _personalKeeperVm.avatarUrl != null ? NetworkImage(_personalKeeperVm.avatarUrl!):AssetImage('assets/images/drawkit-grape-pack-illustration-18.png'),
+                        backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl): AssetImage('assets/images/drawkit-grape-pack-illustration-18.png'),
                       ),
                     ),
                 ],
@@ -195,7 +195,6 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
                   LengthLimitingTextInputFormatter(11),
                 ],
                 onTapOutside: (e) => _focusNodePhone.unfocus(),
-                onChanged: (value) {},
                 style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -253,11 +252,12 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
   }
 
   Widget _buildImages() {
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('工作照片', style: TextStyle(fontSize: 15, color: Colors.black)),
-        MultiImageUploadWidget(_personalKeeperVm.updateImage)
+        MultiImageUploadWidget(_personalKeeperVm.getImageUrls)
       ],
     );
   }
