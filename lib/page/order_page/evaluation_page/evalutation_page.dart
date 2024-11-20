@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
-import 'package:jiayuan/page/evaluation_page/evalutation_vm.dart';
+import 'package:jiayuan/repository/model/full_order.dart';
+
 import 'package:provider/provider.dart';
 
-import '../../common_ui/MultiImageUpLoad/MultiImageUpLoad.dart';
-import '../../route/route_utils.dart';
+import '../../../common_ui/MultiImageUpLoad/MultiImageUpLoad.dart';
+import '../../../route/route_utils.dart';
+import 'evalutation_vm.dart';
 
 class EvalutationPage extends StatefulWidget {
   @override
@@ -61,24 +63,28 @@ class _EvalutationPageState extends State<EvalutationPage>
 
     Future<void> animateStarsSequentially() async {
       for (int i = 0; i <= starIndex; i++) {
-        if (!mounted) return;
-
         await _animatedControllers[rowIndex][i].forward();
         await _animatedControllers[rowIndex][i].reverse();
         Future.delayed(Duration(milliseconds: 100));
       }
     }
-
     animateStarsSequentially();
   }
 
   @override
   Widget build(BuildContext context) {
+  _viewModel.order = ModalRoute.of(context)?.settings.arguments as FullOrder ;
     return ChangeNotifierProvider<EvalutationViewModel>(
       create: (context) => _viewModel,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        body: Container(
+        body: TextSelectionTheme(
+          data: TextSelectionThemeData(
+            selectionColor: Colors.green,
+            selectionHandleColor: Colors.greenAccent,
+            cursorColor: Colors.greenAccent,
+          ),
+          child: Container(
           width: double.infinity,
           height: double.infinity,
           color: Colors.grey[200],
@@ -87,7 +93,7 @@ class _EvalutationPageState extends State<EvalutationPage>
               Container(
                 decoration: BoxDecoration(
                     gradient: LinearGradient(colors: [
-                  AppColors.primaryColor,
+                  AppColors.backgroundColor4,
                   Colors.white,
                 ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
                 child: AppBar(
@@ -116,7 +122,11 @@ class _EvalutationPageState extends State<EvalutationPage>
                         endIndent: 22,
                       ),
                     ),
-                    MultiImageUploadWidget(_ImageChanged), //图片上传
+                    Container(
+                      color: Colors.white,
+                      padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+                      child: MultiImageUploadWidget(_ImageChanged),
+                    ), //图片上传
                     _ServiceEvaluationWidgetState(), //内容评价
                     //打分
                     _HitStartsWidget(),
@@ -125,6 +135,7 @@ class _EvalutationPageState extends State<EvalutationPage>
               )),
             ],
           ),
+        ),
         ),
       ),
     );
@@ -151,7 +162,7 @@ class _EvalutationPageState extends State<EvalutationPage>
           Material(
             child: InkWell(
               onTap: () {
-                print("点击了");
+                   _viewModel.makePhoneCall(_viewModel.order!.userPhoneNumber!);
               },
               child: Icon(Icons.phone, color: Colors.black, size: 24),
             ),
@@ -168,6 +179,7 @@ class _EvalutationPageState extends State<EvalutationPage>
           return Container(
             color: Colors.white,
             child: TextField(
+              style: TextStyle(fontSize: 14,color: Colors.black,fontWeight: FontWeight.w400),
               decoration: InputDecoration(
                 hintText: "✎ 呼起键盘，添加小标签，写更有帮助性的评价吧",
                 hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
