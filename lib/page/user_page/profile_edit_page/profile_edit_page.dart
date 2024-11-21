@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/im/im_chat_api.dart';
+import 'package:jiayuan/repository/api/uploadImage_api.dart';
 import 'package:jiayuan/repository/model/user.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
@@ -62,6 +63,13 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   Future<void> _updateUserInfo(User updatedUser) async {
     String url = UrlPath.updateUserInfoUrl;
 
+     //TODO:上传头像
+      if (_pickedFile != null) {
+       String url = await UploadImageApi.instance.uploadImage(_pickedFile!,UrlPath.uploadAvatarUrl);
+        print('头像存储路径 ${url}');
+        updatedUser.userAvatar = url;
+      }
+
     try {
       final response = await DioInstance.instance().post(
         path: url,
@@ -72,6 +80,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
           showToast("更新成功", duration: Duration(seconds: 1));
+
+
 
           // 更新 userInfoNotifier 以通知监听者
           Global.userInfoNotifier.value = User.fromJson(response.data['data']);
@@ -87,10 +97,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
           if (isProduction) print("token: ${Global.token}");
 
-          //TODO:上传头像
-          // if (_pickedFile != null) {
-          //   saveAvatar(_pickedFile, Global.userInfoNotifier.value.userId);
-          // }
 
           await ImChatApi.getInstance().setSelfInfo(
               Global.userInfo!.userId.toString(),

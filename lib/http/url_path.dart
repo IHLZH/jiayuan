@@ -54,7 +54,7 @@ class UrlPath {
   static const String updateUserInfoUrl = "/update/userInfo";
 
   //图片上传接口
-  static const String uploadAvatarUrl = "/profile/upload";
+  static const String uploadAvatarUrl = "/avatar/upload";
 
   //接取委托接口
   static const String receiveCommissionUrl = "/receive";
