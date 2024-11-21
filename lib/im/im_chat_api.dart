@@ -218,7 +218,7 @@ class ImChatApi {
           String? text = message.textElem!.text;
 
           if (isProduction) print("============获得新消息： ${text}=========");
-          messageChange^=1;
+          if(isProduction)ConversationPageViewModel.instance.initConversationList();
         }
         // 使用自定义消息
         if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
