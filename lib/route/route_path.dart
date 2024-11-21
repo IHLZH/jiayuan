@@ -97,4 +97,6 @@ class RoutePath {
   //我的证书页面
   static const String keeperCertificate = "/KeeperCertificate";
 
+  //家政员中心的评论页面
+  static const String commentPage = "/commentPage";
 }
