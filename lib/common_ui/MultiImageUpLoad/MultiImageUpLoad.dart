@@ -28,9 +28,9 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
   Future<void> _pickImages() async {
     final pickedFiles = await _picker.pickMultiImage();
     // 确保总数不超过6张
-    if (pickedFiles != null) {
+    if (pickedFiles.length  > 0) {
       _imageUrls.addAll(await UploadImageApi.instance.uploadMultipleImages(
-          pickedFiles.take(6 - _imageFiles.length).toList()));
+          pickedFiles.take(6 - _imageFiles.length).toList(),''));
       _imageFiles.addAll(pickedFiles.take(6 - _imageFiles.length));
       setState(() {
 
