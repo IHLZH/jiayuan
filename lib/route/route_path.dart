@@ -92,4 +92,6 @@ class RoutePath {
   static const String evalutationPage = "/evaluatePage";
   //家政员简历
   static const String personalKeeper = "/personalKeeper";
+  // 会话列表/聊天页面
+  static const String conversationList = "/conversationList";
 }

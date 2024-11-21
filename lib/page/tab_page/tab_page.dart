@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/navigation/navigation_bar_widget.dart';
 import 'package:jiayuan/page/Test.dart';
+import 'package:jiayuan/page/chat_page/conversation_page.dart';
 import 'package:jiayuan/page/commission_page/commission_page.dart';
 import 'package:jiayuan/page/home_page/home_page.dart';
 import 'package:jiayuan/page/user_page/user_page.dart';
@@ -90,7 +91,7 @@ class _TabPageState extends State<TabPage>{
     print("111");
     _tabItems[0] = HomePage();
     _tabItems[1] = CommissionPage();
-    _tabItems[2] = ChatPage();
+    _tabItems[2] = ConversationPage();
     _tabItems[3] = UserPage();
   }
 

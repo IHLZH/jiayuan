@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jiayuan/page/certified_page/cert/cert_certified_page.dart';
 import 'package:jiayuan/page/certified_page/keeper/keeper_certified_page.dart';
+import 'package:jiayuan/page/chat_page/conversation_page.dart';
 import 'package:jiayuan/page/commission_center_page/commission_center_page.dart';
 import 'package:jiayuan/page/commission_center_page/order/order_page.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
@@ -126,6 +127,8 @@ class Routes {
         return pageRoute(EvalutationPage(),settings: settings);
       case RoutePath.personalKeeper:
         return pageRoute(PersonalKeeperPage());
+      case RoutePath.conversationList:
+        return pageRoute(ConversationPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
