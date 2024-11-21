@@ -20,6 +20,7 @@ import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
 import '../page/commission_center_page/certificates/certificate_page.dart';
+import '../page/commission_center_page/comment/comment_page.dart';
 import '../page/commission_center_page/personal_keeper_page/personal_keeper_page.dart';
 import '../page/keeper_page/KeeperPage.dart';
 import '../page/login_page/phone_login_page.dart';
@@ -123,7 +124,7 @@ class Routes {
       //委托中心订单页
       case RoutePath.centerOrder:
         return pageRoute(CenterOrderPage(), settings: settings);
-        //评价页
+        //服务完成后的评价页
       case RoutePath.evalutationPage:
         return pageRoute(EvalutationPage(),settings: settings);
       case RoutePath.personalKeeper:
@@ -133,6 +134,9 @@ class Routes {
         //我的证书页面
       case RoutePath.keeperCertificate:
         return pageRoute(CertificatePage());
+        //家政员中心展示用户评论的页面
+      case RoutePath.commentPage:
+        return pageRoute(CommentPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

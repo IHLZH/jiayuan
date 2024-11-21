@@ -44,6 +44,14 @@ class CreateTableSqls {
       PRIMARY KEY (userId,keeperid))
       ''';
 
+  static final String createTableSql_commission_browser_history = '''
+      CREATE TABLE IF NOT EXISTS commission_history (
+      commissionId INTEGER,
+      userId INTEGER,
+      keeperid INTEGER,
+      )
+  ''';
+
   Map<String, String> getAllTables() {
     Map<String, String> map = Map<String, String>();
     map['search_history'] = createTableSql_search_history;
