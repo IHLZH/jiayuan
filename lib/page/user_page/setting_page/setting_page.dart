@@ -60,7 +60,7 @@ class _SettingPageState extends State<SettingPage> {
       }
     }
 
-    Future<void> _clearSignalConversation() async {
+    Future<void> _clearSignalMessage() async {
       await ImChatApi.getInstance().clearSignalMessage('21');
     }
 
@@ -89,7 +89,7 @@ class _SettingPageState extends State<SettingPage> {
                 _getSignalConversationMessage();
                 break;
               case '清空和喜多的聊天':
-                _clearSignalConversation();
+                _clearSignalMessage();
                 break;
               default:
                 break;
