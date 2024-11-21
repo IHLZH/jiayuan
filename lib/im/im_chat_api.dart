@@ -2,7 +2,6 @@ import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
-import 'package:tencent_cloud_chat_sdk/enum/V2TimGroupListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimSDKListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/history_msg_get_type_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/log_level_enum.dart';
@@ -69,7 +68,6 @@ class ImChatApi {
   V2TimSDKListener? sdkListener; //sdk监听器
   V2TimFriendshipListener? friendshipListener; //关系监听器
   V2TimAdvancedMsgListener? advancedMsgListener; //高级消息监听器
-  V2TimGroupListener? groupListener; //群组监听器
 
   int messageChange = 0;
 
@@ -218,7 +216,8 @@ class ImChatApi {
           String? text = message.textElem!.text;
 
           if (isProduction) print("============获得新消息： ${text}=========");
-          if(isProduction)ConversationPageViewModel.instance.initConversationList();
+          if (isProduction)
+            ConversationPageViewModel.instance.initConversationList();
         }
         // 使用自定义消息
         if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
@@ -651,5 +650,20 @@ class ImChatApi {
     }
   }
 
-  //
+  //未读数更新
+  //清空单聊未读数
+  Future<void> clearSignalUnread(String userID) async {
+    // 设置单聊消息已读
+    V2TimCallback markC2CMessageAsReadRes = await TencentImSDKPlugin
+        .v2TIMManager
+        .getMessageManager()
+        .markC2CMessageAsRead(userID: userID); // 需要设置消息已读的用户id
+    if (markC2CMessageAsReadRes.code == 0) {
+      // 标记成功
+      if(isProduction) print("============= userID: $userID 清空单聊未读数成功 ===========");
+    }else{
+      if(isProduction) print("============= 清空单聊未读数失败 ===========");
+      if(isProduction) print("错误码：${markC2CMessageAsReadRes.code} 错误信息： ${markC2CMessageAsReadRes.desc}");
+    }
+  }
 }
