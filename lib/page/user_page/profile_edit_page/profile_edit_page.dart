@@ -8,7 +8,6 @@ import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/repository/api/uploadImage_api.dart';
 import 'package:jiayuan/repository/model/user.dart';
-import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:jiayuan/utils/image_utils.dart';
@@ -61,14 +60,17 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   Future<void> _updateUserInfo(User updatedUser) async {
-    String url = UrlPath.updateUserInfoUrl;
+    if (_pickedFile != null) {
+      String imageUrl = await UploadImageApi.instance
+          .uploadImage(_pickedFile!, UrlPath.uploadAvatarUrl);
+      print('头像存储路径 ${imageUrl}');
+      updatedUser.userAvatar = imageUrl;
 
-     //TODO:上传头像
-      if (_pickedFile != null) {
-       String url = await UploadImageApi.instance.uploadImage(_pickedFile!,UrlPath.uploadAvatarUrl);
-        print('头像存储路径 ${url}');
-        updatedUser.userAvatar = url;
-      }
+      // 立即更新 userInfoNotifier
+      // Global.userInfoNotifier.value = updatedUser;
+    }
+
+    String url = UrlPath.updateUserInfoUrl;
 
     try {
       final response = await DioInstance.instance().post(
@@ -81,10 +83,11 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         if (response.data['code'] == 200) {
           showToast("更新成功", duration: Duration(seconds: 1));
 
-
-
-          // 更新 userInfoNotifier 以通知监听者
-          Global.userInfoNotifier.value = User.fromJson(response.data['data']);
+          setState(() {
+            // 更新 userInfoNotifier 以通知监听者
+            Global.userInfoNotifier.value =
+                User.fromJson(response.data['data']);
+          });
 
           // 保存token
           final List<String> token =
@@ -96,7 +99,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
           if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
           if (isProduction) print("token: ${Global.token}");
-
 
           await ImChatApi.getInstance().setSelfInfo(
               Global.userInfo!.userId.toString(),
@@ -136,6 +138,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     if (pickedFile != null) {
       setState(() {
         _pickedFile = pickedFile; // 更新选择的头像
+        _avatarUrl = null; // 清空之前的头像URL，以便显示新选择的头像
       });
     }
   }
@@ -199,7 +202,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 backgroundImage: _pickedFile != null // 优化头像显示逻辑
                     ? FileImage(File(_pickedFile!.path)) // 使用选择的头像
                     : _avatarUrl != null && _avatarUrl != '默认头像'
-                        ? NetworkImage(_avatarUrl!)
+                        ? NetworkImage(_avatarUrl!+'?timestamp=${DateTime.now().millisecondsSinceEpoch}')
                         : null,
                 child: _pickedFile == null &&
                         (_avatarUrl == null || _avatarUrl == '默认头像')
