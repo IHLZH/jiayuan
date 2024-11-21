@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiayuan/http/dio_instance.dart';
-import 'package:jiayuan/http/url_path.dart';
+import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
 
@@ -19,14 +19,56 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
+    Future<void> _test() async {
+      // 获取当前日期
+      DateTime now = DateTime.now();
+
+      // 格式化日期为字符串，例如 "2024-11-20"
+      String formattedDate =
+          "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+
+      ImChatApi.getInstance().sendTextMessage('21', formattedDate);
+    }
+
+    Future<void> _receiveTest() async {
+      List<V2TimConversation?> conversationList =
+          await ImChatApi.getInstance().getConversationList('0', 20);
+      for (var item in conversationList) {
+        print(
+            "id: ${item?.conversationID} ==== groupID: ${item?.groupID} ==== groupType: ${item?.groupType} ==== 未读数: ${item?.unreadCount} ==== 展示名: ${item?.showName} ==== 对方ID: ${item?.userID}}");
+      }
+    }
+
+    Future<void> _receiveSignalTest() async {
+      V2TimConversation? conversation =
+          await ImChatApi.getInstance().getConversation("c2c_21");
+      print(
+          "id: ${conversation?.conversationID} ==== groupID: ${conversation?.groupID} ==== groupType: ${conversation?.groupType} ==== 未读数: ${conversation?.unreadCount} ==== 展示名: ${conversation?.showName} ==== 对方ID: ${conversation?.userID}}");
+    }
+
     Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
       return Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: () {
-            if (icon == Icons.email_outlined) {
-            } else {
-              // 其他选项的点击事件处理
+            switch (title) {
+              case '邮箱地址':
+                break;
+              case '手机号码':
+                break;
+              case '修改密码':
+                break;
+              case '发送给喜多郁代':
+                _test();
+                break;
+              case '拉取所有会话列表':
+                _receiveTest();
+                break;
+              case '拉取和喜多的会话':
+                _receiveSignalTest();
+                break;
+              default:
+                break;
             }
           },
           splashColor: Colors.grey[300],
@@ -118,6 +160,12 @@ class _SettingPageState extends State<SettingPage> {
                   _buildOption(Icons.phone, '手机号码'),
                   _line(),
                   _buildOption(Icons.lock, '修改密码'),
+                  _line(),
+                  _buildOption(Icons.send_outlined, '发送给喜多郁代'),
+                  _line(),
+                  _buildOption(Icons.record_voice_over_outlined, '拉取所有会话列表'),
+                  _line(),
+                  _buildOption(Icons.record_voice_over_outlined, '拉取和喜多的会话'),
                 ],
               ),
             ),
