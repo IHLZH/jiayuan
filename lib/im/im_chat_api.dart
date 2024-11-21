@@ -645,4 +645,6 @@ class ImChatApi {
       return;
     }
   }
+
+  //
 }
