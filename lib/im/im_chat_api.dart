@@ -1,3 +1,4 @@
+import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
@@ -211,6 +212,7 @@ class ImChatApi {
         // 在本地维护的消息中处理被对方撤回的消息
       },
       onRecvNewMessage: (V2TimMessage message) async {
+        //ConversationPageViewModel.instance.onRefresh();
         // 处理文本消息
         if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
           String? text = message.textElem!.text;

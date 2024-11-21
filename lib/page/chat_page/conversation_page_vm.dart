@@ -8,6 +8,10 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_text_elem.dart';
 
 class ConversationPageViewModel with ChangeNotifier{
 
+  static ConversationPageViewModel instance = ConversationPageViewModel._();
+
+  ConversationPageViewModel._();
+
   //会话列表
   List<V2TimConversation?> conversationList = [];
 
@@ -58,11 +62,43 @@ class ConversationPageViewModel with ChangeNotifier{
     notifyListeners();
   }
 
+  //将时间戳转化为具体时间显示
   String formatTimestamp(int timestamp) {
-    // 将时间戳（秒或毫秒）转化为 DateTime
-    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-    // 使用 DateFormat 格式化时间
-    return DateFormat('HH:mm').format(dateTime);
+    final now = DateTime.now();
+    final date = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000); // 如果时间戳是秒
+    // final date = DateTime.fromMillisecondsSinceEpoch(timestamp); // 如果时间戳是毫秒
+
+    // 判断是否是今天
+    if (isSameDay(date, now)) {
+      return DateFormat('HH:mm').format(date);
+    }
+
+    // 判断是否是昨天
+    final yesterday = now.subtract(Duration(days: 1));
+    if (isSameDay(date, yesterday)) {
+      return "昨天";
+    }
+
+    // 判断是否在本周内
+    final startOfWeek = now.subtract(Duration(days: now.weekday - 1)); // 本周开始时间
+    if (date.isAfter(startOfWeek)) {
+      const weekdays = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"];
+      return weekdays[date.weekday - 1];
+    }
+
+    // 判断是否是今年
+    if (date.year == now.year) {
+      return DateFormat('MM/dd').format(date);
+    }
+
+    // 更久之前
+    return DateFormat('yyyy/MM/dd').format(date);
+  }
+
+  static bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 
 

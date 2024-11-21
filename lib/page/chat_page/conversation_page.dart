@@ -18,7 +18,7 @@ class ConversationPage extends StatefulWidget{
 
 class _ConversationPageState extends State<ConversationPage>{
 
-  ConversationPageViewModel _conversationViewModel = ConversationPageViewModel();
+  ConversationPageViewModel _conversationViewModel = ConversationPageViewModel.instance;
 
   @override
   void initState() {
@@ -138,7 +138,7 @@ class _ConversationPageState extends State<ConversationPage>{
                 )
             ),
             child: Container(
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
               child: Row(
                 children: [
                   CircleAvatar(
@@ -175,7 +175,7 @@ class _ConversationPageState extends State<ConversationPage>{
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
                         _conversationViewModel.formatTimestamp(conversation.lastMessage?.timestamp ?? 9999),
