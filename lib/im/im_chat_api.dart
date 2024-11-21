@@ -3,6 +3,7 @@ import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimGroupListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimSDKListener.dart';
+import 'package:tencent_cloud_chat_sdk/enum/history_msg_get_type_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/log_level_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/message_elem_type.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_callback.dart';
@@ -36,6 +37,20 @@ bool isProduction = Constants.IS_Production;
 
 //发送单聊文本消息
 // ImChatApi.getInstance().sendTextMessage(receiverID, text);//分别为接收人ID和文本
+
+//获取会话列表 分页
+// List<V2TimConversation?> conversationList = await ImChatApi.getInstance().getConversationList('0', 20);
+
+//获取特定会话信息
+// 若为单聊，格式为 c2c_${userID} , 群聊为 group_${groupID}
+// V2TimConversation? conversation = await ImChatApi.getInstance().getConversation("c2c_21");
+
+//获取指定单聊的历史信息 分页，endID为分页结尾msgID,保证能继续拉取
+//单聊ID 格式为 ${userID}
+// List<V2TimMessage>? messageList = await ImChatApi.getInstance().getHistorySignalMessageList(ID, pageSize,endID);
+
+//清空聊天记录
+// await ImChatApi.getInstance().clearSignalMessage(userID);
 
 class ImChatApi {
   // 私有化构造函数
@@ -425,6 +440,8 @@ class ImChatApi {
     if (createTextMessageRes.code == 0) {
       // 文本信息创建成功
       String? id = createTextMessageRes.data?.id;
+
+      if (isProduction) print("============= 文本信息创建成功 id: ${id} ============");
       // 发送文本消息
       // 在sendMessage时，若只填写receiver则发个人用户单聊消息
       //                 若只填写groupID则发群组消息
@@ -571,6 +588,61 @@ class ImChatApi {
         print(
             "错误码：${getConversationtRes.code} 错误信息： ${getConversationtRes.desc}");
       return null;
+    }
+  }
+
+  //拉取单聊历史信息
+  Future<List<V2TimMessage>> getHistorySignalMessageList(
+      String userID, int count, String? lastMsgID) async {
+    // 拉取单聊历史消息
+    // 首次拉取，lastMsgID 设置为 null
+    // 再次拉取时，lastMsgID 可以使用返回的消息列表中的最后一条消息的id
+    V2TimValueCallback<List<V2TimMessage>> getHistoryMessageListRes =
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .getHistoryMessageList(
+      getType: HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG, // 拉取消息的位置及方向
+      userID: userID, // 用户id 拉取单聊消息，需要指定对方的 userID，此时 groupID 传空即可。
+      groupID: "", // 群组id 拉取群聊消息，需要指定群聊的 groupID，此时 userID 传空即可。
+      count: count, // 拉取数据数量
+      lastMsgID: lastMsgID, // 拉取起始消息id
+      // 仅能在群聊中使用该字段。
+      // 设置 lastMsgSeq 作为拉取的起点，返回的消息列表中包含这条消息。
+      // 如果同时指定了 lastMsg 和 lastMsgSeq，SDK 优先使用 lastMsg。
+      // 如果均未指定 lastMsg 和 lastMsgSeq，拉取的起点取决于是否设置 getTimeBegin。设置了，则使用设置的范围作为起点；未设置，则使用最新消息作为起点。
+      // lastMsgSeq: -1,
+      messageTypeList: [], // 用于过滤历史信息属性，若为空则拉取所有属性信息。
+    );
+
+    if (getHistoryMessageListRes.code == 0) {
+      // 获取成功
+      if (isProduction)
+        print("========= 拉取 ID : ${userID} 的 历史消息成功 ============");
+      return getHistoryMessageListRes.data ?? [];
+    } else {
+      if (isProduction) print("============= 获取历史消息失败 ============");
+      if (isProduction)
+        print(
+            "错误码：${getHistoryMessageListRes.code} 错误信息： ${getHistoryMessageListRes.desc}");
+      return [];
+    }
+  }
+
+  //清空单聊消息
+  Future<void> clearSignalMessage(String userID) async {
+    V2TimCallback clearSignalMessageRes = await TencentImSDKPlugin.v2TIMManager
+        .getMessageManager()
+        .clearC2CHistoryMessage(userID: userID);
+
+    if (clearSignalMessageRes.code == 0) {
+      if (isProduction)
+        print("============= userID: $userID 清空单聊消息成功 ===========");
+    } else {
+      if (isProduction) print("============= 清空单聊消息失败 ===========");
+      if (isProduction)
+        print(
+            "错误码：${clearSignalMessageRes.code} 错误信息： ${clearSignalMessageRes.desc}");
+      return;
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
 
@@ -19,13 +20,15 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
+    String? lastSignalMessageID = null;
+
     Future<void> _test() async {
       // 获取当前日期
       DateTime now = DateTime.now();
 
       // 格式化日期为字符串，例如 "2024-11-20"
       String formattedDate =
-          "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+          "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}-${now.second.toString().padLeft(2, '0')}";
 
       ImChatApi.getInstance().sendTextMessage('21', formattedDate);
     }
@@ -44,6 +47,21 @@ class _SettingPageState extends State<SettingPage> {
           await ImChatApi.getInstance().getConversation("c2c_21");
       print(
           "id: ${conversation?.conversationID} ==== groupID: ${conversation?.groupID} ==== groupType: ${conversation?.groupType} ==== 未读数: ${conversation?.unreadCount} ==== 展示名: ${conversation?.showName} ==== 对方ID: ${conversation?.userID}}");
+    }
+
+    Future<void> _getSignalConversationMessage() async {
+      List<V2TimMessage>? messageList = await ImChatApi.getInstance()
+          .getHistorySignalMessageList('21', 1, lastSignalMessageID);
+
+      for (var item in messageList!) {
+        print(
+            "id: ${item.msgID} ==== 消息类型: ${item.elemType} ==== 消息内容: ${item.textElem?.text}");
+        lastSignalMessageID = item.msgID;
+      }
+    }
+
+    Future<void> _clearSignalConversation() async {
+      await ImChatApi.getInstance().clearSignalMessage('21');
     }
 
     Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
@@ -66,6 +84,12 @@ class _SettingPageState extends State<SettingPage> {
                 break;
               case '拉取和喜多的会话':
                 _receiveSignalTest();
+                break;
+              case '拉取和喜多的单聊历史信息':
+                _getSignalConversationMessage();
+                break;
+              case '清空和喜多的聊天':
+                _clearSignalConversation();
                 break;
               default:
                 break;
@@ -166,6 +190,11 @@ class _SettingPageState extends State<SettingPage> {
                   _buildOption(Icons.record_voice_over_outlined, '拉取所有会话列表'),
                   _line(),
                   _buildOption(Icons.record_voice_over_outlined, '拉取和喜多的会话'),
+                  _line(),
+                  _buildOption(
+                      Icons.record_voice_over_outlined, '拉取和喜多的单聊历史信息'),
+                  _line(),
+                  _buildOption(Icons.cleaning_services_rounded, '清空和喜多的聊天'),
                 ],
               ),
             ),
