@@ -51,6 +51,10 @@ class PersonalKeeperVm with ChangeNotifier {
     this.imageUrls = imageUrls;
   }
 
+  void submitData() async{
+
+  }
+
   //保存被选择的委托
   void SaveCommissionTypeSelected() {
     commissionTypeSelected = Map<String, bool>.from(commissionTypeSelected1);
@@ -84,7 +88,7 @@ class PersonalKeeperVm with ChangeNotifier {
   Future<void> selectAvatarByGallery() async {
     XFile? avatar = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (avatar != null) {
-      // avatarUrl = await uploadImage(avatar);
+       avatarUrl = await uploadImage(avatar);
       await uploadImage(avatar);
       notifyListeners();
     }
@@ -95,22 +99,15 @@ class PersonalKeeperVm with ChangeNotifier {
     XFile? avatar = await ImagePicker().pickImage(source: ImageSource.camera);
     if (avatar != null) {
       await uploadImage(avatar);
-      // avatarUrl = await uploadImage(avatar);
+       avatarUrl = await uploadImage(avatar);
       notifyListeners();
     }
   }
 
   //上传单张图片 返回图片存储路径
   Future<String> uploadImage(XFile file) async {
-    String imageUrl = await UploadImageApi.instance.uploadImage(file);
+    String imageUrl = await UploadImageApi.instance.uploadImage(file,'/avatar/upload');
     print("图片路径: $imageUrl");
     return imageUrl;
-  }
-
-  //上传多张图片  采用并发上传的方式进行上传  返回存储路径
-  Future<List<String>> uploadMultipleImages(List<XFile> files) async {
-    List<String> imageUrls =
-        await UploadImageApi.instance.uploadMultipleImages(files); // 等待所有任务完成
-    return imageUrls;
   }
 }
