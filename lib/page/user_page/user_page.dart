@@ -103,7 +103,7 @@ class _UserPageState extends State<UserPage> {
     }
 
     Future<void> _jumpToProfileEditPage() async {
-      if(false){
+      if (false) {
         final result = await RouteUtils.pushForNamed(
           context,
           RoutePath.profileEditPage,
@@ -112,7 +112,7 @@ class _UserPageState extends State<UserPage> {
         if (result == true) {
           setState(() {});
         }
-      }else{
+      } else {
         if (Global.isLogin) {
           final result = await RouteUtils.pushForNamed(
             context,
@@ -130,8 +130,9 @@ class _UserPageState extends State<UserPage> {
 
     // 委托中心
     Future<void> _jumpToCommissionCenterPage() async {
-      if(isProduction)RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
-      else{
+      if (isProduction)
+        RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
+      else {
         switch (Global.userInfoNotifier.value!.userType) {
           case 0:
             showToast("请先成为家政员", duration: Duration(seconds: 1));
@@ -430,8 +431,10 @@ class _UserPageState extends State<UserPage> {
                       //头像
                       CircleAvatar(
                         radius: 40,
-                        backgroundImage:
-                            const AssetImage('assets/images/ikun1.png'),
+                        backgroundImage: Global.userInfo!.userAvatar == null ||
+                                Global.userInfo!.userAvatar == '默认头像'
+                            ? AssetImage('assets/images/ikun1.png')
+                            : NetworkImage(Global.userInfo!.userAvatar!),
                       ),
                       SizedBox(width: 16),
 
@@ -616,7 +619,8 @@ class _UserPageState extends State<UserPage> {
                         children: [
                           _buildManagementOption(Icons.person_add, '成为家政员'),
                           _buildManagementOption(Icons.assignment, '已接订单'),
-                          _buildManagementOption(Icons.format_align_center_outlined, '服务中心'),
+                          _buildManagementOption(
+                              Icons.format_align_center_outlined, '服务中心'),
                           _buildManagementOption(Icons.verified_user, '证书认证'),
                         ],
                       ),
