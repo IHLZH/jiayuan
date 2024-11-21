@@ -19,6 +19,7 @@ import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 
+import '../page/commission_center_page/certificates/certificate_page.dart';
 import '../page/commission_center_page/personal_keeper_page/personal_keeper_page.dart';
 import '../page/keeper_page/KeeperPage.dart';
 import '../page/login_page/phone_login_page.dart';
@@ -129,6 +130,9 @@ class Routes {
         return pageRoute(PersonalKeeperPage());
       case RoutePath.conversationList:
         return pageRoute(ConversationPage());
+        //我的证书页面
+      case RoutePath.keeperCertificate:
+        return pageRoute(CertificatePage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

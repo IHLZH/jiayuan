@@ -285,6 +285,7 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
       child: InkWell(
         onTap: () {
            if(title == "个人信息")  RouteUtils.pushForNamed(context, RoutePath.personalKeeper);
+           else if(title == "我的证书") RouteUtils.pushForNamed(context, RoutePath.keeperCertificate);
         },
         splashColor: Colors.grey[300],
         highlightColor: Theme.of(context).primaryColor.withAlpha(30),
