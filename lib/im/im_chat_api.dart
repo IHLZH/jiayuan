@@ -70,6 +70,8 @@ class ImChatApi {
   V2TimAdvancedMsgListener? advancedMsgListener; //高级消息监听器
   V2TimGroupListener? groupListener; //群组监听器
 
+  int messageChange = 0;
+
   Future<void> initSDK() async {
     // 1. 从即时通信 IM 控制台获取应用 SDKAppID。
     int sdkAppID = 1600061544;
@@ -214,6 +216,7 @@ class ImChatApi {
           String? text = message.textElem!.text;
 
           if (isProduction) print("============获得新消息： ${text}=========");
+          messageChange^=1;
         }
         // 使用自定义消息
         if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
