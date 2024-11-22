@@ -32,6 +32,11 @@ class _ChatPageState extends State<ChatPage>{
     await _chatViewModel.getChatMessage();
   }
 
+  dispose(){
+    super.dispose();
+    _chatViewModel.clear();
+  }
+
   bool getHasShowTime(int currentTimestamp, int previousTimestamp){
     // 获取当前时间和消息时间的日期对象
     final currentTime = DateTime.fromMillisecondsSinceEpoch(currentTimestamp * 1000);

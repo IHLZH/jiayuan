@@ -45,6 +45,12 @@ class ChatPageViewModel with ChangeNotifier{
     }
   }
 
+  void clear(){
+    lastMessageId = null;
+    hasMoreData = true;
+    chatMessageList.clear();
+  }
+
   Future<void> refreshChatMessage() async {
     if(conversation != null){
       lastMessageId = null;
@@ -79,9 +85,11 @@ class ChatPageViewModel with ChangeNotifier{
   }
 
   Future<void> sendSingMessage() async {
-    await ImChatApi.getInstance().sendTextMessage(conversation!.userID!, textController.text);
-    //更新lastMessageId
-    await refreshChatMessage();
+    if(conversation != null){
+      await ImChatApi.getInstance().sendTextMessage(conversation!.userID!, textController.text);
+      //更新lastMessageId
+      await refreshChatMessage();
+    }
   }
 
   String? formatTimestampToHours(int timestamp){
