@@ -1,3 +1,4 @@
+import 'package:jiayuan/page/chat_page/chat/chat_page_vm.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
@@ -220,7 +221,14 @@ class ImChatApi {
           String? text = message.textElem!.text;
 
           if (isProduction) print("============获得新消息： ${text}=========");
-          // ConversationPageViewModel.instance.initConversationList();
+
+          if (ChatPageViewModel.instance.conversation != null &&
+              message.userID ==
+                  ChatPageViewModel.instance.conversation!.userID) {
+            if (isProduction)
+              print("============ userID: ${message.userID} =========");
+            ChatPageViewModel.instance.refreshChatMessage();
+          }
         }
         // 使用自定义消息
         if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
@@ -410,6 +418,12 @@ class ImChatApi {
           .removeAdvancedMsgListener(listener: advancedMsgListener);
 
       if (isProduction) print("============= IM移除消息监听器成功 ============");
+
+      //移除会话监听器
+      TencentImSDKPlugin.v2TIMManager
+          .getConversationManager()
+          .removeConversationListener(listener: conversationListener!);
+      if (isProduction) print("============= IM移除会话监听器成功 ============");
     } else {
       if (isProduction) print("============= IM登出失败 ============");
       if (isProduction) print("错误码: ${logoutRes.code} 错误信息: ${logoutRes.desc}");
