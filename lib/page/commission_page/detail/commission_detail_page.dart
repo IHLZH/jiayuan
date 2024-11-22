@@ -72,7 +72,6 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                               IconButton(
                                 icon: Icon(Icons.share),
                                 onPressed: () {
-
                                 },
                               ),
                             ],

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
+import 'package:jiayuan/route/route_path.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
@@ -32,10 +33,8 @@ class _ConversationPageState extends State<ConversationPage>{
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context){
-        return _conversationViewModel;
-      },
+    return ChangeNotifierProvider.value(
+      value: _conversationViewModel,
       child: Scaffold(
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
@@ -126,7 +125,10 @@ class _ConversationPageState extends State<ConversationPage>{
     return Material(
       color: Colors.white,
       child: InkWell(
-        onTap: (){},
+        onTap: (){
+          RouteUtils.pushForNamed(context, RoutePath.chatPage, arguments: conversation);
+          _conversationViewModel.clearUnReadCount(conversation);
+        },
         child: Container(
             width: double.infinity,
             height: 70.h,

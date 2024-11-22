@@ -62,6 +62,11 @@ class ConversationPageViewModel with ChangeNotifier{
     notifyListeners();
   }
 
+  Future<void> clearUnReadCount(V2TimConversation conversation) async {
+    await ImChatApi.getInstance().clearSignalUnread(conversation.userID!);
+    notifyListeners();
+  }
+
   //将时间戳转化为具体时间显示
   String formatTimestamp(int timestamp) {
     final now = DateTime.now();
@@ -101,5 +106,11 @@ class ConversationPageViewModel with ChangeNotifier{
         date1.day == date2.day;
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print("ConversationPageViewModel销毁");
+  }
 
 }

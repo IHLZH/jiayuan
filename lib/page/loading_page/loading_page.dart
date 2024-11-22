@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 
 import '../../common_ui/dialog/loading.dart';
-import '../Test.dart';
 
 class LoadingPage extends StatefulWidget{
   @override
