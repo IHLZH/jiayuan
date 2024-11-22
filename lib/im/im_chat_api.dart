@@ -69,7 +69,7 @@ class ImChatApi {
   V2TimSDKListener? sdkListener; //sdk监听器
   V2TimFriendshipListener? friendshipListener; //关系监听器
   V2TimAdvancedMsgListener? advancedMsgListener; //高级消息监听器
-  V2TimConversationListener? conversationListener;//会话监听器
+  V2TimConversationListener? conversationListener; //会话监听器
 
   int messageChange = 0;
 
@@ -666,11 +666,16 @@ class ImChatApi {
         await TencentImSDKPlugin.v2TIMManager
             .getMessageManager()
             .getHistoryMessageList(
-      getType: HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG, // 拉取消息的位置及方向
-      userID: userID, // 用户id 拉取单聊消息，需要指定对方的 userID，此时 groupID 传空即可。
-      groupID: "", // 群组id 拉取群聊消息，需要指定群聊的 groupID，此时 userID 传空即可。
-      count: count, // 拉取数据数量
-      lastMsgID: lastMsgID, // 拉取起始消息id
+      getType: HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG,
+      // 拉取消息的位置及方向
+      userID: userID,
+      // 用户id 拉取单聊消息，需要指定对方的 userID，此时 groupID 传空即可。
+      groupID: "",
+      // 群组id 拉取群聊消息，需要指定群聊的 groupID，此时 userID 传空即可。
+      count: count,
+      // 拉取数据数量
+      lastMsgID: lastMsgID,
+      // 拉取起始消息id
       // 仅能在群聊中使用该字段。
       // 设置 lastMsgSeq 作为拉取的起点，返回的消息列表中包含这条消息。
       // 如果同时指定了 lastMsg 和 lastMsgSeq，SDK 优先使用 lastMsg。
@@ -699,14 +704,19 @@ class ImChatApi {
     // 首次拉取，lastMsgID 设置为 null
     // 再次拉取时，lastMsgID 可以使用返回的消息列表中的最后一条消息的id
     V2TimValueCallback<List<V2TimMessage>> getHistoryMessageListRes =
-    await TencentImSDKPlugin.v2TIMManager
-        .getMessageManager()
-        .getHistoryMessageList(
-      getType: HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG, // 拉取消息的位置及方向
-      userID: "", // 用户id 拉取单聊消息，需要指定对方的 userID，此时 groupID 传空即可。
-      groupID: groupID, // 群组id 拉取群聊消息，需要指定群聊的 groupID，此时 userID 传空即可。
-      count: count, // 拉取数据数量
-      lastMsgID: lastMsgID, // 拉取起始消息id
+        await TencentImSDKPlugin.v2TIMManager
+            .getMessageManager()
+            .getHistoryMessageList(
+      getType: HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG,
+      // 拉取消息的位置及方向
+      userID: "",
+      // 用户id 拉取单聊消息，需要指定对方的 userID，此时 groupID 传空即可。
+      groupID: groupID,
+      // 群组id 拉取群聊消息，需要指定群聊的 groupID，此时 userID 传空即可。
+      count: count,
+      // 拉取数据数量
+      lastMsgID: lastMsgID,
+      // 拉取起始消息id
       // 仅能在群聊中使用该字段。
       // 设置 lastMsgSeq 作为拉取的起点，返回的消息列表中包含这条消息。
       // 如果同时指定了 lastMsg 和 lastMsgSeq，SDK 优先使用 lastMsg。
@@ -757,10 +767,28 @@ class ImChatApi {
         .markC2CMessageAsRead(userID: userID); // 需要设置消息已读的用户id
     if (markC2CMessageAsReadRes.code == 0) {
       // 标记成功
-      if(isProduction) print("============= userID: $userID 清空单聊未读数成功 ===========");
-    }else{
-      if(isProduction) print("============= 清空单聊未读数失败 ===========");
-      if(isProduction) print("错误码：${markC2CMessageAsReadRes.code} 错误信息： ${markC2CMessageAsReadRes.desc}");
+      if (isProduction)
+        print("============= userID: $userID 清空单聊未读数成功 ===========");
+    } else {
+      if (isProduction) print("============= 清空单聊未读数失败 ===========");
+      if (isProduction)
+        print(
+            "错误码：${markC2CMessageAsReadRes.code} 错误信息： ${markC2CMessageAsReadRes.desc}");
+    }
+  }
+
+  //撤回消息
+  Future<void> revokeMessage(String msgID) async {
+    V2TimCallback revokeMessageRes = await TencentImSDKPlugin.v2TIMManager
+        .getMessageManager()
+        .revokeMessage(msgID: msgID);
+
+    if (revokeMessageRes.code == 0) {
+      if (isProduction) print("============= 撤回消息成功 ===========");
+    } else {
+      if (isProduction) print("============= 撤回消息失败 ===========");
+      if (isProduction)
+        print("错误码：${revokeMessageRes.code} 错误信息： ${revokeMessageRes.desc}");
     }
   }
 }
