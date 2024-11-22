@@ -90,7 +90,7 @@ class _ChatPageState extends State<ChatPage>{
                                     },
                                   ),
                                   Text(
-                                    vm.conversation.showName ?? "",
+                                    vm.conversation?.showName ?? "",
                                     style: TextStyle(
                                         color: AppColors.textColor2b,
                                         fontSize: 20.sp,

@@ -15,7 +15,7 @@ class ChatPageViewModel with ChangeNotifier{
 
   List<V2TimMessage> chatMessageList = [];
 
-  late V2TimConversation conversation;
+  V2TimConversation? conversation;
 
   ScrollController scrollController = ScrollController();
 
@@ -29,7 +29,7 @@ class ChatPageViewModel with ChangeNotifier{
 
   Future<void> getChatMessage() async {
     if(conversation != null){
-      List<V2TimMessage> chatMessageData = await ImChatApi.getInstance().getHistorySignalMessageList(conversation.userID!, count, lastMessageId);
+      List<V2TimMessage> chatMessageData = await ImChatApi.getInstance().getHistorySignalMessageList(conversation!.userID!, count, lastMessageId);
       if(chatMessageData.isNotEmpty){
         lastMessageId = chatMessageData.last.msgID;
         if(chatMessageData.length < count){
@@ -46,12 +46,14 @@ class ChatPageViewModel with ChangeNotifier{
   }
 
   Future<void> refreshChatMessage() async {
-    lastMessageId = null;
-    chatMessageList.clear();
-    List<V2TimMessage> chatMessageData = await ImChatApi.getInstance().getHistorySignalMessageList(conversation.userID!, count, lastMessageId);
-    chatMessageList.addAll(chatMessageData);
-    await ConversationPageViewModel.instance.clearUnReadCount(conversation);
-    notifyListeners();
+    if(conversation != null){
+      lastMessageId = null;
+      chatMessageList.clear();
+      List<V2TimMessage> chatMessageData = await ImChatApi.getInstance().getHistorySignalMessageList(conversation!.userID!, count, lastMessageId);
+      chatMessageList.addAll(chatMessageData);
+      await ConversationPageViewModel.instance.clearUnReadCount(conversation!);
+      notifyListeners();
+    }
   }
 
   void initScorllListener(){
@@ -77,7 +79,7 @@ class ChatPageViewModel with ChangeNotifier{
   }
 
   Future<void> sendSingMessage() async {
-    await ImChatApi.getInstance().sendTextMessage(conversation.userID!, textController.text);
+    await ImChatApi.getInstance().sendTextMessage(conversation!.userID!, textController.text);
     //更新lastMessageId
     await refreshChatMessage();
   }
