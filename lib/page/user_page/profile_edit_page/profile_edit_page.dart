@@ -65,7 +65,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     if (_pickedFile != null) {
       String imageUrl = await UploadImageApi.instance
           .uploadImage(_pickedFile!, UrlPath.uploadAvatarUrl);
-      print('头像存储路径 ${imageUrl}');
+      // print('头像存储路径 ${imageUrl}');
       updatedUser.userAvatar = imageUrl;
 
       // 立即更新 userInfoNotifier
