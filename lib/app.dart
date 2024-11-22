@@ -7,6 +7,8 @@ import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/route/routes.dart';
 import 'package:oktoast/oktoast.dart';
 
+import 'common_ui/styles/app_colors.dart';
+
 /// 设计尺寸
 Size get designSize {
   final firstView = WidgetsBinding.instance.platformDispatcher.views.first;
@@ -35,18 +37,22 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           theme: ThemeData(
-            tabBarTheme: TabBarTheme(dividerColor: Colors.transparent),
-            useMaterial3: true,
-            primaryColor: Colors.teal,
-            cardColor: Colors.grey,
-            textTheme: TextTheme(
-              bodyLarge: TextStyle(
-                  color: Colors.teal,
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold),
-              bodyMedium: TextStyle(color: Colors.teal),
-            ),
-          ),
+              tabBarTheme: TabBarTheme(dividerColor: Colors.transparent),
+              useMaterial3: true,
+              primaryColor: Colors.teal,
+              cardColor: Colors.grey,
+              textTheme: TextTheme(
+                bodyLarge: TextStyle(
+                    color: Colors.teal,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold),
+                bodyMedium: TextStyle(color: Colors.teal),
+              ),
+              textSelectionTheme: TextSelectionThemeData(
+                selectionColor: AppColors.appColor,
+                selectionHandleColor: AppColors.appColor,
+                cursorColor: AppColors.appColor,
+              )),
           navigatorKey: RouteUtils.navigatorKey,
           onGenerateRoute: Routes.generateRoute,
           initialRoute: RoutePath.startPage,
@@ -60,7 +66,7 @@ class MyApp extends StatelessWidget {
             const Locale("en", "US")
           ],
           debugShowCheckedModeBanner: false,
-              builder: EasyLoading.init(),
+          builder: EasyLoading.init(),
         );
       },
     ));
