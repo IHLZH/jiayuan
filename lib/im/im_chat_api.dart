@@ -334,6 +334,7 @@ class ImChatApi {
       onConversationChanged: (List<V2TimConversation> conversationList) {
         //某些会话的关键信息发生变化（未读计数发生变化、最后一条消息被更新等等）的回调函数
         //conversationList    变化的会话列表
+        if (isProduction) print("============ 会话列表发生变化 ===========");
         ConversationPageViewModel.instance.initConversationList();
       },
       onConversationGroupCreated:
