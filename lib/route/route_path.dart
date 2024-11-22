@@ -94,4 +94,6 @@ class RoutePath {
   static const String personalKeeper = "/personalKeeper";
   // 会话列表/聊天页面
   static const String conversationList = "/conversationList";
+
+  static const String chatPage = "/chatPage";
 }
