@@ -1,6 +1,7 @@
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
+import 'package:tencent_cloud_chat_sdk/enum/V2TimConversationListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimSDKListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/history_msg_get_type_enum.dart';
@@ -68,6 +69,7 @@ class ImChatApi {
   V2TimSDKListener? sdkListener; //sdk监听器
   V2TimFriendshipListener? friendshipListener; //关系监听器
   V2TimAdvancedMsgListener? advancedMsgListener; //高级消息监听器
+  V2TimConversationListener? conversationListener;//会话监听器
 
   int messageChange = 0;
 
@@ -209,7 +211,7 @@ class ImChatApi {
       onRecvMessageRevoked: (String messageid) {
         // 在本地维护的消息中处理被对方撤回的消息
         if (isProduction) print("============撤回消息： $messageid=========");
-        ConversationPageViewModel.instance.initConversationList();
+        // ConversationPageViewModel.instance.initConversationList();
       },
       onRecvNewMessage: (V2TimMessage message) async {
         //ConversationPageViewModel.instance.onRefresh();
@@ -218,7 +220,7 @@ class ImChatApi {
           String? text = message.textElem!.text;
 
           if (isProduction) print("============获得新消息： ${text}=========");
-          ConversationPageViewModel.instance.initConversationList();
+          // ConversationPageViewModel.instance.initConversationList();
         }
         // 使用自定义消息
         if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
@@ -328,6 +330,61 @@ class ImChatApi {
 
     // 会话监听
     //设置会话监听器
+    conversationListener = V2TimConversationListener(
+      onConversationChanged: (List<V2TimConversation> conversationList) {
+        //某些会话的关键信息发生变化（未读计数发生变化、最后一条消息被更新等等）的回调函数
+        //conversationList    变化的会话列表
+        ConversationPageViewModel.instance.initConversationList();
+      },
+      onConversationGroupCreated:
+          (String groupName, List<V2TimConversation> conversationList) {
+        // 会话分组被创建
+        // groupName 会话分组名称
+        // conversationList 会话分组包含的会话列表
+      },
+      onConversationGroupDeleted: (String groupName) {
+        // 会话分组被删除
+        // groupName  被删除的会话分组名称
+      },
+      onConversationGroupNameChanged: (String oldName, String newName) {
+        // 会话分组名变更
+        // oldName 旧名称
+        // newName 新名称
+      },
+      onConversationsAddedToGroup:
+          (String groupName, List<V2TimConversation> conversationList) {
+        // 会话分组新增会话
+        // groupName 会话分组名称
+        // conversationList 被加入会话分组的会话列表
+      },
+      onConversationsDeletedFromGroup:
+          (String groupName, List<V2TimConversation> conversationList) {
+        // 会话分组删除会话
+        // groupName 会话分组名称
+        // conversationList 被删除的会话列表
+      },
+      onNewConversation: (List<V2TimConversation> conversationList) {
+        // 新会话的回调函数
+        // conversationList 收到的新会话列表
+      },
+      onSyncServerFailed: () {
+        // 同步服务失败的回调函数
+      },
+      onSyncServerFinish: () {
+        // 同步服务完成的回调函数
+      },
+      onSyncServerStart: () {
+        // 同步服务开始的回调函数
+      },
+      onTotalUnreadMessageCountChanged: (int totalUnreadCount) {
+        // 会话未读总数改变的回调函数
+        // totalUnreadCount 会话未读总数
+      },
+    );
+    TencentImSDKPlugin.v2TIMManager
+        .getConversationManager()
+        .addConversationListener(listener: conversationListener!);
+    if (isProduction) print("============= IM添加会话监听器成功 ============");
   }
 
   Future<void> logout() async {
