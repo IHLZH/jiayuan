@@ -29,10 +29,9 @@ class ImageUtils {
     return FormData.fromMap({"file": await MultipartFile.fromFile(image.path)});
   }
 
-  //动态压缩图片 压缩到指定大附近
-  static Future<List<int>?> compressIfNeededToMemory(
-      XFile file, int maxSizeMB) async {
-    int fieldSize = await file.readAsBytes().then((value) => value.length);
+  //动态压缩图片 压缩到指定大小附近
+  static Future<List<int>?> compressIfNeededToMemory(XFile file, int maxSizeMB) async {
+    int fieldSize = await file.length();
      print('原始文件大小 ${fieldSize/((1024 * 1024))}MB');
     if (fieldSize > maxSizeMB * 1024 * 1024) {
       int quality = 95; // 初始质量

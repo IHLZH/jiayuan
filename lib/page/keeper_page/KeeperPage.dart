@@ -93,7 +93,7 @@ class _KeeperpageState extends State<Keeperpage>
                     ),
                   ),
                   Expanded(
-                    child: CustomScrollView(
+                      child: CustomScrollView(
                       slivers: [
                         SliverToBoxAdapter(
                           child: _keeperPersonInfo(),
@@ -437,10 +437,11 @@ class _KeeperpageState extends State<Keeperpage>
           ),
           Divider(height: 1, indent: 18, endIndent: 18),
           Container(
-              height: 240.h,
               margin: EdgeInsets.only(
                   left: 10.w, right: 15.w, bottom: 60.h, top: 8.h),
               child: ListView.builder(
+                shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.zero, // 清除默认内边距
                   itemCount: keeperViewModel.keeperData?.evaluations?.length,
                   itemBuilder: (context, index) => Container(
@@ -525,7 +526,9 @@ class _KeeperpageState extends State<Keeperpage>
                                           fit: BoxFit.cover,
                                         ),
                                       )),
-                            )
+                            ),
+                            SizedBox(height: 10),
+                            Divider(height: 1),
                           ],
                         ),
                       )))

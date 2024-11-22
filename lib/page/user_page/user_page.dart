@@ -429,12 +429,31 @@ class _UserPageState extends State<UserPage> {
                   child: Row(
                     children: [
                       //头像
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundImage: Global.userInfo!.userAvatar == null ||
-                                Global.userInfo!.userAvatar == '默认头像'
-                            ? AssetImage('assets/images/ikun1.png')
-                            : NetworkImage(Global.userInfo!.userAvatar!),
+                      Container(
+                        child: ValueListenableBuilder<User?>(
+                            valueListenable: Global.userInfoNotifier,
+                            builder: (context, userInfo, child) {
+                              if (isProduction)
+                                if(isProduction)print(
+                                    "ValueListenableBuilder重建: ${userInfo?.userAvatar}"); // 调试信息
+                              if (userInfo == null) {
+                                return CircleAvatar(
+                                  radius: 40,
+                                  backgroundImage:
+                                      AssetImage('assets/images/ikun1.png'),
+                                );
+                              }
+
+                              return CircleAvatar(
+                                radius: 40,
+                                backgroundImage: userInfo?.userAvatar != null &&
+                                        userInfo.userAvatar != '默认头像'
+                                    ? NetworkImage(
+                                        '${userInfo.userAvatar}?timestamp=${DateTime.now().millisecondsSinceEpoch}') // 添加时间戳
+                                    : const AssetImage(
+                                        'assets/images/ikun1.png'),
+                              );
+                            }),
                       ),
                       SizedBox(width: 16),
 

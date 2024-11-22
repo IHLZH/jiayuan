@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
+import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -8,7 +9,6 @@ import '../../../route/route_path.dart';
 import '../../../route/route_utils.dart';
 import '../../../utils/global.dart';
 import 'browser_history_vim.dart';
-
 
 class BrowseHistoryPage extends StatefulWidget {
   const BrowseHistoryPage({super.key});
@@ -19,27 +19,39 @@ class BrowseHistoryPage extends StatefulWidget {
 
 class _BrowseHistoryPageState extends State<BrowseHistoryPage> {
   BrowseHistoryViewModel browseHistoryViewModel = BrowseHistoryViewModel();
+
   void initState() {
     super.initState();
     browseHistoryViewModel.getBrowseHistory();
   }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: browseHistoryViewModel,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: Text("浏览过的家政员"),
           centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () async {
+                showBrowseHistoryDialog(context);
+              },
+            ),
+          ],
         ),
         body: Container(
           height: double.infinity,
           width: double.infinity,
+          decoration: BoxDecoration(color: AppColors.backgroundColor3),
           child: Consumer<BrowseHistoryViewModel>(
-            builder: (context,value,child){
+            builder: (context, value, child) {
               return ListView.builder(
                 itemCount: value.browseHistory.length,
-                itemBuilder: (context,index){
+                itemBuilder: (context, index) {
                   return _buildHousekeeperCard(value.browseHistory[index]);
                 },
               );
@@ -65,15 +77,14 @@ class _BrowseHistoryPageState extends State<BrowseHistoryPage> {
         color: Colors.white,
         child: InkWell(
           borderRadius: BorderRadius.circular(10.0),
-          onTap: () async{
+          onTap: () async {
             housekeeper.createdTime = DateTime.now();
             housekeeper.userId = Global.userInfo?.userId;
-            await Global.dbUtil?.db.insert('browser_history', housekeeper.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
-            RouteUtils.pushForNamed(
-                context,
-                RoutePath.KeeperPage,
-                arguments: housekeeper.keeperId
-            );
+            await Global.dbUtil?.db.insert(
+                'browser_history', housekeeper.toMap(),
+                conflictAlgorithm: ConflictAlgorithm.replace);
+            RouteUtils.pushForNamed(context, RoutePath.KeeperPage,
+                arguments: housekeeper.keeperId);
           },
           child: Container(
               padding: EdgeInsets.all(10),
@@ -100,11 +111,18 @@ class _BrowseHistoryPageState extends State<BrowseHistoryPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(housekeeper.realName!,
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black)),
+                                Row(
+                                  children: [
+                                    Text(housekeeper.realName!,
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black)),
+                                    Spacer(),
+                                    Text(
+                                        '${DateFormat('yyyy-MM-dd').format(housekeeper.createdTime!)}')
+                                  ],
+                                ),
                                 SizedBox(
                                   height: 3,
                                 ),
@@ -146,10 +164,9 @@ class _BrowseHistoryPageState extends State<BrowseHistoryPage> {
                         ),
                         Expanded(
                             child: Text(
-                              " ${housekeeper.highlight}",
-                              style: TextStyle(color: Colors.black45,
-                                  fontSize: 12),
-                            ))
+                          " ${housekeeper.highlight}",
+                          style: TextStyle(color: Colors.black45, fontSize: 12),
+                        ))
                       ],
                     ),
                   ),
@@ -160,4 +177,30 @@ class _BrowseHistoryPageState extends State<BrowseHistoryPage> {
     );
   }
 
+  void showBrowseHistoryDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('提示'),
+          content: Text('确定要删除所有浏览记录吗？'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('取消'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('确定'),
+              onPressed: () async {
+                await browseHistoryViewModel.deleteAllBrowseHistory();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

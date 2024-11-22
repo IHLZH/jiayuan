@@ -14,4 +14,12 @@ class BrowseHistoryViewModel with ChangeNotifier{
     browseHistory.forEach((item)=> print(item.createdTime));
     notifyListeners();
   }
+
+  Future<void> deleteAllBrowseHistory()async{
+     final result = await Global.dbUtil?.db.delete('browser_history');
+     if(result != null){
+       browseHistory.clear();
+     }
+     notifyListeners();
+  }
 }

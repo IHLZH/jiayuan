@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/route/routes.dart';
-import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
 /// 设计尺寸
@@ -24,9 +23,7 @@ Size get designSize {
       logicalShortestSide * scaleFactor, logicalLongestSide * scaleFactor);
 }
 
-class  MyApp extends StatelessWidget {
-
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(designSize);
@@ -43,7 +40,10 @@ class  MyApp extends StatelessWidget {
             primaryColor: Colors.teal,
             cardColor: Colors.grey,
             textTheme: TextTheme(
-              bodyLarge: TextStyle(color: Colors.teal, fontSize: 17,fontWeight: FontWeight.bold),
+              bodyLarge: TextStyle(
+                  color: Colors.teal,
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold),
               bodyMedium: TextStyle(color: Colors.teal),
             ),
           ),
@@ -60,6 +60,7 @@ class  MyApp extends StatelessWidget {
             const Locale("en", "US")
           ],
           debugShowCheckedModeBanner: false,
+              builder: EasyLoading.init(),
         );
       },
     ));
