@@ -1,6 +1,7 @@
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
+import 'package:tencent_cloud_chat_sdk/enum/V2TimConversationListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimSDKListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/history_msg_get_type_enum.dart';
@@ -68,6 +69,7 @@ class ImChatApi {
   V2TimSDKListener? sdkListener; //sdk监听器
   V2TimFriendshipListener? friendshipListener; //关系监听器
   V2TimAdvancedMsgListener? advancedMsgListener; //高级消息监听器
+  V2TimConversationListener? conversationListener;//会话监听器
 
   int messageChange = 0;
 
@@ -208,6 +210,8 @@ class ImChatApi {
       },
       onRecvMessageRevoked: (String messageid) {
         // 在本地维护的消息中处理被对方撤回的消息
+        if (isProduction) print("============撤回消息： $messageid=========");
+        // ConversationPageViewModel.instance.initConversationList();
       },
       onRecvNewMessage: (V2TimMessage message) async {
         //ConversationPageViewModel.instance.onRefresh();
@@ -216,8 +220,7 @@ class ImChatApi {
           String? text = message.textElem!.text;
 
           if (isProduction) print("============获得新消息： ${text}=========");
-          if (isProduction)
-            ConversationPageViewModel.instance.initConversationList();
+          // ConversationPageViewModel.instance.initConversationList();
         }
         // 使用自定义消息
         if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
@@ -327,6 +330,62 @@ class ImChatApi {
 
     // 会话监听
     //设置会话监听器
+    conversationListener = V2TimConversationListener(
+      onConversationChanged: (List<V2TimConversation> conversationList) {
+        //某些会话的关键信息发生变化（未读计数发生变化、最后一条消息被更新等等）的回调函数
+        //conversationList    变化的会话列表
+        if (isProduction) print("============ 会话列表发生变化 ===========");
+        ConversationPageViewModel.instance.initConversationList();
+      },
+      onConversationGroupCreated:
+          (String groupName, List<V2TimConversation> conversationList) {
+        // 会话分组被创建
+        // groupName 会话分组名称
+        // conversationList 会话分组包含的会话列表
+      },
+      onConversationGroupDeleted: (String groupName) {
+        // 会话分组被删除
+        // groupName  被删除的会话分组名称
+      },
+      onConversationGroupNameChanged: (String oldName, String newName) {
+        // 会话分组名变更
+        // oldName 旧名称
+        // newName 新名称
+      },
+      onConversationsAddedToGroup:
+          (String groupName, List<V2TimConversation> conversationList) {
+        // 会话分组新增会话
+        // groupName 会话分组名称
+        // conversationList 被加入会话分组的会话列表
+      },
+      onConversationsDeletedFromGroup:
+          (String groupName, List<V2TimConversation> conversationList) {
+        // 会话分组删除会话
+        // groupName 会话分组名称
+        // conversationList 被删除的会话列表
+      },
+      onNewConversation: (List<V2TimConversation> conversationList) {
+        // 新会话的回调函数
+        // conversationList 收到的新会话列表
+      },
+      onSyncServerFailed: () {
+        // 同步服务失败的回调函数
+      },
+      onSyncServerFinish: () {
+        // 同步服务完成的回调函数
+      },
+      onSyncServerStart: () {
+        // 同步服务开始的回调函数
+      },
+      onTotalUnreadMessageCountChanged: (int totalUnreadCount) {
+        // 会话未读总数改变的回调函数
+        // totalUnreadCount 会话未读总数
+      },
+    );
+    TencentImSDKPlugin.v2TIMManager
+        .getConversationManager()
+        .addConversationListener(listener: conversationListener!);
+    if (isProduction) print("============= IM添加会话监听器成功 ============");
   }
 
   Future<void> logout() async {
@@ -491,6 +550,8 @@ class ImChatApi {
     }
   }
 
+  //单聊发送
+
   //分页拉取会话
   Future<List<V2TimConversation?>> getConversationList(
       String index, int pageSize) async {
@@ -622,6 +683,42 @@ class ImChatApi {
       // 获取成功
       if (isProduction)
         print("========= 拉取 ID : ${userID} 的 历史消息成功 ============");
+      return getHistoryMessageListRes.data ?? [];
+    } else {
+      if (isProduction) print("============= 获取历史消息失败 ============");
+      if (isProduction)
+        print(
+            "错误码：${getHistoryMessageListRes.code} 错误信息： ${getHistoryMessageListRes.desc}");
+      return [];
+    }
+  }
+
+  //获取群聊历史信息
+  Future<List<V2TimMessage>> getHistoryGroupMessageList(
+      String groupID, int count, String? lastMsgID) async {
+    // 首次拉取，lastMsgID 设置为 null
+    // 再次拉取时，lastMsgID 可以使用返回的消息列表中的最后一条消息的id
+    V2TimValueCallback<List<V2TimMessage>> getHistoryMessageListRes =
+    await TencentImSDKPlugin.v2TIMManager
+        .getMessageManager()
+        .getHistoryMessageList(
+      getType: HistoryMsgGetTypeEnum.V2TIM_GET_LOCAL_OLDER_MSG, // 拉取消息的位置及方向
+      userID: "", // 用户id 拉取单聊消息，需要指定对方的 userID，此时 groupID 传空即可。
+      groupID: groupID, // 群组id 拉取群聊消息，需要指定群聊的 groupID，此时 userID 传空即可。
+      count: count, // 拉取数据数量
+      lastMsgID: lastMsgID, // 拉取起始消息id
+      // 仅能在群聊中使用该字段。
+      // 设置 lastMsgSeq 作为拉取的起点，返回的消息列表中包含这条消息。
+      // 如果同时指定了 lastMsg 和 lastMsgSeq，SDK 优先使用 lastMsg。
+      // 如果均未指定 lastMsg 和 lastMsgSeq，拉取的起点取决于是否设置 getTimeBegin。设置了，则使用设置的范围作为起点；未设置，则使用最新消息作为起点。
+      // lastMsgSeq: -1,
+      messageTypeList: [], // 用于过滤历史信息属性，若为空则拉取所有属性信息。
+    );
+
+    if (getHistoryMessageListRes.code == 0) {
+      // 获取成功
+      if (isProduction)
+        print("========= 拉取 groupID : ${groupID} 的 历史消息成功 ============");
       return getHistoryMessageListRes.data ?? [];
     } else {
       if (isProduction) print("============= 获取历史消息失败 ============");
