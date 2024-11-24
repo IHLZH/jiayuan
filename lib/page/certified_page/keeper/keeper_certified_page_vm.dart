@@ -100,8 +100,8 @@ class KeeperCertifiedPageViewModel with ChangeNotifier{
 
   Future<bool> getIdCardAuth() async {
     // 读取图片文件的字节
-    List<int>? idCardBackBytes = await ImageUtils.compressIfNeededToMemory(idCardBack, 5);
-    List<int>? idCardFrontBytes = await ImageUtils.compressIfNeededToMemory(idCardFront, 5);
+    List<int>? idCardBackBytes = await ImageUtils.compressIfNeededToMemory(idCardBack, 1);
+    List<int>? idCardFrontBytes = await ImageUtils.compressIfNeededToMemory(idCardFront, 1);
 
     if(idCardFrontBytes != null && idCardBackBytes != null){
       // 将字节转换为 Base64 字符串

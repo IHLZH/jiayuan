@@ -224,6 +224,7 @@ class _ChatPageState extends State<ChatPage>{
 
   Widget selfMessage(V2TimMessage message,bool hasShowTime){
     return Container(
+      margin: EdgeInsets.only(left: 20),
         width: double.infinity,
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Column(
@@ -239,9 +240,11 @@ class _ChatPageState extends State<ChatPage>{
               ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
@@ -290,6 +293,7 @@ class _ChatPageState extends State<ChatPage>{
   Widget otherMessage(V2TimMessage message,bool hasShowTime){
     return Container(
       width: double.infinity,
+      margin: EdgeInsets.only(right: 20),
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Column(
         children: [
@@ -303,6 +307,7 @@ class _ChatPageState extends State<ChatPage>{
               ),
             ),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CircleAvatar(
                 backgroundColor: Colors.white,
@@ -313,6 +318,7 @@ class _ChatPageState extends State<ChatPage>{
               SizedBox(width: 10,),
               Expanded(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
