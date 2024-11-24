@@ -57,9 +57,14 @@ class ChatPageViewModel with ChangeNotifier{
       chatMessageList.clear();
       List<V2TimMessage> chatMessageData = await ImChatApi.getInstance().getHistorySignalMessageList(conversation!.userID!, count, lastMessageId);
       chatMessageList.addAll(chatMessageData);
-      await ConversationPageViewModel.instance.clearUnReadCount(conversation!);
+      await clearUnReadCount(conversation!);
       notifyListeners();
     }
+  }
+
+  Future<void> clearUnReadCount(V2TimConversation conversation) async {
+    await ImChatApi.getInstance().clearSignalUnread(conversation.userID!);
+    notifyListeners();
   }
 
   void initScorllListener(){

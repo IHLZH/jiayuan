@@ -62,11 +62,6 @@ class ConversationPageViewModel with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> clearUnReadCount(V2TimConversation conversation) async {
-    await ImChatApi.getInstance().clearSignalUnread(conversation.userID!);
-    notifyListeners();
-  }
-
   //将时间戳转化为具体时间显示
   String formatTimestamp(int timestamp) {
     final now = DateTime.now();

@@ -6,6 +6,9 @@ import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/http_method.dart';
+import 'package:jiayuan/http/url_path.dart';
+import 'package:jiayuan/utils/global.dart';
+import 'package:oktoast/oktoast.dart';
 
 class IdentityApi{
 
@@ -13,156 +16,62 @@ class IdentityApi{
 
   IdentityApi._();
 
-  String host = "https://zidv2.market.alicloudapi.com";
-
-  String CardNoAuthPath = "/idcard/VerifyIdcardv2";
-
-  String IdCardFrontAuthPath = "/thirdnode/ImageAI/idcardfrontrecongnition";
-
-  String IdCardBackAuthPath = "/thirdnode/ImageAI/idcardbackrecongnition";
-
-  String appCode = "b5320fa7a56b4d7a96c36525bb051be2";
-
-  final _defaultTimeout = const Duration(seconds: 30);
-
-  Dio _dio = Dio();
-
-  void initDio(){
-    _dio.options = BaseOptions(
-      baseUrl: host,
-      responseType: ResponseType.json,
-      connectTimeout: _defaultTimeout,
-      receiveTimeout: _defaultTimeout,
-      sendTimeout: _defaultTimeout,
-    );
-  }
-
   Future<bool> getCardNoAuth({required String cardNo, required String realName}) async {
     try{
-      final Response response = await _dio.get(
-          CardNoAuthPath,
+      final Response response = await DioInstance.instance().post(
+          path: UrlPath.CardNoAuthPath,
           options: Options(
-              method: HttpMethod.GET,
+              method: HttpMethod.POST,
               headers: {
-                "Authorization" : "APPCODE " + appCode
+                "token" : Global.token
               }
           ),
-          queryParameters: {
-            "cardNo" : cardNo,
-            "realName" : realName
-          }
+          data: {
+            "realName": realName,
+            "idCard": cardNo
+          },
       );
 
-      print(response.data);
-
-      //final data = response.data as Map<String, dynamic>;
-
-      if (response.data is String) {
-        // 如果是字符串，尝试解析为 JSON
-        final data = json.decode(response.data) as Map<String, dynamic>;
-        if (data["error_code"] == 0) {
-          final result = data["result"] as Map<String, dynamic>;
-          bool isok = result["isok"] as bool;
-          return isok;
+      if(response.statusCode == 200){
+        if(response.data['code'] == 200){
+          return true;
         }
-      } else if (response.data is Map<String, dynamic>) {
-        // 如果是 Map 类型，直接处理
-        final data = response.data as Map<String, dynamic>;
-        if (data["error_code"] == 0) {
-          final result = data["result"] as Map<String, dynamic>;
-          bool isok = result["isok"] as bool;
-          return isok;
-        }
+      }else{
+        showToast("网络连接错误");
       }
+
     }catch(e){
       print("身份证号码认证请求错误" + e.toString());
     }
     return false;
   }
 
-  Future<bool> getIdCardFrontAuth({required String idCardNo, required String idCardBase64}) async {
+  Future<bool> getIdCardAuth({required String idCardFront, required String idCardBack}) async {
     try{
-      final Response response = await _dio.post(
-          IdCardFrontAuthPath,
+      final Response response = await DioInstance.instance().post(
+          path: UrlPath.IdCardFrontAuthPath,
           options: Options(
             method: HttpMethod.POST,
               headers: {
-                "Authorization" : "APPCODE " + appCode
-              }
+                "token" : Global.token
+              },
           ),
-          data: {
-            "base64Str" : idCardBase64
+          data:  {
+            "front":idCardFront,
+            "back":idCardBack
           },
       );
 
-      if (response.data is String) {
-        // 如果是字符串，尝试解析为 JSON
-        final data = json.decode(response.data) as Map<String, dynamic>;
-        print(data["error_code"]);
-        if(data["error_code"] == 0){
-          return idCardNo == response.data["result"]["idcardno"];
+      if(response.statusCode == 200){
+        if(response.data['code'] == 200){
+          return true;
         }
-      } else if (response.data is Map<String, dynamic>) {
-        // 如果是 Map 类型，直接处理
-        final data = response.data as Map<String, dynamic>;
-        if(data["error_code"] == 0){
-          return idCardNo == response.data["result"]["idcardno"];
-        }
+      }else{
+        showToast("网络连接错误");
       }
     }catch(e){
-      print("身份证正面认证请求错误" + e.toString());
+      print("身份证照片认证请求错误" + e.toString());
     }
     return false;
   }
-
-  Future<bool> getIdCardBackAuth({required String idCardNo, required String idCardBase64}) async {
-    try{
-      final Response response = await _dio.post(
-          IdCardBackAuthPath,
-          options: Options(
-            method: HttpMethod.POST,
-              headers: {
-                "Authorization" : "APPCODE " + appCode
-              }
-          ),
-          data: {
-            "base64Str" : idCardBase64
-          }
-      );
-
-      if (response.data is String) {
-        // 如果是字符串，尝试解析为 JSON
-        final data = json.decode(response.data) as Map<String, dynamic>;
-        if(data["error_code"] == 0){
-          return isExpired(response.data["result"]["end_data"]);
-        }
-      } else if (response.data is Map<String, dynamic>) {
-        // 如果是 Map 类型，直接处理
-        final data = response.data as Map<String, dynamic>;
-        if(data["error_code"] == 0){
-          return isExpired(response.data["result"]["end_data"]);
-        }
-      }
-    }catch(e){
-      print("身份证背面认证请求错误" + e.toString());
-    }
-    return false;
-  }
-
-  //判断是否过期
-  bool isExpired(String inputDate) {
-    try {
-      // 解析输入日期
-      DateTime parsedDate = DateFormat("yyyyMMdd").parseStrict(inputDate);
-      // 获取当前日期并清除时间部分
-      DateTime today = DateTime.now();
-      DateTime currentDate = DateTime(today.year, today.month, today.day);
-      // 日期没有过期
-      return parsedDate.isAfter(currentDate);
-    } catch (e) {
-      // 输入格式错误时，抛出异常
-      return false;
-    }
-  }
-
 }

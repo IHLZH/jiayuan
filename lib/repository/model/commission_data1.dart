@@ -76,7 +76,7 @@ class CommissionData1 {
     _commissionId = json['commissionId'];
     _userId = json['userId'];
     _userName = User.fromJson(json['user']).nickName;
-    _keeperId = json['keeperId'] ?? 0;
+    _keeperId = json['keeperId'];
     _typeName = json['service'];
     _commissionBudget = json['commissionBudget'].toDouble();
     _commissionDescription = json['commissionDescription'];

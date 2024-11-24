@@ -127,7 +127,6 @@ class _ConversationPageState extends State<ConversationPage>{
       child: InkWell(
         onTap: (){
           RouteUtils.pushForNamed(context, RoutePath.chatPage, arguments: conversation);
-          _conversationViewModel.clearUnReadCount(conversation);
         },
         child: Container(
             width: double.infinity,
