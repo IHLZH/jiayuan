@@ -92,4 +92,8 @@ class UrlPath {
   //更改订单状态
   static const String changeOrderStatus = "/order/update/status";
 
+  static const String CardNoAuthPath = "/keeper/identity/add";
+
+  static const String IdCardFrontAuthPath = "/keeper/identity/identityByPic";
+
 }

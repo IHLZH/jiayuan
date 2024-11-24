@@ -67,6 +67,7 @@ class _ChatPageState extends State<ChatPage>{
   Widget build(BuildContext context) {
 
     _chatViewModel.conversation = ModalRoute.of(context)?.settings.arguments as V2TimConversation;
+    _chatViewModel.clearUnReadCount(_chatViewModel.conversation!);
     _initChatMessage();
 
     return ChangeNotifierProvider.value(

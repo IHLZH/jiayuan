@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/repository/api/identity_api.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/utils/image_utils.dart';
 import 'package:oktoast/oktoast.dart';
 
 class KeeperCertifiedPageViewModel with ChangeNotifier{
@@ -25,24 +26,33 @@ class KeeperCertifiedPageViewModel with ChangeNotifier{
   bool _cardNoWay = false;
   bool _cardImgWay = false;
 
-  Future<void> authenticated() async {
+  Future<void> getAuthCardNo() async {
     if(isNameCorrect && isIdCorrect){
       if(name != "" && idCard != ""){
-        if(idCardFront.path != "" && idCardBack.path != ""){
-          if(await getCardNoAuth() && await getIdCardFrontAuth() && await getIdCardBackAuth()){
-            isSuccess = true;
-            //发起网络请求，赋予家政员身份
-            notifyListeners();
-          }else{
-            isFail = true;
-            notifyListeners();
-          }
+        if(await getCardNoAuth()){
+          isSuccess = true;
+          notifyListeners();
         }else{
-          showToast("照片不能为空");
+          isFail = true;
+          notifyListeners();
         }
       } else{
         showToast("信息不能为空");
       }
+    }
+  }
+
+  Future<void> getAuthIdCard() async {
+    if(idCardFront.path != "" && idCardBack.path != ""){
+      if(await getIdCardAuth()){
+        isSuccess = true;
+        notifyListeners();
+      }else{
+        isFail = true;
+        notifyListeners();
+      }
+    }else{
+      showToast("照片不能为空");
     }
   }
 
@@ -88,50 +98,30 @@ class KeeperCertifiedPageViewModel with ChangeNotifier{
     }
   }
 
-  Future<bool> getIdCardFrontAuth() async {
-
-    File imageFile = File(idCardFront.path);
-
+  Future<bool> getIdCardAuth() async {
     // 读取图片文件的字节
-    List<int> imageBytes = await imageFile.readAsBytes();
+    List<int>? idCardBackBytes = await ImageUtils.compressIfNeededToMemory(idCardBack, 5);
+    List<int>? idCardFrontBytes = await ImageUtils.compressIfNeededToMemory(idCardFront, 5);
 
-    // 将字节转换为 Base64 字符串
-    String idCardBase64 = base64Encode(imageBytes);
+    if(idCardFrontBytes != null && idCardBackBytes != null){
+      // 将字节转换为 Base64 字符串
+      String idCardFrontBase64 = base64Encode(idCardFrontBytes);
+      String idCardBackBase64 = base64Encode(idCardBackBytes);
 
-    bool result = await IdentityApi.instance.getIdCardFrontAuth(
-        idCardNo: idCard,
-        idCardBase64: idCardBase64
-    );
+      bool result = await IdentityApi.instance.getIdCardAuth(
+          idCardFront: idCardBackBase64,
+          idCardBack: idCardFrontBase64
+      );
 
-    if(result){
-      print("身份证正面验证通过");
-      return true;
+      if(result){
+        print("身份证照片验证通过");
+        return true;
+      }else{
+        print("身份证照片验证失败");
+        return false;
+      }
     }else{
-      print("身份证正面验证失败");
-      return false;
-    }
-  }
-
-  Future<bool> getIdCardBackAuth() async {
-
-    File imageFile = File(idCardBack.path);
-
-    // 读取图片文件的字节
-    List<int> imageBytes = await imageFile.readAsBytes();
-
-    // 将字节转换为 Base64 字符串
-    String idCardBase64 = base64Encode(imageBytes);
-
-    bool result = await IdentityApi.instance.getIdCardBackAuth(
-        idCardNo: idCard,
-        idCardBase64: idCardBase64
-    );
-
-    if(result){
-      print("身份证反面验证通过");
-      return true;
-    }else{
-      print("身份证反面验证失败");
+      showToast("压缩出错");
       return false;
     }
   }

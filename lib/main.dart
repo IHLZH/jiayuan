@@ -8,12 +8,9 @@ import 'package:jiayuan/page/tab_page/tab_page.dart';
 import 'http/dio_instance.dart';
 
 Future<void> main() async {
-  DioInstance.instance().initDio(baseUrl: UrlPath.BaseUrl);
+  DioInstance.instance().initDio(baseUrl: UrlPath.testBaseUrl);
   await ScreenUtil.ensureScreenSize();
   runApp(MyApp());
-
-
-
 }
 
 

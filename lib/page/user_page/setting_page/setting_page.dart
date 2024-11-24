@@ -51,7 +51,7 @@ class _SettingPageState extends State<SettingPage> {
 
     Future<void> _getSignalConversationMessage() async {
       List<V2TimMessage>? messageList = await ImChatApi.getInstance()
-          .getHistorySignalMessageList('21', 1, lastSignalMessageID);
+          .getHistorySignalMessageList('21', 100, lastSignalMessageID);
 
       for (var item in messageList!) {
         print(

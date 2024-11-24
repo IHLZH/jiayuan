@@ -217,7 +217,10 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  GestureDetector(
+                  InkWell(
+                    onTap: (){
+                      _keeperViewModel.toCardNo();
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -235,15 +238,15 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                         )
                       ],
                     ),
-                    onTap: (){
-                      _keeperViewModel.toCardNo();
-                    },
                   ),
                   Divider(
                     height: 1,
                     color: Colors.grey,
                   ),
-                  GestureDetector(
+                  InkWell(
+                    onTap: (){
+                      _keeperViewModel.toCardImg();
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -261,9 +264,6 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                         )
                       ],
                     ),
-                    onTap: (){
-                      _keeperViewModel.toCardImg();
-                    },
                   )
                 ],
               ),
@@ -395,7 +395,7 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                     radius: 8.r,
                     buttonText: "认证完成>",
                     onTap: (){
-                      _keeperViewModel.authenticated();
+                      _keeperViewModel.getAuthCardNo();
                     },
                   )
                 ],
@@ -475,7 +475,7 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                     radius: 8.r,
                     buttonText: "认证完成>",
                     onTap: (){
-                      _keeperViewModel.authenticated();
+                      _keeperViewModel.getAuthIdCard();
                     },
                   )
                 ],

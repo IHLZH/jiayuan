@@ -30,7 +30,7 @@ class ImageUtils {
   }
 
   //动态压缩图片 压缩到指定大小附近
-  static Future<List<int>?> compressIfNeededToMemory(XFile file, int maxSizeMB) async {
+  static Future<List<int>?> compressIfNeededToMemory(XFile file, double maxSizeMB) async {
     int fieldSize = await file.length();
      print('原始文件大小 ${fieldSize/((1024 * 1024))}MB');
     if (fieldSize > maxSizeMB * 1024 * 1024) {
