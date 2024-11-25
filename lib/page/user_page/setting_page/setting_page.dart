@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/im/im_chat_api.dart';
+import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
@@ -66,7 +67,7 @@ class _SettingPageState extends State<SettingPage> {
     }
 
     Future<void> _searchUser() async {
-      await ImChatApi.getInstance().searchUser('20');
+      RouteUtils.pushForNamed(context, RoutePath.userSearchPage);
     }
 
     Future<void> _getFriendsList() async {
