@@ -9,8 +9,9 @@ class SliverHeader extends StatefulWidget {
   final List<Widget> children;
   final bool? pinned;
   final bool? floating;
+  final double? childHeight;
 
-  const SliverHeader({super.key, this.pinned, this.floating, required this.children});
+  const SliverHeader({super.key, this.pinned, this.floating, required this.children, this.childHeight});
 
   @override
   State createState() {
@@ -19,32 +20,23 @@ class SliverHeader extends StatefulWidget {
 }
 
 class _SliverHeaderState extends State<SliverHeader> {
-  double? _childHeight;
+
+  double? _myHeight;
 
   @override
   Widget build(BuildContext context) {
+
+    _myHeight = widget.childHeight;
+
     return SliverPersistentHeader(
         pinned: widget.pinned ?? true,
         floating: widget.floating ?? true,
         delegate: SliverAppBarDelegate(
-            minHeight: _childHeight ?? 70.h,
-            maxHeight: _childHeight ?? 70.h,
+            minHeight: _myHeight ?? 70.h,
+            maxHeight: _myHeight ?? 70.h,
             child: LayoutBuilder(
               builder: (context, constraints) {
                 //通过LayoutBuilder动态获取子组件的高度
-                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                  //防止多次回调setState
-                  var height = context.size?.height;
-                  print("_SliverHeaderState _Height={$height}");
-                  if (_childHeight == height) {
-                    return;
-                  }
-                  _childHeight = height;
-                  if (kDebugMode) {
-                    print("_SliverHeaderState _childHeight=$_childHeight");
-                  }
-                  setState(() {});
-                });
                 return Container(
                     width: double.infinity,
                     color: Colors.white,

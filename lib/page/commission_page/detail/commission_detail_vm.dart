@@ -1,9 +1,14 @@
 import 'package:flutter/cupertino.dart';
+import 'package:jiayuan/im/im_chat_api.dart';
+import 'package:jiayuan/page/tab_page/tab_page_vm.dart';
 import 'package:jiayuan/repository/api/commission_api.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/repository/model/user.dart';
+import 'package:jiayuan/route/route_path.dart';
+import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommissionDetailViewModel with ChangeNotifier{
@@ -41,6 +46,12 @@ class CommissionDetailViewModel with ChangeNotifier{
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  Future<void> makeChat({required String userId, required BuildContext context}) async {
+    V2TimConversation? conversation = await ImChatApi.getInstance().getConversation("c2c_${userId}");
+    RouteUtils.pushForNamed(context, RoutePath.chatPage , arguments: conversation);
+    notifyListeners();
   }
 
   String obfuscatePhoneNumber(String phoneNumber) {

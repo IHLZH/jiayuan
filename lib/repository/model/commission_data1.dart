@@ -76,6 +76,7 @@ class CommissionData1 {
     _commissionId = json['commissionId'];
     _userId = json['userId'];
     _userName = User.fromJson(json['user']).nickName;
+    _userAvatar = User.fromJson(json['user']).userAvatar;
     _keeperId = json['keeperId'];
     _typeName = json['service'];
     _commissionBudget = json['commissionBudget'].toDouble();
@@ -159,6 +160,7 @@ class CommissionData1 {
   int? _commissionId;
   int? _userId;
   String? _userName;
+  String? _userAvatar;
   int? _keeperId;
   int? _typeId;
   String? _typeName;
@@ -229,6 +231,7 @@ CommissionData1 copyWith({
   int get commissionId => _commissionId ?? 1;
   int get userId => _userId ?? 0;
   String get userName => _userName ?? "";
+  String? get userAvatar => _userAvatar;
   int get keeperId => _keeperId ?? 0;
   int get typeId => _typeId ?? 1;
   String get typeName => _typeName ?? "家政服务";
