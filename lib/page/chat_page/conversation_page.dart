@@ -106,6 +106,8 @@ class _ConversationPageState extends State<ConversationPage>{
                                     child: Text('创建群组'),
                                   ),
                                 ],
+                                color: Colors.white,
+                                popUpAnimationStyle: AnimationStyle.noAnimation
                               );
 
                               if (result != null) {
