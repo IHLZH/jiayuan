@@ -30,7 +30,8 @@ class _SettingPageState extends State<SettingPage> {
       String formattedDate =
           "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}-${now.second.toString().padLeft(2, '0')}";
 
-      ImChatApi.getInstance().sendTextMessage('21', formattedDate);
+      String text = "🦌🦌🦌";
+      ImChatApi.getInstance().sendTextMessage('21', text);
     }
 
     Future<void> _receiveTest() async {
@@ -44,7 +45,7 @@ class _SettingPageState extends State<SettingPage> {
 
     Future<void> _receiveSignalTest() async {
       V2TimConversation? conversation =
-          await ImChatApi.getInstance().getConversation("c2c_21");
+          await ImChatApi.getInstance().getConversation("c2c_19");
       print(
           "id: ${conversation?.conversationID} ==== groupID: ${conversation?.groupID} ==== groupType: ${conversation?.groupType} ==== 未读数: ${conversation?.unreadCount} ==== 展示名: ${conversation?.showName} ==== 对方ID: ${conversation?.userID}}");
     }
@@ -62,6 +63,18 @@ class _SettingPageState extends State<SettingPage> {
 
     Future<void> _clearSignalMessage() async {
       await ImChatApi.getInstance().clearSignalMessage('21');
+    }
+
+    Future<void> _searchUser() async {
+      await ImChatApi.getInstance().searchUser('20');
+    }
+
+    Future<void> _getFriendsList() async {
+      await ImChatApi.getInstance().getFriendList();
+    }
+
+    Future<void> _addMyFriend() async {
+      await ImChatApi.getInstance().addFriend('19', 'ikun');
     }
 
     Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
@@ -82,7 +95,7 @@ class _SettingPageState extends State<SettingPage> {
               case '拉取所有会话列表':
                 _receiveTest();
                 break;
-              case '拉取和喜多的会话':
+              case '拉取单聊会话':
                 _receiveSignalTest();
                 break;
               case '拉取和喜多的单聊历史信息':
@@ -90,6 +103,15 @@ class _SettingPageState extends State<SettingPage> {
                 break;
               case '清空和喜多的聊天':
                 _clearSignalMessage();
+                break;
+              case '搜索用户':
+                _searchUser();
+                break;
+              case '获得好友列表':
+                _getFriendsList();
+                break;
+              case '添加好友':
+                _addMyFriend();
                 break;
               default:
                 break;
@@ -189,12 +211,18 @@ class _SettingPageState extends State<SettingPage> {
                   _line(),
                   _buildOption(Icons.record_voice_over_outlined, '拉取所有会话列表'),
                   _line(),
-                  _buildOption(Icons.record_voice_over_outlined, '拉取和喜多的会话'),
+                  _buildOption(Icons.record_voice_over_outlined, '拉取单聊会话'),
                   _line(),
                   _buildOption(
                       Icons.record_voice_over_outlined, '拉取和喜多的单聊历史信息'),
                   _line(),
                   _buildOption(Icons.cleaning_services_rounded, '清空和喜多的聊天'),
+                  _line(),
+                  _buildOption(Icons.search, '搜索用户'),
+                  _line(),
+                  _buildOption(Icons.search, '获得好友列表'),
+                  _line(),
+                  _buildOption(Icons.person_add_alt, '添加好友'),
                 ],
               ),
             ),
