@@ -1,7 +1,9 @@
 class UrlPath {
   static const String realBaseUrl = "http://192.168.3.32:9900/";
 
-  static const String BaseUrl = "http://www.shinesuning.top:8080";
+  // static const String BaseUrl = "http://www.shinesuning.top:8080";
+  // static const String BaseUrl = "http://192.168.31.189:8080";
+  static const String BaseUrl = "http://10.7.89.191:8080";
 
   static const String wangBaseUrl = "http://10.7.89.154:8080";
 
@@ -78,7 +80,8 @@ class UrlPath {
   static const String getAllPriceUrl = "/release/add/price";
 
   //高德地图天气接口
-  static const String weatherUrl = "https://restapi.amap.com/v3/weather/weatherInfo";
+  static const String weatherUrl =
+      "https://restapi.amap.com/v3/weather/weatherInfo";
 
   //分类请求委托
   static const String getTypeCommission = "/searchList_by_money_distance";
@@ -96,4 +99,6 @@ class UrlPath {
 
   static const String IdCardFrontAuthPath = "/keeper/identity/identityByPic";
 
+  //获取用户
+  static const String searchUser = "/searchFriends";
 }
