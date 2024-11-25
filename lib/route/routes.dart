@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jiayuan/page/certified_page/cert/cert_certified_page.dart';
 import 'package:jiayuan/page/certified_page/keeper/keeper_certified_page.dart';
 import 'package:jiayuan/page/chat_page/conversation_page.dart';
+import 'package:jiayuan/page/chat_page/friend_list/friend_list.dart';
 import 'package:jiayuan/page/commission_center_page/commission_center_page.dart';
 import 'package:jiayuan/page/commission_center_page/order/order_page.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
@@ -18,6 +19,7 @@ import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
 import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
 import 'package:jiayuan/route/route_path.dart';
+import 'package:jiayuan/route/route_utils.dart';
 
 import '../page/chat_page/chat/chat_page.dart';
 import '../page/commission_center_page/certificates/certificate_page.dart';
@@ -140,6 +142,8 @@ class Routes {
         return pageRoute(CommentPage());
       case RoutePath.chatPage:
         return pageRoute(ChatPage(),settings: settings);
+      case RoutePath.friendList:
+        return pageRoute(FriendList());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
