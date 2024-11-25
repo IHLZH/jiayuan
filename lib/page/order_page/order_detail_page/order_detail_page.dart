@@ -638,8 +638,19 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                       ],
                     ),
                   ),
-                4 => _buildIconButton(
-                    Icons.payment, '去支付', AppColors.orangeBtnColor),
+                4 => Container(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildIconButton(
+                          Icons.payment, '去支付', AppColors.orangeBtnColor),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      _buildIconButton(Icons.cancel, '不验收', Colors.red),
+                    ],
+                  ),
+                ),
                 5 => _buildIconButton(
                     Icons.rate_review_outlined, '去评价', AppColors.appColor),
                 _ => Container(),
