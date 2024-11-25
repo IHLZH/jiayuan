@@ -69,7 +69,52 @@ class _ConversationPageState extends State<ConversationPage>{
                       ),
                       Builder(
                           builder: (context) =>GestureDetector(
-                            onTap: (){
+                            onTap: () async {
+                              final RenderBox button = context.findRenderObject() as RenderBox;
+                              final RenderBox overlay = Overlay.of(context)
+                                  .context
+                                  .findRenderObject() as RenderBox;
+
+                              // 获取按钮的全局位置
+                              final Offset buttonPosition = button.localToGlobal(Offset.zero);
+                              final Size buttonSize = button.size;
+
+                              // 弹出菜单
+                              final result = await showMenu<String>(
+                                context: context,
+                                position: RelativeRect.fromRect(
+                                  // 菜单显示在图标正下方，稍微偏移按钮高度
+                                  Rect.fromLTRB(
+                                    buttonPosition.dx,
+                                    buttonPosition.dy + buttonSize.height,
+                                    buttonPosition.dx + buttonSize.width,
+                                    buttonPosition.dy + buttonSize.height + 1,
+                                  ),
+                                  Offset.zero & overlay.size, // 屏幕范围
+                                ),
+                                items: [
+                                  const PopupMenuItem<String>(
+                                    value: '0',
+                                    child: Text('好友/群组'),
+                                  ),
+                                  const PopupMenuItem<String>(
+                                    value: '1',
+                                    child: Text('加好友'),
+                                  ),
+                                  const PopupMenuItem<String>(
+                                    value: '2',
+                                    child: Text('创建群组'),
+                                  ),
+                                ],
+                              );
+
+                              if (result != null) {
+                                switch(result){
+                                  case '0':
+                                    RouteUtils.pushForNamed(context, RoutePath.friendList);
+                                    break;
+                                }
+                              }
                             },
                             child: Container(
                               margin: EdgeInsets.only(right: 5),

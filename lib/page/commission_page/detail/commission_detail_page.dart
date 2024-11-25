@@ -140,11 +140,27 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                             ),
                                           ),
                                           SizedBox(width: 20.w,),
-                                          Text(
-                                            vm.commissionData.userName,
-                                            style: TextStyle(
-                                              color: Colors.black87
-                                            ),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                child: CircleAvatar(
+                                                  backgroundColor: AppColors.backgroundColor3,
+                                                  child: ClipOval(
+                                                    child: vm.commissionData.userAvatar != null ?
+                                                    Image.network(vm.commissionData.userAvatar!) :
+                                                    Image.asset("assets/images/detail_img.png"),
+                                                  ),
+                                                ),
+                                                width: 25,
+                                                height: 25,
+                                              ),
+                                              Text(
+                                                vm.commissionData.userName,
+                                                style: TextStyle(
+                                                    color: Colors.black87
+                                                ),
+                                              )
+                                            ],
                                           )
                                         ],
                                       ),
@@ -335,7 +351,53 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                           )
                                         ],
                                       ),
-
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "发送消息",
+                                            style: TextStyle(
+                                                color: Colors.black45,
+                                                fontSize: 16.sp
+                                            ),
+                                          ),
+                                          SizedBox(width: 20.w,),
+                                          Row(
+                                            children: [
+                                              Container(
+                                                child: CircleAvatar(
+                                                  backgroundColor: AppColors.backgroundColor3,
+                                                  child: ClipOval(
+                                                    child: vm.commissionData.userAvatar != null ?
+                                                    Image.network(vm.commissionData.userAvatar!) :
+                                                    Image.asset("assets/images/detail_img.png"),
+                                                  ),
+                                                ),
+                                                width: 25,
+                                                height: 25,
+                                              ),
+                                              Text(
+                                                vm.commissionData.userName,
+                                                style: TextStyle(
+                                                    color: Colors.black87
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(width: 20.w,),
+                                          IconButton(
+                                            onPressed: (){
+                                              vm.makeChat(
+                                                  userId: vm.commissionData.userId.toString(),
+                                                  context: context
+                                              );
+                                            },
+                                            icon: Icon(
+                                              Icons.chat,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
