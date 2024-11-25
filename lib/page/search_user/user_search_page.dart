@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/search_user/user_search_vm.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
+import 'package:jiayuan/route/route_path.dart';
+import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -24,21 +27,25 @@ class _UserSearchPageState extends State<UserSearchPage> {
     _userSearchViewModel = UserSearchViewModel();
   }
 
+  Future<void> _jumpToUserInfoPage(SearchUser user) async {
+    await RouteUtils.pushForNamed(context, RoutePath.userInfoPage,
+        arguments: {"user": user});
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => _userSearchViewModel,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(110),
+          preferredSize: Size.fromHeight(65),
           child: Container(
             color: Colors.white,
             child: Column(
               children: [
                 Container(
-                  padding: EdgeInsets.only(top: 40),
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 45),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
                         icon: Icon(
@@ -50,32 +57,15 @@ class _UserSearchPageState extends State<UserSearchPage> {
                         },
                       ),
                       Expanded(
-                        child: Center(
-                          child: Text(
-                            "搜索用户",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 48),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: Row(
-                    children: [
-                      Expanded(
                         child: TextField(
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                           controller: _searchController,
                           decoration: InputDecoration(
-                            hintText: "输入搜索信息",
+                            hintText: "输入信息(昵称/邮箱/手机号)",
                             border: InputBorder.none,
+                            filled: true,
+                            fillColor: AppColors.searchBgColor,
                             suffixIcon: IconButton(
                               icon: Icon(Icons.search),
                               onPressed: () {
@@ -84,6 +74,9 @@ class _UserSearchPageState extends State<UserSearchPage> {
                               },
                             ),
                           ),
+                          onSubmitted: (value) {
+                            _userSearchViewModel.searchUsers(value);
+                          },
                         ),
                       ),
                     ],
@@ -166,6 +159,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
                               onTap: () {
                                 // TODO: 点击用户的操作
                                 if (isProduction) print("点击了用户${index}");
+                                _jumpToUserInfoPage(searchUser);
                               },
                             ),
                           ),

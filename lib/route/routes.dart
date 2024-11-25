@@ -16,11 +16,12 @@ import 'package:jiayuan/page/login_page/login_page.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page.dart';
 import 'package:jiayuan/page/register_page/register_check_code_page.dart';
 import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
+import 'package:jiayuan/page/search_user/user_info/user_info_page.dart';
 import 'package:jiayuan/page/search_user/user_search_page.dart';
 import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
+import 'package:jiayuan/repository/model/searchUser.dart';
 import 'package:jiayuan/route/route_path.dart';
-import 'package:jiayuan/route/route_utils.dart';
 
 import '../page/chat_page/chat/chat_page.dart';
 import '../page/commission_center_page/certificates/certificate_page.dart';
@@ -145,9 +146,12 @@ class Routes {
         return pageRoute(ChatPage(), settings: settings);
       case RoutePath.userSearchPage:
         return pageRoute(UserSearchPage());
-        return pageRoute(ChatPage(),settings: settings);
+        return pageRoute(ChatPage(), settings: settings);
       case RoutePath.friendList:
         return pageRoute(FriendList());
+      case RoutePath.userInfoPage:
+        final arg = settings.arguments as Map<String, dynamic>;
+        return pageRoute(UserInfoPage(user: arg['user'] as SearchUser));
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
