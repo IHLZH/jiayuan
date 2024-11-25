@@ -192,7 +192,7 @@ class FriendListState extends State<FriendList> with TickerProviderStateMixin{
   Widget SearchTopBar(){
     return GestureDetector(
       onTap: (){
-        //RouteUtils.pushForNamed(context, RoutePath.commissionSearch);
+        RouteUtils.pushForNamed(context, RoutePath.userSearchPage);
       },
       child: Container(
         height: 30.h,
