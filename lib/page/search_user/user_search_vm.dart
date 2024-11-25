@@ -64,6 +64,9 @@ class UserSearchViewModel with ChangeNotifier {
       userList.addAll(result.users);
       totalCount = result.total;
       notifyListeners();
+    } else if (currentPage == 1) {
+      userList.clear();
+      notifyListeners();
     }
 
     refreshController.loadComplete();
