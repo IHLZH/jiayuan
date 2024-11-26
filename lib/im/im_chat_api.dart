@@ -937,7 +937,7 @@ class ImChatApi {
   }
 
   //获取单个好友信息
-  Future<void> getFriendProfile(String userID) async {
+  Future<V2TimFriendInfoResult> getFriendProfile(String userID) async {
     // 获取好友信息
     V2TimValueCallback<List<V2TimFriendInfoResult>> friendsInfo =
         await TencentImSDKPlugin.v2TIMManager
@@ -946,11 +946,15 @@ class ImChatApi {
 
     if (friendsInfo.code == 0) {
       if (isProduction) print("============= 获取单个好友信息成功 ===========");
+
+      return friendsInfo.data![0];
     } else {
       if (isProduction) print("============= 获取单个好友信息失败 ===========");
       if (isProduction)
         print("错误码：${friendsInfo.code} 错误信息： ${friendsInfo.desc}");
     }
+
+    return [];
   }
 
   //更改好友备注
