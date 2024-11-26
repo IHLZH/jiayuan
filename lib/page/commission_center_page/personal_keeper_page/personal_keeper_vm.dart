@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/page/home_page/home_vm.dart';
 import 'package:jiayuan/repository/api/uploadImage_api.dart';
 
