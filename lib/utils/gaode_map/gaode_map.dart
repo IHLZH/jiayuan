@@ -15,11 +15,13 @@ class GaodeMap{
 
   //高德地图sdk
   // 实例化
-  late final AMapFlutterLocation _locationPlugin;
+  AMapFlutterLocation? _locationPlugin;
   // 监听定位
-  late StreamSubscription<Map<String, Object>> _locationListener;
+  StreamSubscription<Map<String, Object>>? _locationListener;
 
   Completer<void> _locationCompleter = Completer<void>(); // 用于等待定位完成
+
+  bool isInited = false;
 
   Future<void> initGaodeMap() async {
     //实例化
@@ -30,6 +32,8 @@ class GaodeMap{
     await _getPermission();
     //开始定位
     await _getLocation();
+
+    isInited = true;
   }
 
   Future<void> _getLocation() async {
@@ -41,7 +45,7 @@ class GaodeMap{
     ///注册定位结果监听
     try{
       _locationListener = _locationPlugin
-          .onLocationChanged()
+          ?.onLocationChanged()
           .listen((Map<String, Object> result) {
 
         print("位置信息为：" + result.toString());
@@ -72,10 +76,19 @@ class GaodeMap{
   }
 
   Future<void> disposeGaodeMap() async {
-    //销毁定位
-    _locationPlugin.destroy();
-    //取消定位订阅
-    await _locationListener.cancel();
+    if(_locationPlugin != null){
+      print("111");
+      //停止定位
+      _stopLocation();
+      print("112");
+      //销毁定位
+      _locationPlugin!.destroy();
+
+      //取消定位订阅
+      await _locationListener!.cancel();
+    }else{
+      print("无法销毁高德定位：定位插件未初始化");
+    }
   }
 
   Future<void> _getPermission() async {
@@ -130,16 +143,18 @@ class GaodeMap{
   ///获取iOS native的accuracyAuthorization类型
   void _requestAccuracyAuthorization() async {
     //iOS 14中系统的定位类型信息
-    AMapAccuracyAuthorization currentAccuracyAuthorization =
-    await _locationPlugin.getSystemAccuracyAuthorization();
-    if (currentAccuracyAuthorization ==
-        AMapAccuracyAuthorization.AMapAccuracyAuthorizationFullAccuracy) {
-      print("精确定位类型");
-    } else if (currentAccuracyAuthorization ==
-        AMapAccuracyAuthorization.AMapAccuracyAuthorizationReducedAccuracy) {
-      print("模糊定位类型");
-    } else {
-      print("未知定位类型");
+    if(_locationPlugin != null){
+      AMapAccuracyAuthorization currentAccuracyAuthorization =
+      await _locationPlugin!.getSystemAccuracyAuthorization();
+      if (currentAccuracyAuthorization ==
+          AMapAccuracyAuthorization.AMapAccuracyAuthorizationFullAccuracy) {
+        print("精确定位类型");
+      } else if (currentAccuracyAuthorization ==
+          AMapAccuracyAuthorization.AMapAccuracyAuthorizationReducedAccuracy) {
+        print("模糊定位类型");
+      } else {
+        print("未知定位类型");
+      }
     }
   }
 
@@ -188,28 +203,34 @@ class GaodeMap{
       locationOption.pausesLocationUpdatesAutomatically = false;
 
       ///将定位参数设置给定位插件
-      _locationPlugin.setLocationOption(locationOption);
+      _locationPlugin!.setLocationOption(locationOption);
     }
   }
 
   ///开始定位
   Future<void> _startLocation() async {
-    if (null != _locationPlugin) {
+    if(_locationPlugin != null){
       ///开始定位之前设置定位参数
       _setLocationOption();
-      _locationPlugin.startLocation();
+      _locationPlugin!.startLocation();
+    }else{
+      print("无法开始定位：定位插件未初始化");
     }
   }
 
   ///停止定位
   void _stopLocation() {
-    if (null != _locationPlugin) {
-      _locationPlugin.stopLocation();
+    if(_locationPlugin != null){
+      _locationPlugin!.stopLocation();
+      print("113");
+    }else{
+      print("无法停止定位：定位插件未初始化");
     }
+
   }
 
   StreamSubscription<Map<String, Object>> get locationListener =>
-      _locationListener;
+      _locationListener!;
 
   set locationListener(StreamSubscription<Map<String, Object>> value) {
     _locationListener = value;

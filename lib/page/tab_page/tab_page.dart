@@ -66,17 +66,20 @@ class _TabPageState extends State<TabPage>{
     _initGaodeMapAndTab();
   }
 
-  void dispose()  {
+  void dispose()  async {
+    _disposeGaodeAndDB();
+
+    super.dispose();
+  }
+
+  Future<void> _disposeGaodeAndDB() async {
     //销毁高德及监听器
-    GaodeMap.instance.disposeGaodeMap();
+    await GaodeMap.instance.disposeGaodeMap();
 
     //关闭数据库
     print("数据库关闭");
-    void dispose() async{
-      Global.dbUtil?.close();
-      print("已被销毁dispose");
-    }
-    super.dispose();
+    await Global.dbUtil?.close();
+    print("已被销毁dispose");
   }
 
   Future<void> _initGaodeMapAndTab() async {
@@ -87,7 +90,6 @@ class _TabPageState extends State<TabPage>{
   }
 
   void _initTabItems(){
-    print("111");
     _tabItems[0] = HomePage();
     _tabItems[1] = CommissionPage();
     _tabItems[2] = ConversationPage();

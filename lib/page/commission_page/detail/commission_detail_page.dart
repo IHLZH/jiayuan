@@ -886,12 +886,10 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                         onTap: () async {
                           int result = await _commissionDetailViewModel.changeCommissionStatus(1);
                           if(result == 0){
-                            TabPageViewModel.currentIndex = 3;
-                            RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
                             showToast("请先认证！");
                           }else if(result == 1){
-                            TabPageViewModel.currentIndex = 3;
-                            RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.tab);
+                            RouteUtils.pop(context);
+                            RouteUtils.pop(context);
                             showToast("接取成功！");
                           }
                         },

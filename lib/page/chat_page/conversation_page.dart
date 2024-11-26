@@ -191,9 +191,7 @@ class _ConversationPageState extends State<ConversationPage>{
                 children: [
                   CircleAvatar(
                     backgroundColor: AppColors.backgroundColor3,
-                    child: ClipOval(
-                      child: conversation.faceUrl != null ? Image.network(conversation.faceUrl!) : Image.asset("assets/images/upload.png"),
-                    ),
+                    backgroundImage: conversation.faceUrl != null ? NetworkImage(conversation.faceUrl!+"?timestamp=${DateTime.now().millisecondsSinceEpoch}") : AssetImage("assets/images/upload.png"),
                   ),
                   SizedBox(width: 5,),
                   Expanded(

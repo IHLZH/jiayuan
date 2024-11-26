@@ -644,7 +644,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     children: [
                       _buildIconButton(
                           Icons.payment, '去支付', AppColors.orangeBtnColor),
-                      Expanded(child: SizedBox()),
+                      SizedBox(width: 2,),
                       _buildIconButton(Icons.cancel, '不验收', Colors.red),
                     ],
                   ),

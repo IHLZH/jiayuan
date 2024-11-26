@@ -6,6 +6,7 @@ import 'package:jiayuan/page/commission_center_page/commission_center_vm.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/common_data.dart';
+import 'package:jiayuan/utils/global.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_ui/chart/indicator.dart';
@@ -97,73 +98,78 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
   }
 
   Widget _KeeperCard() {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: Colors.white, width: 1),
-            gradient: LinearGradient(
-              colors: [
-                AppColors.endColor, // 渐变起始颜色
-                Colors.white38, // 渐变结束颜色
-              ],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                          child: ClipOval(
-                        child: Image.network(
-                            "https://i1.hdslb.com/bfs/face/ff445d09efe51be21b6d8170e746699899fb9c52.jpg@92w_92h.avif"),
-                      )),
-                      SizedBox(
-                        width: 5.w,
-                      ),
-                      Text(
-                        "用户名",
-                        style: TextStyle(fontSize: 18.sp),
-                      )
+    return ValueListenableBuilder(
+        valueListenable: Global.keeperInfoNotifier,
+        builder: (context, keeperInfo, child){
+          return Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: Colors.white, width: 1),
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.endColor, // 渐变起始颜色
+                      Colors.white38, // 渐变结束颜色
                     ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
                   ),
-                  AppButton(
-                    onTap: () {
-                        RouteUtils.pushForNamed(context, RoutePath.personalKeeper);
-                    },
-                    buttonHeight: 25.h,
-                    buttonWidth: 90.w,
-                    type: AppButtonType.main,
-                    buttonText: "修改信息>",
-                    radius: 32.r,
-                    margin: EdgeInsets.symmetric(),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Column(
                   children: [
-                    _Achievement("100", "完成单数"),
-                    _Achievement("10", "工作经验"),
-                    _Achievement("4.9", "综合评分"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                                child: ClipOval(
+                                  child: Image.network(
+                                      "https://i1.hdslb.com/bfs/face/ff445d09efe51be21b6d8170e746699899fb9c52.jpg@92w_92h.avif"),
+                                )),
+                            SizedBox(
+                              width: 5.w,
+                            ),
+                            Text(
+                              keeperInfo?.realName ?? "",
+                              style: TextStyle(fontSize: 18.sp),
+                            )
+                          ],
+                        ),
+                        AppButton(
+                          onTap: () {
+                            RouteUtils.pushForNamed(context, RoutePath.personalKeeper);
+                          },
+                          buttonHeight: 25.h,
+                          buttonWidth: 90.w,
+                          type: AppButtonType.main,
+                          buttonText: "修改信息>",
+                          radius: 32.r,
+                          margin: EdgeInsets.symmetric(),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _Achievement((keeperInfo?.completedOrders ?? 0).toString(), "完成单数"),
+                          _Achievement((keeperInfo?.workExperience ?? 0).toString(), "工作经验"),
+                          _Achievement((keeperInfo?.rating ?? 0.0).toString(), "综合评分"),
+                        ],
+                      ),
+                    )
                   ],
                 ),
-              )
-            ],
-          ),
-        ));
+              ));
+        }
+    );
   }
 
   Widget _Achievement(String num, String title) {

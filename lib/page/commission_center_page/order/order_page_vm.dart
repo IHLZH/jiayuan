@@ -1,6 +1,9 @@
 import 'package:flutter/widgets.dart';
+import 'package:jiayuan/common_ui/styles/app_colors.dart';
+import 'package:jiayuan/repository/api/commission_api.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/utils/common_data.dart';
+import 'package:jiayuan/utils/global.dart';
 
 
 class OrderPageViewModel with ChangeNotifier{
@@ -159,6 +162,18 @@ class OrderPageViewModel with ChangeNotifier{
           typeName: "日常保洁"
       ),
     ];
+  }
+
+  Future<void> getUnServedOrders() async {
+    unServed = await CommissionApi.instance.getOrderByStatus(
+        {
+          "keeperId" : Global.keeperInfo?.keeperId,
+          "status" : 2,
+          "page" : 1,
+          "pageSize" : 10
+        }
+    );
+    notifyListeners();
   }
 
   String getCountyAddress(CommissionData1 commission){

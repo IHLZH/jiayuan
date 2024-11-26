@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
+import 'package:jiayuan/repository/api/keeper_api.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/sqlite/dbutil.dart';
@@ -27,7 +28,7 @@ class _StartPageState extends State<StartPage> {
     // 初始化CookieJar
   //  DioInstance.instance().initDio(baseUrl: "");
    // DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
-   DioInstance.instance().changeBaseUrl(UrlPath.yuwenBaseUrl);
+   DioInstance.instance().changeBaseUrl(UrlPath.testBaseUrl);
    // DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
 
     //初始化sqlite数据库
@@ -98,6 +99,10 @@ class _StartPageState extends State<StartPage> {
 
             //持久化
             await SpUtils.saveString("token", Global.token!);
+
+            if((Global.userInfo?.userType ?? 0) == 1){
+              await KeeperApi.instance.getKeeperDataByUserId();
+            }
 
             //IM登录
             String userSig = response.data['message'];

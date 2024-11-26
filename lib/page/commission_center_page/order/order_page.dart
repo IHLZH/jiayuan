@@ -30,11 +30,15 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    _orderViewModel.getOrders();
+    _initOrders();
     _tabController = TabController(
         length: 4,
         vsync: this
     );
+  }
+
+  Future<void> _initOrders() async {
+    _orderViewModel.getOrders();
   }
 
   @override

@@ -189,7 +189,7 @@ class FriendListState extends State<FriendList> with TickerProviderStateMixin{
             children: [
               CircleAvatar(
                 backgroundColor: AppColors.backgroundColor3,
-                backgroundImage: friendInfo.userProfile?.faceUrl != null ? NetworkImage(friendInfo.userProfile!.faceUrl!) : null,
+                backgroundImage: friendInfo.userProfile?.faceUrl != null ? NetworkImage(friendInfo.userProfile!.faceUrl!+"?timestamp=${DateTime.now().millisecondsSinceEpoch}") : null,
               ),
               SizedBox(width: 10,),
               Text(

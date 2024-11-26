@@ -70,15 +70,15 @@ class HousekeeperDataDetail {
      avatar = data['avatar'];
      workExperience = data['workExperience'];
      highlight = data['highlight'];
-     rating = data['rating'];
+     rating = data['averageRating'] as double;
      city = data['city'];
      completedOrders = data['completeSingularNumber'];
-      tags = data['tags'].cast<String>();
-      keeperImages = data['keeperImages'].cast<String>();
-      introduction = data['introduction'];
-      certificates = data['certificatePicUrl'];
-      contact = data['phoneNumber'];
-      evaluations = data['userCommentResults'].map<Evaluation>((item) => Evaluation.fromJson(item)).toList();
+     tags = data['tags']?.cast<String>() ?? [];
+     keeperImages = data['photoUrl']?.cast<String>() ?? [];
+     introduction = data['introduction'];
+     certificates = data['certificatePicUrl']?.cast<String>() ?? [];
+     contact = data['phoneNumber'];
+      //evaluations = data['userCommentResults'].map<Evaluation>((item) => Evaluation.fromJson(item)).toList();
    }
 }
 

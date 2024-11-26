@@ -77,9 +77,6 @@ class _UserPageState extends State<UserPage> {
               //IM注销登录
               await ImChatApi.getInstance().logout();
 
-              //定位关闭
-              // GaodeMap.instance.disposeGaodeMap();
-
               showToast("退出登录", duration: Duration(seconds: 1));
 
               await SpUtils.saveString("password", "");
@@ -101,9 +98,6 @@ class _UserPageState extends State<UserPage> {
         if (isProduction) print("退出登录");
 
         Global.isLogin = false;
-
-        //定位关闭
-        // GaodeMap.instance.stopLocation();
 
         RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
       }

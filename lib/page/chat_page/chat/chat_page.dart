@@ -279,9 +279,7 @@ class _ChatPageState extends State<ChatPage>{
                 SizedBox(width: 10,),
                 CircleAvatar(
                   backgroundColor: Colors.white,
-                  child: ClipOval(
-                    child: message.faceUrl != null ? Image.network(message.faceUrl!) : Image.asset("assets/images/upload.png"),
-                  ),
+                  backgroundImage: message.faceUrl != "默认头像" ? NetworkImage(message.faceUrl!) : AssetImage("assets/images/upload.png"),
                 ),
               ],
             ),
