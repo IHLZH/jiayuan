@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:jiayuan/common_ui/sliver/sliver_header.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/send_commission_page/send_commision_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../common_ui/banner/home_banner_widget.dart';
@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage>
     });
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
     homeViewModel.getWeatherData();
+    homeViewModel.releaseBuildTimer();
     homeViewModel.getBannerData();
     homeViewModel.getHousekeeperData();
     homeViewModel.loadingStandardPrice();
@@ -70,24 +71,40 @@ class _HomePageState extends State<HomePage>
               backgroundColor: Color.fromRGBO(70, 219, 201, 1),
             ),
             backgroundColor: Colors.white,
-            body: CustomScrollView(
-              scrollDirection: Axis.vertical,
-              slivers: [
-                //轮播图
-                SliverToBoxAdapter(child: _banner()),
-                //委托服务类型
-                SliverToBoxAdapter(child: _PageViewWidget()),
-                //天气卡片
-                SliverToBoxAdapter(child: _ServiceViewWidget()),
-                //固定头部
-                SliverHeader(children: _buildHeaderList()),
-                //推荐
-                SliverToBoxAdapter(
-                  child: SizedBox(height: 8),
+            body: SmartRefresher(
+                enablePullUp: true,
+                enablePullDown: false,
+                controller: homeViewModel.refreshController,
+                onLoading: () {
+                  homeViewModel.getHousekeeperData();
+                },
+                header: MaterialClassicHeader(
+                  color: AppColors.appColor,
+                  backgroundColor: AppColors.endColor,
                 ),
-                _HouseKeeperRecommendedWidget(),
-              ],
-            )));
+                footer: ClassicFooter(
+                  canLoadingText: "松开加载更多~",
+                  loadingText: "努力加载中~",
+                  noDataText: "已经到底了~",
+                ),
+                child: CustomScrollView(
+                  scrollDirection: Axis.vertical,
+                  slivers: [
+                    //轮播图
+                    SliverToBoxAdapter(child: _banner()),
+                    //委托服务类型
+                    SliverToBoxAdapter(child: _PageViewWidget()),
+                    //天气卡片
+                    SliverToBoxAdapter(child: _ServiceViewWidget()),
+                    //固定头部
+                    SliverHeader(children: _buildHeaderList()),
+                    //推荐
+                    SliverToBoxAdapter(
+                      child: SizedBox(height: 8),
+                    ),
+                    _HouseKeeperRecommendedWidget(),
+                  ],
+                ))));
   }
 
   List<Widget> _buildHeaderList() {
@@ -110,7 +127,7 @@ class _HomePageState extends State<HomePage>
             InkWell(
               onTap: () {
                 _controller.forward();
-                homeViewModel.getHousekeeperData();
+                homeViewModel.refreshData();
               },
               child: Row(
                 children: [
@@ -191,12 +208,12 @@ class _HomePageState extends State<HomePage>
                 Material(
                   elevation: 5,
                   borderOnForeground: false,
-                  borderRadius:BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10),
                   child: Container(
                       height: 120.h,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white,width: 0.5),
+                        border: Border.all(color: Colors.white, width: 0.5),
                         borderRadius: BorderRadius.circular(10),
                         image: DecorationImage(
                           fit: BoxFit.cover,
@@ -210,20 +227,18 @@ class _HomePageState extends State<HomePage>
         );
       },
     );
-
-    ;
   }
 
 // 家政员推荐
   Widget _HouseKeeperRecommendedWidget() {
-    return Selector<HomeViewModel, List<Housekeeper>?>(
-      selector: (context, homeViewModel) => homeViewModel.housekeepers,
-      builder: (context, serviceData, child) {
+    return Consumer<HomeViewModel>(
+      // 将 Selector 改为 Consumer
+      builder: (context, viewModel, child) {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
               (context, index) =>
-                  _buildHousekeeperCard(homeViewModel.housekeepers[index]),
-              childCount: homeViewModel.housekeepers.length),
+                  _buildHousekeeperCard(viewModel.housekeepers[index]),
+              childCount: viewModel.housekeepers.length),
         );
       },
     );

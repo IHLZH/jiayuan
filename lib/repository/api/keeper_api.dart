@@ -87,82 +87,30 @@ class KeeperApi{
   }
 
   //根据委托类型推荐
-  Future<List<Housekeeper>?> getHousekeeperData(double? lng, double? lat, {int? id}) async{
+  Future<List<Housekeeper>> getHousekeeperData(double? lng, double? lat, {int? id}) async{
     List<Housekeeper>  housekeepers = [];
     try {
       print('推荐的参数${lng},${lat}');
       print('token参数');
       print('${Global.token}');
-      final Response response = await DioInstance.instance().get(path: "/release/keeper/list",  param: {"longitude": lng, "latitude": lat, "typeId": id},options: Options(headers: {"token": Global.token})) ;
+      final Response response = await DioInstance.instance().get(path: "/release/keeper/list",  param: {"longitude": lng, "latitude": lat, "typeId": id},options: Options(headers: {"Authorization": Global.token})) ;
        housekeepers = (response.data["data"] as List).map((e) => Housekeeper.fromJson(e)).toList();
        housekeepers.forEach((item)=>print(item.realName));
      print('获取到的推荐数据${response.data["data"]}');
     }catch(e){
       print("请求失败ss"+e.toString());
     }
-    housekeepers =  [
-      Housekeeper(
-          realName: "刘子恒",
-          keeperId: 1 ,
-          age: 20,
-          avatar: "https://th.bing.com/th?id=OIP.LO6625C8g41ovz21idvhOgAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2",
-          workExperience: 5 ,
-          rating: 4.5,
-          highlight: "专业通下水道，价格便宜，十年老人"
-      ),
-      Housekeeper(
-          realName: "徐静磊",
-          age: 18,
-          keeperId: 2,
-          avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
-          workExperience: 5,
-          rating: 4.7,
-          highlight: "家事全包，价格便宜，服务态度好"
-      ),
-
-      Housekeeper(
-          realName: "李小明",
-          keeperId: 3,
-          age: 18,
-          avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
-          workExperience: 5,
-          rating: 5,
-          highlight: "家电维修，，价格实惠"
-      ),
-
-      Housekeeper(
-          realName: "李小明",
-          keeperId: 4,
-          age: 18,
-          avatar: "https://th.bing.com/th?id=OIP.Lk_V7thpko1MZPfobakoiQAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2",
-          workExperience: 5,
-          rating: 5,
-          highlight: "家电维修，，价格实惠"
-      ),
-
-      Housekeeper(
-          realName: "李小明",
-          keeperId: 5,
-          age: 18,
-          avatar: "https://th.bing.com/th?id=OIP.A_3uAao9gpskoDD1vNDJBAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2`",
-          workExperience: 5,
-          rating: 5,
-          highlight: "家电维修，，价格实惠"
-      ),
-
-      Housekeeper(
-          realName: "李小明",
-          keeperId: 6,
-          age: 18,
-          avatar: "https://th.bing.com/th?id=OIP.yp-D-KHI3e2nN4eMBJcEVAAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.4&pid=3.1&rm=2",
-          workExperience: 5,
-          rating: 5,
-          highlight: "家电维修，，价格实惠"
-      ),
-    ];
     return housekeepers;
 
   }
 
+
+   Future<void> releaseHeart() async{
+    try {
+      final Response response = await DioInstance.instance().get(path: "/release/heart",options: Options(headers: {"Authorization": Global.token}));
+    }catch(e){
+      print("心跳请求失败ss"+e.toString());
+    }
+   }
 
 }
