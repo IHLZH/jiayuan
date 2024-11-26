@@ -6,6 +6,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimConversationListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
+import 'package:tencent_cloud_chat_sdk/enum/V2TimGroupListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimSDKListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/friend_type_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/history_msg_get_type_enum.dart';
@@ -19,6 +20,9 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_search_param.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_change_info.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member_change_info.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message_receipt.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_msg_create_info_result.dart';
@@ -77,6 +81,7 @@ class ImChatApi {
   V2TimFriendshipListener? friendshipListener; //关系监听器
   V2TimAdvancedMsgListener? advancedMsgListener; //高级消息监听器
   V2TimConversationListener? conversationListener; //会话监听器
+  V2TimGroupListener? groupListener; //群组监听器
 
   int messageChange = 0;
 
@@ -408,6 +413,111 @@ class ImChatApi {
 
     if (isProduction && friendshipListener != null)
       print("============= IM设置关系链监听器成功 ============");
+
+    //设置群组监听器
+    groupListener = V2TimGroupListener(
+      onApplicationProcessed: (String groupID, V2TimGroupMemberInfo opUser,
+          bool isAgreeJoin, String opReason) async {
+        //加群请求已经被群主或管理员处理了（只有申请人能够收到）
+        //groupID    群 ID
+        //opUser    处理人
+        //isAgreeJoin    是否同意加群
+        //opReason    处理原因
+      },
+      onGrantAdministrator: (String groupID, V2TimGroupMemberInfo opUser,
+          List<V2TimGroupMemberInfo> memberList) async {
+        //指定管理员身份
+        //groupID    群 ID
+        //opUser    处理人
+        //memberList    被处理的群成员
+      },
+      onGroupAttributeChanged:
+          (String groupID, Map<String, String> groupAttributeMap) async {
+        //收到群属性更新的回调
+        //groupID    群 ID
+        //groupAttributeMap    群的所有属性
+      },
+      onGroupCreated: (String groupID) async {
+        //创建群（主要用于多端同步）
+        //groupID    群 ID
+      },
+      onGroupDismissed: (String groupID, V2TimGroupMemberInfo opUser) async {
+        //群被解散了（全员能收到）
+        //groupID    群 ID
+        //opUser    处理人
+      },
+      onGroupInfoChanged:
+          (String groupID, List<V2TimGroupChangeInfo> changeInfos) async {
+        //群信息被修改（全员能收到）
+        //groupID    群 ID
+        //changeInfos    修改的群信息
+      },
+      onGroupRecycled: (String groupID, V2TimGroupMemberInfo opUser) async {
+        //群被回收（全员能收到）
+        //groupID    群 ID
+        //opUser    处理人
+      },
+      onMemberEnter:
+          (String groupID, List<V2TimGroupMemberInfo> memberList) async {
+        //有用户加入群（全员能够收到）
+        //groupID    群 ID
+        //memberList    加入的成员
+      },
+      onMemberInfoChanged: (String groupID,
+          List<V2TimGroupMemberChangeInfo>
+              v2TIMGroupMemberChangeInfoList) async {
+        //群成员信息被修改，仅支持禁言通知（全员能收到）。
+        //groupID    群 ID
+        //v2TIMGroupMemberChangeInfoList    被修改的群成员信息
+      },
+      onMemberInvited: (String groupID, V2TimGroupMemberInfo opUser,
+          List<V2TimGroupMemberInfo> memberList) async {
+        //某些人被拉入某群（全员能够收到）
+        //groupID    群 ID
+        //opUser    处理人
+        //memberList    被拉进群成员
+      },
+      onMemberKicked: (String groupID, V2TimGroupMemberInfo opUser,
+          List<V2TimGroupMemberInfo> memberList) async {
+        //某些人被踢出某群（全员能够收到）
+        //groupID    群 ID
+        //opUser    处理人
+        //memberList    被踢成员
+      },
+      onMemberLeave: (String groupID, V2TimGroupMemberInfo member) async {
+        //有用户离开群（全员能够收到）
+        //groupID    群 ID
+        //member    离开的成员
+      },
+      onQuitFromGroup: (String groupID) async {
+        //主动退出群组（主要用于多端同步，直播群（AVChatRoom）不支持）
+        //groupID    群 ID
+      },
+      onReceiveJoinApplication:
+          (String groupID, V2TimGroupMemberInfo member, String opReason) async {
+        //有新的加群请求（只有群主或管理员会收到）
+        //groupID    群 ID
+        //member    申请人
+        //opReason    申请原因
+      },
+      onReceiveRESTCustomData: (String groupID, String customData) async {
+        //收到 RESTAPI 下发的自定义系统消息
+        //groupID    群 ID
+        //customData    自定义数据
+      },
+      onRevokeAdministrator: (String groupID, V2TimGroupMemberInfo opUser,
+          List<V2TimGroupMemberInfo> memberList) async {
+        //取消管理员身份
+        //groupID    群 ID
+        //opUser    处理人
+        //memberList    被处理的群成员
+      },
+    );
+    //添加群组监听器
+    TencentImSDKPlugin.v2TIMManager.addGroupListener(listener: groupListener!);
+
+    if (isProduction && groupListener != null)
+      print("============= IM设置群组监听器成功 ============");
   }
 
   Future<void> logout() async {
@@ -438,6 +548,11 @@ class ImChatApi {
           .getConversationManager()
           .removeConversationListener(listener: conversationListener!);
       if (isProduction) print("============= IM移除会话监听器成功 ============");
+
+      TencentImSDKPlugin.v2TIMManager
+          .removeGroupListener(listener: groupListener);
+      if (isProduction) print("============= IM移除群组监听器成功 ============");
+
     } else {
       if (isProduction) print("============= IM登出失败 ============");
       if (isProduction) print("错误码: ${logoutRes.code} 错误信息: ${logoutRes.desc}");
@@ -969,9 +1084,10 @@ class ImChatApi {
     if (setFriendInfoRes.code == 0) {
       // 修改成功
       if (isProduction) print("============= 更改好友备注成功 ===========");
-    }else{
+    } else {
       if (isProduction) print("============= 更改好友备注失败 ===========");
-      if (isProduction) print("错误码：${setFriendInfoRes.code} 错误信息： ${setFriendInfoRes.desc}");
+      if (isProduction)
+        print("错误码：${setFriendInfoRes.code} 错误信息： ${setFriendInfoRes.desc}");
     }
   }
 }
