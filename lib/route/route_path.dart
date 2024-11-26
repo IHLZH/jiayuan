@@ -110,4 +110,7 @@ class RoutePath {
 
   //好友/群组 列表
   static const String friendList = "/friendList";
+
+  //好友信息 好友设置页面
+  static const String friendInfo = "/firendInfo";
 }

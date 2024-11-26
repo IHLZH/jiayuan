@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jiayuan/page/certified_page/cert/cert_certified_page.dart';
 import 'package:jiayuan/page/certified_page/keeper/keeper_certified_page.dart';
 import 'package:jiayuan/page/chat_page/conversation_page.dart';
+import 'package:jiayuan/page/chat_page/friend_info/friend_info_page.dart';
 import 'package:jiayuan/page/chat_page/friend_list/friend_list.dart';
 import 'package:jiayuan/page/commission_center_page/commission_center_page.dart';
 import 'package:jiayuan/page/commission_center_page/order/order_page.dart';
@@ -152,6 +153,8 @@ class Routes {
       case RoutePath.userInfoPage:
         final arg = settings.arguments as Map<String, dynamic>;
         return pageRoute(UserInfoPage(user: arg['user'] as SearchUser));
+      case RoutePath.friendInfo:
+        return pageRoute(FriendInfoPage(), settings: settings);
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

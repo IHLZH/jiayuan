@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -191,7 +192,7 @@ class _ConversationPageState extends State<ConversationPage>{
                 children: [
                   CircleAvatar(
                     backgroundColor: AppColors.backgroundColor3,
-                    backgroundImage: conversation.faceUrl != null ? NetworkImage(conversation.faceUrl!+"?timestamp=${DateTime.now().millisecondsSinceEpoch}") : AssetImage("assets/images/upload.png"),
+                    backgroundImage: conversation.faceUrl != "默认头像" ? CachedNetworkImageProvider(conversation.faceUrl!) : null
                   ),
                   SizedBox(width: 5,),
                   Expanded(

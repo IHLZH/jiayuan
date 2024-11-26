@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -279,7 +280,7 @@ class _ChatPageState extends State<ChatPage>{
                 SizedBox(width: 10,),
                 CircleAvatar(
                   backgroundColor: Colors.white,
-                  backgroundImage: message.faceUrl != "默认头像" ? NetworkImage(message.faceUrl!) : AssetImage("assets/images/upload.png"),
+                  backgroundImage: message.faceUrl != "默认头像" ? CachedNetworkImageProvider(message.faceUrl!) : null
                 ),
               ],
             ),
@@ -308,10 +309,8 @@ class _ChatPageState extends State<ChatPage>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CircleAvatar(
-                backgroundColor: Colors.white,
-                child: ClipOval(
-                  child: message.faceUrl != null ? Image.network(message.faceUrl!) : Image.asset("assets/images/upload.png"),
-                ),
+                  backgroundColor: Colors.white,
+                  backgroundImage: message.faceUrl != "默认头像" ? CachedNetworkImageProvider(message.faceUrl!) : null
               ),
               SizedBox(width: 10,),
               Expanded(

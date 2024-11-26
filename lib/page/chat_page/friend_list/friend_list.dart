@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -189,7 +190,7 @@ class FriendListState extends State<FriendList> with TickerProviderStateMixin{
             children: [
               CircleAvatar(
                 backgroundColor: AppColors.backgroundColor3,
-                backgroundImage: friendInfo.userProfile?.faceUrl != null ? NetworkImage(friendInfo.userProfile!.faceUrl!+"?timestamp=${DateTime.now().millisecondsSinceEpoch}") : null,
+                backgroundImage: friendInfo.userProfile?.faceUrl != "默认头像" ? CachedNetworkImageProvider(friendInfo.userProfile!.faceUrl!) : null,
               ),
               SizedBox(width: 10,),
               Text(

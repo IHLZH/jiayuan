@@ -51,6 +51,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                           color: Colors.white
                         ),
                         child: Container(
+                          alignment: Alignment.bottomCenter,
                           height: 200.h,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
