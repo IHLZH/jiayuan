@@ -100,6 +100,7 @@ class _StartPageState extends State<StartPage> {
             //持久化
             await SpUtils.saveString("token", Global.token!);
 
+            //获取家政员信息
             if((Global.userInfo?.userType ?? 0) == 1){
               await KeeperApi.instance.getKeeperDataByUserId();
             }

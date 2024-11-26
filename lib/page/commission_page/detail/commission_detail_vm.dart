@@ -26,9 +26,11 @@ class CommissionDetailViewModel with ChangeNotifier{
       });
       if(result) {
         return 1;
+      }else{
+        return 0;
       }
     }
-    return 0;
+    return 2;
   }
 
   Future<void> makePhoneCall(String phoneNumber) async {

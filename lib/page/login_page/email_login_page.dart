@@ -9,6 +9,7 @@ import 'package:oktoast/oktoast.dart';
 
 import '../../http/url_path.dart';
 import '../../im/im_chat_api.dart';
+import '../../repository/api/keeper_api.dart';
 import '../../repository/model/user.dart';
 import '../../route/route_path.dart';
 import '../../route/route_utils.dart';
@@ -158,6 +159,11 @@ class _EmailLoginPageState extends State<EmailLoginPage> {
 
           if (isProduction) print("userInfo: ${Global.userInfo.toString()}");
           if (isProduction) print("token: ${Global.token}");
+
+          //获取家政员信息
+          if((Global.userInfo?.userType ?? 0) == 1){
+            await KeeperApi.instance.getKeeperDataByUserId();
+          }
 
           //IM登录
           String userSig = response.data['message'];
