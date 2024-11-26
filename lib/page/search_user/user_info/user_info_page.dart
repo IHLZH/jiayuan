@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jiayuan/repository/api/user_api.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
 
 class UserInfoPage extends StatefulWidget {
@@ -11,6 +12,31 @@ class UserInfoPage extends StatefulWidget {
 }
 
 class _UserInfoPageState extends State<UserInfoPage> {
+  bool isFriend = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFriendStatus();
+  }
+
+  Future<void> _initializeFriendStatus() async {
+    bool friendStatus = await _checkFriend();
+    setState(() {
+      isFriend = friendStatus;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<bool> _checkFriend() async {
+    return await UserApi.instance.checkFriend(widget.user.userId);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,18 +153,22 @@ class _UserInfoPageState extends State<UserInfoPage> {
                           const Expanded(child: SizedBox()),
                         ],
 
-                        _buildActionButton(
-                          icon: Icons.person_add,
-                          label: '加好友',
-                          color: Colors.blue,
-                          onPressed: () {
-                            // TODO: 实现加好友功能
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('加好友功能开发中')),
-                            );
-                          },
-                        ),
-                        const SizedBox(width: 8),
+                        if (isFriend == false) ...[
+                          _buildActionButton(
+                            icon: Icons.person_add,
+                            label: '加好友',
+                            color: Colors.blue,
+                            onPressed: () {
+                              isFriend = true;
+                              setState(() {});
+                              // TODO: 实现加好友功能
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   SnackBar(content: Text('加好友功能开发中')),
+                              // );
+                            },
+                          ),
+                          const SizedBox(width: 8),
+                        ],
                         _buildActionButton(
                           icon: Icons.message,
                           label: '发信息',
