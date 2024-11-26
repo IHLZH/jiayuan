@@ -952,9 +952,9 @@ class ImChatApi {
       if (isProduction) print("============= 获取单个好友信息失败 ===========");
       if (isProduction)
         print("错误码：${friendsInfo.code} 错误信息： ${friendsInfo.desc}");
-    }
 
-    return V2TimFriendInfoResult();
+      throw Exception("获取单个好友信息失败");
+    }
   }
 
   //更改好友备注
