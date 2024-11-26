@@ -1,6 +1,8 @@
 import 'package:jiayuan/page/chat_page/chat/chat_page_vm.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
+import 'package:jiayuan/repository/api/user_api.dart';
 import 'package:jiayuan/utils/constants.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimConversationListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
@@ -103,6 +105,10 @@ class ImChatApi {
         // 当前用户被踢下线，此时可以 UI 提示用户，并再次调用 V2TIMManager 的 login() 函数重新登录。
         if (isProduction)
           print("当前用户被踢下线，此时可以 UI 提示用户，并再次调用 V2TIMManager 的 login() 函数重新登录。");
+
+        showToast("其他设备登录当前账户",duration: Duration(seconds: 3));
+
+          // UserApi.instance.logout();
       },
       onSelfInfoUpdated: (V2TimUserFullInfo info) {
         // 登录用户的资料发生了更新

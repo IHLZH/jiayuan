@@ -56,7 +56,7 @@ class _UserPageState extends State<UserPage> {
       );
     }
 
-    void _logout() async {
+    void logout() async {
       // 注销逻辑
       if (Global.isLogin) {
         String url = UrlPath.logoutUrl;
@@ -68,7 +68,7 @@ class _UserPageState extends State<UserPage> {
           );
           if (response.statusCode == 200) {
             if (response.data["code"] == 200) {
-              showToast("注销成功", duration: Duration(seconds: 1));
+              showToast("退出登录", duration: Duration(seconds: 1));
 
               if (isProduction) print("注销");
 
@@ -83,7 +83,7 @@ class _UserPageState extends State<UserPage> {
 
               RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
             } else {
-              showToast("注销失败", duration: Duration(seconds: 1));
+              showToast("退出登录失败", duration: Duration(seconds: 1));
             }
           } else {
             if (isProduction)
@@ -93,9 +93,9 @@ class _UserPageState extends State<UserPage> {
           if (isProduction) print("error $e");
         }
       } else {
-        showToast("注销成功", duration: Duration(seconds: 1));
+        showToast("退出登录成功", duration: Duration(seconds: 1));
 
-        if (isProduction) print("注销");
+        if (isProduction) print("退出登录");
 
         Global.isLogin = false;
         RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
@@ -676,7 +676,7 @@ class _UserPageState extends State<UserPage> {
                     _line(),
                     _buildOption(Icons.settings, '设置'),
                     _line(),
-                    _buildOption(Icons.logout, '退出登录', onCheck: _logout),
+                    _buildOption(Icons.logout, '退出登录', onCheck: logout),
                   ],
                 ),
               ),

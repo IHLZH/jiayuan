@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/im/im_chat_api.dart';
@@ -5,6 +7,11 @@ import 'package:jiayuan/repository/model/searchUser.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
+
+import '../../route/route_path.dart';
+import '../../route/route_utils.dart';
+import '../../utils/global.dart';
+import '../../utils/sp_utils.dart';
 
 bool isProduction = Constants.IS_Production;
 
@@ -21,6 +28,7 @@ class UserApi {
   static UserApi get instance => _instance;
 
   factory UserApi() => _instance;
+
   UserApi._internal();
 
   Future<SearchUserResult> searchUsers(String query, int page) async {
@@ -61,8 +69,9 @@ class UserApi {
     return SearchUserResult([], 0);
   }
 
-  Future<bool> checkFriend(int userID) async{
-    List<V2TimFriendInfo> friendList = await ImChatApi.getInstance().getFriendList();
+  Future<bool> checkFriend(int userID) async {
+    List<V2TimFriendInfo> friendList =
+        await ImChatApi.getInstance().getFriendList();
 
     bool result = false;
 
@@ -75,22 +84,58 @@ class UserApi {
       element.userProfile?.birthday; //用户生日
       element.userProfile?.customInfo; //用户的自定义状态
 
-      if(isProduction){
+      if (isProduction) {
         print("====== checkFriend my and userID : ${element.userID}");
       }
-      if(element.userID==userID.toString()){
+      if (element.userID == userID.toString()) {
         result = true;
       }
     });
 
-    if(isProduction){
-      if(result){
+    if (isProduction) {
+      if (result) {
         print("================ $userID 是好友 =======================");
-      }else{
+      } else {
         print("================== $userID 不是好友 =======================");
       }
     }
 
     return result;
+  }
+
+  //TODO
+  Future<void> logout() async {
+    String url = UrlPath.logoutUrl;
+
+    try {
+      final response = await DioInstance.instance().post(
+        path: url,
+        options: Options(headers: {"Authorization": Global.token}),
+      );
+      if (response.statusCode == 200) {
+        if (response.data["code"] == 200) {
+          showToast("退出登录", duration: Duration(seconds: 1));
+
+          if (isProduction) print("注销");
+
+          Global.isLogin = false;
+          Global.password = null;
+          Global.userInfoNotifier.value = null;
+
+          //IM注销登录
+          await ImChatApi.getInstance().logout();
+
+          await SpUtils.saveString("password", "");
+
+          // RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
+        } else {
+          showToast("退出登录失败", duration: Duration(seconds: 1));
+        }
+      } else {
+        if (isProduction) showToast("服务器连接失败", duration: Duration(seconds: 1));
+      }
+    } catch (e) {
+      if (isProduction) print("error $e");
+    }
   }
 }
