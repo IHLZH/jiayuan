@@ -98,7 +98,7 @@ class UploadImageApi {
         print("上传成功: ${response.data['message']}");
 
         // 保存token
-        if(response.headers["authorization"]!.isNotEmpty){
+        if(response.headers.map.containsKey('Authorization')&&response.headers["authorization"]!.isNotEmpty){
           final List<String> token =
           response.headers["Authorization"] as List<String>;
           Global.token = token.first;
