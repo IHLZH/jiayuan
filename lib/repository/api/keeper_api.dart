@@ -1,11 +1,14 @@
 import 'dart:ffi';
 
 import 'package:dio/dio.dart';
+import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/repository/model/HouseKeeper_data_detail.dart';
 import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
 import 'package:jiayuan/utils/global.dart';
+import 'package:oktoast/oktoast.dart';
 
 import '../../http/dio_instance.dart';
+import '../../http/http_method.dart';
 
 class KeeperApi{
   static KeeperApi  instance = KeeperApi._();
@@ -162,6 +165,33 @@ class KeeperApi{
     ];
     return housekeepers;
 
+  }
+
+  Future<void> getKeeperDataByUserId() async {
+    try{
+      final Response response = await DioInstance.instance().get(
+        path: UrlPath.getKeeperDataByUserId,
+        options: Options(
+          method: HttpMethod.POST,
+          headers: {
+            "Authorization" : Global.token
+          },
+        )
+      );
+
+      if(response.statusCode == 200){
+        if(response.data['code'] == 200){
+          print("获取家政员信息成功" + response.data['data'].toString());
+          Global.keeperInfo = HousekeeperDataDetail.fromJson(response.data['data']);
+        }else{
+          print("服务器错误：" + response.data['code'].toString() + " " + response.data['message']);
+        }
+      }else{
+        showToast("网络错误");
+      }
+    }catch(e){
+      print("获取家政员信息失败：" + e.toString());
+    }
   }
 
 
