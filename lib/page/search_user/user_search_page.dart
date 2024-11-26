@@ -24,7 +24,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
   @override
   void initState() {
     super.initState();
-    _userSearchViewModel = UserSearchViewModel();
+    // _userSearchViewModel = UserSearchViewModel();
   }
 
   Future<void> _jumpToUserInfoPage(SearchUser user) async {
