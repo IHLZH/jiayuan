@@ -917,4 +917,23 @@ class ImChatApi {
         print("错误码：${addFriendResult.code} 错误信息： ${addFriendResult.desc}");
     }
   }
+
+  //单个删除好友
+  Future<void> deleteFriend(String userID) async {
+    // 删除双向好友
+    V2TimValueCallback<List<V2TimFriendOperationResult>> deleteres =
+        await TencentImSDKPlugin.v2TIMManager
+            .getFriendshipManager()
+            .deleteFromFriendList(
+                deleteType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH,
+                userIDList: [userID]);
+
+    if(deleteres.code == 0){
+      if(isProduction) print("============= 单个删除好友成功 ===========");
+    }else {
+      if (isProduction) print("============= 单个删除好友失败 ===========");
+      if (isProduction) print(
+          "错误码：${deleteres.code} 错误信息： ${deleteres.desc}");
+    }
+  }
 }
