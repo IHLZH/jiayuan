@@ -954,7 +954,7 @@ class ImChatApi {
         print("错误码：${friendsInfo.code} 错误信息： ${friendsInfo.desc}");
     }
 
-    return [];
+    return V2TimFriendInfoResult();
   }
 
   //更改好友备注
