@@ -23,7 +23,7 @@ class IdentityApi{
           options: Options(
               method: HttpMethod.POST,
               headers: {
-                "token" : Global.token
+                "Authorization" : Global.token
               }
           ),
           data: {
@@ -53,7 +53,7 @@ class IdentityApi{
           options: Options(
             method: HttpMethod.POST,
               headers: {
-                "token" : Global.token
+                "Authorization" : Global.token
               },
           ),
           data:  {

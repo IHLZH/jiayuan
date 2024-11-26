@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:jiayuan/repository/model/HouseKeeper_data_detail.dart';
 import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
 import 'package:jiayuan/repository/model/standardPrice.dart';
 import 'package:jiayuan/repository/model/user.dart';
@@ -31,6 +32,14 @@ class Global {
   static User? get userInfo => userInfoNotifier.value;
   static set userInfo(User? value) {
     userInfoNotifier.value = value;
+  }
+
+  //家政员信息监听
+  static final keeperInfoNotifier = ValueNotifier<HousekeeperDataDetail?>(null);
+
+  static HousekeeperDataDetail? get keeperInfo => keeperInfoNotifier.value;
+  static set keeperInfo(HousekeeperDataDetail? keeper){
+    keeperInfoNotifier.value = keeper;
   }
 
   static String? token;

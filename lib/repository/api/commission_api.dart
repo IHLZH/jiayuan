@@ -101,7 +101,12 @@ class CommissionApi{
     try{
       final Response response = await DioInstance.instance().put(
         path: UrlPath.changeOrderStatus,
-        queryParameters: param
+        queryParameters: param,
+        options: Options(
+          headers: {
+            "Authorization" : Global.token
+          }
+        )
       );
 
       if(response.statusCode == 200){
@@ -121,13 +126,44 @@ class CommissionApi{
     return false;
   }
 
+  Future<List<CommissionData1>> getOrderByStatus(Map<String, dynamic> param) async {
+    List<CommissionData1> orderList = [];
+    try{
+
+      final Response response = await DioInstance.instance().get(
+        path: UrlPath.getOrderByStatus,
+        param: param,
+      );
+
+      if(response.statusCode == 200){
+        if(response.data['code'] == 200){
+          final data = response.data['data'] as List;
+          print("请求成功" + data.toString() + data.length.toString());
+          for(int i = 0; i < data.length; i++){
+            orderList.add(CommissionData1.fromJson(data[i]));
+          }
+        }else{
+          print("服务器错误：" + response.data['code'].toString() + " " + response.data['message']);
+        }
+      }else{
+        showToast(
+            "网络错误，请检查网络连接"
+        );
+      }
+
+    }catch(e){
+      print("网络错误error:" + e.toString());
+    }
+    return orderList;
+  }
+
   //发布委托
   Future<String> sendCommission(CommissionData1 commission, int serviceType) async {
     Response response = await DioInstance.instance().post(
         path: UrlPath.sendCommissionUrl,
         data: commission.toJsonForSend(),
         queryParameters: {"serviceId": serviceType},
-       options: Options(headers: {"token":Global.token})
+       options: Options(headers: {"Authorization":Global.token})
     );
     return response.data['code'].toString();
   }

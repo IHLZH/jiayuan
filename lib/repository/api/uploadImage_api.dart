@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/http/dio_instance.dart';
-import 'package:jiayuan/http/url_path.dart';
 
 import '../../utils/global.dart';
 import '../../utils/image_utils.dart';
@@ -43,7 +42,7 @@ class UploadImageApi {
           data: formData,
           options: Options(
               contentType: 'multipart/form-data',
-              headers: {'token': Global.token}),
+              headers: {'Authorization': Global.token}),
         );
         if (response.statusCode == 200) {
           // 将返回的图片地址赋值给对应的索引
@@ -125,7 +124,7 @@ class UploadImageApi {
       Response response = await DioInstance.instance().post(
         path: path,
         queryParameters: {"fileName": imageFileUrl},
-        options: Options(headers: {'token': Global.token}),
+        options: Options(headers: {'Authorization': Global.token}),
       );
       if (response.statusCode == 200) {
         print("删除成功: ${response.data['message']}");

@@ -22,13 +22,13 @@ class HouseKeepingScreeningPage extends StatefulWidget {
 class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
   PageController _pageController = PageController(initialPage: 0);
   HouseKeepingScreeningVM _houseKeepingScreeningVM = HouseKeepingScreeningVM();
-  List<RefreshController> _refreshControllers = List.generate(HomeViewModel.CommissionTypes.length, (index)=> RefreshController());
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        _houseKeepingScreeningVM.loadHouseKeepers(0);
+        _houseKeepingScreeningVM.loadMoreHouseKeepers(0);
       }
     });
   }
@@ -36,9 +36,6 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
   @override
   void dispose() {
     _pageController.dispose();
-    _refreshControllers.forEach((element) {
-      element.dispose();
-    });
     super.dispose();
   }
 
@@ -119,11 +116,11 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
                             physics: NeverScrollableScrollPhysics(),
                             itemCount: HomeViewModel.CommissionTypes.length,
                             onPageChanged: (index) async {
-                              await _houseKeepingScreeningVM.loadHouseKeepers(index);
+                              await _houseKeepingScreeningVM.loadMoreHouseKeepers(index);
                             },
                             itemBuilder: (context, index) {
                               List housekeepers = _houseKeepingScreeningVM
-                                  .housekeepersByType[index] ?? [];
+                                  .housekeepersByType[index]! ;
                               if (housekeepers.isEmpty) {
                                 //返回一个圆形的进度条指示器
                                 return Center(
@@ -132,18 +129,16 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
                               return Container(
                                 color: Colors.white,
                                 child: SmartRefresher(
-                                  controller: _refreshControllers[index],
+                                  controller: _houseKeepingScreeningVM.refreshControllers[index],
                                   enablePullDown: true,
                                   enablePullUp: true,
                                   header: MaterialClassicHeader(),
                                   footer:ClassicFooter(),
                                   onRefresh: () async {
                                     await _houseKeepingScreeningVM.refreshHouseKeepers(index);
-                                    _refreshControllers[index].refreshCompleted();
                                   },
                                   onLoading: () async {
                                     await _houseKeepingScreeningVM.loadMoreHouseKeepers(index);
-                                    _refreshControllers[index].loadComplete();
                                   },
                                   child: ListView.builder(
                                       itemCount: housekeepers.length,
