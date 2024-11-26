@@ -145,11 +145,9 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                               Container(
                                                 child: CircleAvatar(
                                                   backgroundColor: AppColors.backgroundColor3,
-                                                  child: ClipOval(
-                                                    child: vm.commissionData.userAvatar != null ?
-                                                    Image.network(vm.commissionData.userAvatar!) :
-                                                    Image.asset("assets/images/detail_img.png"),
-                                                  ),
+                                                  backgroundImage: vm.commissionData.userAvatar != null ?
+                                                  NetworkImage(vm.commissionData.userAvatar!) :
+                                                  AssetImage("assets/images/detail_img.png"),
                                                 ),
                                                 width: 25,
                                                 height: 25,
@@ -367,11 +365,9 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                               Container(
                                                 child: CircleAvatar(
                                                   backgroundColor: AppColors.backgroundColor3,
-                                                  child: ClipOval(
-                                                    child: vm.commissionData.userAvatar != null ?
-                                                    Image.network(vm.commissionData.userAvatar!) :
-                                                    Image.asset("assets/images/detail_img.png"),
-                                                  ),
+                                                  backgroundImage: vm.commissionData.userAvatar != null ?
+                                                  NetworkImage(vm.commissionData.userAvatar!) :
+                                                  AssetImage("assets/images/detail_img.png"),
                                                 ),
                                                 width: 25,
                                                 height: 25,
@@ -771,7 +767,6 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
             Expanded(
                 child: AppButton(
                   onTap: (){
-                    //0 3 4
                     _unFinishShowDialog(statuId);
                   },
                   type: AppButtonType.main,
@@ -885,12 +880,16 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                       child: AppButton(
                         onTap: () async {
                           int result = await _commissionDetailViewModel.changeCommissionStatus(1);
-                          if(result == 0){
+                          if(result == 2){
+                            RouteUtils.pop(context);
                             showToast("请先认证！");
                           }else if(result == 1){
                             RouteUtils.pop(context);
                             RouteUtils.pop(context);
                             showToast("接取成功！");
+                          }else if(result == 0){
+                            RouteUtils.pop(context);
+                            showToast("接取失败！");
                           }
                         },
                         type: AppButtonType.main,
