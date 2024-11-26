@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/http/dio_instance.dart';
+import 'package:jiayuan/http/url_path.dart';
 
 import '../../utils/global.dart';
 import '../../utils/image_utils.dart';
@@ -29,7 +30,7 @@ class UploadImageApi {
       //获取当前文件的索引
       int index = files.indexOf(file);
       //图片压缩处理
-      List<int>? imageData = await ImageUtils.compressIfNeededToMemory(file, 5);
+      List<int>? imageData = await ImageUtils.compressIfNeededToMemory(file, 0.5);
       //转化为字节流时必须要指定文件名  不然无法c
       FormData formData = FormData.fromMap({
         "file": await MultipartFile.fromBytes(imageData!,
@@ -77,7 +78,7 @@ class UploadImageApi {
     String imageUrl = "";
     bool isSuccess = false;
     // 图片压缩处理
-    List<int>? imageData = await ImageUtils.compressIfNeededToMemory(file, 5);
+    List<int>? imageData = await ImageUtils.compressIfNeededToMemory(file, 0.5);
     FormData formData = FormData.fromMap({
       "file": await MultipartFile.fromBytes(imageData!,
           filename: file.path.split('/').last),
@@ -109,4 +110,22 @@ class UploadImageApi {
       EasyLoading.showError('上传失败');
     return imageUrl;
   }
+
+  //删除图片
+   Future<void> deleteImage(String imageFileUrl,String path) async {
+    try {
+      Response response = await DioInstance.instance().post(
+        path: path,
+        queryParameters: {"fileName": imageFileUrl},
+        options: Options(headers: {'token': Global.token}),
+      );
+      if (response.statusCode == 200) {
+        print("删除成功: ${response.data['message']}");
+      } else {
+        print("删除失败，状态码: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("删除出错: $e");
+    }
+   }
 }
