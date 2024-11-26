@@ -928,12 +928,46 @@ class ImChatApi {
                 deleteType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH,
                 userIDList: [userID]);
 
-    if(deleteres.code == 0){
-      if(isProduction) print("============= 单个删除好友成功 ===========");
-    }else {
+    if (deleteres.code == 0) {
+      if (isProduction) print("============= 单个删除好友成功 ===========");
+    } else {
       if (isProduction) print("============= 单个删除好友失败 ===========");
-      if (isProduction) print(
-          "错误码：${deleteres.code} 错误信息： ${deleteres.desc}");
+      if (isProduction) print("错误码：${deleteres.code} 错误信息： ${deleteres.desc}");
+    }
+  }
+
+  //获取单个好友信息
+  Future<void> getFriendProfile(String userID) async {
+    // 获取好友信息
+    V2TimValueCallback<List<V2TimFriendInfoResult>> friendsInfo =
+        await TencentImSDKPlugin.v2TIMManager
+            .getFriendshipManager()
+            .getFriendsInfo(userIDList: [userID]);
+
+    if (friendsInfo.code == 0) {
+      if (isProduction) print("============= 获取单个好友信息成功 ===========");
+    } else {
+      if (isProduction) print("============= 获取单个好友信息失败 ===========");
+      if (isProduction)
+        print("错误码：${friendsInfo.code} 错误信息： ${friendsInfo.desc}");
+    }
+  }
+
+  //更改好友备注
+  Future<void> setFriendRemark(String userID, String remark) async {
+    //设置指定好友资料
+    V2TimCallback setFriendInfoRes = await TencentImSDKPlugin.v2TIMManager
+        .getFriendshipManager()
+        .setFriendInfo(
+          userID: userID, //需要修改的用户id
+          friendRemark: remark, //修改的好友备注
+        ); //修改的好友自定义信息
+    if (setFriendInfoRes.code == 0) {
+      // 修改成功
+      if (isProduction) print("============= 更改好友备注成功 ===========");
+    }else{
+      if (isProduction) print("============= 更改好友备注失败 ===========");
+      if (isProduction) print("错误码：${setFriendInfoRes.code} 错误信息： ${setFriendInfoRes.desc}");
     }
   }
 }
