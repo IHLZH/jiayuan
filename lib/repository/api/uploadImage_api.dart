@@ -92,11 +92,19 @@ class UploadImageApi {
         data: formData,
         options: Options(
             contentType: 'multipart/form-data',
-            headers: {'token': Global.token}),
+            headers: {'Authorization': Global.token}),
       );
       if (response.statusCode == 200) {
         imageUrl = response.data["data"];
         print("上传成功: ${response.data['message']}");
+
+        // 保存token
+        if(response.headers["authorization"]!.isNotEmpty){
+          final List<String> token =
+          response.headers["Authorization"] as List<String>;
+          Global.token = token.first;
+        }
+
         isSuccess = true;
       } else {
         print("上传失败，状态码: ${response.statusCode}");

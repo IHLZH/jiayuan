@@ -1,10 +1,13 @@
 import 'package:jiayuan/page/chat_page/chat/chat_page_vm.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
+import 'package:jiayuan/repository/api/user_api.dart';
 import 'package:jiayuan/utils/constants.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimConversationListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimSDKListener.dart';
+import 'package:tencent_cloud_chat_sdk/enum/friend_type_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/history_msg_get_type_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/log_level_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/message_elem_type.dart';
@@ -13,6 +16,9 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_application.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info_result.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_operation_result.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_search_param.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message_receipt.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_msg_create_info_result.dart';
@@ -99,6 +105,10 @@ class ImChatApi {
         // 当前用户被踢下线，此时可以 UI 提示用户，并再次调用 V2TIMManager 的 login() 函数重新登录。
         if (isProduction)
           print("当前用户被踢下线，此时可以 UI 提示用户，并再次调用 V2TIMManager 的 login() 函数重新登录。");
+
+        showToast("其他设备登录当前账户",duration: Duration(seconds: 3));
+
+          // UserApi.instance.logout();
       },
       onSelfInfoUpdated: (V2TimUserFullInfo info) {
         // 登录用户的资料发生了更新
@@ -227,7 +237,7 @@ class ImChatApi {
                   ChatPageViewModel.instance.conversation!.userID) {
             if (isProduction)
               print("============ userID: ${message.userID} =========");
-            ChatPageViewModel.instance.refreshChatMessage();
+            await ChatPageViewModel.instance.refreshChatMessage();
           }
         }
         // 使用自定义消息
@@ -339,11 +349,11 @@ class ImChatApi {
     // 会话监听
     //设置会话监听器
     conversationListener = V2TimConversationListener(
-      onConversationChanged: (List<V2TimConversation> conversationList) {
+      onConversationChanged: (List<V2TimConversation> conversationList) async {
         //某些会话的关键信息发生变化（未读计数发生变化、最后一条消息被更新等等）的回调函数
         //conversationList    变化的会话列表
         if (isProduction) print("============ 会话列表发生变化 ===========");
-        ConversationPageViewModel.instance.initConversationList();
+        await ConversationPageViewModel.instance.initConversationList();
       },
       onConversationGroupCreated:
           (String groupName, List<V2TimConversation> conversationList) {
@@ -636,6 +646,8 @@ class ImChatApi {
                 conversationID:
                     conversationID); //会话唯一 ID，如果是 C2C 单聊，组成方式为 c2c_userID，如果是群聊，组成方式为 group_groupID
     if (getConversationtRes.code == 0) {
+      if (isProduction) print("=========== 获取指定会话成功 ===========");
+
       //拉取成功
       getConversationtRes.data
           ?.conversationID; //会话唯一 ID，如果是单聊，组成方式为 c2c_userID；如果是群聊，组成方式为 group_groupID。
@@ -803,6 +815,102 @@ class ImChatApi {
       if (isProduction) print("============= 撤回消息失败 ===========");
       if (isProduction)
         print("错误码：${revokeMessageRes.code} 错误信息： ${revokeMessageRes.desc}");
+    }
+  }
+
+  //搜索
+  Future<void> searchUser(String keyword) async {
+    //搜索好友的搜索条件
+    V2TimFriendSearchParam searchParam = V2TimFriendSearchParam(
+      isSearchNickName: true, //是否搜索昵称
+      isSearchRemark: true, //是否搜索备注
+      isSearchUserID: true, //是否搜索id
+      keywordList: [keyword], //关键字列表，最多支持5个。
+    );
+    V2TimValueCallback<List<V2TimFriendInfoResult>> searchFriendsRes =
+        await TencentImSDKPlugin.v2TIMManager
+            .getFriendshipManager()
+            .searchFriends(searchParam: searchParam); //搜索好友的搜索条件
+    if (searchFriendsRes.code == 0) {
+      // if(isProduction) print("============= 搜索好友成功 ===========");
+
+      // 查询成功
+      searchFriendsRes.data?.forEach((element) {
+        element.relation; //好友类型 0:不是好友 1:对方在我的好友列表中 2:我在对方的好友列表中 3:互为好友
+        element.resultCode; //此条记录的查询结果错误码
+        element.resultInfo; //此条查询结果描述
+        //friendInfo为好友个人资料，如果不是好友，除了 userID 字段，其他字段都为空
+        element.friendInfo
+            ?.friendCustomInfo; //好友自定义字段 首先要在 控制台 (功能配置 -> 好友自定义字段) 配置好友自定义字段，然后再调用接口进行设置
+        element.friendInfo?.friendGroups; //好友所在分组列表
+        element.friendInfo?.friendRemark; //好友备注
+        element.friendInfo?.userID; //用户的id
+        element.friendInfo?.userProfile
+            ?.allowType; //用户的好友验证方式 0:允许所有人加我好友 1:不允许所有人加我好友 2:加我好友需我确认
+        element.friendInfo?.userProfile?.birthday; //用户生日
+        element.friendInfo?.userProfile?.customInfo; //用户的自定义状态
+        element.friendInfo?.userProfile?.faceUrl; //用户头像 url
+        element.friendInfo?.userProfile?.gender; //用户的性别 1:男 2:女
+        element.friendInfo?.userProfile?.level; //用户的等级
+        element.friendInfo?.userProfile?.nickName; //用户昵称
+        element.friendInfo?.userProfile?.role; //用户的角色
+        element.friendInfo?.userProfile?.selfSignature; //用户的签名
+        element.friendInfo?.userProfile?.userID; //用户 ID
+
+        if (isProduction) print("============= 搜索好友成功 ===========");
+        if (isProduction)
+          print(
+              "关键字：${keyword} 搜索结果：${element.friendInfo?.userID} 类型：${element.relation} 昵称：${element.friendInfo?.userProfile?.nickName} ");
+      });
+    } else {
+      if (isProduction) print("============= 搜索失败 ===========");
+      if (isProduction)
+        print("错误码：${searchFriendsRes.code} 错误信息： ${searchFriendsRes.desc}");
+    }
+  }
+
+  //获取好友列表
+  Future<List<V2TimFriendInfo>> getFriendList() async {
+    // 获取好友列表
+    V2TimValueCallback<List<V2TimFriendInfo>> friendsList =
+        await TencentImSDKPlugin.v2TIMManager
+            .getFriendshipManager()
+            .getFriendList();
+
+    if (isProduction) {
+      print("============= 获取好友列表 ===========");
+      friendsList.data?.forEach((element) {
+        element.friendRemark; //好友备注
+        element.friendGroups; //好友所在分组列表
+        element.userID; //用户的id
+        element.userProfile
+            ?.allowType; //用户的好友验证方式 0:允许所有人加我好友 1:不允许所有人加我好友 2:加我好友需我确认
+        element.userProfile?.birthday; //用户生日
+        element.userProfile?.customInfo; //用户的自定义状态
+
+        print("好友ID ：${element.userID} 备注：${element.friendRemark}");
+      });
+    }
+
+    return friendsList.data ?? [];
+  }
+
+  //添加好友
+  Future<void> addFriend(String userID, String friendRemark) async {
+    // 添加双向好友
+    V2TimValueCallback<V2TimFriendOperationResult> addFriendResult =
+        await TencentImSDKPlugin.v2TIMManager.getFriendshipManager().addFriend(
+            userID: userID,
+            remark: friendRemark,
+            addWording: "附言",
+            addType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH);
+
+    if (addFriendResult.code == 0) {
+      if (isProduction) print("============= 添加好友成功 ===========");
+    } else {
+      if (isProduction) print("============= 添加好友失败 ===========");
+      if (isProduction)
+        print("错误码：${addFriendResult.code} 错误信息： ${addFriendResult.desc}");
     }
   }
 }

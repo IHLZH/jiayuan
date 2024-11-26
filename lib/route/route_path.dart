@@ -101,4 +101,13 @@ class RoutePath {
 
   //家政员中心的评论页面
   static const String commentPage = "/commentPage";
+
+  //用户搜索页面
+  static const String userSearchPage = "/userSearchPage";
+
+  //用户信息页面
+  static const String userInfoPage = "/userInfoPage";
+
+  //好友/群组 列表
+  static const String friendList = "/friendList";
 }
