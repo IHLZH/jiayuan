@@ -68,8 +68,6 @@ class _UserPageState extends State<UserPage> {
           );
           if (response.statusCode == 200) {
             if (response.data["code"] == 200) {
-              showToast("退出登录", duration: Duration(seconds: 1));
-
               if (isProduction) print("注销");
 
               Global.isLogin = false;
@@ -78,6 +76,11 @@ class _UserPageState extends State<UserPage> {
 
               //IM注销登录
               await ImChatApi.getInstance().logout();
+
+              //定位关闭
+              // GaodeMap.instance.disposeGaodeMap();
+
+              showToast("退出登录", duration: Duration(seconds: 1));
 
               await SpUtils.saveString("password", "");
 
@@ -98,6 +101,10 @@ class _UserPageState extends State<UserPage> {
         if (isProduction) print("退出登录");
 
         Global.isLogin = false;
+
+        //定位关闭
+        // GaodeMap.instance.stopLocation();
+
         RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
       }
     }
@@ -434,7 +441,7 @@ class _UserPageState extends State<UserPage> {
                             valueListenable: Global.userInfoNotifier,
                             builder: (context, userInfo, child) {
                               if (isProduction)
-                                if(isProduction)print(
+                                print(
                                     "ValueListenableBuilder重建: ${userInfo?.userAvatar}"); // 调试信息
                               if (userInfo == null) {
                                 return CircleAvatar(
