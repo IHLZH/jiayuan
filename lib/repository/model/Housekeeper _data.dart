@@ -39,13 +39,13 @@ class Housekeeper {
   });
 
   Housekeeper.fromJson(data) {
-    realName = data['realName'];
-    keeperId = data['keeperId'];
-    age = data['age'];
+    realName = data['realName'] ?? "";
+    keeperId = data['keeperId'] ;
+    age = data['age'] ;
     avatar = data['avatar'];
-    workExperience = data['workExperience'];
-    highlight = data['highlight'];
-    rating = data['rating'];
+    workExperience = data['workExperience'] == 0 ? 1 : data['workExperience'];
+    highlight = data['highlight'] ??  "";
+    rating = data['totalStar'] ?? 4.5;
   }
 
 

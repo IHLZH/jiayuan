@@ -35,7 +35,7 @@ class ImageUtils {
      print('原始文件大小 ${fieldSize/((1024 * 1024))}MB');
     if (fieldSize > maxSizeMB * 1024 * 1024) {
       int quality = 95; // 初始质量
-      int minQuality = 0; // 最低质量阈值
+      int minQuality = 5; // 最低质量阈值
       List<int>? compressedBytes;
       while (quality >= minQuality) {
        // print('尝试压缩，质量: $quality');
@@ -57,7 +57,7 @@ class ImageUtils {
           // 如果文件仍然过大，降低质量
           quality -= 5;
         } catch (e) {
-          print('压缩出错: $e');
+          showToast('压缩出错');
           return null;
         }                                                                                                                                                                                               ;
       }

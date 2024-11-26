@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/repository/api/uploadImage_api.dart';
 
 class MultiImageUploadWidget extends StatefulWidget {
@@ -28,22 +30,22 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
   Future<void> _pickImages() async {
     final pickedFiles = await _picker.pickMultiImage();
     // 确保总数不超过6张
-    if (pickedFiles.length  > 0) {
+    if (pickedFiles.length > 0) {
       _imageUrls.addAll(await UploadImageApi.instance.uploadMultipleImages(
-          pickedFiles.take(6 - _imageFiles.length).toList(),''));
+          pickedFiles.take(6 - _imageFiles.length).toList(),
+          UrlPath.keeperPicturePath));
       _imageFiles.addAll(pickedFiles.take(6 - _imageFiles.length));
-      setState(() {
-
-      });
+      setState(() {});
     }
     widget.onImageSelected(_imageUrls);
   }
 
-  void _removeImage(int index) {
-    setState(() {
-      // 删除选中的图片
-      _imageFiles.removeAt(index);
-    });
+  void _removeImage(int index) async {
+    // 删除选中的图片
+    _imageFiles.removeAt(index);
+    await UploadImageApi.instance.deleteImage(
+        _imageUrls[index],  "/keeper/picture/delete");
+    setState(() {});
     // 调用回调函数将图片传递到父组件
     widget.onImageSelected(_imageUrls);
   }
@@ -83,9 +85,9 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
                               Icon(Icons.add),
                               _imageFiles.length >= 1
                                   ? Text(
-                                "还可上传 ${6 - _imageFiles.length}张",
-                                style: TextStyle(fontSize: 12),
-                              )
+                                      "还可上传 ${6 - _imageFiles.length}张",
+                                      style: TextStyle(fontSize: 12),
+                                    )
                                   : Text("上传图片"),
                             ],
                           ),
@@ -96,10 +98,9 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
                     Positioned.fill(
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.file(
-                          File(_imageFiles[index].path),
-                          fit: BoxFit.cover,
-                        ),
+                        child: CachedNetworkImage(imageUrl: _imageUrls[index],placeholder:(context,url){
+                          return Image.asset(_imageFiles[index].path);
+                        })
                       ),
                     ),
                     Positioned(
@@ -107,7 +108,7 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
                       top: 0,
                       child: GestureDetector(
                         onTap: () => _removeImage(index),
-                        child: Icon(Icons.close, size: 18, color: Colors.white),
+                        child: Icon(Icons.close, size: 18, color: Colors.black),
                       ),
                     ),
                   ],

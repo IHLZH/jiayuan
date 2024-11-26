@@ -7,7 +7,7 @@ import '../../utils/sp_utils.dart';
 class TokenInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    options.headers["token"] = Global.token;
+    options.headers["Authorization"] = Global.token;
     options.headers["Authorization"] = Global.token;
     handler.next(options);
   }

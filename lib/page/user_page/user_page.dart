@@ -86,7 +86,7 @@ class _UserPageState extends State<UserPage> {
 
               RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
             } else {
-              showToast("退出登录失败", duration: Duration(seconds: 1));
+              showToast("退出登录失败 ${response.data['message']}", duration: Duration(seconds: 1));
             }
           } else {
             if (isProduction)
