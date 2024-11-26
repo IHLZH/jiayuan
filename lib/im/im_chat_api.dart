@@ -1,6 +1,6 @@
 import 'package:jiayuan/page/chat_page/chat/chat_page_vm.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
-import 'package:jiayuan/repository/api/user_api.dart';
+import 'package:jiayuan/page/chat_page/friend_list/friend_list_vm.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
@@ -106,9 +106,9 @@ class ImChatApi {
         if (isProduction)
           print("当前用户被踢下线，此时可以 UI 提示用户，并再次调用 V2TIMManager 的 login() 函数重新登录。");
 
-        showToast("其他设备登录当前账户",duration: Duration(seconds: 3));
+        showToast("其他设备登录当前账户", duration: Duration(seconds: 3));
 
-          // UserApi.instance.logout();
+        // UserApi.instance.logout();
       },
       onSelfInfoUpdated: (V2TimUserFullInfo info) {
         // 登录用户的资料发生了更新
@@ -149,49 +149,6 @@ class ImChatApi {
       // 登录成功逻辑
       if (isProduction)
         print("============= IM登录成功 UserID: $userID ============");
-
-      //关系监听
-      //设置关系链监听器
-      friendshipListener = V2TimFriendshipListener(
-        onBlackListAdd: (List<V2TimFriendInfo> infoList) async {
-          //黑名单列表新增用户的回调
-          //infoList 新增的用户信息列表
-        },
-        onBlackListDeleted: (List<String> userList) async {
-          //黑名单列表删除的回调
-          //userList 被删除的用户id列表
-        },
-        onFriendApplicationListAdded:
-            (List<V2TimFriendApplication> applicationList) async {
-          //好友请求数量增加的回调
-          //applicationList 新增的好友请求信息列表
-        },
-        onFriendApplicationListDeleted: (List<String> userIDList) async {
-          //好友请求数量减少的回调
-          //减少的好友请求的请求用户id列表
-        },
-        onFriendApplicationListRead: () async {
-          //好友请求已读的回调
-        },
-        onFriendInfoChanged: (List<V2TimFriendInfo> infoList) async {
-          //好友信息改变的回调
-          //infoList 好友信息改变的好友列表
-        },
-        onFriendListAdded: (List<V2TimFriendInfo> users) async {
-          //好友列表增加人员的回调
-          //users 新增的好友信息列表
-        },
-        onFriendListDeleted: (List<String> userList) async {
-          //好友列表减少人员的回调
-          //userList 减少的好友id列表
-        },
-      );
-      TencentImSDKPlugin.v2TIMManager
-          .getFriendshipManager()
-          .addFriendListener(listener: friendshipListener!); //添加关系链监听器
-
-      if (isProduction && friendshipListener != null)
-        print("============= IM设置关系链监听器成功 ============");
     } else {
       // 登录失败逻辑
       if (isProduction) print("登录失败");
@@ -404,6 +361,53 @@ class ImChatApi {
         .getConversationManager()
         .addConversationListener(listener: conversationListener!);
     if (isProduction) print("============= IM添加会话监听器成功 ============");
+
+    //关系监听
+    //设置关系链监听器
+    friendshipListener = V2TimFriendshipListener(
+      onBlackListAdd: (List<V2TimFriendInfo> infoList) async {
+        //黑名单列表新增用户的回调
+        //infoList 新增的用户信息列表
+      },
+      onBlackListDeleted: (List<String> userList) async {
+        //黑名单列表删除的回调
+        //userList 被删除的用户id列表
+      },
+      onFriendApplicationListAdded:
+          (List<V2TimFriendApplication> applicationList) async {
+        //好友请求数量增加的回调
+        //applicationList 新增的好友请求信息列表
+      },
+      onFriendApplicationListDeleted: (List<String> userIDList) async {
+        //好友请求数量减少的回调
+        //减少的好友请求的请求用户id列表
+      },
+      onFriendApplicationListRead: () async {
+        //好友请求已读的回调
+      },
+      onFriendInfoChanged: (List<V2TimFriendInfo> infoList) async {
+        //好友信息改变的回调
+        //infoList 好友信息改变的好友列表
+        if (isProduction) print("=========== 好友信息改变的回调 ============");
+        await FriendListViewModel.instance.getFriendList();
+      },
+      onFriendListAdded: (List<V2TimFriendInfo> users) async {
+        //好友列表增加人员的回调
+        //users 新增的好友信息列表
+        if (isProduction) print("=========== 好友列表增加人员的回调 ============");
+      },
+      onFriendListDeleted: (List<String> userList) async {
+        //好友列表减少人员的回调
+        //userList 减少的好友id列表
+        if (isProduction) print("=========== 好友列表减少人员的回调 ============");
+      },
+    );
+    TencentImSDKPlugin.v2TIMManager
+        .getFriendshipManager()
+        .addFriendListener(listener: friendshipListener!); //添加关系链监听器
+
+    if (isProduction && friendshipListener != null)
+      print("============= IM设置关系链监听器成功 ============");
   }
 
   Future<void> logout() async {
