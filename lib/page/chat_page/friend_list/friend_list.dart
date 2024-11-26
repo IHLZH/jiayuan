@@ -5,6 +5,7 @@ import 'package:jiayuan/common_ui/sliver/sliver_header.dart';
 import 'package:jiayuan/page/chat_page/friend_list/friend_list_vm.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
@@ -100,50 +101,59 @@ class FriendListState extends State<FriendList> with TickerProviderStateMixin{
         ),
         body: Consumer<FriendListViewModel>(
             builder: (context, vm, child){
-              return NestedScrollView(
-                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-                  return [
-                    // 搜索框
-                    SliverToBoxAdapter(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                        height: 50,
-                        decoration: const BoxDecoration(color: Colors.white),
-                        child: Row(
-                          children: [
-                            Expanded(child: SearchTopBar()),
-                          ],
+              return SmartRefresher(
+                controller: vm.refreshController,
+                onRefresh: vm.onRefresh,
+                enablePullDown: true,
+                header: MaterialClassicHeader(
+                  color: AppColors.appColor,
+                  backgroundColor: AppColors.endColor,
+                ),
+                child: NestedScrollView(
+                  headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                    return [
+                      // 搜索框
+                      SliverToBoxAdapter(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                          height: 50,
+                          decoration: const BoxDecoration(color: Colors.white),
+                          child: Row(
+                            children: [
+                              Expanded(child: SearchTopBar()),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    // 间距
-                    const SliverToBoxAdapter(
-                      child: SizedBox(height: 15),
-                    ),
-                    // TabBar 吸顶
-                    SliverPersistentHeader(
-                      pinned: true,
-                      delegate: _SliverTabBarDelegate(
-                        TabBar(
-                          controller: _tabController,
-                          tabs: const [
-                            Tab(text: "好友"),
-                            Tab(text: "群组"),
-                          ],
-                          indicatorColor: AppColors.appColor,
-                          labelColor: AppColors.appColor,
-                          unselectedLabelColor: Colors.grey,
+                      // 间距
+                      const SliverToBoxAdapter(
+                        child: SizedBox(height: 15),
+                      ),
+                      // TabBar 吸顶
+                      SliverPersistentHeader(
+                        pinned: true,
+                        delegate: _SliverTabBarDelegate(
+                          TabBar(
+                            controller: _tabController,
+                            tabs: const [
+                              Tab(text: "好友"),
+                              Tab(text: "群组"),
+                            ],
+                            indicatorColor: AppColors.appColor,
+                            labelColor: AppColors.appColor,
+                            unselectedLabelColor: Colors.grey,
+                          ),
                         ),
                       ),
-                    ),
-                  ];
-                },
-                body: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _friendList(),
-                    _friendList(),
-                  ],
+                    ];
+                  },
+                  body: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _friendList(),
+                      _friendList(),
+                    ],
+                  ),
                 ),
               );
             }
@@ -162,29 +172,37 @@ class FriendListState extends State<FriendList> with TickerProviderStateMixin{
   }
 
   Widget _friendListItem(V2TimFriendInfo friendInfo){
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white
-      ),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      height: 60,
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundColor: AppColors.backgroundColor3,
-            child: ClipOval(
-              child: friendInfo.userProfile?.faceUrl != null ? Image.network(friendInfo.userProfile!.faceUrl!) : null,
-            ),
+    return Material(
+      color: Colors.white,
+      child: InkWell(
+        onTap: (){
+          _friendListVM.gotoChatPage(context, friendInfo.userID);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.white
           ),
-          SizedBox(width: 10,),
-          Text(
-            (friendInfo.friendRemark != null && friendInfo.friendRemark != "") ? friendInfo.friendRemark! : (friendInfo.userProfile?.nickName ?? "用户111"),
-            style: TextStyle(
-              color: AppColors.textColor2b,
-              fontSize: 16.sp
-            ),
-          )
-        ],
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          height: 60,
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: AppColors.backgroundColor3,
+                child: ClipOval(
+                  child: friendInfo.userProfile?.faceUrl != null ? Image.network(friendInfo.userProfile!.faceUrl!) : null,
+                ),
+              ),
+              SizedBox(width: 10,),
+              Text(
+                (friendInfo.friendRemark != null && friendInfo.friendRemark != "") ? friendInfo.friendRemark! : (friendInfo.userProfile?.nickName ?? "用户111"),
+                style: TextStyle(
+                    color: AppColors.textColor2b,
+                    fontSize: 16.sp
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
