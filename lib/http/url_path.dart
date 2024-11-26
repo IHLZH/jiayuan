@@ -55,7 +55,7 @@ class UrlPath {
   //个人信息修改接口
   static const String updateUserInfoUrl = "/update/userInfo";
 
-  //图片上传接口
+  //用户头像上传接口
   static const String uploadAvatarUrl = "/avatar/upload";
 
   //接取委托接口
@@ -101,4 +101,9 @@ class UrlPath {
 
   //获取用户
   static const String searchUser = "/searchFriends";
+   static const String BannerPath = "/release/carousel";
+
+   static const String keeperAvatarPath = "/keeper/upload/avatar";
+   //工作照
+   static const String keeperPicturePath = "/keeper/upload/picture";
 }

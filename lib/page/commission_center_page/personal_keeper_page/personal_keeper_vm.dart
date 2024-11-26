@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/page/home_page/home_vm.dart';
 import 'package:jiayuan/repository/api/uploadImage_api.dart';
 
@@ -106,7 +107,7 @@ class PersonalKeeperVm with ChangeNotifier {
 
   //上传单张图片 返回图片存储路径
   Future<String> uploadImage(XFile file) async {
-    String imageUrl = await UploadImageApi.instance.uploadImage(file,'/avatar/upload');
+    String imageUrl = await UploadImageApi.instance.uploadImage(file,UrlPath.keeperAvatarPath);
     print("图片路径: $imageUrl");
     return imageUrl;
   }

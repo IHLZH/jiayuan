@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:city_pickers/city_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/common_ui/MultiImageUpLoad/MultiImageUpLoad.dart';
 import 'package:jiayuan/page/commission_center_page/personal_keeper_page/personal_keeper_vm.dart';
 import 'package:jiayuan/page/home_page/home_vm.dart';
@@ -169,9 +166,12 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
                     },
                     child: CircleAvatar(
                       radius: 40.w,
-                        backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl): AssetImage('assets/images/drawkit-grape-pack-illustration-18.png'),
-                      ),
+                      backgroundImage: avatarUrl != null
+                          ? NetworkImage(avatarUrl)
+                          : AssetImage(
+                              'assets/images/drawkit-grape-pack-illustration-18.png'),
                     ),
+                  ),
                 ],
               ),
             ));
@@ -252,7 +252,6 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
   }
 
   Widget _buildImages() {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
