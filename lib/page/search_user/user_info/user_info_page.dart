@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/repository/api/user_api.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
 
@@ -36,10 +37,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
     return await UserApi.instance.checkFriend(widget.user.userId);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(widget.user.nickName),
@@ -107,8 +108,8 @@ class _UserInfoPageState extends State<UserInfoPage> {
                           widget.user.userSex == 1 ? '男' : '女'),
                       // _buildInfoRow(Icons.location_on, '最近登录地点',
                       //     '${widget.user.lng ?? "未知"}, ${widget.user.lat ?? "未知"}'),
-                      _buildInfoRow(
-                          Icons.access_time, '最近登录时间', widget.user.loginTime),
+                      _buildInfoRow(Icons.access_time, '最近登录时间',
+                          _formatLoginTime(widget.user.loginTime)),
                       const SizedBox(height: 20),
 
                       // 用户状态和类型
@@ -159,12 +160,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             label: '加好友',
                             color: Colors.blue,
                             onPressed: () {
-                              isFriend = true;
-                              setState(() {});
-                              // TODO: 实现加好友功能
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   SnackBar(content: Text('加好友功能开发中')),
-                              // );
+                              _showAddFriendDialog(widget.user.nickName);
                             },
                           ),
                           const SizedBox(width: 8),
@@ -263,6 +259,100 @@ class _UserInfoPageState extends State<UserInfoPage> {
         return '封禁';
       default:
         return '未知状态';
+    }
+  }
+
+  // 显示加好友弹窗
+  void _showAddFriendDialog(String nickName) {
+    final TextEditingController remarkController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '好友申请',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 16),
+                TextField(
+                  controller: remarkController,
+                  decoration: InputDecoration(
+                    hintText: "输入备注",
+                    border: InputBorder.none,
+                    filled: true,
+                    fillColor: AppColors.searchBgColor,
+                  ),
+                  style: TextStyle(color: Colors.black),
+                ),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        '取消',
+                        style: TextStyle(color: Colors.grey, fontSize: 17),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    TextButton(
+                      onPressed: () {
+                        // TODO: 发送加好友申请的逻辑
+                        String remark = remarkController.text.isNotEmpty
+                            ? remarkController.text
+                            : nickName;
+                        // 发送申请的代码
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        '发送申请',
+                        style:
+                            TextStyle(color: AppColors.appColor, fontSize: 17),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // 辅助方法：格式化最近登录时间
+  String _formatLoginTime(String loginTime) {
+    DateTime loginDateTime =
+        DateTime.parse(loginTime); // 假设 loginTime 是 ISO 8601 格式
+    Duration difference = DateTime.now().difference(loginDateTime);
+
+    if (difference.inDays >= 365) {
+      return '${(difference.inDays / 365).floor()}年前在线';
+    } else if (difference.inDays > 30) {
+      return '${(difference.inDays / 30).floor()}月前在线';
+    } else if (difference.inDays > 0) {
+      return '${difference.inDays}天前在线';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}小时前在线';
+    } else {
+      return '刚刚在线'; // 如果是刚刚在线
     }
   }
 }
