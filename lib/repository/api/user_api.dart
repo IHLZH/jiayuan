@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/im/im_chat_api.dart';
@@ -8,8 +7,6 @@ import 'package:jiayuan/utils/constants.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
 
-import '../../route/route_path.dart';
-import '../../route/route_utils.dart';
 import '../../utils/global.dart';
 import '../../utils/sp_utils.dart';
 
@@ -101,6 +98,10 @@ class UserApi {
     }
 
     return result;
+  }
+
+  Future<void> addFriend(int userID, String friendRemark) async {
+    await ImChatApi.getInstance().addFriend(userID.toString(), friendRemark);
   }
 
   //TODO
