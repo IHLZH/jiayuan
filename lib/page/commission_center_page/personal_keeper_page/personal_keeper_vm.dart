@@ -106,7 +106,7 @@ class PersonalKeeperVm with ChangeNotifier {
 
   //上传单张图片 返回图片存储路径
   Future<String> uploadImage(XFile file) async {
-    String imageUrl = await UploadImageApi.instance.uploadImage(file,'/avatar/upload');
+    String imageUrl = await UploadImageApi.instance.uploadImage(file,UrlPath.keeperAvatarPath);
     print("图片路径: $imageUrl");
     return imageUrl;
   }
