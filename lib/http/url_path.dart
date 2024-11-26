@@ -101,4 +101,8 @@ class UrlPath {
 
   //获取用户
   static const String searchUser = "/searchFriends";
+
+  static const String getOrderByStatus = "/keeper/order";
+
+  static const String getKeeperDataByUserId = "/keeper/info";
 }
