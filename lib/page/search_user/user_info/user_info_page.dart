@@ -160,7 +160,11 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             label: '加好友',
                             color: Colors.blue,
                             onPressed: () {
-                              _showAddFriendDialog(widget.user.nickName);
+                              _showAddFriendDialog(
+                                  widget.user.userId, widget.user.nickName);
+
+                              isFriend = true;
+                              setState(() {});
                             },
                           ),
                           const SizedBox(width: 8),
@@ -263,7 +267,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
   }
 
   // 显示加好友弹窗
-  void _showAddFriendDialog(String nickName) {
+  void _showAddFriendDialog(int userID, String nickName) {
     final TextEditingController remarkController = TextEditingController();
 
     showDialog(
@@ -313,12 +317,14 @@ class _UserInfoPageState extends State<UserInfoPage> {
                     ),
                     SizedBox(width: 8),
                     TextButton(
-                      onPressed: () {
-                        // TODO: 发送加好友申请的逻辑
+                      onPressed: () async {
                         String remark = remarkController.text.isNotEmpty
                             ? remarkController.text
                             : nickName;
                         // 发送申请的代码
+
+                        await UserApi.instance.addFriend(userID, remark);
+
                         Navigator.of(context).pop();
                       },
                       child: Text(
@@ -339,20 +345,24 @@ class _UserInfoPageState extends State<UserInfoPage> {
 
   // 辅助方法：格式化最近登录时间
   String _formatLoginTime(String loginTime) {
-    DateTime loginDateTime =
-        DateTime.parse(loginTime); // 假设 loginTime 是 ISO 8601 格式
-    Duration difference = DateTime.now().difference(loginDateTime);
+    try {
+      DateTime loginDateTime =
+          DateTime.parse(loginTime); // 假设 loginTime 是 ISO 8601 格式
+      Duration difference = DateTime.now().difference(loginDateTime);
 
-    if (difference.inDays >= 365) {
-      return '${(difference.inDays / 365).floor()}年前在线';
-    } else if (difference.inDays > 30) {
-      return '${(difference.inDays / 30).floor()}月前在线';
-    } else if (difference.inDays > 0) {
-      return '${difference.inDays}天前在线';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时前在线';
-    } else {
-      return '刚刚在线'; // 如果是刚刚在线
+      if (difference.inDays >= 365) {
+        return '${(difference.inDays / 365).floor()}年前在线';
+      } else if (difference.inDays > 30) {
+        return '${(difference.inDays / 30).floor()}月前在线';
+      } else if (difference.inDays > 0) {
+        return '${difference.inDays}天前在线';
+      } else if (difference.inHours > 0) {
+        return '${difference.inHours}小时前在线';
+      } else {
+        return '刚刚在线'; // 如果是刚刚在线
+      }
+    } catch (e) {
+      return '未知时间'; // 如果解析失败，返回默认值
     }
   }
 }
