@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
+import 'package:jiayuan/page/search_user/user_info/user_info_vm.dart';
 import 'package:jiayuan/repository/api/user_api.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
@@ -35,6 +36,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
 
   @override
   void dispose() {
+    UserInfoViewModel.isChatJumpTo = false;
     super.dispose();
   }
 
@@ -50,6 +52,12 @@ class _UserInfoPageState extends State<UserInfoPage> {
         backgroundColor: Colors.white,
         title: Text(widget.user.nickName),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context,"back");
+          },
+        ),
       ),
       body: Container(
         color: Colors.white,
@@ -179,7 +187,14 @@ class _UserInfoPageState extends State<UserInfoPage> {
                           label: '发信息',
                           color: Colors.green,
                           onPressed: () {
-                            _gotoChatPage(widget.user.userId);
+                            switch(UserInfoViewModel.isChatJumpTo){
+                              case true:
+                                _backToChatPage();
+                                break;
+                              case false:
+                                _gotoChatPage(widget.user.userId);
+                                break;
+                            }
                           },
                         ),
                       ],
@@ -269,8 +284,14 @@ class _UserInfoPageState extends State<UserInfoPage> {
   }
 
   Future<void> _gotoChatPage(int userId) async {
-    V2TimConversation? conversation = await ImChatApi.getInstance().getConversation("c2c_${userId}");
-    RouteUtils.pushForNamed(context, RoutePath.chatPage, arguments: conversation);
+    V2TimConversation? conversation =
+        await ImChatApi.getInstance().getConversation("c2c_${userId}");
+    RouteUtils.pushForNamed(context, RoutePath.chatPage,
+        arguments: conversation);
+  }
+
+  Future<void> _backToChatPage() async {
+    Navigator.pop(context,"backToChatPage");
   }
 
   // 显示加好友弹窗
