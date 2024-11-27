@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -204,7 +205,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 backgroundImage: _pickedFile != null // 优化头像显示逻辑
                     ? FileImage(File(_pickedFile!.path)) // 使用选择的头像
                     : _avatarUrl != null && _avatarUrl != '默认头像'
-                        ? NetworkImage(_avatarUrl!+'?timestamp=${DateTime.now().millisecondsSinceEpoch}')
+                        ? CachedNetworkImageProvider(_avatarUrl!)
                         : null,
                 child: _pickedFile == null &&
                         (_avatarUrl == null || _avatarUrl == '默认头像')

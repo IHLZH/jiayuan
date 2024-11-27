@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -83,7 +84,8 @@ class _UserPageState extends State<UserPage> {
 
               RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
             } else {
-              showToast("退出登录失败 ${response.data['message']}", duration: Duration(seconds: 1));
+              showToast("退出登录失败 ${response.data['message']}",
+                  duration: Duration(seconds: 1));
             }
           } else {
             if (isProduction)
@@ -446,14 +448,13 @@ class _UserPageState extends State<UserPage> {
                               }
 
                               return CircleAvatar(
-                                radius: 40,
-                                backgroundImage: userInfo?.userAvatar != null &&
-                                        userInfo.userAvatar != '默认头像'
-                                    ? NetworkImage(
-                                        '${userInfo.userAvatar}?timestamp=${DateTime.now().millisecondsSinceEpoch}') // 添加时间戳
-                                    : const AssetImage(
-                                        'assets/images/ikun1.png'),
-                              );
+                                  radius: 40,
+                                  backgroundImage: userInfo?.userAvatar !=
+                                              null &&
+                                          userInfo.userAvatar != "默认头像"
+                                      ? CachedNetworkImageProvider(
+                                          userInfo.userAvatar!)
+                                      : AssetImage('assets/images/ikun1.png'));
                             }),
                       ),
                       SizedBox(width: 16),
