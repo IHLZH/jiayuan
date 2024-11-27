@@ -9,6 +9,7 @@ import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimGroupListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimSDKListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/friend_type_enum.dart';
+import 'package:tencent_cloud_chat_sdk/enum/group_add_opt_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/history_msg_get_type_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/log_level_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/message_elem_type.dart';
@@ -22,6 +23,7 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_search_param.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_change_info.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member_change_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
@@ -697,7 +699,6 @@ class ImChatApi {
   }
 
   //单聊发送
-
   //分页拉取会话
   Future<List<V2TimConversation?>> getConversationList(
       String index, int pageSize) async {
@@ -1117,6 +1118,30 @@ class ImChatApi {
       if(isProduction) print("============= 检验是否是好友失败 ===========");
       if(isProduction) print("错误码：${checkres.code} 错误信息： ${checkres.desc}");
       throw Exception("检验是否是好友失败");
+    }
+  }
+
+  //创建工作群聊
+  Future<String> createGroup(String groupName,List<V2TimGroupMember>memberList) async {
+    // 创建群组
+    V2TimValueCallback<String> createGroupRes =
+    await TencentImSDKPlugin.v2TIMManager.getGroupManager().createGroup(
+      groupType: "Work",// 群类型
+      groupName: groupName,// 群名称，不能为 null。
+      notification: "",// 群公告
+      introduction: "",// 群介绍
+      faceUrl: "默认头像",// 群头像Url
+      isAllMuted: false,// 是否全体禁言
+      isSupportTopic: false,// 是否支持话题
+      addOpt: GroupAddOptTypeEnum.V2TIM_GROUP_ADD_ANY,// 添加群设置( FORBID: 禁止加群 / AUTH: 加群审核 / ANY: 直接加群 )
+      memberList: memberList,// 初始成员列表
+    );
+    if (createGroupRes.code == 0) {
+      // 创建成功
+      createGroupRes.data;// 创建的群号
+      return createGroupRes.data!;
+    }else{
+      throw Exception("创建群聊失败");
     }
   }
 }
