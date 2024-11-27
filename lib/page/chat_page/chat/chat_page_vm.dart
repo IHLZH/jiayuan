@@ -3,8 +3,13 @@ import 'package:intl/intl.dart';
 import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/page/chat_page/conversation_page.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
+import 'package:jiayuan/route/route_path.dart';
+import 'package:jiayuan/route/route_utils.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
 
 class ChatPageViewModel with ChangeNotifier{
@@ -46,9 +51,16 @@ class ChatPageViewModel with ChangeNotifier{
   }
 
   void clear(){
+    conversation = null;
     lastMessageId = null;
     hasMoreData = true;
     chatMessageList.clear();
+  }
+
+  Future<void> refreshConversation() async {
+    conversation = await ImChatApi.getInstance().getConversation(conversation!.conversationID);
+    notifyListeners();
+    await refreshChatMessage();
   }
 
   Future<void> refreshChatMessage() async {
@@ -65,6 +77,28 @@ class ChatPageViewModel with ChangeNotifier{
   Future<void> clearUnReadCount(V2TimConversation conversation) async {
     await ImChatApi.getInstance().clearSignalUnread(conversation.userID!);
     notifyListeners();
+  }
+
+  Future<void> sendSingMessage() async {
+    if(conversation != null){
+      await ImChatApi.getInstance().sendTextMessage(conversation!.userID!, textController.text);
+      //更新lastMessageId
+      await refreshChatMessage();
+    }
+  }
+
+  Future<void> gotoFriendInfo(BuildContext context, String userId) async {
+    V2TimFriendInfoResult friendInfoResult = await ImChatApi.getInstance().getFriendProfile(userId);
+    V2TimFriendInfo? friendInfo = friendInfoResult.friendInfo;
+    if(friendInfo != null){
+      int result = await RouteUtils.pushForNamed(context, RoutePath.friendInfo,arguments: friendInfo) as int;
+      if(result == 1){
+        print("备注改变");
+        refreshConversation();
+      }
+    }else{
+      showToast("用户信息获取失败");
+    }
   }
 
   void initScorllListener(){
@@ -86,14 +120,6 @@ class ChatPageViewModel with ChangeNotifier{
       isLoading = true;
       notifyListeners();
       await getChatMessage();
-    }
-  }
-
-  Future<void> sendSingMessage() async {
-    if(conversation != null){
-      await ImChatApi.getInstance().sendTextMessage(conversation!.userID!, textController.text);
-      //更新lastMessageId
-      await refreshChatMessage();
     }
   }
 

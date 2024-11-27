@@ -87,8 +87,8 @@ class RouteUtils {
   }
 
   ///关闭当前页面
-  static void pop(BuildContext context) {
-    Navigator.pop(context);
+  static void pop(BuildContext context,{dynamic result}) {
+    Navigator.pop(context, result);
   }
 
   ///关闭当前页面:包含返回值

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/input/app_input.dart';
 import 'package:jiayuan/page/chat_page/chat/chat_page_vm.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
@@ -67,9 +68,11 @@ class _ChatPageState extends State<ChatPage>{
   @override
   Widget build(BuildContext context) {
 
-    _chatViewModel.conversation = ModalRoute.of(context)?.settings.arguments as V2TimConversation;
-    _chatViewModel.clearUnReadCount(_chatViewModel.conversation!);
-    _initChatMessage();
+    if(_chatViewModel.conversation == null){
+      _chatViewModel.conversation = ModalRoute.of(context)?.settings.arguments as V2TimConversation;
+      _chatViewModel.clearUnReadCount(_chatViewModel.conversation!);
+      _initChatMessage();
+    }
 
     return ChangeNotifierProvider.value(
         value: _chatViewModel,
@@ -109,6 +112,11 @@ class _ChatPageState extends State<ChatPage>{
                               IconButton(
                                 icon: Icon(Icons.more_horiz),
                                 onPressed: () {
+                                  if(vm.conversation?.userID != null){
+                                    vm.gotoFriendInfo(context, vm.conversation!.userID!);
+                                  }else{
+                                    showToast("用户不存在");
+                                  }
                                 },
                               ),
                             ],
@@ -319,7 +327,7 @@ class _ChatPageState extends State<ChatPage>{
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        message.nickName ?? "",
+                        (message.friendRemark != null && message.friendRemark != "") ? message.friendRemark! : message.nickName ?? "",
                         style: TextStyle(
                             color: AppColors.textColor5a
                         ),
