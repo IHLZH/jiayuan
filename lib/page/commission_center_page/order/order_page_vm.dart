@@ -33,143 +33,39 @@ class OrderPageViewModel with ChangeNotifier{
     }
   }
 
-  void getOrders(){
-    unServed = [
-      CommissionData1(
-          commissionId: 2,
-          province: "河北省",
-          city: "石家庄",
-          county: "裕华区",
-          commissionAddress: "河北师范大学诚朴园三号楼204",
-          userPhoneNumber: "19358756689",
-          distance: 1.5,
-          commissionBudget: 255.25,
-          expectStartTime: DateTime(2024,11,2,12,30),
-          commissionStatus: 2,
-          typeName: "日常保洁"
-      ),
-      CommissionData1(
-        commissionId: 2,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        commissionAddress: "河北师范大学诚朴园三号楼204",
-        userPhoneNumber: "19358756689",
-        distance: 1.5,
-        commissionBudget: 255.25,
-        expectStartTime: DateTime(2024,11,2,12,30),
-        commissionStatus: 2,
-          typeName: "日常保洁"
-      ),
-      CommissionData1(
-        commissionId: 2,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        commissionAddress: "河北师范大学诚朴园三号楼204",
-        userPhoneNumber: "19358756689",
-        distance: 1.5,
-        commissionBudget: 255.25,
-        expectStartTime: DateTime(2024,11,2,12,30),
-        commissionStatus: 2,
-          typeName: "日常保洁"
-      ),
-    ];
+  //已完成订单分页请求页码
+  int downOrderCurrentpage = 1;
 
-    inService = [
-      CommissionData1(
-        commissionId: 2,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        commissionAddress: "河北师范大学诚朴园三号楼204",
-        userPhoneNumber: "19358756689",
-        distance: 1.5,
-        commissionBudget: 255.25,
-        expectStartTime: DateTime(2024,11,2,12,30),
-        commissionStatus: 3,
-          typeName: "日常保洁"
-      ),
-      CommissionData1(
-        commissionId: 2,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        commissionAddress: "河北师范大学诚朴园三号楼204",
-        userPhoneNumber: "19358756689",
-        distance: 1.5,
-        commissionBudget: 255.25,
-        expectStartTime: DateTime(2024,11,2,12,30),
-        commissionStatus: 3,
-          typeName: "日常保洁"
-      ),
-    ];
-
-    unPay = [
-      CommissionData1(
-        commissionId: 2,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        commissionAddress: "河北师范大学诚朴园三号楼204",
-        userPhoneNumber: "19358756689",
-        distance: 1.5,
-        commissionBudget: 255.25,
-        expectStartTime: DateTime(2024,11,2,12,30),
-        commissionStatus: 4,
-          typeName: "日常保洁"
-      ),
-      CommissionData1(
-        commissionId: 2,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        commissionAddress: "河北师范大学诚朴园三号楼204",
-        userPhoneNumber: "19358756689",
-        distance: 1.5,
-        commissionBudget: 255.25,
-        expectStartTime: DateTime(2024,11,2,12,30),
-        commissionStatus: 4,
-          typeName: "日常保洁"
-      ),
-    ];
-
-    down = [
-      CommissionData1(
-        commissionId: 2,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        commissionAddress: "河北师范大学诚朴园三号楼204",
-        userPhoneNumber: "19358756689",
-        distance: 1.5,
-        commissionBudget: 255.25,
-        expectStartTime: DateTime(2024,11,2,12,30),
-        commissionStatus: 5,
-          typeName: "日常保洁"
-      ),
-      CommissionData1(
-        commissionId: 2,
-        province: "河北省",
-        city: "石家庄",
-        county: "裕华区",
-        commissionAddress: "河北师范大学诚朴园三号楼204",
-        userPhoneNumber: "19358756689",
-        distance: 1.5,
-        commissionBudget: 255.25,
-        expectStartTime: DateTime(2024,11,2,12,30),
-        commissionStatus: 5,
-          typeName: "日常保洁"
-      ),
-    ];
-  }
-
-  Future<void> getUnServedOrders() async {
+  Future<void> getServedOrders() async {
     unServed = await CommissionApi.instance.getOrderByStatus(
         {
           "keeperId" : Global.keeperInfo?.keeperId,
           "status" : 2,
           "page" : 1,
+          "pageSize" : 100
+        }
+    );
+    inService = await CommissionApi.instance.getOrderByStatus(
+      {
+        "keeperId" : Global.keeperInfo?.keeperId,
+        "status" : 3,
+        "page" : 1,
+        "pageSize" : 100
+      }
+    );
+    unPay = await CommissionApi.instance.getOrderByStatus(
+        {
+          "keeperId" : Global.keeperInfo?.keeperId,
+          "status" : 4,
+          "page" : 1,
+          "pageSize" : 100
+        }
+    );
+    down = await CommissionApi.instance.getOrderByStatus(
+        {
+          "keeperId" : Global.keeperInfo?.keeperId,
+          "status" : 5,
+          "page" : downOrderCurrentpage,
           "pageSize" : 10
         }
     );

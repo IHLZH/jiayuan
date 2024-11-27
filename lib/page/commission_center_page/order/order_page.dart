@@ -38,7 +38,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
   }
 
   Future<void> _initOrders() async {
-    _orderViewModel.getOrders();
+    await _orderViewModel.getServedOrders();
   }
 
   @override

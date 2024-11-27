@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/repository/api/identity_api.dart';
+import 'package:jiayuan/repository/api/keeper_api.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/image_utils.dart';
 import 'package:oktoast/oktoast.dart';
@@ -91,6 +92,7 @@ class KeeperCertifiedPageViewModel with ChangeNotifier{
 
     if(result){
       print("身份证号码验证通过");
+      await KeeperApi.instance.getKeeperDataByUserId();
       return true;
     }else{
       print("身份证号码验证失败");
@@ -115,6 +117,7 @@ class KeeperCertifiedPageViewModel with ChangeNotifier{
 
       if(result){
         print("身份证照片验证通过");
+        await KeeperApi.instance.getKeeperDataByUserId();
         return true;
       }else{
         print("身份证照片验证失败");
