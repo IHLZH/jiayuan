@@ -559,11 +559,11 @@ class ImChatApi {
     }
   }
 
-  Future<void> getUsersInfo(List<String> userIDList) async {
+  Future<V2TimUserFullInfo> getUsersInfo(String userID) async {
     //获取用户资料
     V2TimValueCallback<List<V2TimUserFullInfo>> getUsersInfoRes =
         await TencentImSDKPlugin.v2TIMManager
-            .getUsersInfo(userIDList: userIDList); //需要查询的用户id列表
+            .getUsersInfo(userIDList: [userID]); //需要查询的用户id
     if (getUsersInfoRes.code == 0) {
       // 查询成功
       getUsersInfoRes.data?.forEach((element) {
@@ -579,24 +579,27 @@ class ImChatApi {
         element.userID; //用户 ID
       });
 
-      if (isProduction) print("查询成功");
-      if (isProduction) {
-        print(
-            "usersInfo: ID:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.userID}");
-        print(
-            "性别:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.gender}");
-        print(
-            "角色:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.role}");
-        print(
-            "昵称:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.nickName}");
-        print(
-            "等级:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.level}");
-        print(
-            "生日:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.birthday}");
-        //TODO:用户角色设置与查找
-      }
+      if (isProduction) print("============== 查询成功 ===========");
+      // if (isProduction) {
+      //   print(
+      //       "usersInfo: ID:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.userID}");
+      //   print(
+      //       "性别:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.gender}");
+      //   print(
+      //       "角色:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.role}");
+      //   print(
+      //       "昵称:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.nickName}");
+      //   print(
+      //       "等级:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.level}");
+      //   print(
+      //       "生日:${getUsersInfoRes.data?.firstWhere((user) => user.userID == userIDList.first)?.birthday}");
+      // }
+
+      return getUsersInfoRes.data!.first;
     } else {
       if (isProduction) print("============= IM查询失败 ============");
+      if (isProduction) print("错误码: ${getUsersInfoRes.code} 错误信息: ${getUsersInfoRes.desc}");
+      throw Exception("查询失败");
     }
   }
 
