@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/repository/api/user_api.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
+
+import '../../../im/im_chat_api.dart';
+import '../../../route/route_path.dart';
+import '../../../route/route_utils.dart';
 
 class UserInfoPage extends StatefulWidget {
   final SearchUser user;
@@ -174,10 +179,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                           label: '发信息',
                           color: Colors.green,
                           onPressed: () {
-                            // TODO: 实现发信息功能
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('发信息功能开发中')),
-                            );
+                            _gotoChatPage(widget.user.userId);
                           },
                         ),
                       ],
@@ -264,6 +266,11 @@ class _UserInfoPageState extends State<UserInfoPage> {
       default:
         return '未知状态';
     }
+  }
+
+  Future<void> _gotoChatPage(int userId) async {
+    V2TimConversation? conversation = await ImChatApi.getInstance().getConversation("c2c_${userId}");
+    RouteUtils.pushForNamed(context, RoutePath.chatPage, arguments: conversation);
   }
 
   // 显示加好友弹窗
