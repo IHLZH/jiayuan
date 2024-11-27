@@ -88,8 +88,6 @@ class ImChatApi {
   V2TimConversationListener? conversationListener; //会话监听器
   V2TimGroupListener? groupListener; //群组监听器
 
-  int messageChange = 0;
-
   Future<void> initSDK() async {
     // 1. 从即时通信 IM 控制台获取应用 SDKAppID。
     int sdkAppID = 1600061544;
@@ -116,9 +114,7 @@ class ImChatApi {
         if (isProduction)
           print("当前用户被踢下线，此时可以 UI 提示用户，并再次调用 V2TIMManager 的 login() 函数重新登录。");
 
-        showToast("其他设备登录当前账户", duration: Duration(seconds: 3));
-
-        // UserApi.instance.logout();
+          showToast("其他设备登录当前账户", duration: Duration(seconds: 2));
       },
       onSelfInfoUpdated: (V2TimUserFullInfo info) {
         // 登录用户的资料发生了更新
@@ -1114,7 +1110,7 @@ class ImChatApi {
             .getFriendshipManager()
             .checkFriend(
                 checkType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH,
-                userIDList: []);
+                userIDList: [userID]);
     if (checkres.code == 0) {
       if (isProduction) print("============= 检验是否是好友成功 ===========");
       // 查询发送成功
