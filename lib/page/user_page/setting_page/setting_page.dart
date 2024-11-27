@@ -79,6 +79,10 @@ class _SettingPageState extends State<SettingPage> {
       await ImChatApi.getInstance().addFriend('19', 'ikun');
     }
 
+    Future<void> _jumpToChangeEmailPage() async {
+      RouteUtils.pushForNamed(context, RoutePath.changeEmailPage);
+    }
+
     Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
       return Material(
         color: Colors.transparent,
@@ -86,6 +90,7 @@ class _SettingPageState extends State<SettingPage> {
           onTap: () {
             switch (title) {
               case '邮箱地址':
+                _jumpToChangeEmailPage();
                 break;
               case '手机号码':
                 break;
@@ -208,23 +213,23 @@ class _SettingPageState extends State<SettingPage> {
                   _buildOption(Icons.phone, '手机号码'),
                   _line(),
                   _buildOption(Icons.lock, '修改密码'),
-                  _line(),
-                  _buildOption(Icons.send_outlined, '发送给喜多郁代'),
-                  _line(),
-                  _buildOption(Icons.record_voice_over_outlined, '拉取所有会话列表'),
-                  _line(),
-                  _buildOption(Icons.record_voice_over_outlined, '拉取单聊会话'),
-                  _line(),
-                  _buildOption(
-                      Icons.record_voice_over_outlined, '拉取和喜多的单聊历史信息'),
-                  _line(),
-                  _buildOption(Icons.cleaning_services_rounded, '清空和喜多的聊天'),
-                  _line(),
-                  _buildOption(Icons.search, '搜索用户'),
-                  _line(),
-                  _buildOption(Icons.search, '获得好友列表'),
-                  _line(),
-                  _buildOption(Icons.person_add_alt, '添加好友'),
+                  // _line(),
+                  // _buildOption(Icons.send_outlined, '发送给喜多郁代'),
+                  // _line(),
+                  // _buildOption(Icons.record_voice_over_outlined, '拉取所有会话列表'),
+                  // _line(),
+                  // _buildOption(Icons.record_voice_over_outlined, '拉取单聊会话'),
+                  // _line(),
+                  // _buildOption(
+                  //     Icons.record_voice_over_outlined, '拉取和喜多的单聊历史信息'),
+                  // _line(),
+                  // _buildOption(Icons.cleaning_services_rounded, '清空和喜多的聊天'),
+                  // _line(),
+                  // _buildOption(Icons.search, '搜索用户'),
+                  // _line(),
+                  // _buildOption(Icons.search, '获得好友列表'),
+                  // _line(),
+                  // _buildOption(Icons.person_add_alt, '添加好友'),
                 ],
               ),
             ),

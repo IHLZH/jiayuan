@@ -53,6 +53,12 @@ class RoutePath {
   //设置页
   static const String settingPage = "/settingPage";
 
+  //更改邮箱页
+  static const String changeEmailPage = "/changeEmailPage";
+
+  //提交邮箱页
+  static const String submitEmailPage = "/submitEmailPage";
+
   //委托分类页
   static const String commissionType = "/commissionType";
 

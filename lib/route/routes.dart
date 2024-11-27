@@ -20,6 +20,7 @@ import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
 import 'package:jiayuan/page/search_user/user_info/user_info_page.dart';
 import 'package:jiayuan/page/search_user/user_search_page.dart';
 import 'package:jiayuan/page/start_page.dart';
+import 'package:jiayuan/page/user_page/setting_page/change_email_page/change_email_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
 import 'package:jiayuan/route/route_path.dart';
@@ -105,6 +106,9 @@ class Routes {
       //设置页
       case RoutePath.settingPage:
         return pageRoute(SettingPage());
+        //更改邮箱页
+      case RoutePath.changeEmailPage:
+        return pageRoute(ChangeEmailPage());
       //家政员个人页面
       case RoutePath.KeeperPage:
         final keeperId = settings.arguments as int;
@@ -145,11 +149,13 @@ class Routes {
         return pageRoute(CommentPage());
       case RoutePath.chatPage:
         return pageRoute(ChatPage(), settings: settings);
+      // 用户搜索页
       case RoutePath.userSearchPage:
         return pageRoute(UserSearchPage());
         return pageRoute(ChatPage(), settings: settings);
       case RoutePath.friendList:
         return pageRoute(FriendList());
+      // 用户资料页
       case RoutePath.userInfoPage:
         final arg = settings.arguments as Map<String, dynamic>;
         return pageRoute(UserInfoPage(user: arg['user'] as SearchUser));
