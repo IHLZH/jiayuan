@@ -110,4 +110,7 @@ class UrlPath {
    static const String keeperAvatarPath = "/keeper/upload/avatar";
    //工作照
    static const String keeperPicturePath = "/keeper/upload/picture";
+
+   //获取单个用户信息
+   static const String getSignalUserInfo = "/searchUserById";
 }

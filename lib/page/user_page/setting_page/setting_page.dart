@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/im/im_chat_api.dart';
+import 'package:jiayuan/repository/api/user_api.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
@@ -67,7 +68,7 @@ class _SettingPageState extends State<SettingPage> {
     }
 
     Future<void> _searchUser() async {
-      RouteUtils.pushForNamed(context, RoutePath.userSearchPage);
+      await UserApi.instance.getSignalUser(1);
     }
 
     Future<void> _getFriendsList() async {

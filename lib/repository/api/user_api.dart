@@ -36,7 +36,7 @@ class UserApi {
       final response = await DioInstance.instance().get(path: url, param: {
         "message": query,
         "page": page,
-      });
+      }, options: Options(headers: {"Authorization": Global.token}));
 
       if (response.statusCode == 200) {
         if (response.data["code"] == 200) {
@@ -67,6 +67,44 @@ class UserApi {
     return SearchUserResult([], 0);
   }
 
+  Future<SearchUser> getSignalUser(int userID) async {
+    String url = UrlPath.getSignalUserInfo;
+
+    try {
+      SearchUser user;
+
+      final response = await DioInstance.instance().get(
+          path: url,
+          param: {
+            "userId": userID,
+          },
+          options: Options(headers: {"Authorization": Global.token}));
+      if (response.statusCode == 200) {
+        if (response.data["code"] == 200) {
+          user = SearchUser.fromJson(response.data['data']);
+
+          if(isProduction){
+            print("获取用户信息成功");
+            // print(response.data['data']);
+            print(user);
+          }
+
+          return user;
+        }else{
+          if (isProduction) print(response.data['message']);
+          showToast(response.data['message'], duration: Duration(seconds: 1));
+        }
+      }else{
+        if (isProduction) print("无法连接服务器");
+        showToast("无法连接服务器", duration: Duration(seconds: 1));
+      }
+    } catch (e) {
+      if (isProduction) print("error: $e");
+    }
+
+    throw Exception("获取用户信息失败");
+  }
+
   Future<bool> checkFriend(int userID) async {
     bool result = false;
 
@@ -90,39 +128,39 @@ class UserApi {
     await ImChatApi.getInstance().addFriend(userID.toString(), friendRemark);
   }
 
-  //TODO
-  Future<void> logout() async {
-    String url = UrlPath.logoutUrl;
-
-    try {
-      final response = await DioInstance.instance().post(
-        path: url,
-        options: Options(headers: {"Authorization": Global.token}),
-      );
-      if (response.statusCode == 200) {
-        if (response.data["code"] == 200) {
-          showToast("退出登录", duration: Duration(seconds: 1));
-
-          if (isProduction) print("注销");
-
-          Global.isLogin = false;
-          Global.password = null;
-          Global.userInfoNotifier.value = null;
-
-          //IM注销登录
-          await ImChatApi.getInstance().logout();
-
-          await SpUtils.saveString("password", "");
-
-          // RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
-        } else {
-          showToast("退出登录失败", duration: Duration(seconds: 1));
-        }
-      } else {
-        if (isProduction) showToast("服务器连接失败", duration: Duration(seconds: 1));
-      }
-    } catch (e) {
-      if (isProduction) print("error $e");
-    }
-  }
+//TODO
+// Future<void> logout() async {
+//   String url = UrlPath.logoutUrl;
+//
+//   try {
+//     final response = await DioInstance.instance().post(
+//       path: url,
+//       options: Options(headers: {"Authorization": Global.token}),
+//     );
+//     if (response.statusCode == 200) {
+//       if (response.data["code"] == 200) {
+//         showToast("退出登录", duration: Duration(seconds: 1));
+//
+//         if (isProduction) print("注销");
+//
+//         Global.isLogin = false;
+//         Global.password = null;
+//         Global.userInfoNotifier.value = null;
+//
+//         //IM注销登录
+//         await ImChatApi.getInstance().logout();
+//
+//         await SpUtils.saveString("password", "");
+//
+//         // RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
+//       } else {
+//         showToast("退出登录失败", duration: Duration(seconds: 1));
+//       }
+//     } else {
+//       if (isProduction) showToast("服务器连接失败", duration: Duration(seconds: 1));
+//     }
+//   } catch (e) {
+//     if (isProduction) print("error $e");
+//   }
+// }
 }
