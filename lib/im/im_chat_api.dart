@@ -16,6 +16,7 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_callback.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_application.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_check_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_operation_result.dart';
@@ -552,7 +553,6 @@ class ImChatApi {
       TencentImSDKPlugin.v2TIMManager
           .removeGroupListener(listener: groupListener);
       if (isProduction) print("============= IM移除群组监听器成功 ============");
-
     } else {
       if (isProduction) print("============= IM登出失败 ============");
       if (isProduction) print("错误码: ${logoutRes.code} 错误信息: ${logoutRes.desc}");
@@ -1088,6 +1088,32 @@ class ImChatApi {
       if (isProduction) print("============= 更改好友备注失败 ===========");
       if (isProduction)
         print("错误码：${setFriendInfoRes.code} 错误信息： ${setFriendInfoRes.desc}");
+    }
+  }
+
+  //检验是否是好友
+  Future<V2TimFriendCheckResult> checkFriend(String userID) async {
+    // 检测好友是否有双向（单向）好友关系。
+    V2TimValueCallback<List<V2TimFriendCheckResult>> checkres =
+        await TencentImSDKPlugin.v2TIMManager
+            .getFriendshipManager()
+            .checkFriend(
+                checkType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH,
+                userIDList: []);
+    if (checkres.code == 0) {
+      if(isProduction) print("============= 检验是否是好友成功 ===========");
+      // 查询发送成功
+      checkres.data?.forEach((element) {
+        element.resultCode;//检查结果错误码
+        element.resultInfo;//检查结果信息
+        element.resultType;//与查询用户的关系类型 0:不是好友 1:对方在我的好友列表中 2:我在对方的好友列表中 3:互为好友
+        element.userID;//用户id
+      });
+      return checkres.data![0];
+    }else{
+      if(isProduction) print("============= 检验是否是好友失败 ===========");
+      if(isProduction) print("错误码：${checkres.code} 错误信息： ${checkres.desc}");
+      throw Exception("检验是否是好友失败");
     }
   }
 }

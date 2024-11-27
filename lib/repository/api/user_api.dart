@@ -5,6 +5,7 @@ import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_check_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
 
 import '../../utils/global.dart';
@@ -67,27 +68,12 @@ class UserApi {
   }
 
   Future<bool> checkFriend(int userID) async {
-    List<V2TimFriendInfo> friendList =
-        await ImChatApi.getInstance().getFriendList();
-
     bool result = false;
 
-    friendList.forEach((element) {
-      element.friendRemark; //好友备注
-      element.friendGroups; //好友所在分组列表
-      element.userID; //用户的id
-      element.userProfile
-          ?.allowType; //用户的好友验证方式 0:允许所有人加我好友 1:不允许所有人加我好友 2:加我好友需我确认
-      element.userProfile?.birthday; //用户生日
-      element.userProfile?.customInfo; //用户的自定义状态
+    V2TimFriendCheckResult res =
+        await ImChatApi.getInstance().checkFriend(userID.toString());
 
-      if (isProduction) {
-        print("====== checkFriend my and userID : ${element.userID}");
-      }
-      if (element.userID == userID.toString()) {
-        result = true;
-      }
-    });
+    result = res.resultType == 3;
 
     if (isProduction) {
       if (result) {
