@@ -23,9 +23,11 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_operation_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_search_param.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_change_info.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member_change_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member_info.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member_operation_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message_receipt.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_msg_create_info_result.dart';
@@ -479,6 +481,14 @@ class ImChatApi {
         //groupID    群 ID
         //opUser    处理人
         //memberList    被拉进群成员
+
+        if (isProduction) print("=========== 有用户加入群 ============");
+
+        if (isProduction) {
+          memberList.forEach((element) {
+            print("=========== 用户 ${element.userID} 被拉入某群 ============");
+          });
+        }
       },
       onMemberKicked: (String groupID, V2TimGroupMemberInfo opUser,
           List<V2TimGroupMemberInfo> memberList) async {
@@ -600,7 +610,8 @@ class ImChatApi {
       return getUsersInfoRes.data!.first;
     } else {
       if (isProduction) print("============= IM查询失败 ============");
-      if (isProduction) print("错误码: ${getUsersInfoRes.code} 错误信息: ${getUsersInfoRes.desc}");
+      if (isProduction)
+        print("错误码: ${getUsersInfoRes.code} 错误信息: ${getUsersInfoRes.desc}");
       throw Exception("查询失败");
     }
   }
@@ -1105,43 +1116,139 @@ class ImChatApi {
                 checkType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH,
                 userIDList: []);
     if (checkres.code == 0) {
-      if(isProduction) print("============= 检验是否是好友成功 ===========");
+      if (isProduction) print("============= 检验是否是好友成功 ===========");
       // 查询发送成功
       checkres.data?.forEach((element) {
-        element.resultCode;//检查结果错误码
-        element.resultInfo;//检查结果信息
-        element.resultType;//与查询用户的关系类型 0:不是好友 1:对方在我的好友列表中 2:我在对方的好友列表中 3:互为好友
-        element.userID;//用户id
+        element.resultCode; //检查结果错误码
+        element.resultInfo; //检查结果信息
+        element.resultType; //与查询用户的关系类型 0:不是好友 1:对方在我的好友列表中 2:我在对方的好友列表中 3:互为好友
+        element.userID; //用户id
       });
       return checkres.data![0];
-    }else{
-      if(isProduction) print("============= 检验是否是好友失败 ===========");
-      if(isProduction) print("错误码：${checkres.code} 错误信息： ${checkres.desc}");
+    } else {
+      if (isProduction) print("============= 检验是否是好友失败 ===========");
+      if (isProduction) print("错误码：${checkres.code} 错误信息： ${checkres.desc}");
       throw Exception("检验是否是好友失败");
     }
   }
 
-  //创建工作群聊
-  Future<String> createGroup(String groupName,List<V2TimGroupMember>memberList) async {
+  //创建群聊
+  Future<String> createGroup(
+      String groupName, List<V2TimGroupMember> memberList) async {
     // 创建群组
     V2TimValueCallback<String> createGroupRes =
-    await TencentImSDKPlugin.v2TIMManager.getGroupManager().createGroup(
-      groupType: "Work",// 群类型
-      groupName: groupName,// 群名称，不能为 null。
-      notification: "",// 群公告
-      introduction: "",// 群介绍
-      faceUrl: "默认头像",// 群头像Url
-      isAllMuted: false,// 是否全体禁言
-      isSupportTopic: false,// 是否支持话题
-      addOpt: GroupAddOptTypeEnum.V2TIM_GROUP_ADD_ANY,// 添加群设置( FORBID: 禁止加群 / AUTH: 加群审核 / ANY: 直接加群 )
-      memberList: memberList,// 初始成员列表
-    );
+        await TencentImSDKPlugin.v2TIMManager.getGroupManager().createGroup(
+              groupType: "Work",
+              // 群类型
+              groupName: groupName,
+              // 群名称，不能为 null。
+              notification: "",
+              // 群公告
+              introduction: "",
+              // 群介绍
+              faceUrl: "默认头像",
+              // 群头像Url
+              isAllMuted: false,
+              // 是否全体禁言
+              isSupportTopic: false,
+              // 是否支持话题
+              addOpt: GroupAddOptTypeEnum.V2TIM_GROUP_ADD_ANY,
+              // 添加群设置( FORBID: 禁止加群 / AUTH: 加群审核 / ANY: 直接加群 )
+              memberList: memberList, // 初始成员列表
+            );
     if (createGroupRes.code == 0) {
       // 创建成功
-      createGroupRes.data;// 创建的群号
+      createGroupRes.data; // 创建的群号
       return createGroupRes.data!;
-    }else{
+    } else {
       throw Exception("创建群聊失败");
+    }
+  }
+
+  //获取群聊列表
+  Future<List<V2TimGroupInfo>> getGroupList() async {
+    //获取当前用户已经加入的群列
+    V2TimValueCallback<List<V2TimGroupInfo>> getJoinedGroupListRes =
+        await TencentImSDKPlugin.v2TIMManager
+            .getGroupManager()
+            .getJoinedGroupList();
+    if (getJoinedGroupListRes.code == 0) {
+      // 查询成功
+      getJoinedGroupListRes.data?.forEach((element) {
+        element.createTime; // 群创建时间
+        element.customInfo; // 群自定义字段
+        element.faceUrl; // 群头像Url
+        element.groupAddOpt; // 群添加选项设置
+        element.groupID; // 群ID
+        element.groupName; // 群名
+        element.groupType; // 群类型
+        element.introduction; // 群介绍
+        element.isAllMuted; // 群是否全体禁言
+        element.isSupportTopic; // 群是否支持话题
+        element.joinTime; // 当前用户在此群的加入时间
+        element.lastInfoTime; // 最后一次群修改资料的时间
+        element.lastMessageTime; // 最后一次群发消息的时间
+        element.memberCount; // 群员数量
+        element.notification; // 群公告
+        element.onlineCount; // 群在线人数
+        element.owner; // 群主
+        element.recvOpt; // 当前用户在此群中接受信息的选项
+        element.role; // 此用户在群中的角色
+      });
+
+      return getJoinedGroupListRes.data!;
+    } else {
+      if (isProduction) print("============= 获取群聊列表失败 ===========");
+      if (isProduction)
+        print(
+            "错误码：${getJoinedGroupListRes.code} 错误信息： ${getJoinedGroupListRes.desc}");
+      throw Exception("获取群聊列表失败");
+    }
+  }
+
+  //邀请进入群聊
+  Future<void> inviteGroupMember(
+      String groupID, List<String> memberList) async {
+    // 邀请他人入群
+    V2TimValueCallback<List<V2TimGroupMemberOperationResult>>
+        inviteUserToGroupRes = await TencentImSDKPlugin.v2TIMManager
+            .getGroupManager()
+            .inviteUserToGroup(
+      groupID: "groupID", // 需要加入的群组id
+      userList: [], // 邀请的用户id列表
+    );
+    if (inviteUserToGroupRes.code == 0) {
+      // 邀请成功
+      inviteUserToGroupRes.data?.forEach((element) {
+        element.memberID; // 被操作成员 ID
+        // 邀请结果状态
+        // 0:操作失败，1:操作成功，2:无效操作，加群时已经是群成员
+        // 3:等待处理，邀请入群时等待对方处理，4:操作失败，创建群指定初始群成员列表或邀请入群时，被邀请者加入的群总数超限
+        element.result; // 邀请结果状态
+      });
+    } else {
+      if (isProduction) print("============= 邀请进入群聊失败 ===========");
+      if (isProduction)
+        print(
+            "错误码：${inviteUserToGroupRes.code} 错误信息： ${inviteUserToGroupRes.desc}");
+    }
+  }
+
+  // 退出群聊
+  Future<void> quitGroup(String groupID) async {
+    V2TimCallback quitGroupRes =
+        await TencentImSDKPlugin.v2TIMManager.quitGroup(
+      groupID: "groupID",
+    ); // 需要退出的群组 ID
+    if (quitGroupRes.code == 0) {
+      // 退出成功
+      if (isProduction) {
+        print("退出群聊成功");
+      }
+    } else {
+      if (isProduction) print("============= 退出群聊失败 ===========");
+      if (isProduction)
+        print("错误码：${quitGroupRes.code} 错误信息： ${quitGroupRes.desc}");
     }
   }
 }
