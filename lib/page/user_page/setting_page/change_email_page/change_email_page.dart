@@ -121,12 +121,11 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                         label: Text("更换",
                             style: TextStyle(color: AppColors.blackColor333)),
                         onPressed: () async {
-                          //TODO 更换邮箱
-                          // final res = await RouteUtils.pushForNamed(
-                          //     context, RoutePath.checkEmailPage);
-                          // if (res == true) {
-                          //   Global.userInfoNotifier.notifyListeners();
-                          // }
+                          final res = await RouteUtils.pushForNamed(
+                              context, RoutePath.checkEmailPage);
+                          if (res == true) {
+                            Global.userInfoNotifier.notifyListeners();
+                          }
                         },
                         style: OutlinedButton.styleFrom(
                           backgroundColor: Colors.white,
