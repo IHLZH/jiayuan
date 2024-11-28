@@ -30,8 +30,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
 
   Future<void> _initializeFriendStatus() async {
     isFriend = await UserApi.instance.checkFriend(widget.user.userId);
-    setState(() {
-    });
+    setState(() {});
   }
 
   @override
@@ -47,7 +46,6 @@ class _UserInfoPageState extends State<UserInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(widget.user.nickName),
@@ -55,7 +53,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context,"back");
+            Navigator.pop(context, "back");
           },
         ),
       ),
@@ -79,7 +77,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             backgroundImage: widget.user.userAvatar == '默认头像'
                                 ? AssetImage('assets/images/ikun1.png')
                                 : CachedNetworkImageProvider(
-                                widget.user.userAvatar!),
+                                    widget.user.userAvatar!),
                             onBackgroundImageError: (_, __) {
                               // 显示默认头像
                               print('显示默认头像');
@@ -92,9 +90,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                               Text(
                                 widget.user.nickName,
                                 style: const TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 17,
                                   fontWeight: FontWeight.bold,
                                 ),
+                                softWrap: true,
                               ),
                               const SizedBox(height: 4),
                               Text(
@@ -187,7 +186,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                           label: '发信息',
                           color: Colors.green,
                           onPressed: () {
-                            switch(UserInfoViewModel.isChatJumpTo){
+                            switch (UserInfoViewModel.isChatJumpTo) {
                               case true:
                                 _backToChatPage();
                                 break;
@@ -291,7 +290,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
   }
 
   Future<void> _backToChatPage() async {
-    Navigator.pop(context,"backToChatPage");
+    Navigator.pop(context, "backToChatPage");
   }
 
   // 显示加好友弹窗
