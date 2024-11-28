@@ -5,8 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
+import 'package:jiayuan/im/im_chat_api.dart';
+import 'package:jiayuan/utils/constants.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
+
+bool isProduction = Constants.IS_Production;
 
 class BindEmailPage extends StatefulWidget {
   const BindEmailPage({Key? key}) : super(key: key);
@@ -69,30 +73,27 @@ class _BindEmailPageState extends State<BindEmailPage> {
       return;
     }
 
-    Global.userInfoNotifier.value!.email = "114514@qq.com";
-    Navigator.pop(context, true);
+    final String url = UrlPath.getEmailCodeUrl + "?email=$email&purpose=bind";
+    _isSending = true;
+    setState(() {});
 
-    // final String url = UrlPath.getEmailCodeUrl + "?email=$email&purpose=bind";
-    // _isSending = true;
-    // setState(() {});
-
-    // try {
-    //   final response = await DioInstance.instance().get(path: url);
-    //   if (response.statusCode == 200) {
-    //     if (response.data['code'] == 200) {
-    //       showToast("验证码已发送", duration: const Duration(seconds: 1));
-    //       _startTimer();
-    //     } else {
-    //       showToast(response.data['message'],
-    //           duration: const Duration(seconds: 1));
-    //     }
-    //   }
-    // } catch (e) {
-    //   showToast("发送失败，请稍后重试", duration: const Duration(seconds: 1));
-    // } finally {
-    //   _isSending = false;
-    //   setState(() {});
-    // }
+    try {
+      final response = await DioInstance.instance().get(path: url);
+      if (response.statusCode == 200) {
+        if (response.data['code'] == 200) {
+          showToast("验证码已发送", duration: const Duration(seconds: 1));
+          _startTimer();
+        } else {
+          showToast(response.data['message'],
+              duration: const Duration(seconds: 1));
+        }
+      }
+    } catch (e) {
+      showToast("发送失败，请稍后重试", duration: const Duration(seconds: 1));
+    } finally {
+      _isSending = false;
+      setState(() {});
+    }
   }
 
   Future<void> _bindEmail() async {
@@ -118,6 +119,8 @@ class _BindEmailPageState extends State<BindEmailPage> {
         if (response.data['code'] == 200) {
           showToast("绑定成功", duration: const Duration(seconds: 1));
           Navigator.pop(context, true);
+
+          Global.userInfoNotifier.value!.email = email;
         } else {
           showToast(response.data['message'],
               duration: const Duration(seconds: 1));
@@ -125,6 +128,7 @@ class _BindEmailPageState extends State<BindEmailPage> {
       }
     } catch (e) {
       showToast("绑定失败，请稍后重试", duration: const Duration(seconds: 1));
+      if(isProduction)print("Error: $e");
     }
   }
 

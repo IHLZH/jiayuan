@@ -56,7 +56,7 @@ class UrlPath {
   static const String updateUserInfoUrl = "/update/userInfo";
 
   //邮箱绑定接口
-  static const String bindEmailUrl = "/bindMail";
+  static const String bindEmailUrl = "/bindEmail";
 
   //用户头像上传接口
   static const String uploadAvatarUrl = "/avatar/upload";
