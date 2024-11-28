@@ -58,6 +58,9 @@ class UrlPath {
   //邮箱绑定接口
   static const String bindEmailUrl = "/bindEmail";
 
+  //邮箱验证接口
+  static const String verifyEmailUrl = "/verify/email";
+
   //用户头像上传接口
   static const String uploadAvatarUrl = "/avatar/upload";
 
