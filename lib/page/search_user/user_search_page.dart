@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/search_user/user_search_vm.dart';
@@ -134,8 +135,8 @@ class _UserSearchPageState extends State<UserSearchPage> {
                               leading: CircleAvatar(
                                 backgroundImage: searchUser.userAvatar == '默认头像'
                                     ? AssetImage("assets/images/ikun1.png")
-                                    : NetworkImage(searchUser.userAvatar +
-                                        '?timestamp=${DateTime.now().millisecondsSinceEpoch}'),
+                                    : CachedNetworkImageProvider(
+                                    searchUser.userAvatar!),
                                 radius: 30,
                               ),
                               title: Text(

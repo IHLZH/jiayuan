@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/search_user/user_info/user_info_vm.dart';
@@ -19,18 +20,17 @@ class UserInfoPage extends StatefulWidget {
 }
 
 class _UserInfoPageState extends State<UserInfoPage> {
-  bool isFriend = false;
+  bool isFriend = true;
 
   @override
   void initState() {
-    super.initState();
     _initializeFriendStatus();
+    super.initState();
   }
 
   Future<void> _initializeFriendStatus() async {
-    bool friendStatus = await _checkFriend();
+    isFriend = await UserApi.instance.checkFriend(widget.user.userId);
     setState(() {
-      isFriend = friendStatus;
     });
   }
 
@@ -78,8 +78,8 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             radius: 40,
                             backgroundImage: widget.user.userAvatar == '默认头像'
                                 ? AssetImage('assets/images/ikun1.png')
-                                : NetworkImage(widget.user.userAvatar +
-                                    '?timestamp=${DateTime.now().millisecondsSinceEpoch}'),
+                                : CachedNetworkImageProvider(
+                                widget.user.userAvatar!),
                             onBackgroundImageError: (_, __) {
                               // 显示默认头像
                               print('显示默认头像');
