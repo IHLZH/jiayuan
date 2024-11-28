@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/http/dio_instance.dart';
@@ -10,6 +11,7 @@ import 'package:oktoast/oktoast.dart';
 import '../../../common_ui/styles/app_colors.dart';
 import '../../../http/url_path.dart';
 import '../../../route/route_utils.dart';
+import '../../../utils/global.dart';
 
 bool isProduction = Constants.IS_Production;
 
@@ -47,11 +49,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     String url = UrlPath.updateOrderStatusUrl;
 
     try {
-      final response =
-          await DioInstance.instance().put(path: url, queryParameters: {
-        'commissionId': _order.commissionId,
-        'new': 2,
-      });
+      final response = await DioInstance.instance().put(
+          path: url,
+          queryParameters: {
+            'commissionId': _order.commissionId,
+            'new': 2,
+          },
+          options: Options(headers: {"Authorization": Global.token}));
 
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
@@ -77,11 +81,15 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     String url = UrlPath.updateOrderStatusUrl;
 
     try {
-      final response =
-          await DioInstance.instance().put(path: url, queryParameters: {
-        'commissionId': _order.commissionId,
-        'new': 0,
-      });
+      final response = await DioInstance.instance().put(
+          path: url,
+          queryParameters: {
+            'commissionId': _order.commissionId,
+            'new': 0,
+          },
+          options: Options(headers: {
+            'Authorization': Global.token!,
+          }));
 
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
@@ -104,11 +112,15 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     String url = UrlPath.updateOrderStatusUrl;
 
     try {
-      final response =
-          await DioInstance.instance().put(path: url, queryParameters: {
-        'commissionId': _order.commissionId,
-        'new': 6,
-      });
+      final response = await DioInstance.instance().put(
+          path: url,
+          queryParameters: {
+            'commissionId': _order.commissionId,
+            'new': 6,
+          },
+          options: Options(headers: {
+            'Authorization': Global.token!,
+          }));
 
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {

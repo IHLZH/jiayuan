@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/http/dio_instance.dart';
@@ -68,7 +69,11 @@ class _OrderPageState extends State<OrderPage> {
             "?userId=${Global.userInfoNotifier.value!.userId}&page=${_currentPage}&size=${_pageSize}";
 
     try {
-      final response = await DioInstance.instance().get(path: url);
+      final response = await DioInstance.instance().get(
+          path: url,
+          options: Options(headers: {
+            'Authorization': Global.token!,
+          }));
 
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
