@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/input/app_input.dart';
 import 'package:jiayuan/page/chat_page/chat/chat_page_vm.dart';
+import 'package:jiayuan/route/route_path.dart';
+import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -286,9 +288,14 @@ class _ChatPageState extends State<ChatPage>{
                     )
                 ),
                 SizedBox(width: 10,),
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: message.faceUrl != "默认头像" ? CachedNetworkImageProvider(message.faceUrl!) : null
+                InkWell(
+                  onTap: (){
+                    _chatViewModel.gotoUserInfo(context, Global.userInfo!.userId.toString());
+                  },
+                  child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      backgroundImage: message.faceUrl != "默认头像" ? CachedNetworkImageProvider(message.faceUrl!) : null
+                  ),
                 ),
               ],
             ),
@@ -316,9 +323,14 @@ class _ChatPageState extends State<ChatPage>{
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: message.faceUrl != "默认头像" ? CachedNetworkImageProvider(message.faceUrl!) : null
+              InkWell(
+                onTap: (){
+                  _chatViewModel.gotoUserInfo(context, message.userID!);
+                },
+                child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: message.faceUrl != "默认头像" ? CachedNetworkImageProvider(message.faceUrl!) : null
+                ),
               ),
               SizedBox(width: 10,),
               Expanded(

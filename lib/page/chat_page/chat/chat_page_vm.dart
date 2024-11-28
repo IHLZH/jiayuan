@@ -12,6 +12,10 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
 
+import '../../../repository/api/user_api.dart';
+import '../../../repository/model/searchUser.dart';
+import '../../search_user/user_info/user_info_vm.dart';
+
 class ChatPageViewModel with ChangeNotifier{
 
   static ChatPageViewModel instance = ChatPageViewModel._();
@@ -99,6 +103,12 @@ class ChatPageViewModel with ChangeNotifier{
     }else{
       showToast("用户信息获取失败");
     }
+  }
+
+  Future<void> gotoUserInfo(BuildContext context, String userId) async {
+    SearchUser searchUser = await UserApi.instance.getSignalUser(int.parse(userId));
+    UserInfoViewModel.isChatJumpTo = true;
+    RouteUtils.pushForNamed(context, RoutePath.userInfoPage,  arguments: {"user": searchUser}) as String;
   }
 
   void initScorllListener(){

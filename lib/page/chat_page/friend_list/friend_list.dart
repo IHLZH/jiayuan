@@ -75,19 +75,6 @@ class FriendListState extends State<FriendList> with TickerProviderStateMixin{
                             ),
                           ],
                         ),
-                        Builder(
-                            builder: (context) =>GestureDetector(
-                              onTap: () {},
-                              child: Container(
-                                margin: EdgeInsets.only(right: 5),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.more_horiz),
-                                  ],
-                                ),
-                              ),
-                            )
-                        ),
                       ],
                     ),
                   )

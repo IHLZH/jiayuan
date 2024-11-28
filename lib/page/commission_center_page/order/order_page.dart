@@ -39,6 +39,8 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
 
   Future<void> _initOrders() async {
     await _orderViewModel.getServedOrders();
+    setState(() {
+    });
   }
 
   @override
@@ -268,7 +270,9 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                       Container(
                         padding: EdgeInsets.only(top: 4,bottom: 4),
                         child: Text(
-                          commission.distance.toString() + "km.",
+                            commission.distance < 1
+                                ? "${(commission.distance * 1000).round()}m."
+                                : "${commission.distance.toStringAsFixed(1)}km.",
                           style: TextStyle(
                               color: AppColors.textColor2b
                           ),
