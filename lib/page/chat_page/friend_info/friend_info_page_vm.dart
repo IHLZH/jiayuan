@@ -39,6 +39,7 @@ class FriendInfoPageViewModel with ChangeNotifier{
       if(friendInfoResult.friendInfo != null){
         this.friendInfo = friendInfoResult.friendInfo!;
       }
+      print("好友备注为${friendInfo!.friendRemark}");
       notifyListeners();
     }
   }
@@ -50,12 +51,23 @@ class FriendInfoPageViewModel with ChangeNotifier{
   Future<void> deleteFriend() async {
     if(friendInfo != null){
       await ImChatApi.getInstance().deleteFriend(friendInfo!.userID);
+      isFriend = false;
+      notifyListeners();
     }
   }
 
   Future<void> clearChatMessage() async {
     if(friendInfo != null){
       await ImChatApi.getInstance().clearSignalMessage(friendInfo!.userID);
+    }
+  }
+
+  Future<void> addFriend(String userId, String remark) async {
+    if(friendInfo != null){
+      await ImChatApi.getInstance().addFriend(userId, remark);
+      await setFriendRemark(userId, remark);
+      isFriend = true;
+      notifyListeners();
     }
   }
 
