@@ -56,6 +56,9 @@ class RoutePath {
   //更改邮箱页
   static const String changeEmailPage = "/changeEmailPage";
 
+  //绑定邮箱页
+  static const String bindEmailPage = "/bindEmailPage";
+
   //提交邮箱页
   static const String submitEmailPage = "/submitEmailPage";
 

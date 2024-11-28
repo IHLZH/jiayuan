@@ -20,6 +20,7 @@ import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
 import 'package:jiayuan/page/search_user/user_info/user_info_page.dart';
 import 'package:jiayuan/page/search_user/user_search_page.dart';
 import 'package:jiayuan/page/start_page.dart';
+import 'package:jiayuan/page/user_page/setting_page/change_email_page/bind_email_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/change_email_page/change_email_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
@@ -106,9 +107,12 @@ class Routes {
       //设置页
       case RoutePath.settingPage:
         return pageRoute(SettingPage());
-        //更改邮箱页
+      //更改邮箱页
       case RoutePath.changeEmailPage:
         return pageRoute(ChangeEmailPage());
+      //邮箱绑定页
+      case RoutePath.bindEmailPage:
+        return pageRoute(BindEmailPage());
       //家政员个人页面
       case RoutePath.KeeperPage:
         final keeperId = settings.arguments as int;
