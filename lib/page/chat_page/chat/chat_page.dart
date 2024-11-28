@@ -33,7 +33,7 @@ class _ChatPageState extends State<ChatPage>{
   }
 
   Future<void> _initChatMessage() async {
-    await _chatViewModel.getChatMessage();
+    await _chatViewModel.refreshChatMessage();
   }
 
   dispose(){
@@ -70,7 +70,7 @@ class _ChatPageState extends State<ChatPage>{
   @override
   Widget build(BuildContext context) {
 
-    if(_chatViewModel.conversation == null){
+    if(_chatViewModel.conversation == null || _chatViewModel.conversation != ModalRoute.of(context)?.settings.arguments as V2TimConversation){
       _chatViewModel.conversation = ModalRoute.of(context)?.settings.arguments as V2TimConversation;
       _chatViewModel.clearUnReadCount(_chatViewModel.conversation!);
       _initChatMessage();
@@ -270,19 +270,17 @@ class _ChatPageState extends State<ChatPage>{
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(8.r)
                           ),
-                          child: Expanded(
-                              child: Wrap(
-                                children: [
-                                  Text(
-                                    message.textElem?.text ?? "",
-                                    style: TextStyle(
-                                      color: AppColors.textColor2b,
-                                      fontSize: 16.sp,
-                                    ),
-                                  ),
-                                ],
-                              )
-                          ),
+                          child: Wrap(
+                            children: [
+                              Text(
+                                message.textElem?.text ?? "",
+                                style: TextStyle(
+                                  color: AppColors.textColor2b,
+                                  fontSize: 16.sp,
+                                ),
+                              ),
+                            ],
+                          )
                         )
                       ],
                     )
@@ -350,19 +348,17 @@ class _ChatPageState extends State<ChatPage>{
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8.r)
                         ),
-                        child: Expanded(
-                            child: Wrap(
-                              children: [
-                                Text(
-                                  message.textElem?.text ?? "",
-                                  style: TextStyle(
-                                    color: AppColors.textColor2b,
-                                    fontSize: 16.sp,
-                                  ),
-                                ),
-                              ],
-                            )
-                        ),
+                        child: Wrap(
+                          children: [
+                            Text(
+                              message.textElem?.text ?? "",
+                              style: TextStyle(
+                                color: AppColors.textColor2b,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+                          ],
+                        )
                       )
                     ],
                   )

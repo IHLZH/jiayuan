@@ -5,6 +5,7 @@ import 'package:jiayuan/page/chat_page/conversation_page.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
@@ -107,7 +108,9 @@ class ChatPageViewModel with ChangeNotifier{
 
   Future<void> gotoUserInfo(BuildContext context, String userId) async {
     SearchUser searchUser = await UserApi.instance.getSignalUser(int.parse(userId));
-    UserInfoViewModel.isChatJumpTo = true;
+    if(userId != Global.userInfo!.userId.toString() || conversation?.userID == Global.userInfo!.userId.toString()) {
+      UserInfoViewModel.isChatJumpTo = true;
+    }
     RouteUtils.pushForNamed(context, RoutePath.userInfoPage,  arguments: {"user": searchUser}) as String;
   }
 
