@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/page/commission_center_page/order/order_page_vm.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/route/route_path.dart';
@@ -485,10 +486,13 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                   ),
                   Expanded(
                       child: AppButton(
-                        onTap: (){
+                        onTap: () async {
                           RouteUtils.pop(context);
+                          await _orderViewModel.changeCommissionStatus(commission, 4);
                           showToast("操作成功，委托已完成！");
-                          RouteUtils.pop(context);
+                          await _orderViewModel.getServedOrders();
+                          setState(() {
+                          });
                         },
                         type: AppButtonType.main,
                         radius: 8.r,
@@ -504,8 +508,11 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
   }
 
   //提醒用户弹窗事件
-  void _remind(CommissionData1 commission){
+  Future<void> _remind(CommissionData1 commission) async {
     //提醒用户
+    String remindText = "我已完成订单编号为 ${commission.commissionId} 的委托订单，请尽快支付";
+    await ImChatApi.getInstance().sendTextMessage(commission.userId.toString(), remindText);
+    showToast("用户已收到提醒");
   }
 
   //取消服务
@@ -567,10 +574,13 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                   ),
                   Expanded(
                       child: AppButton(
-                        onTap: (){
+                        onTap: () async {
                           RouteUtils.pop(context);
+                          await _orderViewModel.changeCommissionStatus(commission, 0);
                           showToast("操作成功，委托已取消");
-                          RouteUtils.pop(context);
+                          await _orderViewModel.getServedOrders();
+                          setState(() {
+                          });
                         },
                         type: AppButtonType.main,
                         radius: 8.r,
@@ -646,10 +656,13 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                   ),
                   Expanded(
                       child: AppButton(
-                        onTap: (){
+                        onTap: () async {
                           RouteUtils.pop(context);
+                          await _orderViewModel.changeCommissionStatus(commission, 3);
                           showToast("操作成功，委托已开始");
-                          RouteUtils.pop(context);
+                          await _orderViewModel.getServedOrders();
+                          setState(() {
+                          });
                         },
                         type: AppButtonType.main,
                         radius: 8.r,

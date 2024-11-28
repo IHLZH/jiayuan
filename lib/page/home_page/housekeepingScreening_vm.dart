@@ -19,7 +19,7 @@ class HouseKeepingScreeningVM with ChangeNotifier {
       try {
         List<Housekeeper>? housekeepers = await KeeperApi.instance
             .getHousekeeperData(
-                Global.location!.longitude, Global.location!.longitude,
+            Global.locationInfo!.longitude, Global.locationInfo!.longitude,
                 id: typeIndex);
         if(housekeepersByType[typeIndex] == null){
           housekeepersByType[typeIndex] = [];
@@ -45,7 +45,7 @@ class HouseKeepingScreeningVM with ChangeNotifier {
       await Future.delayed(Duration(milliseconds: 500)); // 缩短延迟时间
       List<Housekeeper>? housekeepers = await KeeperApi.instance
           .getHousekeeperData(
-              Global.location!.longitude, Global.location!.longitude,
+          Global.locationInfo!.longitude, Global.locationInfo!.longitude,
               id: typeIndex);
       housekeepersByType[typeIndex] = housekeepers;
       notifyListeners();

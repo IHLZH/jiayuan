@@ -72,6 +72,21 @@ class OrderPageViewModel with ChangeNotifier{
     notifyListeners();
   }
 
+  Future<int> changeCommissionStatus(CommissionData1 commissionData, int newStatu) async {
+    if((Global.userInfo?.userType ?? 0) == 1){
+      bool result = await CommissionApi.instance.changeOrderStatus({
+        "commissionId":commissionData.commissionId,
+        "new":newStatu
+      });
+      if(result) {
+        return 1;
+      }else{
+        return 0;
+      }
+    }
+    return 2;
+  }
+
   String getCountyAddress(CommissionData1 commission){
     return commission.county + " " + commission.commissionAddress + "河北师范大学诚朴园三号楼204";
   }

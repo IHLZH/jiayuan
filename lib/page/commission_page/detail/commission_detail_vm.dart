@@ -17,7 +17,7 @@ class CommissionDetailViewModel with ChangeNotifier{
 
   CommissionData1 commissionData = CommissionData1();
 
-  //委托接取
+  //委托状态更改
   Future<int> changeCommissionStatus(int newStatu) async {
     if((Global.userInfo?.userType ?? 0) == 1){
       bool result = await CommissionApi.instance.changeOrderStatus({

@@ -73,7 +73,7 @@ class HomeViewModel with ChangeNotifier {
     if (hasMoreData) {
       List<Housekeeper> temp;
       temp = await KeeperApi.instance.getHousekeeperData(
-          Global.location!.longitude!, Global.location!.latitude!);
+          Global.locationInfo!.longitude!, Global.locationInfo!.latitude!);
       if (temp.length < 10) {
         hasMoreData = false;
         refreshController.loadNoData();
@@ -89,7 +89,7 @@ class HomeViewModel with ChangeNotifier {
     if (hasMoreData) {
       List<Housekeeper> temp;
       temp = await KeeperApi.instance.getHousekeeperData(
-          Global.location!.longitude!, Global.location!.latitude!);
+          Global.locationInfo!.longitude!, Global.locationInfo!.latitude!);
       if (temp.length < 1) {
         showToast('附近没有更多的家政员了');
       } else if (temp.length < 10) {
@@ -125,13 +125,13 @@ class HomeViewModel with ChangeNotifier {
 
   void weatherTask() async {
     //获取天气数据
-    print('市区状态码 ${Global.location?.adCode}');
+    print('市区状态码 ${Global.locationInfo?.adCode}');
     try {
       final response = await Dio().get(
         UrlPath.weatherUrl,
         queryParameters: {
           'key': ConstConfig.webKey,
-          'city': Global.location?.adCode,
+          'city': Global.locationInfo?.adCode,
           'extensions': 'base'
         },
       );

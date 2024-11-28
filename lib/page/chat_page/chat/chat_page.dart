@@ -39,6 +39,7 @@ class _ChatPageState extends State<ChatPage>{
   dispose(){
     super.dispose();
     _chatViewModel.clear();
+    print("================= chatpage销毁 ====================");
   }
 
   bool getHasShowTime(int currentTimestamp, int previousTimestamp){
@@ -71,6 +72,7 @@ class _ChatPageState extends State<ChatPage>{
   Widget build(BuildContext context) {
 
     if(_chatViewModel.conversation == null || _chatViewModel.conversation != ModalRoute.of(context)?.settings.arguments as V2TimConversation){
+      print("================= chatpage刷新 ====================");
       _chatViewModel.conversation = ModalRoute.of(context)?.settings.arguments as V2TimConversation;
       _chatViewModel.clearUnReadCount(_chatViewModel.conversation!);
       _initChatMessage();

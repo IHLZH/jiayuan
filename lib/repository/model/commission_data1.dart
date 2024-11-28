@@ -134,7 +134,7 @@ class CommissionData1 {
   }
   
   void _initDistance(){
-    _distance = calculateDistance(Global.location?.latitude ?? 39.906217, Global.location?.longitude ?? 116.3912757, lat, lng);
+    _distance = calculateDistance(Global.locationInfo?.latitude ?? 39.906217, Global.locationInfo?.longitude ?? 116.3912757, lat, lng);
   }
 
   double calculateDistance(double lat1, double lng1, double lat2, double lng2) {

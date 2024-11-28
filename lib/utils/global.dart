@@ -42,6 +42,14 @@ class Global {
     keeperInfoNotifier.value = keeper;
   }
 
+  //定位信息监听
+  static final locationInfoNotifier = ValueNotifier<LocationData?>(null);
+
+  static LocationData? get locationInfo => locationInfoNotifier.value;
+  static set locationInfo(LocationData? locationData){
+    locationInfoNotifier.value = locationData;
+  }
+
   static String? token;
   static String? input;
   static String? password;
@@ -53,9 +61,6 @@ class Global {
 
   //sqlite数据库工具类 用于打开和关闭数据库
   static DBUtil? dbUtil;
-
-  //用户定位信息
-  static LocationData? location;
 
   //委托类型表
   static List<CommissionType> CommissionTypes = [

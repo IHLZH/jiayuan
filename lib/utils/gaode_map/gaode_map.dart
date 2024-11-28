@@ -21,7 +21,6 @@ class GaodeMap{
 
   Completer<void> _locationCompleter = Completer<void>(); // 用于等待定位完成
 
-  bool isInited = false;
 
   Future<void> initGaodeMap() async {
     //实例化
@@ -33,7 +32,7 @@ class GaodeMap{
     //开始定位
     await _getLocation();
 
-    isInited = true;
+    print("====================== 高德初始化完毕 ====================");
   }
 
   Future<void> _getLocation() async {
@@ -50,7 +49,7 @@ class GaodeMap{
 
         print("位置信息为：" + result.toString());
 
-        Global.location = LocationData(
+        Global.locationInfo = LocationData(
             latitude: result["latitude"] as double,
             longitude: result["longitude"]as double,
             country: result['country'].toString(),
@@ -63,7 +62,7 @@ class GaodeMap{
             cityCode: result['cityCode'].toString()
         );
 
-        print("定位信息为：" + Global.location.toString());
+        print("定位信息为：" + Global.locationInfo.toString());
 
         // 定位信息获取后，完成 Completer
         if (!_locationCompleter.isCompleted) {
@@ -77,17 +76,51 @@ class GaodeMap{
 
   Future<void> disposeGaodeMap() async {
     if(_locationPlugin != null){
-      print("111");
       //停止定位
       _stopLocation();
-      print("112");
       //销毁定位
       _locationPlugin!.destroy();
 
       //取消定位订阅
       await _locationListener!.cancel();
+
+      print("================= 高德定位已被销毁 ==================");
     }else{
       print("无法销毁高德定位：定位插件未初始化");
+    }
+  }
+
+  /// 执行单次定位
+  Future<void> doSingleLocation() async {
+    // 如果插件未初始化，先初始化
+    if (_locationPlugin == null) {
+      await initGaodeMap();
+    }
+
+    // 保存原有的定位选项
+    if (_locationPlugin != null) {
+      // 设置单次定位选项
+      AMapLocationOption singleLocationOption = AMapLocationOption();
+      singleLocationOption.onceLocation = true;  // 设置为单次定位
+      singleLocationOption.needAddress = true;
+      singleLocationOption.desiredAccuracy = DesiredAccuracy.Best;
+
+      // 应用单次定位设置
+      _locationPlugin!.setLocationOption(singleLocationOption);
+
+      // 创建新的 Completer
+      _locationCompleter = Completer<void>();
+
+      // 开始定位
+      _locationPlugin!.startLocation();
+
+      // 等待定位完成
+      await _locationCompleter.future;
+
+      // 恢复原有的定位选项
+      _setLocationOption();  // 这会重新设置为原来的1分钟间隔
+    } else {
+      print("无法执行单次定位：定位插件未初始化");
     }
   }
 

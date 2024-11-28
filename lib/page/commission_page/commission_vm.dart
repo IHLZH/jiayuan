@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:jiayuan/repository/api/commission_api.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
+import 'package:jiayuan/utils/gaode_map/gaode_map.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../utils/global.dart';
@@ -28,8 +29,8 @@ class CommissionViewModel with ChangeNotifier{
   Future<void> initData() async {
     isLoading = true;
     await getRecommendComission({
-      "longitude":Global.location?.longitude ?? 0.0,
-      "latitude":Global.location?.latitude ?? 0.0,
+      "longitude":Global.locationInfo?.longitude ?? 0.0,
+      "latitude":Global.locationInfo?.latitude ?? 0.0,
       "distance":10,
       "page": startPage,
       "size": size
@@ -42,8 +43,8 @@ class CommissionViewModel with ChangeNotifier{
     if(hasMoreData){
       endPage++;
       await loadingComission({
-        "longitude":Global.location?.longitude ?? 0.0,
-        "latitude":Global.location?.latitude ?? 0.0,
+        "longitude":Global.locationInfo?.longitude ?? 0.0,
+        "latitude":Global.locationInfo?.latitude ?? 0.0,
         "distance":10,
         "page": endPage,
         "size": size
@@ -64,8 +65,8 @@ class CommissionViewModel with ChangeNotifier{
   Future<void> onRefresh() async {
     startPage++;
     await refreshComission({
-      "longitude":Global.location?.longitude ?? 0.0,
-      "latitude":Global.location?.latitude ?? 0.0,
+      "longitude":Global.locationInfo?.longitude ?? 0.0,
+      "latitude":Global.locationInfo?.latitude ?? 0.0,
       "distance":10,
       "page": startPage,
       "size": size
@@ -87,6 +88,7 @@ class CommissionViewModel with ChangeNotifier{
   }
 
   Future<void> refreshComission(Map<String, dynamic> param) async {
+    refreshLocation();
     List<CommissionData1> commissionData = await CommissionApi.instance.recommendCommission(param);
     if(!commissionData.isEmpty && commissionData.length >= 3){
       this.commissionDataList = commissionData;
@@ -108,6 +110,11 @@ class CommissionViewModel with ChangeNotifier{
       param["page"] = endPage;
       await loadingComission(param);
     }
+  }
+
+  Future<void> refreshLocation() async {
+    await GaodeMap.instance.doSingleLocation();
+    notifyListeners();
   }
 }
 

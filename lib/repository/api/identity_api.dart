@@ -35,6 +35,8 @@ class IdentityApi{
       if(response.statusCode == 200){
         if(response.data['code'] == 200){
           return true;
+        }else{
+          showToast(response.data['message']);
         }
       }else{
         showToast("网络连接错误");

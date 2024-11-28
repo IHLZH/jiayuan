@@ -476,31 +476,36 @@ class _CommissionPageState extends State<CommissionPage>{
   }
 
   Widget Position(){
-    return GestureDetector(
-      onTap: (){
-        //RouteUtils.push(context, MapPage());
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10.w),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.location_on_outlined,
-              weight: 3,
-              color: AppColors.textColor2b,
-            ),
-            Text(
-              Global.location?.city ?? "定位中..",
-              style: TextStyle(
-                color: AppColors.textColor2b,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600
+    return ValueListenableBuilder(
+        valueListenable: Global.locationInfoNotifier,
+        builder: (context, locationInfo,child){
+          return GestureDetector(
+            onTap: (){
+              //RouteUtils.push(context, MapPage());
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 10.w),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.location_on_outlined,
+                    weight: 3,
+                    color: AppColors.textColor2b,
+                  ),
+                  Text(
+                    locationInfo?.city ?? "定位中..",
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
+          );
+        }
     );
   }
 

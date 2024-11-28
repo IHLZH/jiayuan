@@ -32,8 +32,8 @@ class CommissionTypeViewModel with ChangeNotifier{
     await getTypeComission({
       "typeId": typeId,
       "distance":distance,
-      "latitude":Global.location?.latitude ?? 39.906217,
-      "longitude":Global.location?.longitude ?? 116.3912757,
+      "latitude":Global.locationInfo?.latitude ?? 39.906217,
+      "longitude":Global.locationInfo?.longitude ?? 116.3912757,
       "page": startPage,
       "size": size,
     });
@@ -46,8 +46,8 @@ class CommissionTypeViewModel with ChangeNotifier{
       await loadingComission({
         "typeId":typeId,
         "distance":distance,
-        "latitude":Global.location?.latitude ?? 39.906217,
-        "longitude":Global.location?.longitude ?? 116.3912757,
+        "latitude":Global.locationInfo?.latitude ?? 39.906217,
+        "longitude":Global.locationInfo?.longitude ?? 116.3912757,
         "page": endPage,
         "size": size,
         "min": minPrice,
@@ -71,8 +71,8 @@ class CommissionTypeViewModel with ChangeNotifier{
     await refreshComission({
       "typeId":typeId,
       "distance":distance,
-      "latitude":Global.location?.latitude ?? 39.906217,
-      "longitude":Global.location?.longitude ?? 116.3912757,
+      "latitude":Global.locationInfo?.latitude ?? 39.906217,
+      "longitude":Global.locationInfo?.longitude ?? 116.3912757,
       "page": startPage,
       "size": size,
       "min": minPrice,
@@ -96,8 +96,8 @@ class CommissionTypeViewModel with ChangeNotifier{
     await getTypeComission({
       "typeId":typeId,
       "distance":distance,
-      "latitude":Global.location?.latitude ?? 39.906217,
-      "longitude":Global.location?.longitude ?? 116.3912757,
+      "latitude":Global.locationInfo?.latitude ?? 39.906217,
+      "longitude":Global.locationInfo?.longitude ?? 116.3912757,
       "page": startPage,
       "size": size,
       "min": minPrice,

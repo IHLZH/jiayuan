@@ -65,8 +65,13 @@ class _HomePageState extends State<HomePage>
               title: Row(children: [
                 Icon(Icons.location_on, color: Colors.black),
                 SizedBox(width: 10.w),
-                Text("${Global.location?.city}",
-                    style: TextStyle(fontSize: 15.sp))
+                ValueListenableBuilder(
+                    valueListenable: Global.locationInfoNotifier,
+                    builder: (context, location, child){
+                      return Text("${location?.city}",
+                          style: TextStyle(fontSize: 15.sp));
+                    }
+                )
               ]),
               backgroundColor: Color.fromRGBO(70, 219, 201, 1),
             ),
