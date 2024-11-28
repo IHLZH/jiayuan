@@ -18,7 +18,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
   Widget build(BuildContext context) {
     return switch (Global.userInfo!.email) {
       //邮箱为空时
-      null => Scaffold(
+      null || '' => Scaffold(
           backgroundColor: AppColors.backgroundColor5,
           appBar: AppBar(
             backgroundColor: Colors.white,
@@ -66,6 +66,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                         side: BorderSide(
                             color: AppColors.backgroundColor5, width: 2),
                       ),
+                      overlayColor: Colors.grey[800],
                     ),
                   ),
                 ],
@@ -122,6 +123,7 @@ class _ChangeEmailPageState extends State<ChangeEmailPage> {
                         side: BorderSide(
                             color: AppColors.backgroundColor5, width: 2),
                       ),
+                      overlayColor: Colors.grey[800],
                     ),
                   ),
                 ],
