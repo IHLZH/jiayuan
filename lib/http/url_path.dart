@@ -55,6 +55,9 @@ class UrlPath {
   //个人信息修改接口
   static const String updateUserInfoUrl = "/update/userInfo";
 
+  //邮箱绑定接口
+  static const String bindEmailUrl = "/bindMail";
+
   //用户头像上传接口
   static const String uploadAvatarUrl = "/avatar/upload";
 
@@ -105,12 +108,12 @@ class UrlPath {
   static const String getOrderByStatus = "/keeper/order";
 
   static const String getKeeperDataByUserId = "/keeper/info";
-   static const String BannerPath = "/release/carousel";
+  static const String BannerPath = "/release/carousel";
 
-   static const String keeperAvatarPath = "/keeper/upload/avatar";
-   //工作照
-   static const String keeperPicturePath = "/keeper/upload/picture";
+  static const String keeperAvatarPath = "/keeper/upload/avatar";
+  //工作照
+  static const String keeperPicturePath = "/keeper/upload/picture";
 
-   //获取单个用户信息
-   static const String getSignalUserInfo = "/searchUserById";
+  //获取单个用户信息
+  static const String getSignalUserInfo = "/searchUserById";
 }
