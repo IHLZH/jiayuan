@@ -237,7 +237,7 @@ class _OrderPageState extends State<OrderPage> {
                       6 => Text("已取消",
                           style: TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.bold)),
-                      7 => Text("已完成(已评价)",
+                      7 => Text("已评价",
                           style: TextStyle(
                               color: Colors.green,
                               fontWeight: FontWeight.bold)),
