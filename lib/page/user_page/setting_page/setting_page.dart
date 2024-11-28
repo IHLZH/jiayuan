@@ -83,6 +83,10 @@ class _SettingPageState extends State<SettingPage> {
       RouteUtils.pushForNamed(context, RoutePath.changeEmailPage);
     }
 
+    Future<void> _jumpToChangePhonePage() async {
+      RouteUtils.pushForNamed(context, RoutePath.changePhonePage);
+    }
+
     Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
       return Material(
         color: Colors.transparent,
@@ -93,6 +97,7 @@ class _SettingPageState extends State<SettingPage> {
                 _jumpToChangeEmailPage();
                 break;
               case '手机号码':
+                _jumpToChangePhonePage();
                 break;
               case '修改密码':
                 break;

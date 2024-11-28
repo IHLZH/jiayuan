@@ -61,6 +61,12 @@ class UrlPath {
   //邮箱验证接口
   static const String verifyEmailUrl = "/verify/email";
 
+  //手机号绑定接口
+  static const String bindPhoneUrl = "/bindPhone";
+
+  //手机号验证接口
+  static const String verifyPhoneUrl = "/verify/phone";
+
   //用户头像上传接口
   static const String uploadAvatarUrl = "/avatar/upload";
 

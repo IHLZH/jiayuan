@@ -5,20 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
-import 'package:jiayuan/route/route_path.dart';
-import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/utils/constants.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
-class CheckEmailPage extends StatefulWidget {
-  const CheckEmailPage({Key? key}) : super(key: key);
+bool isProduction = Constants.IS_Production;
+
+class BindPhonePage extends StatefulWidget {
+  const BindPhonePage({Key? key}) : super(key: key);
 
   @override
-  _CheckEmailPageState createState() => _CheckEmailPageState();
+  State<StatefulWidget> createState() => _BindPhonePageState();
 }
 
-class _CheckEmailPageState extends State<CheckEmailPage> {
+class _BindPhonePageState extends State<BindPhonePage> {
+  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
+  final FocusNode _phoneFocusNode = FocusNode();
   final FocusNode _codeFocusNode = FocusNode();
   int _secondsRemaining = 0;
   Timer? _timer;
@@ -27,12 +30,15 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
   @override
   void initState() {
     super.initState();
+    _phoneFocusNode.addListener(_onFocusChange);
     _codeFocusNode.addListener(_onFocusChange);
   }
 
   @override
   void dispose() {
+    _phoneFocusNode.removeListener(_onFocusChange);
     _codeFocusNode.removeListener(_onFocusChange);
+    _phoneFocusNode.dispose();
     _codeFocusNode.dispose();
     _timer?.cancel();
     super.dispose();
@@ -60,9 +66,13 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
   }
 
   Future<void> _getVerificationCode() async {
-    final String email = Global.userInfoNotifier.value!.email!;
+    final String phone = _phoneController.text;
+    if (phone.isEmpty) {
+      showToast("请输入手机号码", duration: const Duration(seconds: 1));
+      return;
+    }
 
-    final String url = UrlPath.getEmailCodeUrl + "?email=$email";
+    final String url = UrlPath.getPhoneCodeUrl + "?phone=$phone&purpose=bind";
     _isSending = true;
     setState(() {});
 
@@ -85,37 +95,39 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
     }
   }
 
-  Future<void> _verifyCode() async {
+  Future<void> _bindPhone() async {
+    final String phone = _phoneController.text;
     final String code = _codeController.text;
-    final String email = Global.userInfoNotifier.value!.email!;
 
-    if (code.isEmpty) {
-      showToast("请输入验证码", duration: const Duration(seconds: 1));
+    if (phone.isEmpty || code.isEmpty) {
+      showToast("请填写完整信息", duration: const Duration(seconds: 1));
       return;
     }
 
     try {
       final response = await DioInstance.instance().post(
-        path: UrlPath.verifyEmailUrl,
+        path: UrlPath.bindPhoneUrl,
         queryParameters: {
-          "email": email,
-          "emailCode": code,
+          "phone": phone,
+          "smsCode": code,
         },
         options: Options(headers: {"Authorization": Global.token!}),
       );
 
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
-          showToast("验证成功", duration: const Duration(seconds: 1));
-          // 验证成功后跳转到绑定新邮箱页面
-          RouteUtils.pushForNamed(context, RoutePath.bindEmailPage);
+          showToast("绑定成功", duration: const Duration(seconds: 1));
+          Navigator.pop(context, true);
+
+          Global.userInfoNotifier.value!.userPhoneNumber = phone;
         } else {
           showToast(response.data['message'],
               duration: const Duration(seconds: 1));
         }
       }
     } catch (e) {
-      showToast("验证失败，请稍后重试", duration: const Duration(seconds: 1));
+      showToast("绑定失败，请稍后重试", duration: const Duration(seconds: 1));
+      if(isProduction)print("Error: $e");
     }
   }
 
@@ -124,14 +136,13 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor5,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: Text("验证邮箱"),
+        backgroundColor: AppColors.backgroundColor5,
+        title: Text("绑定手机号"),
         centerTitle: true,
       ),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.all(30),
-          margin: EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
@@ -146,14 +157,27 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
           ),
           child: Column(
             children: [
-              Row(
-                children: [
-                  Text(
-                    "当前邮箱：${Global.userInfoNotifier.value!.email}",
-                    style: TextStyle(
-                        fontSize: 20, color: Theme.of(context).primaryColor),
+              TextField(
+                controller: _phoneController,
+                focusNode: _phoneFocusNode,
+                decoration: InputDecoration(
+                  labelText: "手机号码",
+                  labelStyle: TextStyle(
+                    color: _phoneFocusNode.hasFocus
+                        ? Theme.of(context).primaryColor
+                        : Colors.grey,
                   ),
-                ],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: 20),
               Row(
@@ -194,8 +218,8 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
                         _isSending
                             ? "发送中..."
                             : _secondsRemaining > 0
-                                ? "${_secondsRemaining}s"
-                                : "获取验证码",
+                            ? "${_secondsRemaining}s"
+                            : "获取验证码",
                         style: TextStyle(color: Theme.of(context).primaryColor),
                       ),
                       style: TextButton.styleFrom(
@@ -203,7 +227,7 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                           side:
-                              BorderSide(color: Theme.of(context).primaryColor),
+                          BorderSide(color: Theme.of(context).primaryColor),
                         ),
                       ),
                     ),
@@ -215,9 +239,9 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: _verifyCode,
+                  onPressed: _bindPhone,
                   child: Text(
-                    "验证",
+                    "绑定",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -227,9 +251,11 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.appColor,
                     elevation: 0,
+                    padding: EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    minimumSize: Size(double.infinity, 50),
                   ),
                 ),
               ),

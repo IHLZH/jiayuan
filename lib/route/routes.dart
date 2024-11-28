@@ -39,6 +39,9 @@ import '../page/send_commission_page/send_commision_page.dart';
 import '../page/tab_page/tab_page.dart';
 import '../page/user_page/browser_history_page/browser_history_page.dart';
 import '../page/user_page/profile_edit_page/profile_edit_page.dart';
+import '../page/user_page/setting_page/change_phone_page/bind_phone_page.dart';
+import '../page/user_page/setting_page/change_phone_page/change_phone_page.dart';
+import '../page/user_page/setting_page/change_phone_page/check_phone_page.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -114,11 +117,18 @@ class Routes {
       //邮箱绑定页
       case RoutePath.bindEmailPage:
         return pageRoute(BindEmailPage());
-        //检验邮箱页
+      //检验邮箱页
       case RoutePath.checkEmailPage:
         return pageRoute(CheckEmailPage());
-        //提交邮箱页
-
+      //更改手机号页
+      case RoutePath.changePhonePage:
+        return pageRoute(ChangePhonePage());
+      //手机号绑定页
+      case RoutePath.bindPhonePage:
+        return pageRoute(BindPhonePage());
+      //检验手机号页
+      case RoutePath.checkPhonePage:
+        return pageRoute(CheckPhonePage());
       //家政员个人页面
       case RoutePath.KeeperPage:
         final keeperId = settings.arguments as int;
@@ -162,7 +172,6 @@ class Routes {
       // 用户搜索页
       case RoutePath.userSearchPage:
         return pageRoute(UserSearchPage());
-        return pageRoute(ChatPage(), settings: settings);
       case RoutePath.friendList:
         return pageRoute(FriendList());
       // 用户资料页

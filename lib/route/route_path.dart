@@ -62,8 +62,17 @@ class RoutePath {
   //检验邮箱页
   static const String checkEmailPage = "/checkEmailPage";
 
-  //提交邮箱页
-  static const String submitEmailPage = "/submitEmailPage";
+  //更改手机号页
+  static const String changePhonePage = "/changePhonePage";
+
+  //绑定手机号页
+  static const String bindPhonePage = "/bindPhonePage";
+
+  //检验手机号页
+  static const String checkPhonePage = "/checkPhonePage";
+
+  //修改密码页
+  static const String changePasswordPage = "/changePasswordPage";
 
   //委托分类页
   static const String commissionType = "/commissionType";

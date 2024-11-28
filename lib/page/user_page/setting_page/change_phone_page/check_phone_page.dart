@@ -7,17 +7,20 @@ import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
+import 'package:jiayuan/utils/constants.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
-class CheckEmailPage extends StatefulWidget {
-  const CheckEmailPage({Key? key}) : super(key: key);
+bool isProduction = Constants.IS_Production;
+
+class CheckPhonePage extends StatefulWidget {
+  const CheckPhonePage({Key? key}) : super(key: key);
 
   @override
-  _CheckEmailPageState createState() => _CheckEmailPageState();
+  _CheckPhonePageState createState() => _CheckPhonePageState();
 }
 
-class _CheckEmailPageState extends State<CheckEmailPage> {
+class _CheckPhonePageState extends State<CheckPhonePage> {
   final TextEditingController _codeController = TextEditingController();
   final FocusNode _codeFocusNode = FocusNode();
   int _secondsRemaining = 0;
@@ -60,9 +63,9 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
   }
 
   Future<void> _getVerificationCode() async {
-    final String email = Global.userInfoNotifier.value!.email!;
+    final String phone = Global.userInfoNotifier.value!.userPhoneNumber!;
 
-    final String url = UrlPath.getEmailCodeUrl + "?email=$email";
+    final String url = UrlPath.getPhoneCodeUrl + "?phone=$phone";
     _isSending = true;
     setState(() {});
 
@@ -87,7 +90,7 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
 
   Future<void> _verifyCode() async {
     final String code = _codeController.text;
-    final String email = Global.userInfoNotifier.value!.email!;
+    final String phone = Global.userInfoNotifier.value!.userPhoneNumber!;
 
     if (code.isEmpty) {
       showToast("请输入验证码", duration: const Duration(seconds: 1));
@@ -96,10 +99,10 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
 
     try {
       final response = await DioInstance.instance().post(
-        path: UrlPath.verifyEmailUrl,
+        path: UrlPath.verifyPhoneUrl,
         queryParameters: {
-          "email": email,
-          "emailCode": code,
+          "phone": phone,
+          "smsCode": code,
         },
         options: Options(headers: {"Authorization": Global.token!}),
       );
@@ -107,8 +110,8 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
           showToast("验证成功", duration: const Duration(seconds: 1));
-          // 验证成功后跳转到绑定新邮箱页面
-          RouteUtils.pushForNamed(context, RoutePath.bindEmailPage);
+          // 验证成功后跳转到绑定新手机号页面
+          RouteUtils.pushForNamed(context, RoutePath.bindPhonePage);
         } else {
           showToast(response.data['message'],
               duration: const Duration(seconds: 1));
@@ -116,6 +119,7 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
       }
     } catch (e) {
       showToast("验证失败，请稍后重试", duration: const Duration(seconds: 1));
+      if(isProduction)print("error ${e}");
     }
   }
 
@@ -125,7 +129,7 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
       backgroundColor: AppColors.backgroundColor5,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("验证邮箱"),
+        title: Text("验证手机号"),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -149,7 +153,7 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
               Row(
                 children: [
                   Text(
-                    "当前邮箱：${Global.userInfoNotifier.value!.email}",
+                    "当前手机号：${Global.userInfoNotifier.value!.userPhoneNumber}",
                     style: TextStyle(
                         fontSize: 20, color: Theme.of(context).primaryColor),
                   ),
