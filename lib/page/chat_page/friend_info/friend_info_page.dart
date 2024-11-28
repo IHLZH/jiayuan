@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiayuan/common_ui/dialog/loading.dart';
 import 'package:jiayuan/common_ui/input/app_input.dart';
 import 'package:jiayuan/page/chat_page/friend_info/friend_info_page_vm.dart';
 import 'package:oktoast/oktoast.dart';
@@ -31,14 +32,17 @@ class _FriendInfoPageState extends State<FriendInfoPage>{
   }
 
   Future<void> _checkIsFriend() async {
+    Loading.showLoading();
     await _friendInfoVM.checkIsFriend();
     setState(() {
+      Loading.dismissAll();
     });
   }
 
   @override
   void dispose() {
     super.dispose();
+    Loading.dismissAll();
     _friendInfoVM.clear();
   }
 
@@ -116,7 +120,7 @@ class _FriendInfoPageState extends State<FriendInfoPage>{
                                 ),
                                 child: InkWell(
                                   onTap: (){
-
+                                    vm.gotoUserInfo(context, vm.friendInfo!.userID);
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -248,7 +252,7 @@ class _FriendInfoPageState extends State<FriendInfoPage>{
                                 ),
                                 child: InkWell(
                                   onTap: (){
-
+                                    vm.gotoUserInfo(context, vm.friendInfo!.userID);
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -225,7 +225,7 @@ class _ConversationPageState extends State<ConversationPage>{
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        _conversationViewModel.formatTimestamp(conversation.lastMessage?.timestamp ?? 9999),
+                        conversation.lastMessage != null ? _conversationViewModel.formatTimestamp(conversation.lastMessage!.timestamp!) : "",
                         style: TextStyle(
                           color: AppColors.textColor9A,
                           fontSize: 14.sp,
