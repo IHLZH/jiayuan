@@ -32,9 +32,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
 
   // 去评价
   Future<void> _jumpToEvaluatePage() async {
-
-       RouteUtils.pushForNamed(context, RoutePath.evalutationPage,arguments: _order);
-
+    final res = await RouteUtils.pushForNamed(
+        context, RoutePath.evalutationPage,
+        arguments: _order);
+    if (res == true) {
+      setState(() {
+        _order.commissionStatus = 7;
+      });
+    }
   }
 
   // 同意操作
@@ -546,6 +551,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               color: Colors.grey,
               fontSize: 17.sp,
               fontWeight: FontWeight.bold)),
+      7 => Text("已完成(已评价)",
+          style: TextStyle(
+              color: Colors.green,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.bold)),
       _ => Text('未知状态',
           style: TextStyle(
               color: Colors.red, fontSize: 17.sp, fontWeight: FontWeight.bold)),
@@ -613,7 +623,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(child: SizedBox()),
+              SizedBox(width: 15),
               _buildIconButton(Icons.edit, '修改信息', Colors.green),
               if (_order.commissionStatus == 0 ||
                   _order.commissionStatus == 1 ||
@@ -639,18 +649,22 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     ),
                   ),
                 4 => Container(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildIconButton(
-                          Icons.payment, '去支付', AppColors.orangeBtnColor),
-                      SizedBox(width: 2,),
-                      _buildIconButton(Icons.cancel, '不验收', Colors.red),
-                    ],
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildIconButton(
+                            Icons.payment, '去支付', AppColors.orangeBtnColor),
+                        SizedBox(
+                          width: 2,
+                        ),
+                        _buildIconButton(Icons.cancel, '不验收', Colors.red),
+                      ],
+                    ),
                   ),
-                ),
                 5 => _buildIconButton(
                     Icons.rate_review_outlined, '去评价', AppColors.appColor),
+                7 => _buildIconButton(
+                    Icons.rate_review_outlined, '我的评价', AppColors.appColor),
                 _ => Container(),
               },
               Expanded(child: SizedBox()),

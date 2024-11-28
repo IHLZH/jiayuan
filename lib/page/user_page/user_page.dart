@@ -168,6 +168,11 @@ class _UserPageState extends State<UserPage> {
           arguments: {"status": status});
     }
 
+    //已接订单
+    Future<void> _jumpToComissionOrderPage() async {
+      RouteUtils.pushForNamed(context, RoutePath.centerOrder);
+    }
+
     // 水平图标1.0
     // Widget _buildOrderStatus(String title) {
     //   IconData icon;
@@ -292,10 +297,12 @@ class _UserPageState extends State<UserPage> {
                 _jumpToOrderPage(4);
               } else if (title == '已完成') {
                 _jumpToOrderPage(5);
-              } else if (title == '服务中心') {
-                _jumpToCommissionCenterPage();
               } else if (title == '成为家政员') {
                 _jumpToKeeperCertified();
+              } else if (title == '已接订单') {
+                _jumpToComissionOrderPage();
+              } else if (title == '服务中心') {
+                _jumpToCommissionCenterPage();
               } else if (title == '证书认证') {
                 _jumpToCertCertified();
               }

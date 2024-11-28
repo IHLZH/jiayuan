@@ -49,9 +49,10 @@ class _OrderPageState extends State<OrderPage> {
     _refreshOrders();
   }
 
-  Future<void> _jumpToEvaluatePage(int index ) async {
-        OrderDetailPageVm.nowOrder = _orderDataList[index];
-    await RouteUtils.pushForNamed(context, RoutePath.evalutationPage,arguments: _orderDataList[index]);
+  Future<void> _jumpToEvaluatePage(int index) async {
+    OrderDetailPageVm.nowOrder = _orderDataList[index];
+    await RouteUtils.pushForNamed(context, RoutePath.evalutationPage,
+        arguments: _orderDataList[index]);
     _refreshOrders();
   }
 
@@ -231,14 +232,10 @@ class _OrderPageState extends State<OrderPage> {
                       6 => Text("已取消",
                           style: TextStyle(
                               color: Colors.grey, fontWeight: FontWeight.bold)),
-                      // 7 => Text("待验收",
-                      //     style: TextStyle(
-                      //         color: Colors.red, fontWeight: FontWeight.bold)),
-                      // 8 => Text(
-                      //     "待确认",
-                      //     style: TextStyle(
-                      //         color: Colors.orange, fontWeight: FontWeight.bold),
-                      //   ),
+                      7 => Text("已完成(已评价)",
+                          style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold)),
                       _ => Text("未知",
                           style: TextStyle(
                               color: Colors.redAccent,
@@ -440,7 +437,9 @@ class _OrderPageState extends State<OrderPage> {
                                     ? '待支付'
                                     : widget.status == 5
                                         ? '已完成'
-                                        : '已取消',
+                                        : widget.status == 6
+                                            ? '已取消'
+                                            : '已完成(已评价)',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         centerTitle: true,
         elevation: 0,
