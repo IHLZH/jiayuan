@@ -73,6 +73,7 @@ class ChatPageViewModel with ChangeNotifier{
       lastMessageId = null;
       chatMessageList.clear();
       List<V2TimMessage> chatMessageData = await ImChatApi.getInstance().getHistorySignalMessageList(conversation!.userID!, count, lastMessageId);
+      lastMessageId = chatMessageData.last.msgID;
       chatMessageList.addAll(chatMessageData);
       await clearUnReadCount(conversation!);
       notifyListeners();
