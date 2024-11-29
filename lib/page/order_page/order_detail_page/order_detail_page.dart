@@ -635,7 +635,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(" "),
+              Expanded(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 10),
+                  child: SizedBox(),
+                ),
+              ),
+
               _buildIconButton(Icons.edit, '修改信息', Colors.green),
               if (_order.commissionStatus == 0 ||
                   _order.commissionStatus == 1 ||
