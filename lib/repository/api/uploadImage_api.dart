@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/http/dio_instance.dart';
+import 'package:jiayuan/http/url_path.dart';
 
 import '../../utils/global.dart';
 import '../../utils/image_utils.dart';
@@ -47,12 +48,14 @@ class UploadImageApi {
               contentType: 'multipart/form-data',
               headers: {'Authorization': Global.token}),
         );
-        print('测试asdasdasdasdasdasdasd');
         if (response.statusCode == 200) {
           // 将返回的图片地址赋值给对应的索引
           print("上传成功: ${response.data}");
           isSuccess = true;
-          imageUrls[index] = response.data["data"];
+         path ==  UrlPath.uploadEvaluationPicture ?
+          imageUrls[index] = response.data["data"][0] : response.data["data"];
+         //打印图片地址
+          print(imageUrls[index]);
         } else {
           print("上传失败，状态码: ${response.statusCode}");
         }
@@ -107,11 +110,11 @@ class UploadImageApi {
             contentType: 'multipart/form-data',
             headers: {'Authorization': Global.token}),
       );
-      if (response.statusCode == 200) {
+      if (response.data["code"] == 200) {
         // 将返回的图片地址赋值给对应的索引
         print("上传成功: ${response.data}");
         isSuccess = true;
-        imageUrls = response.data["data"];
+        imageUrls = response.data["data"]?.cast<String>() ?? [] ;
       } else {
         print("上传失败，状态码: ${response.statusCode}");
       }

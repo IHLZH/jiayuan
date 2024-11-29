@@ -7,6 +7,10 @@ import '../../utils/global.dart';
 import 'home_vm.dart';
 
 class HouseKeepingScreeningVM with ChangeNotifier {
+  static HouseKeepingScreeningVM instance = HouseKeepingScreeningVM._();
+  HouseKeepingScreeningVM._(){
+    loadMoreHouseKeepers(0);
+  }
   Map<int, List<Housekeeper>> housekeepersByType = Map.fromIterable(
     HomeViewModel.CommissionTypes.asMap().keys,
     key: (index) => index,
@@ -67,5 +71,12 @@ class HouseKeepingScreeningVM with ChangeNotifier {
   void updateCurrentIndex(int index) {
     currentIndex = index;
     notifyListeners();
+  }
+  void dispose() {
+    print("被销毁了");
+    for(var controller in refreshControllers){
+      controller.dispose();
+    }
+    super.dispose();
   }
 }

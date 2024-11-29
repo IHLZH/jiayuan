@@ -48,12 +48,8 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
     final pickedFiles = await _picker.pickMultiImage();
     // 确保总数不超过6张
     if (pickedFiles.length > 0) {
-      _imageUrls.addAll(widget.addUrlPath == UrlPath.uploadEvaluationPicture
-          ? await UploadImageApi.instance.uploadMultipleImages2(
-              pickedFiles.take(6 - _imageFiles.length).toList(),
-              widget.addUrlPath,
-              queryParameters: widget.queryParameters)
-          : await UploadImageApi.instance.uploadMultipleImages(
+      _imageUrls.addAll(
+           await UploadImageApi.instance.uploadMultipleImages(
               pickedFiles.take(6 - _imageFiles.length).toList(),
               widget.addUrlPath,
               queryParameters: widget.queryParameters));

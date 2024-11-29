@@ -21,12 +21,11 @@ class HouseKeepingScreeningPage extends StatefulWidget {
 
 class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
   PageController _pageController = PageController(initialPage: 0);
-  HouseKeepingScreeningVM _houseKeepingScreeningVM = HouseKeepingScreeningVM();
+  HouseKeepingScreeningVM _houseKeepingScreeningVM = HouseKeepingScreeningVM.instance ;
 
   @override
   void initState() {
     super.initState();
-        _houseKeepingScreeningVM.loadMoreHouseKeepers(0);
   }
 
   @override
@@ -76,8 +75,8 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<HouseKeepingScreeningVM>(
-      create: (context) => _houseKeepingScreeningVM,
+    return ChangeNotifierProvider.value(
+      value: _houseKeepingScreeningVM,
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: AppColors.appColor,

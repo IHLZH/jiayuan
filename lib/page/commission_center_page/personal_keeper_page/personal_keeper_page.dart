@@ -33,6 +33,12 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
     super.initState();
     _skillsController.text = _personalKeeperVm.highlight!;
     _introductionController.text = _personalKeeperVm.introduction!;
+    //打印Global.keeperInfo的信息
+    print("你好");
+    if(Global.keeperInfo == null){
+      print("有问题");
+    }
+    print("keeperInfo: ${Global.keeperInfo!.realName}");
     for(int i = 0 ; i < Global.keeperInfo!.tags!.length; i++){
       _personalKeeperVm.commissionTypeSelected[Global.keeperInfo!.tags![i]] = true;
     }
