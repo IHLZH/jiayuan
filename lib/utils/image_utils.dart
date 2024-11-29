@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -30,36 +31,65 @@ class ImageUtils {
   }
 
   //动态压缩图片 压缩到指定大小附近
-  static Future<List<int>?> compressIfNeededToMemory(XFile file, double maxSizeMB) async {
+  static Future<List<int>?> compressIfNeededToMemory(
+      XFile file, double maxSizeMB) async {
     int fieldSize = await file.length();
-     print('原始文件大小 ${fieldSize/((1024 * 1024))}MB');
+    print('原始文件大小 ${fieldSize / ((1024 * 1024))}MB');
+    // //获取图片原始分辨率
+    // img.Image? decoder = img.decodeImage(await file.readAsBytes());
+    // if (decoder == null) {
+    //   throw Exception("无法解码图片");
+    // }
+    // int originalWidth = decoder.width;
+    // int originalHeight = decoder.height;
+    // //print('原始图片分辨率 $originalWidth x $originalHeight');
+    // // 计算目标压缩尺寸，设定宽度为 1200px 或 1500px（根据需要进行调整）
+    // int targetWidth = 1200;
+    // // 或者根据分辨率比例动态计算图片高度
+    // int targetHeight = (originalHeight * (targetWidth / originalWidth)).toInt();
     if (fieldSize > maxSizeMB * 1024 * 1024) {
-      int quality = 95; // 初始质量
-      int minQuality = 5; // 最低质量阈值
+      int maxQuality = 100; // 初始质量
+      int minQuality = 0; // 最低质量阈值
       List<int>? compressedBytes;
-      while (quality >= minQuality) {
-       // print('尝试压缩，质量: $quality');
+      while (minQuality <= maxQuality) {
+        int quality = minQuality + ((maxQuality - minQuality) ~/ 2);
+        // print('尝试压缩，质量: $quality');
         try {
           compressedBytes = await FlutterImageCompress.compressWithFile(
             file.path,
             quality: quality,
+            // minHeight: targetHeight,
+            // minWidth: targetWidth,
           );
           if (compressedBytes == null) {
             throw Exception("压缩失败");
           }
           int compressedSize = compressedBytes.length;
-         // print('压缩后文件大小: ${compressedSize / (1024 * 1024)} MB');
-          if (compressedSize <= maxSizeMB * 1024 * 1024) {
+          // print('压缩后文件大小: ${compressedSize / (1024 * 1024)} MB');
+          // 判断压缩后的文件大小是否在目标大小附近10的范围，是则，不再压缩
+          if ((compressedSize - maxSizeMB * 1024 * 1024).abs() <=
+              maxSizeMB * 1024 * 1024 * 0.10) {
             print('压缩成功，压缩质量为$quality');
             print('压缩后文件大小: ${compressedSize / (1024 * 1024)} MB');
             return compressedBytes;
           }
-          // 如果文件仍然过大，降低质量
-          quality -= 5;
+          if (compressedSize > maxSizeMB * 1024 * 1024) {
+            maxQuality = quality; //减小质量范围
+          }
+          if (compressedSize < maxSizeMB * 1024 * 1024) {
+            minQuality = quality ; //增加质量范围
+          }
+          // 7%的阈值，就算成功  最多压缩五次
+          if ((maxQuality - minQuality) <= 6) {
+            print('压缩成功，压缩质量为$quality');
+            print('压缩后文件大小: ${compressedSize / (1024 * 1024)} MB');
+            return compressedBytes;
+          }
         } catch (e) {
           showToast('压缩出错');
           return null;
-        }                                                                                                                                                                                               ;
+        }
+        ;
       }
     } else {
       return await file.readAsBytes();
