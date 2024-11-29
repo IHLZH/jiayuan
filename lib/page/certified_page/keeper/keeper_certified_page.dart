@@ -1,40 +1,37 @@
 import 'dart:io';
 
-import 'package:flustars/flustars.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/common_ui/buttons/red_button.dart';
 import 'package:jiayuan/common_ui/input/app_input.dart';
 import 'package:jiayuan/page/certified_page/keeper/keeper_certified_page_vm.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/global.dart';
-import 'package:oktoast/oktoast.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
 import '../../../route/route_utils.dart';
 import '../../../utils/image_utils.dart';
+
 /*
 家政员认证页面
  */
-class KeeperCertifiedPage extends StatefulWidget{
+class KeeperCertifiedPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _KeeperCertifiedPageState();
   }
 }
 
-class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
-  KeeperCertifiedPageViewModel _keeperViewModel = KeeperCertifiedPageViewModel();
+class _KeeperCertifiedPageState extends State<KeeperCertifiedPage> {
+  KeeperCertifiedPageViewModel _keeperViewModel =
+      KeeperCertifiedPageViewModel();
 
   Future<void> _uploadFromCamera(int id) async {
     final pickedFile = await ImageUtils.getCameraImage();
-    if(pickedFile != null){
+    if (pickedFile != null) {
       setState(() {
-        switch(id){
+        switch (id) {
           case 0:
             _keeperViewModel.idCardFront = pickedFile;
             break;
@@ -48,9 +45,9 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
 
   Future<void> _uploadFromGallery(int id) async {
     final pickedFile = await ImageUtils.getImage();
-    if(pickedFile != null){
+    if (pickedFile != null) {
       setState(() {
-        switch(id){
+        switch (id) {
           case 0:
             _keeperViewModel.idCardFront = pickedFile;
             break;
@@ -58,7 +55,6 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
             _keeperViewModel.idCardBack = pickedFile;
             break;
         }
-
       });
     }
   }
@@ -96,7 +92,8 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
   //检验身份证号
   bool _validateIDCard(String idCard) {
     // 正则表达式：前 17 位为数字，最后一位可以为数字或 X
-    RegExp idCardRegex = RegExp(r"^[1-9]\d{5}(19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|(3[0-1]))\d{3}(\d|X|x)$");
+    RegExp idCardRegex = RegExp(
+        r"^[1-9]\d{5}(19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|(3[0-1]))\d{3}(\d|X|x)$");
     return idCardRegex.hasMatch(idCard);
   }
 
@@ -109,90 +106,84 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-        create: (context){
-          return _keeperViewModel;
-        },
-        child: Consumer<KeeperCertifiedPageViewModel>(
-            builder: (context, vm, child){
-              return Scaffold(
-                resizeToAvoidBottomInset: true,
-                appBar: PreferredSize(
-                    preferredSize: Size.fromHeight(kToolbarHeight),
+      create: (context) {
+        return _keeperViewModel;
+      },
+      child:
+          Consumer<KeeperCertifiedPageViewModel>(builder: (context, vm, child) {
+        return Scaffold(
+            resizeToAvoidBottomInset: true,
+            appBar: PreferredSize(
+                preferredSize: Size.fromHeight(kToolbarHeight),
+                child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.appColor, // 渐变起始颜色
+                          getColor(), // 渐变结束颜色
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
                     child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.appColor, // 渐变起始颜色
-                              getColor(),      // 渐变结束颜色
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
+                      height: 250.h,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.arrow_back_ios_new),
+                            onPressed: () {
+                              vm.back(context);
+                            },
                           ),
-                        ),
-                        child: Container(
-                          height: 250.h,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.arrow_back_ios_new),
-                                onPressed: () {
-                                  vm.back(context);
-                                },
-                              ),
-                              Text(
-                                "身份认证",
-                                style: TextStyle(
-                                    color: AppColors.textColor2b,
-                                    fontSize: 20.sp,
-                                    fontWeight: FontWeight.w500
-                                ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.more_horiz),
-                                onPressed: () {
-
-                                },
-                              ),
-                            ],
+                          Text(
+                            "身份认证",
+                            style: TextStyle(
+                                color: AppColors.textColor2b,
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w500),
                           ),
-                        )
-                    )
-                ),
-                body: _KeeperPage()
-              );
-            }
-        ),
+                          IconButton(
+                            icon: Icon(Icons.more_horiz),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ))),
+            body: _KeeperPage());
+      }),
     );
   }
 
-  Color getColor(){
-    if(_keeperViewModel.isSuccess || (Global.userInfo?.userType ?? 0) == 1 || _keeperViewModel.isFail){
+  Color getColor() {
+    if (_keeperViewModel.isSuccess ||
+        (Global.userInfo?.userType ?? 0) == 1 ||
+        _keeperViewModel.isFail) {
       return Colors.white;
-    }else return AppColors.backgroundColor3;
+    } else
+      return AppColors.backgroundColor3;
   }
 
-  Widget _KeeperPage(){
-    if(_keeperViewModel.isSuccess || (Global.userInfo?.userType ?? 0) == 1){
+  Widget _KeeperPage() {
+    if (_keeperViewModel.isSuccess || (Global.userInfo?.userType ?? 0) == 1) {
       return _Success();
-    }else if(_keeperViewModel.isFail){
+    } else if (_keeperViewModel.isFail) {
       return _Fail();
-    }else if(_keeperViewModel.cardImgWay || _keeperViewModel.cardNoWay){
+    } else if (_keeperViewModel.cardImgWay || _keeperViewModel.cardNoWay) {
       return _AuthResult();
-    }else {
+    } else {
       return _AuthWay();
     }
   }
 
-  Widget _AuthWay(){
+  Widget _AuthWay() {
     return Container(
-      height: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundColor3
-      ),
-      child: SingleChildScrollView(
-        child: Column(
+        height: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: BoxDecoration(color: AppColors.backgroundColor3),
+        child: SingleChildScrollView(
+            child: Column(
           children: [
             Row(
               children: [
@@ -201,24 +192,24 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                   style: TextStyle(
                       color: AppColors.textColor2b,
                       fontSize: 18.sp,
-                    fontWeight: FontWeight.w500
-                  ),
+                      fontWeight: FontWeight.w500),
                 )
               ],
             ),
-            SizedBox(height: 10,),
+            SizedBox(
+              height: 10,
+            ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               height: 120.h,
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(16.r)
-              ),
+                  borderRadius: BorderRadius.circular(16.r)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       _keeperViewModel.toCardNo();
                     },
                     child: Row(
@@ -227,9 +218,7 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                         Text(
                           "身份证号码认证",
                           style: TextStyle(
-                              color: AppColors.textColor2b,
-                              fontSize: 16.sp
-                          ),
+                              color: AppColors.textColor2b, fontSize: 16.sp),
                         ),
                         Icon(
                           Icons.arrow_forward_ios,
@@ -244,7 +233,7 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                     color: Colors.grey,
                   ),
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       _keeperViewModel.toCardImg();
                     },
                     child: Row(
@@ -253,9 +242,7 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
                         Text(
                           "身份证正反面认证",
                           style: TextStyle(
-                              color: AppColors.textColor2b,
-                              fontSize: 16.sp
-                          ),
+                              color: AppColors.textColor2b, fontSize: 16.sp),
                         ),
                         Icon(
                           Icons.arrow_forward_ios,
@@ -269,228 +256,226 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
               ),
             ),
           ],
-        )
-      )
-    );
+        )));
   }
 
-  Widget _AuthResult(){
+  Widget _AuthResult() {
     return _keeperViewModel.cardNoWay
         ? Container(
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        decoration: BoxDecoration(
-            color : AppColors.backgroundColor3
-        ),
-        child: ListView(
-          children: [
-            SizedBox(height: 10,),
-            Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16.r)
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                    child: Row(
-                      children: [
-                        Text(
-                          "一, 请填写真实的身份信息",
-                          style: TextStyle(
-                              fontSize: 16.sp,
-                              color: AppColors.textColor2b
-                          ),
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(color: AppColors.backgroundColor3),
+            child: ListView(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16.r)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        child: Row(
+                          children: [
+                            Text(
+                              "一, 请填写真实的身份信息",
+                              style: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: AppColors.textColor2b),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                    child: Row(
-                      children: [
-                        Text(
-                          "姓名：",
-                          style: TextStyle(
-                              fontSize: 18.sp,
-                              color: AppColors.textColor2b
-                          ),
-                        ),
-                        Expanded(
-                            child: AppInput(
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        child: Row(
+                          children: [
+                            Text(
+                              "姓名：",
+                              style: TextStyle(
+                                  fontSize: 18.sp,
+                                  color: AppColors.textColor2b),
+                            ),
+                            Expanded(
+                                child: AppInput(
                               hintText: "请输入真实姓名",
-                              onChanged: (name){
-                                if(name != ""){
+                              onChanged: (name) {
+                                if (name != "") {
                                   setState(() {
                                     _keeperViewModel.name = name;
-                                    _keeperViewModel.isNameCorrect = _validateName(name);
+                                    _keeperViewModel.isNameCorrect =
+                                        _validateName(name);
                                   });
-                                }else{
+                                } else {
                                   setState(() {
                                     _keeperViewModel.isNameCorrect = true;
                                   });
                                 }
                               },
-                            )
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: _keeperViewModel.isNameCorrect ? null : Text(
-                      "(请填写真实的姓名信息)",
-                      style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.red
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                    child: Row(
-                      children: [
-                        Text(
-                          "身份证号：",
-                          style: TextStyle(
-                              fontSize: 18.sp,
-                              color: AppColors.textColor2b
-                          ),
+                            ))
+                          ],
                         ),
-                        Expanded(
-                            child: AppInput(
+                      ),
+                      Container(
+                        child: _keeperViewModel.isNameCorrect
+                            ? null
+                            : Text(
+                                "(请填写真实的姓名信息)",
+                                style: TextStyle(
+                                    fontSize: 16.sp, color: Colors.red),
+                              ),
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        child: Row(
+                          children: [
+                            Text(
+                              "身份证号：",
+                              style: TextStyle(
+                                  fontSize: 18.sp,
+                                  color: AppColors.textColor2b),
+                            ),
+                            Expanded(
+                                child: AppInput(
                               hintText: "请输入正确的身份证号",
-                              onChanged: (id){
-                                if(id != ""){
+                              onChanged: (id) {
+                                if (id != "") {
                                   setState(() {
                                     _keeperViewModel.idCard = id;
-                                    _keeperViewModel.isIdCorrect = _validateIDCard(id);
+                                    _keeperViewModel.isIdCorrect =
+                                        _validateIDCard(id);
                                   });
-                                }else{
+                                } else {
                                   setState(() {
                                     _keeperViewModel.isIdCorrect = true;
                                   });
                                 }
                               },
-                            )
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: _keeperViewModel.isIdCorrect ? null : Text(
-                      "(请填写真实的身份证号)",
-                      style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.red
+                            ))
+                          ],
+                        ),
                       ),
-                    ),
+                      Container(
+                        child: _keeperViewModel.isIdCorrect
+                            ? null
+                            : Text(
+                                "(请填写真实的身份证号)",
+                                style: TextStyle(
+                                    fontSize: 16.sp, color: Colors.red),
+                              ),
+                      ),
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      AppButton(
+                        type: AppButtonType.main,
+                        radius: 8.r,
+                        buttonText: "认证完成>",
+                        onTap: () {
+                          _keeperViewModel.getAuthCardNo();
+                        },
+                      )
+                    ],
                   ),
-
-                  SizedBox(height: 40.h,),
-
-                  AppButton(
-                    type: AppButtonType.main,
-                    radius: 8.r,
-                    buttonText: "认证完成>",
-                    onTap: (){
-                      _keeperViewModel.getAuthCardNo();
-                    },
-                  )
-                ],
-              ),
-            )
-          ],
-        )
-    )
+                )
+              ],
+            ))
         : Container(
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        decoration: BoxDecoration(
-            color: AppColors.backgroundColor3
-        ),
-        child: ListView(
-          children: [
-            SizedBox(height: 10,),
-            Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16.r)
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                    child: Row(
-                      children: [
-                        Text(
-                          "二, 核对身份(上传身份证照片)",
-                          style: TextStyle(
-                              fontSize: 16.sp,
-                              color: AppColors.textColor2b
-                          ),
+            padding: EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(color: AppColors.backgroundColor3),
+            child: ListView(
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16.r)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        child: Row(
+                          children: [
+                            Text(
+                              "二, 核对身份(上传身份证照片)",
+                              style: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: AppColors.textColor2b),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.black, width: 1),
+                            borderRadius: BorderRadius.circular(16.r)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                _showPickerOptions(context, 0);
+                              },
+                              child: Image(
+                                  width: 150.w,
+                                  height: 90.w,
+                                  image: _keeperViewModel.idCardFront.path != ""
+                                      ? FileImage(File(
+                                          _keeperViewModel.idCardFront.path))
+                                      : AssetImage(
+                                          'assets/images/upload2.jpg')),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                _showPickerOptions(context, 1);
+                              },
+                              child: Image(
+                                  width: 150.w,
+                                  height: 90.w,
+                                  image: _keeperViewModel.idCardBack.path != ""
+                                      ? FileImage(File(
+                                          _keeperViewModel.idCardBack.path))
+                                      : AssetImage(
+                                          'assets/images/upload2.jpg')),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 40.h,
+                      ),
+                      AppButton(
+                        type: AppButtonType.main,
+                        radius: 8.r,
+                        buttonText: "认证完成>",
+                        onTap: () {
+                          _keeperViewModel.getAuthIdCard();
+                        },
+                      )
+                    ],
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black, width: 1),
-                        borderRadius: BorderRadius.circular(16.r)
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        GestureDetector(
-                          onTap: (){
-                            _showPickerOptions(context, 0);
-                          },
-                          child: Image(
-                              width: 150.w,
-                              height: 90.w,
-                              image: _keeperViewModel.idCardFront.path != "" ? FileImage(File(_keeperViewModel.idCardFront.path)) : AssetImage('assets/images/upload2.jpg')
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: (){
-                            _showPickerOptions(context, 1);
-                          },
-                          child: Image(
-                              width: 150.w,
-                              height: 90.w,
-                              image: _keeperViewModel.idCardBack.path != "" ? FileImage(File(_keeperViewModel.idCardBack.path)) : AssetImage('assets/images/upload2.jpg')
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 40.h,),
-
-                  AppButton(
-                    type: AppButtonType.main,
-                    radius: 8.r,
-                    buttonText: "认证完成>",
-                    onTap: (){
-                      _keeperViewModel.getAuthIdCard();
-                    },
-                  )
-                ],
-              ),
-            )
-          ],
-        )
-    );
+                )
+              ],
+            ));
   }
 
-  Widget _Success(){
+  Widget _Success() {
     return Container(
-        decoration: BoxDecoration(
-            color: Colors.white
-        ),
+        decoration: BoxDecoration(color: Colors.white),
         child: Center(
           child: Column(
             children: [
@@ -501,14 +486,15 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
               ),
               Text(
                 "认证成功",
-                style: TextStyle(
-                    fontSize: 25.sp
-                ),
+                style: TextStyle(fontSize: 25.sp),
               ),
-              SizedBox(height: 20.h,),
+              SizedBox(
+                height: 20.h,
+              ),
               AppButton(
-                onTap: (){
-                  RouteUtils.pushReplacementNamed(context, RoutePath.commissionCenter);
+                onTap: () {
+                  RouteUtils.pushReplacementNamed(
+                      context, RoutePath.commissionCenter);
                 },
                 type: AppButtonType.main,
                 radius: 8.r,
@@ -516,41 +502,37 @@ class _KeeperCertifiedPageState extends State<KeeperCertifiedPage>{
               )
             ],
           ),
-        )
-    );
+        ));
   }
 
-  Widget _Fail(){
+  Widget _Fail() {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white
-      ),
-      child: Center(
-        child: Column(
-          children: [
-            Image.asset(
-              height: 200.h,
-              width: 200.w,
-              "assets/images/auth_fail.png",
-            ),
-            Text(
-              "认证失败",
-              style: TextStyle(
-                  fontSize: 25.sp
+        decoration: BoxDecoration(color: Colors.white),
+        child: Center(
+          child: Column(
+            children: [
+              Image.asset(
+                height: 200.h,
+                width: 200.w,
+                "assets/images/auth_fail.png",
               ),
-            ),
-            SizedBox(height: 20.h,),
-            AppButton(
-              onTap: (){
-                _keeperViewModel.reAuth();
-              },
-              type: AppButtonType.main,
-              radius: 8.r,
-              buttonText: "重新认证>",
-            )
-          ],
-        ),
-      )
-    );
+              Text(
+                "认证失败",
+                style: TextStyle(fontSize: 25.sp),
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+              AppButton(
+                onTap: () {
+                  _keeperViewModel.reAuth();
+                },
+                type: AppButtonType.main,
+                radius: 8.r,
+                buttonText: "重新认证>",
+              )
+            ],
+          ),
+        ));
   }
 }

@@ -94,7 +94,7 @@ class SendCommissionViewModel with ChangeNotifier{
     if (_phoneNumber.isEmpty) {
       return "请输入手机号";
     }
-    if (_phoneNumber.length != 11) {
+    if (_phoneNumber.length != 11 || !reg_tel.hasMatch(_phoneNumber)) {
       return "手机号格式不正确";
     }
     if (_address == null || _address!.isEmpty) {

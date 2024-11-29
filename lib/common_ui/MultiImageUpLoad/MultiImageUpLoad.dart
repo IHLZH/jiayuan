@@ -13,8 +13,17 @@ class MultiImageUploadWidget extends StatefulWidget {
 
   //传入一个回调函数，通过回调函数来拿到服务器上传到的图片地址
   final Function(List<String> imageUrls) onImageSelected;
+  String addUrlPath;
+  String deleteUrlPath;
+  List<String> initialImageUrls;
+  Map<String, dynamic> queryParameters;
 
-  MultiImageUploadWidget(this.onImageSelected);
+  MultiImageUploadWidget(
+      {required this.onImageSelected,
+      required this.addUrlPath,
+      required this.deleteUrlPath,
+      required this.queryParameters,
+      required this.initialImageUrls,});
 }
 
 class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
@@ -24,6 +33,14 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
 
   void initState() {
     super.initState();
+    _imageUrls.addAll(widget.initialImageUrls);
+    //让_imageFiles和_imageUrls变得一样大
+    while (_imageFiles.length < _imageUrls.length) {
+      //将assets下的图片
+      _imageFiles.add(XFile(
+          'assets/images/drawkit-grape-pack-illustration-18.png',
+          name: 'default_image.png'));
+    }
   }
 
   //从相册选择图片
@@ -31,9 +48,15 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
     final pickedFiles = await _picker.pickMultiImage();
     // 确保总数不超过6张
     if (pickedFiles.length > 0) {
-      _imageUrls.addAll(await UploadImageApi.instance.uploadMultipleImages(
-          pickedFiles.take(6 - _imageFiles.length).toList(),
-          UrlPath.keeperPicturePath));
+      _imageUrls.addAll(widget.addUrlPath == UrlPath.uploadEvaluationPicture
+          ? await UploadImageApi.instance.uploadMultipleImages2(
+              pickedFiles.take(6 - _imageFiles.length).toList(),
+              widget.addUrlPath,
+              queryParameters: widget.queryParameters)
+          : await UploadImageApi.instance.uploadMultipleImages(
+              pickedFiles.take(6 - _imageFiles.length).toList(),
+              widget.addUrlPath,
+              queryParameters: widget.queryParameters));
       _imageFiles.addAll(pickedFiles.take(6 - _imageFiles.length));
       setState(() {});
     }
@@ -43,8 +66,9 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
   void _removeImage(int index) async {
     // 删除选中的图片
     _imageFiles.removeAt(index);
-    await UploadImageApi.instance.deleteImage(
-        _imageUrls[index],  "/keeper/picture/delete");
+    widget.deleteUrlPath == UrlPath.deleteEvaluationPicture ? await UploadImageApi.instance
+        .deleteImage2(_imageUrls[index], widget.deleteUrlPath) : await UploadImageApi.instance.deleteImage(_imageUrls[index], widget.deleteUrlPath);
+    _imageUrls.removeAt(index);
     setState(() {});
     // 调用回调函数将图片传递到父组件
     widget.onImageSelected(_imageUrls);
@@ -97,11 +121,12 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
                   children: [
                     Positioned.fill(
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: CachedNetworkImage(imageUrl: _imageUrls[index],placeholder:(context,url){
-                          return Image.asset(_imageFiles[index].path);
-                        })
-                      ),
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(
+                              imageUrl: _imageUrls[index],
+                              placeholder: (context, url) {
+                                return CircularProgressIndicator();
+                              })),
                     ),
                     Positioned(
                       right: 0,

@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
-import 'package:jiayuan/repository/api/keeper_api.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/sqlite/dbutil.dart';
@@ -12,6 +11,7 @@ import 'package:jiayuan/utils/sp_utils.dart';
 import 'package:oktoast/oktoast.dart';
 
 import '../im/im_chat_api.dart';
+import '../repository/api/keeper_api.dart';
 import '../repository/model/user.dart';
 
 class StartPage extends StatefulWidget {
@@ -27,8 +27,8 @@ class _StartPageState extends State<StartPage> {
     super.initState();
     // 初始化CookieJar
   //  DioInstance.instance().initDio(baseUrl: "");
-   // DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
-   DioInstance.instance().changeBaseUrl(UrlPath.testBaseUrl);
+   DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
+   // DioInstance.instance().changeBaseUrl(UrlPath.realBaseUrl);
    // DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
 
     //初始化sqlite数据库

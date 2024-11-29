@@ -1,14 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:city_pickers/city_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/MultiImageUpLoad/MultiImageUpLoad.dart';
+import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/page/commission_center_page/personal_keeper_page/personal_keeper_vm.dart';
 import 'package:jiayuan/page/home_page/home_vm.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
+import '../../../utils/global.dart';
 
 class PersonalKeeperPage extends StatefulWidget {
   const PersonalKeeperPage({super.key});
@@ -19,6 +23,7 @@ class PersonalKeeperPage extends StatefulWidget {
 
 class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
   FocusNode _focusNodePhone = FocusNode();
+  TextEditingController _phoneController = TextEditingController();
   PersonalKeeperVm _personalKeeperVm = PersonalKeeperVm();
   TextEditingController _introductionController = TextEditingController();
   TextEditingController _skillsController = TextEditingController();
@@ -26,6 +31,21 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
   @override
   void initState() {
     super.initState();
+    _skillsController.text = _personalKeeperVm.highlight!;
+    _introductionController.text = _personalKeeperVm.introduction!;
+    for(int i = 0 ; i < Global.keeperInfo!.tags!.length; i++){
+      _personalKeeperVm.commissionTypeSelected[Global.keeperInfo!.tags![i]] = true;
+    }
+  }
+
+  void dispose() {
+    _personalKeeperVm.phoneNumber = _phoneController.text;
+    _personalKeeperVm.upLoadKeeperInfo();
+    _focusNodePhone.dispose();
+    _introductionController.dispose();
+    _skillsController.dispose();
+    super.dispose();
+    // 销毁时，移除监听
   }
 
   // 通过钩子事件, 主动唤起浮层.
@@ -166,8 +186,8 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
                     },
                     child: CircleAvatar(
                       radius: 40.w,
-                      backgroundImage: avatarUrl != null
-                          ? NetworkImage(avatarUrl)
+                      backgroundImage: avatarUrl != null && avatarUrl.isNotEmpty
+                          ? CachedNetworkImageProvider(avatarUrl)
                           : AssetImage(
                               'assets/images/drawkit-grape-pack-illustration-18.png'),
                     ),
@@ -178,6 +198,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
   }
 
   Widget _buildPhoneNumber() {
+    _phoneController.text = _personalKeeperVm.phoneNumber!;
     return CommonContainer(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Row(
@@ -188,13 +209,21 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
             SizedBox(width: 10.w),
             Expanded(
               child: TextField(
+                controller: _phoneController,
                 focusNode: _focusNodePhone,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                   LengthLimitingTextInputFormatter(11),
                 ],
-                onTapOutside: (e) => _focusNodePhone.unfocus(),
+                onTapOutside: (e) {
+                  _focusNodePhone.unfocus();
+                  if (!_personalKeeperVm.reg_tel.hasMatch(_phoneController.text))
+                  {
+                    showToast('手机号格式不正确');
+                  };
+                  //校验手机格式
+                },
                 style: TextStyle(
                     fontSize: 16,
                     color: Colors.black,
@@ -214,7 +243,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
 
   Widget _buildIntroductionAndTagsWithImages() {
     return Selector<PersonalKeeperVm,
-            ({String introduction, List<String>? tags})>(
+            ({String? introduction, List<String>? tags})>(
         selector: (context, vm) =>
             (introduction: vm.introduction, tags: vm.tags),
         builder: (context, data, child) {
@@ -256,7 +285,14 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('工作照片', style: TextStyle(fontSize: 15, color: Colors.black)),
-        MultiImageUploadWidget(_personalKeeperVm.getImageUrls)
+        MultiImageUploadWidget(
+          onImageSelected: _personalKeeperVm.getImageUrls,
+          addUrlPath: UrlPath.uploadWorkPicture,
+          deleteUrlPath: UrlPath.deleteWorkPicture,
+          queryParameters: {"userId": Global.userInfo?.userId},
+          initialImageUrls: _personalKeeperVm.imageUrls ,
+        )
+        // MultiImageUploadWidget(onImageSelected: _personalKeeperVm.getImageUrls,addUrlPath: UrlPath.uploadEvaluationPicture,deleteUrlPath: UrlPath.deleteEvaluationPicture,queryParameters:{"userId":Global.userInfo?.userId}),
       ],
     );
   }
@@ -319,7 +355,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
         ),
         Wrap(
           children: List.generate(
-            _personalKeeperVm.tags.length,
+            _personalKeeperVm.tags!.length,
             (index) {
               return Container(
                 margin: EdgeInsets.only(right: 10, bottom: 10),
@@ -330,7 +366,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
                     borderRadius: BorderRadius.circular(5)),
                 child: Center(
                   child: Text(
-                    '${_personalKeeperVm.tags[index]}',
+                    '${_personalKeeperVm.tags![index]}',
                     style: TextStyle(color: Colors.black, fontSize: 12),
                   ),
                 ),
@@ -344,7 +380,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
 
   Widget _buildWorkExperienceWithSkills() {
     return Selector<PersonalKeeperVm,
-            ({String highlight, int? workExperience})>(
+            ({String? highlight, int? workExperience})>(
         selector: (context, vm) =>
             (highlight: vm.highlight, workExperience: vm.workExperience),
         builder: (context, data, child) {
@@ -492,7 +528,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
   }
 
   void showSkillsBottomSheet() {
-    _skillsController.text = _personalKeeperVm.highlight;
+    _skillsController.text = _personalKeeperVm.highlight ?? "";
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -601,7 +637,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
   }
 
   void showIntroductionBottomSheet() {
-    _introductionController.text = _personalKeeperVm.introduction;
+    _introductionController.text = _personalKeeperVm.introduction ?? "";
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,

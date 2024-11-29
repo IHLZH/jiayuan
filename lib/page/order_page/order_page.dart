@@ -24,7 +24,6 @@ class OrderPage extends StatefulWidget {
 }
 
 class _OrderPageState extends State<OrderPage> {
-  // List<FullOrder> _orderDataList = OrderPageVM.getFullOrderList();
   List<FullOrder> _orderDataList = [];
   bool _isRefreshing = false;
   bool _isLoadingMore = false;
@@ -39,7 +38,6 @@ class _OrderPageState extends State<OrderPage> {
   @override
   void initState() {
     _fetchOrders();
-    // _orderDataList = OrderPageVM.getFullOrderList();
     super.initState();
   }
 
