@@ -515,7 +515,7 @@ class _UserPageState extends State<UserPage> {
                                           style: TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.white,
+                                            color: Colors.black,
                                           ),
                                         ),
                                       );
