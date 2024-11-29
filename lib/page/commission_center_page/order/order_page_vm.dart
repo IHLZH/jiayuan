@@ -39,32 +39,63 @@ class OrderPageViewModel with ChangeNotifier{
     }
   }
 
-  void onLoading(){
-
+  Future<void> onRefreshUnServed() async {
+    await getUnServedOrders();
+    unServedRefreshController.refreshCompleted();
+    notifyListeners();
   }
 
-  void onRefresh(){
-
+  Future<void> onRefreshInService() async {
+    await getInServiceOrders();
+    inServiceRefreshController.refreshCompleted();
+    notifyListeners();
   }
 
-  void onRefreshUnServed(){
-
+  Future<void> onRefreshUnPay() async {
+    await getUnPayOrders();
+    unPayRefreshController.refreshCompleted();
+    notifyListeners();
   }
 
-  void onRefreshInService(){
-
+  Future<void> onRefreshDown() async {
+    await getDownOrders();
+    downHasMoreData = true;
+    downRefreshController.resetNoData();
+    downRefreshController.refreshCompleted();
+    notifyListeners();
   }
 
-  void onRefreshUnPay(){
-
-  }
-
-  void onRefreshDownRefresh(){
-
+  Future<void> onLoadingDown() async {
+    if(downHasMoreData){
+      downOrderCurrentpage++;
+      List<CommissionData1> downData = await CommissionApi.instance.getOrderByStatus(
+          {
+            "keeperId" : Global.keeperInfo?.keeperId,
+            "status" : 5,
+            "page" : downOrderCurrentpage,
+            "pageSize" : 10
+          }
+      );
+      if(downData.length < 10){
+        down.addAll(downData);
+        downHasMoreData = false;
+        downRefreshController.loadNoData();
+        notifyListeners();
+      }else{
+        down.addAll(downData);
+        downRefreshController.loadComplete();
+        notifyListeners();
+      }
+    }else{
+      downRefreshController.loadNoData();
+      notifyListeners();
+    }
   }
 
   //已完成订单分页请求页码
   int downOrderCurrentpage = 1;
+
+  bool downHasMoreData = true;
 
   Future<void> initOrders() async {
     await getUnServedOrders();
@@ -135,6 +166,10 @@ class OrderPageViewModel with ChangeNotifier{
 
   String getCountyAddress(CommissionData1 commission){
     return commission.county + " " + commission.commissionAddress + "河北师范大学诚朴园三号楼204";
+  }
+
+  void clear(){
+
   }
 
 }

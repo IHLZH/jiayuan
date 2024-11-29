@@ -160,7 +160,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
             color: AppColors.appColor,
             backgroundColor: AppColors.endColor,
           ),
-          onLoading: _orderViewModel.onLoading,
+          onRefresh: _orderViewModel.onRefreshUnServed,
           child: ListView.builder(
               itemCount: orders.length,
               itemBuilder: (context, index){
@@ -176,7 +176,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
             color: AppColors.appColor,
             backgroundColor: AppColors.endColor,
           ),
-          onLoading: _orderViewModel.onLoading,
+          onRefresh: _orderViewModel.onRefreshInService,
           child: ListView.builder(
               itemCount: orders.length,
               itemBuilder: (context, index){
@@ -192,7 +192,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
             color: AppColors.appColor,
             backgroundColor: AppColors.endColor,
           ),
-          onLoading: _orderViewModel.onLoading,
+          onRefresh: _orderViewModel.onRefreshUnPay,
           child: ListView.builder(
               itemCount: orders.length,
               itemBuilder: (context, index){
@@ -214,8 +214,8 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
             loadingText: "努力加载中~",
             noDataText: "已经到底了~",
           ),
-          onLoading: _orderViewModel.onLoading,
-          onRefresh: _orderViewModel.onRefresh,
+          onLoading: _orderViewModel.onLoadingDown,
+          onRefresh: _orderViewModel.onRefreshDown,
           child: ListView.builder(
               itemCount: orders.length,
               itemBuilder: (context, index){
