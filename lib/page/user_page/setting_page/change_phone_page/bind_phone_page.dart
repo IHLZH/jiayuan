@@ -9,6 +9,8 @@ import 'package:jiayuan/utils/constants.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
+import '../../../../repository/model/user.dart';
+
 bool isProduction = Constants.IS_Production;
 
 class BindPhonePage extends StatefulWidget {
@@ -117,9 +119,8 @@ class _BindPhonePageState extends State<BindPhonePage> {
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
           showToast("绑定成功", duration: const Duration(seconds: 1));
+          Global.userInfoNotifier.value=User.fromJson(response.data['data']);
           Navigator.pop(context, true);
-
-          Global.userInfoNotifier.value!.userPhoneNumber = phone;
         } else {
           showToast(response.data['message'],
               duration: const Duration(seconds: 1));
