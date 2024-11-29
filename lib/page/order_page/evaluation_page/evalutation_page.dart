@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
+import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/repository/model/full_order.dart';
-
 import 'package:provider/provider.dart';
 
 import '../../../common_ui/MultiImageUpLoad/MultiImageUpLoad.dart';
@@ -68,12 +67,13 @@ class _EvalutationPageState extends State<EvalutationPage>
         Future.delayed(Duration(milliseconds: 100));
       }
     }
+
     animateStarsSequentially();
   }
 
   @override
   Widget build(BuildContext context) {
-  _viewModel.order = ModalRoute.of(context)?.settings.arguments as FullOrder ;
+    _viewModel.order = ModalRoute.of(context)?.settings.arguments as FullOrder;
     return ChangeNotifierProvider<EvalutationViewModel>(
       create: (context) => _viewModel,
       child: Scaffold(
@@ -85,68 +85,68 @@ class _EvalutationPageState extends State<EvalutationPage>
             cursorColor: Colors.greenAccent,
           ),
           child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: Colors.grey[200],
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                  AppColors.backgroundColor4,
-                  Colors.white,
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
-                child: AppBar(
-                  backgroundColor: Colors.transparent,
-                  title: Text("评价"),
-                  centerTitle: true,
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-                    onPressed: () {
-                      RouteUtils.pop(context);
-                    },
-                  ),
-                  actions: [
-                    TextButton(
+            width: double.infinity,
+            height: double.infinity,
+            color: Colors.grey[200],
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [
+                    AppColors.backgroundColor4,
+                    Colors.white,
+                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+                  child: AppBar(
+                    backgroundColor: Colors.transparent,
+                    title: Text("评价"),
+                    centerTitle: true,
+                    leading: IconButton(
+                      icon: Icon(Icons.arrow_back_ios, color: Colors.black  ),
                       onPressed: () {
-
+                        RouteUtils.pop(context);
                       },
-                      child: Text(
-                        "提交",
-                        style: TextStyle(fontSize: 20, color: Colors.red),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                  child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _TakeOrdersWidget(), //接单
-                    Container(
-                      color: Colors.white,
-                      child: Divider(
-                        height: 1,
-                        thickness: 1,
-                        indent: 22,
-                        endIndent: 22,
-                      ),
                     ),
-                    Container(
-                      color: Colors.white,
-                      padding: EdgeInsets.only(top: 10, left: 20, right: 20),
-                      child: MultiImageUploadWidget(_ImageChanged),
-                    ), //图片上传
-                    _ServiceEvaluationWidgetState(), //内容评价
-                    //打分
-                    _HitStartsWidget(),
-                  ],
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          _viewModel.submitEvaluation();
+                        },
+                        child: Text(
+                          "提交",
+                          style: TextStyle(fontSize: 20, color: Colors.red),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              )),
-            ],
+                Expanded(
+                    child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _TakeOrdersWidget(), //接单
+                      Container(
+                        color: Colors.white,
+                        child: Divider(
+                          height: 1,
+                          thickness: 1,
+                          indent: 22,
+                          endIndent: 22,
+                        ),
+                      ),
+                      Container(
+                        color: Colors.white,
+                        padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+                        child: MultiImageUploadWidget(onImageSelected: _ImageChanged,addUrlPath: UrlPath.uploadEvaluationPicture,deleteUrlPath: UrlPath.deleteEvaluationPicture,queryParameters:{'keeperId': _viewModel.order?.keeperId},initialImageUrls: [],),
+                      ), //图片上传
+                      _ServiceEvaluationWidgetState(), //内容评价
+                      //打分
+                      _HitStartsWidget(),
+                    ],
+                  ),
+                )),
+              ],
+            ),
           ),
-        ),
         ),
       ),
     );
@@ -173,35 +173,36 @@ class _EvalutationPageState extends State<EvalutationPage>
           Material(
             color: Colors.white,
             child: InkWell(
-              onTap: ()async{
-                  final bool? isCancel = await showDialog<bool>(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    content: Text('确定拨打电话吗？'),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(false);
-                                          },
-                                          child: Text('取消')),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(true);
-                                          },
-                                          child: Text('确定'))
-                                    ],
-                                  ));
-                                            if (isCancel == true) {
-                            try {
-                              _viewModel.makePhoneCall(_viewModel.order!.userPhoneNumber!);
-                            } catch (e) {
-                              if (mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(e.toString())),
-                                );
-                              }
-                            }
-                          }
+              onTap: () async {
+                final bool? isCancel = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          content: Text('确定拨打电话吗？'),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                },
+                                child: Text('取消')),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                },
+                                child: Text('确定'))
+                          ],
+                        ));
+                if (isCancel == true) {
+                  try {
+                    _viewModel
+                        .makePhoneCall(_viewModel.order!.userPhoneNumber!);
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(e.toString())),
+                      );
+                    }
+                  }
+                }
               },
               child: Icon(Icons.phone, color: Colors.black, size: 30),
             ),
@@ -218,7 +219,10 @@ class _EvalutationPageState extends State<EvalutationPage>
           return Container(
             color: Colors.white,
             child: TextField(
-              style: TextStyle(fontSize: 14,color: Colors.black,fontWeight: FontWeight.w400),
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400),
               decoration: InputDecoration(
                 hintText: "✎ 呼起键盘，添加小标签，写更有帮助性的评价吧",
                 hintStyle: TextStyle(color: Colors.grey, fontSize: 14),

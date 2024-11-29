@@ -1,9 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:jiayuan/http/dio_instance.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../repository/model/full_order.dart';
+import '../../../utils/global.dart';
 
 class EvalutationViewModel with ChangeNotifier{
   // 评价图片
@@ -11,14 +13,46 @@ class EvalutationViewModel with ChangeNotifier{
   //评论内容
   String? evaluationContent ;
   //总评分
-  double? totalRating ;
+  int? totalRating ;
   //评价时间
   DateTime? evaluationTime ;
   //三个评分
   List<int> rating = [5,5,5];
+
   FullOrder? order ;
 
   bool isChanged = true;
+  Future<void> submitEvaluation() async {
+    try{
+      final Response response = await DioInstance.instance().post(
+        path: '/order/comment',
+        data: {
+          'keeperId': order?.keeperId,
+          'userId': order?.userId,
+          'commentPicUrl': imageUrls,
+          'comment': evaluationContent,
+          'star': (rating[0]+rating[1]+rating[2])/3.ceil(),
+        },
+        queryParameters: {
+          'commissionId': order?.commissionId,
+          'status': 7
+        },
+        options: Options(
+          headers: {
+            'Authorization': Global.token,
+          }
+        ),
+      );
+      if(response.data['code'] == 200){
+        print('评价成功');
+      }else{
+        print('评价失败 ${response.data['message']}');
+      }
+    }catch(e){
+      print('网络请求失败 ${e}');
+      print( e);
+    }
+  }
 
   updateRating(int index,int value){
     rating[index] = value;

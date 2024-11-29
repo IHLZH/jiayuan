@@ -1,10 +1,8 @@
 class UrlPath {
   static const String realBaseUrl = "http://192.168.3.32:9900/";
 
-  // static const String BaseUrl = "http://www.shinesuning.top:8080";
+   static const String BaseUrl = "http://www.shinesuning.top:8080";
   // static const String BaseUrl = "http://192.168.31.189:8080";
-  static const String BaseUrl = "http://10.7.89.191:8080";
-
   static const String wangBaseUrl = "http://10.7.89.154:8080";
 
   static const String testBaseUrl = "http://10.7.89.171:8080";
@@ -119,10 +117,19 @@ class UrlPath {
   static const String getKeeperDataByUserId = "/keeper/info";
   static const String BannerPath = "/release/carousel";
 
-  static const String keeperAvatarPath = "/keeper/upload/avatar";
-  //工作照
-  static const String keeperPicturePath = "/keeper/upload/picture";
-
+   static const String keeperAvatarPath = "/keeper/upload/avatar";
+   //上传证书
+  static const String uploadCertificate = "/keeper/certificate/upload";
+   //上传工作照
+   static const String uploadWorkPicture = "/keeper/upload/picture";
+   //删除工作照片
+  static const String deleteWorkPicture = "/keeper/picture/delete";
+  //上传评价图
+  static const String uploadEvaluationPicture = "/commentPic/upload";
+  //删除评价图
+  static const String deleteEvaluationPicture = "/commentPic/delete";
+   //更新家政员信息
+  static const String updateKeeperInfo = "/keeper/update";
   //获取单个用户信息
   static const String getSignalUserInfo = "/searchUserById";
 }
