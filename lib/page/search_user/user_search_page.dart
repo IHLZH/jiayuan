@@ -89,91 +89,94 @@ class _UserSearchPageState extends State<UserSearchPage> {
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: Consumer<UserSearchViewModel>(
-                builder: (context, vm, child) {
-                  return SmartRefresher(
-                    controller: vm.refreshController,
-                    enablePullUp: true, //允许上拉加载更多
-                    enablePullDown: true, //允许下拉刷新
-                    onLoading: () async {
-                      if (vm.hasMoreData) {
-                        await vm.loadMoreUsers();
-                      }
-                      vm.refreshController.loadComplete(); //完成加载更多
-                    },
-                    onRefresh: () async {
-                      await vm.refreshUsers();
-                      vm.refreshController.refreshCompleted();
-                    },
-                    header: ClassicHeader(
-                      idleText: "下拉刷新",
-                      refreshingText: "刷新中",
-                      completeText: "刷新完成",
-                      failedText: "刷新失败",
-                      idleIcon: Icon(Icons.arrow_downward),
-                    ),
-                    footer: ClassicFooter(
-                      idleText: "上拉加载更多",
-                      canLoadingText: "上拉加载更多",
-                      noDataText: "没有更多数据",
-                    ),
-                    child: ListView.builder(
-                      itemCount: vm.userList.length,
-                      itemBuilder: (context, index) {
-                        SearchUser searchUser = vm.userList[index];
-                        return Card(
-                          margin: EdgeInsets.zero,
-                          elevation: 0,
-                          child: Container(
-                            color: Colors.white,
-                            child: ListTile(
-                              contentPadding: EdgeInsets.only(
-                                  left: 16, right: 16, top: 8, bottom: 8),
-                              leading: CircleAvatar(
-                                backgroundImage: searchUser.userAvatar == '默认头像'
-                                    ? AssetImage("assets/images/ikun1.png")
-                                    : CachedNetworkImageProvider(
-                                    searchUser.userAvatar!),
-                                radius: 30,
-                              ),
-                              title: Text(
-                                searchUser.nickName,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(height: 4),
-                                  Text(
-                                    searchUser.userPhoneNumber,
-                                    style: TextStyle(color: Colors.grey[600]),
-                                  ),
-                                  Text(
-                                    searchUser.email ?? "无邮箱",
-                                    style: TextStyle(color: Colors.grey[600]),
-                                  ),
-                                  Divider(),
-                                ],
-                              ),
-                              onTap: () {
-                                // TODO: 点击用户的操作
-                                if (isProduction) print("点击了用户${index}");
-                                _jumpToUserInfoPage(searchUser);
-                              },
-                            ),
-                          ),
-                        );
+        body: Container(
+          color: AppColors.backgroundColor5,
+          child: Column(
+            children: [
+              Expanded(
+                child: Consumer<UserSearchViewModel>(
+                  builder: (context, vm, child) {
+                    return SmartRefresher(
+                      controller: vm.refreshController,
+                      enablePullUp: true, //允许上拉加载更多
+                      enablePullDown: true, //允许下拉刷新
+                      onLoading: () async {
+                        if (vm.hasMoreData) {
+                          await vm.loadMoreUsers();
+                        }
+                        vm.refreshController.loadComplete(); //完成加载更多
                       },
-                    ),
-                  );
-                },
+                      onRefresh: () async {
+                        await vm.refreshUsers();
+                        vm.refreshController.refreshCompleted();
+                      },
+                      header: ClassicHeader(
+                        idleText: "下拉刷新",
+                        refreshingText: "刷新中",
+                        completeText: "刷新完成",
+                        failedText: "刷新失败",
+                        idleIcon: Icon(Icons.arrow_downward),
+                      ),
+                      footer: ClassicFooter(
+                        idleText: "上拉加载更多",
+                        canLoadingText: "上拉加载更多",
+                        noDataText: "没有更多数据",
+                      ),
+                      child: ListView.builder(
+                        itemCount: vm.userList.length,
+                        itemBuilder: (context, index) {
+                          SearchUser searchUser = vm.userList[index];
+                          return Card(
+                            margin: EdgeInsets.zero,
+                            elevation: 0,
+                            child: Container(
+                              color: Colors.white,
+                              child: ListTile(
+                                contentPadding: EdgeInsets.only(
+                                    left: 16, right: 16, top: 8, bottom: 8),
+                                leading: CircleAvatar(
+                                  backgroundImage: searchUser.userAvatar == '默认头像'
+                                      ? AssetImage("assets/images/ikun1.png")
+                                      : CachedNetworkImageProvider(
+                                      searchUser.userAvatar!),
+                                  radius: 30,
+                                ),
+                                title: Text(
+                                  searchUser.nickName,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 18),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 4),
+                                    Text(
+                                      searchUser.userPhoneNumber,
+                                      style: TextStyle(color: Colors.grey[600]),
+                                    ),
+                                    Text(
+                                      searchUser.email ?? "无邮箱",
+                                      style: TextStyle(color: Colors.grey[600]),
+                                    ),
+                                    Divider(),
+                                  ],
+                                ),
+                                onTap: () {
+                                  // TODO: 点击用户的操作
+                                  if (isProduction) print("点击了用户${index}");
+                                  _jumpToUserInfoPage(searchUser);
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
