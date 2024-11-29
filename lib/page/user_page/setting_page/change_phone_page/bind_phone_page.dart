@@ -10,6 +10,7 @@ import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
 import '../../../../repository/model/user.dart';
+import '../../../../utils/sp_utils.dart';
 
 bool isProduction = Constants.IS_Production;
 
@@ -120,6 +121,15 @@ class _BindPhonePageState extends State<BindPhonePage> {
         if (response.data['code'] == 200) {
           showToast("绑定成功", duration: const Duration(seconds: 1));
           Global.userInfoNotifier.value=User.fromJson(response.data['data']);
+
+          // 保存token
+          final List<String> token =
+          response.headers["Authorization"] as List<String>;
+          Global.token = token.first;
+
+          //持久化
+          await SpUtils.saveString("token", Global.token!);
+
           Navigator.pop(context, true);
         } else {
           showToast(response.data['message'],
