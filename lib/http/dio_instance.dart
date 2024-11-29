@@ -110,6 +110,28 @@ class DioInstance {
             ));
   }
 
+  //delete请求方式
+  Future<Response> delete(
+      {required String path,
+      Object? data,
+      Map<String, dynamic>? queryParameters,
+      Options? options,
+      CancelToken? cancelToken}) async {
+    if (!_inited) {
+      throw Exception("you should call initDio() first!");
+    }
+    return await _dio.delete(path,
+        data: data,
+        queryParameters: queryParameters,
+        cancelToken: cancelToken,
+        options: options ??
+            Options(
+              method: HttpMethod.DELETE,
+              receiveTimeout: _defaultTimeout,
+              sendTimeout: _defaultTimeout,
+            ));
+  }
+
   BaseOptions buildBaseOptions({
     required String baseUrl,
     String? method = HttpMethod.GET,
