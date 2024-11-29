@@ -8,6 +8,7 @@ import 'package:jiayuan/utils/constants.dart';
 import 'package:jiayuan/utils/sp_utils.dart';
 import 'package:oktoast/oktoast.dart';
 
+import '../../common_ui/floating_support_ball/floating_support_ball.dart';
 import '../../http/dio_instance.dart';
 import '../../http/url_path.dart';
 import '../../im/im_chat_api.dart';
@@ -429,270 +430,274 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // 用户信息头部
-              SafeArea(
-                child: Container(
-                  padding: EdgeInsets.all(16.r),
-                  child: Row(
-                    children: [
-                      //头像
-                      Container(
-                        child: ValueListenableBuilder<User?>(
-                            valueListenable: Global.userInfoNotifier,
-                            builder: (context, userInfo, child) {
-                              if (isProduction)
-                                print(
-                                    "ValueListenableBuilder重建: ${userInfo?.userAvatar}"); // 调试信息
-                              if (userInfo == null) {
-                                return CircleAvatar(
-                                  radius: 40,
-                                  backgroundImage:
+      body: Stack(
+        children: [
+          SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  // 用户信息头部
+                  SafeArea(
+                    child: Container(
+                      padding: EdgeInsets.all(16.r),
+                      child: Row(
+                        children: [
+                          //头像
+                          Container(
+                            child: ValueListenableBuilder<User?>(
+                                valueListenable: Global.userInfoNotifier,
+                                builder: (context, userInfo, child) {
+                                  if (isProduction)
+                                    print(
+                                        "ValueListenableBuilder重建: ${userInfo?.userAvatar}"); // 调试信息
+                                  if (userInfo == null) {
+                                    return CircleAvatar(
+                                      radius: 40,
+                                      backgroundImage:
                                       AssetImage('assets/images/ikun1.png'),
-                                );
-                              }
+                                    );
+                                  }
 
-                              return CircleAvatar(
-                                  radius: 40,
-                                  backgroundImage: userInfo?.userAvatar !=
-                                              null &&
+                                  return CircleAvatar(
+                                      radius: 40,
+                                      backgroundImage: userInfo?.userAvatar !=
+                                          null &&
                                           userInfo.userAvatar != "默认头像"
-                                      ? CachedNetworkImageProvider(
+                                          ? CachedNetworkImageProvider(
                                           userInfo.userAvatar!)
-                                      : AssetImage('assets/images/ikun1.png'));
-                            }),
-                      ),
-                      SizedBox(width: 16),
+                                          : AssetImage('assets/images/ikun1.png'));
+                                }),
+                          ),
+                          SizedBox(width: 16),
 
-                      // 修改昵称显示部分
-                      Container(
-                        width: 150.w,
-                        child: SafeArea(
-                          child: ValueListenableBuilder<User?>(
-                            valueListenable: Global.userInfoNotifier,
-                            builder: (context, userInfo, child) {
-                              return ShaderMask(
-                                shaderCallback: (Rect bounds) {
-                                  return LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Theme.of(context).primaryColor,
-                                      AppColors.appColor,
-                                      // AppColors.endDeepColor,
-                                    ],
-                                  ).createShader(bounds);
+                          // 修改昵称显示部分
+                          Container(
+                            width: 150.w,
+                            child: SafeArea(
+                              child: ValueListenableBuilder<User?>(
+                                valueListenable: Global.userInfoNotifier,
+                                builder: (context, userInfo, child) {
+                                  return ShaderMask(
+                                    shaderCallback: (Rect bounds) {
+                                      return LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          Theme.of(context).primaryColor,
+                                          AppColors.appColor,
+                                          // AppColors.endDeepColor,
+                                        ],
+                                      ).createShader(bounds);
+                                    },
+                                    child: Text(
+                                      userInfo?.nickName ?? '未命名',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
                                 },
-                                child: Text(
-                                  userInfo?.nickName ?? '未命名',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              );
-                            },
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
 
-                      Expanded(child: SizedBox()),
-                      //个人信息修改
-                      Material(
-                        color: Colors.transparent, // 确保背景透明
-                        child: ClipOval(
-                          child: InkWell(
-                            onTap: () => _jumpToProfileEditPage(),
-                            // 水波纹颜色
-                            splashColor: Colors.grey[300],
-                            // 高亮颜色
-                            highlightColor: Colors.grey[300],
-                            // 设置水波纹为圆形
-                            customBorder: CircleBorder(),
-                            child: Icon(Icons.chevron_right_outlined, size: 40),
+                          Expanded(child: SizedBox()),
+                          //个人信息修改
+                          Material(
+                            color: Colors.transparent, // 确保背景透明
+                            child: ClipOval(
+                              child: InkWell(
+                                onTap: () => _jumpToProfileEditPage(),
+                                // 水波纹颜色
+                                splashColor: Colors.grey[300],
+                                // 高亮颜色
+                                highlightColor: Colors.grey[300],
+                                // 设置水波纹为圆形
+                                customBorder: CircleBorder(),
+                                child: Icon(Icons.chevron_right_outlined, size: 40),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+
+                  SizedBox(height: 16.h),
+
+                  //水平图标2.0
+                  Container(
+                    height: 150,
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 0,
+                          blurRadius: 2,
+                          offset: Offset(0, 1),
+                        ),
+                      ],
+                      border: Border.all(color: Colors.grey, width: 1.w),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildSectionTitle('服务订单'),
+                        Container(
+                          margin: EdgeInsets.only(left: 10.w, right: 10.w),
+                          child: Divider(),
+                        ),
+                        Expanded(child: SizedBox()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              _buildManagementOption(Icons.pending_outlined, '待接取'),
+                              _buildManagementOption(
+                                  Icons.check_box_outlined, '待确认'),
+                              _buildManagementOption(
+                                  Icons.monetization_on_outlined, '待支付'),
+                              _buildManagementOption(
+                                  Icons.done_all_outlined, '已完成'),
+                            ],
+                          ),
+                        ),
+                        Expanded(child: SizedBox()),
+                      ],
+                    ),
+                  ),
+
+                  //水平图标1.0
+                  // Container(
+                  //   height: 150.h,
+                  //   margin: EdgeInsets.symmetric(horizontal: 10),
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.white,
+                  //     borderRadius: BorderRadius.circular(10.0),
+                  //     boxShadow: [
+                  //       BoxShadow(
+                  //         color: Colors.grey.withOpacity(0.5),
+                  //         spreadRadius: 0,
+                  //         blurRadius: 2,
+                  //         offset: Offset(0, 1),
+                  //       ),
+                  //     ],
+                  //     border: Border.all(color: Colors.grey, width: 1.0),
+                  //   ),
+                  //   child: Column(
+                  //     children: [
+                  //       _buildSectionTitle('服务订单'),
+                  //       Container(
+                  //         margin: EdgeInsets.only(left: 10.w, right: 10.w),
+                  //         child: Divider(),
+                  //       ),
+                  //       Expanded(child: SizedBox()),
+                  //       Padding(
+                  //         padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                  //         child: Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //           children: [
+                  //             // _buildOrderStatus('待接取'),
+                  //             // _buildOrderStatus('服务中'),
+                  //             // _buildOrderStatus('待支付'),
+                  //             // _buildOrderStatus('已完成'),
+                  //
+                  //
+                  //           ],
+                  //         ),
+                  //       ),
+                  //       Expanded(child: SizedBox()),
+                  //     ],
+                  //   ),
+                  // ),
+
+                  SizedBox(height: 16.h),
+
+                  Container(
+                    height: 150,
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 0,
+                          blurRadius: 2,
+                          offset: Offset(0, 1),
+                        ),
+                      ],
+                      border: Border.all(color: Colors.grey, width: 1.w),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildSectionTitle('家政管理'),
+                        Container(
+                          margin: EdgeInsets.only(left: 10.w, right: 10.w),
+                          child: Divider(),
+                        ),
+                        Expanded(child: SizedBox()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              _buildManagementOption(Icons.person_add, '成为家政员'),
+                              _buildManagementOption(Icons.assignment, '已接订单'),
+                              _buildManagementOption(
+                                  Icons.format_align_center_outlined, '服务中心'),
+                              _buildManagementOption(Icons.verified_user, '证书认证'),
+                            ],
+                          ),
+                        ),
+                        Expanded(child: SizedBox()),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 30.h),
+
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 0,
+                          blurRadius: 2,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                      border: Border.all(color: Colors.grey, width: 1.w),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildOption(Icons.favorite_border, '我的收藏'),
+                        _line(),
+                        _buildOption(Icons.history, '浏览历史'),
+                        _line(),
+                        _buildOption(Icons.help_outline, '常见问题'),
+                        _line(),
+                        _buildOption(Icons.settings, '设置'),
+                        _line(),
+                        _buildOption(Icons.logout, '退出登录', onCheck: logout),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-
-              SizedBox(height: 16.h),
-
-              //水平图标2.0
-              Container(
-                height: 150,
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0,
-                      blurRadius: 2,
-                      offset: Offset(0, 1),
-                    ),
-                  ],
-                  border: Border.all(color: Colors.grey, width: 1.w),
-                ),
-                child: Column(
-                  children: [
-                    _buildSectionTitle('服务订单'),
-                    Container(
-                      margin: EdgeInsets.only(left: 10.w, right: 10.w),
-                      child: Divider(),
-                    ),
-                    Expanded(child: SizedBox()),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildManagementOption(Icons.pending_outlined, '待接取'),
-                          _buildManagementOption(
-                              Icons.check_box_outlined, '待确认'),
-                          _buildManagementOption(
-                              Icons.monetization_on_outlined, '待支付'),
-                          _buildManagementOption(
-                              Icons.done_all_outlined, '已完成'),
-                        ],
-                      ),
-                    ),
-                    Expanded(child: SizedBox()),
-                  ],
-                ),
-              ),
-
-              //水平图标1.0
-              // Container(
-              //   height: 150.h,
-              //   margin: EdgeInsets.symmetric(horizontal: 10),
-              //   decoration: BoxDecoration(
-              //     color: Colors.white,
-              //     borderRadius: BorderRadius.circular(10.0),
-              //     boxShadow: [
-              //       BoxShadow(
-              //         color: Colors.grey.withOpacity(0.5),
-              //         spreadRadius: 0,
-              //         blurRadius: 2,
-              //         offset: Offset(0, 1),
-              //       ),
-              //     ],
-              //     border: Border.all(color: Colors.grey, width: 1.0),
-              //   ),
-              //   child: Column(
-              //     children: [
-              //       _buildSectionTitle('服务订单'),
-              //       Container(
-              //         margin: EdgeInsets.only(left: 10.w, right: 10.w),
-              //         child: Divider(),
-              //       ),
-              //       Expanded(child: SizedBox()),
-              //       Padding(
-              //         padding: const EdgeInsets.symmetric(horizontal: 0.0),
-              //         child: Row(
-              //           mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //           children: [
-              //             // _buildOrderStatus('待接取'),
-              //             // _buildOrderStatus('服务中'),
-              //             // _buildOrderStatus('待支付'),
-              //             // _buildOrderStatus('已完成'),
-              //
-              //
-              //           ],
-              //         ),
-              //       ),
-              //       Expanded(child: SizedBox()),
-              //     ],
-              //   ),
-              // ),
-
-              SizedBox(height: 16.h),
-
-              Container(
-                height: 150,
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0,
-                      blurRadius: 2,
-                      offset: Offset(0, 1),
-                    ),
-                  ],
-                  border: Border.all(color: Colors.grey, width: 1.w),
-                ),
-                child: Column(
-                  children: [
-                    _buildSectionTitle('家政管理'),
-                    Container(
-                      margin: EdgeInsets.only(left: 10.w, right: 10.w),
-                      child: Divider(),
-                    ),
-                    Expanded(child: SizedBox()),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildManagementOption(Icons.person_add, '成为家政员'),
-                          _buildManagementOption(Icons.assignment, '已接订单'),
-                          _buildManagementOption(
-                              Icons.format_align_center_outlined, '服务中心'),
-                          _buildManagementOption(Icons.verified_user, '证书认证'),
-                        ],
-                      ),
-                    ),
-                    Expanded(child: SizedBox()),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 30.h),
-
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 0,
-                      blurRadius: 2,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
-                  border: Border.all(color: Colors.grey, width: 1.w),
-                ),
-                child: Column(
-                  children: [
-                    _buildOption(Icons.favorite_border, '我的收藏'),
-                    _line(),
-                    _buildOption(Icons.history, '浏览历史'),
-                    _line(),
-                    _buildOption(Icons.help_outline, '常见问题'),
-                    _line(),
-                    _buildOption(Icons.settings, '设置'),
-                    _line(),
-                    _buildOption(Icons.logout, '退出登录', onCheck: logout),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
