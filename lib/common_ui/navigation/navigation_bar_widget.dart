@@ -76,34 +76,41 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-        //tab页面
-      body: IndexedStack(index: TabPageViewModel.currentIndex, children: widget.tabItems),
-        //底部导航栏
-      bottomNavigationBar: BottomNavigationBar(
-            iconSize: 22.r,
-            selectedFontSize: 13.sp,
-            unselectedFontSize: 10.sp,
-            //已选择与未选中的字体颜色
-            unselectedItemColor: AppColors.blackColor333,
-            selectedItemColor: AppColors.appColor,
-            backgroundColor: Colors.white,
-            type: widget.bottomNavigationBarType ?? BottomNavigationBarType.fixed,
-            currentIndex: TabPageViewModel.currentIndex,
-            onTap: (index) {
-              //重复事件不处理
-              if (TabPageViewModel.currentIndex == index) {
-                return;
-              }
-              //点击切换page事件
-              widget.onItemChange?.call(index);
-              TabPageViewModel.currentIndex = index;
-              setState(() {});
-            },
-            items: _barItemList()
+    return Theme(
+      data: Theme.of(context).copyWith(
+        splashFactory: NoSplash.splashFactory, // 取消水波纹效果
+      ),
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          //tab页面
+          body: IndexedStack(index: TabPageViewModel.currentIndex, children: widget.tabItems),
+          //底部导航栏
+          bottomNavigationBar: BottomNavigationBar(
+              iconSize: 22.r,
+              selectedFontSize: 13.sp,
+              unselectedFontSize: 10.sp,
+              //已选择与未选中的字体颜色
+              unselectedItemColor: AppColors.blackColor333,
+              selectedItemColor: AppColors.appColor,
+              backgroundColor: Colors.white,
+              //fixedColor: AppColors.appColor,
+              type: widget.bottomNavigationBarType ?? BottomNavigationBarType.fixed,
+              currentIndex: TabPageViewModel.currentIndex,
+              onTap: (index) {
+                //重复事件不处理
+                if (TabPageViewModel.currentIndex == index) {
+                  return;
+                }
+                //点击切换page事件
+                widget.onItemChange?.call(index);
+                TabPageViewModel.currentIndex = index;
+                setState(() {});
+              },
+              items: _barItemList()
+          ),
         ),
     );
+
   }
 
   ///底部导航栏集合
