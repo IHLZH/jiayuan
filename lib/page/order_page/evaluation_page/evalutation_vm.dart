@@ -43,6 +43,7 @@ class EvalutationViewModel with ChangeNotifier{
           }
         ),
       );
+      print('评价提交返回数据 ${response.data}');
       if(response.data['code'] == 200){
         print('评价成功');
       }else{

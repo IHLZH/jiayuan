@@ -10,7 +10,6 @@ import 'package:jiayuan/utils/global.dart';
 
 class PersonalKeeperVm with ChangeNotifier {
   RegExp reg_tel = RegExp(r'^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$');
-
   String? avatarUrl = Global.keeperInfo?.avatar ?? ""; //服务器头像
   String? phoneNumber = Global.keeperInfo?.contact ?? ""; //手机号
   String? city = Global.keeperInfo?.city ?? ""; // 工作城市

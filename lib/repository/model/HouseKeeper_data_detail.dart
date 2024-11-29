@@ -65,17 +65,17 @@ class HousekeeperDataDetail {
 
    HousekeeperDataDetail.fromJson(data) {
      keeperId = data['keeperId'];
-     realName = data['realName'];
-     age = data['age'];
-     avatar = data['avatar'];
+     realName = data['realName'] ?? "";
+     age = data['age'] ?? "";
+     avatar = data['avatar'] ?? "";
      workExperience = data['workExperience'] ?? 1;
      highlight = data['highLight'] ?? "";
      rating = data['averageRating'] as double ?? 4.5;
-     city = data['city'];
+     city = data['city'] ?? "";
      completedOrders = data['completeSingularNumber']?? 10;
      tags = data['tags']?.cast<String>() ?? [];
      keeperImages = data['photoUrl']?.cast<String>() ?? [];
-     introduction = data['introduction']?? [];
+     introduction = data['introduction']?? "";
      certificates = data['certificatePicUrl']?.cast<String>() ?? [];
      contact = data['phoneNumber'] ?? "";
       //evaluations = data['userCommentResults'].map<Evaluation>((item) => Evaluation.fromJson(item)).toList();
