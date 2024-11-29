@@ -4,6 +4,7 @@ import 'package:jiayuan/repository/api/commission_api.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/utils/common_data.dart';
 import 'package:jiayuan/utils/global.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
 class OrderPageViewModel with ChangeNotifier{
@@ -19,6 +20,11 @@ class OrderPageViewModel with ChangeNotifier{
 
   int? currentIndex;
 
+  RefreshController unServedRefreshController = RefreshController();
+  RefreshController inServiceRefreshController = RefreshController();
+  RefreshController unPayRefreshController = RefreshController();
+  RefreshController downRefreshController = RefreshController();
+
   List<CommissionData1> getStatusOrder(int id){
     switch(id){
       case 2:
@@ -33,10 +39,42 @@ class OrderPageViewModel with ChangeNotifier{
     }
   }
 
+  void onLoading(){
+
+  }
+
+  void onRefresh(){
+
+  }
+
+  void onRefreshUnServed(){
+
+  }
+
+  void onRefreshInService(){
+
+  }
+
+  void onRefreshUnPay(){
+
+  }
+
+  void onRefreshDownRefresh(){
+
+  }
+
   //已完成订单分页请求页码
   int downOrderCurrentpage = 1;
 
-  Future<void> getServedOrders() async {
+  Future<void> initOrders() async {
+    await getUnServedOrders();
+    await getInServiceOrders();
+    await getUnPayOrders();
+    await getDownOrders();
+    notifyListeners();
+  }
+
+  Future<void> getUnServedOrders() async {
     unServed = await CommissionApi.instance.getOrderByStatus(
         {
           "keeperId" : Global.keeperInfo?.keeperId,
@@ -45,14 +83,20 @@ class OrderPageViewModel with ChangeNotifier{
           "pageSize" : 100
         }
     );
+  }
+
+  Future<void> getInServiceOrders() async {
     inService = await CommissionApi.instance.getOrderByStatus(
-      {
-        "keeperId" : Global.keeperInfo?.keeperId,
-        "status" : 3,
-        "page" : 1,
-        "pageSize" : 100
-      }
+        {
+          "keeperId" : Global.keeperInfo?.keeperId,
+          "status" : 3,
+          "page" : 1,
+          "pageSize" : 100
+        }
     );
+  }
+
+  Future<void> getUnPayOrders() async {
     unPay = await CommissionApi.instance.getOrderByStatus(
         {
           "keeperId" : Global.keeperInfo?.keeperId,
@@ -61,6 +105,9 @@ class OrderPageViewModel with ChangeNotifier{
           "pageSize" : 100
         }
     );
+  }
+
+  Future<void> getDownOrders() async {
     down = await CommissionApi.instance.getOrderByStatus(
         {
           "keeperId" : Global.keeperInfo?.keeperId,
@@ -69,7 +116,6 @@ class OrderPageViewModel with ChangeNotifier{
           "pageSize" : 10
         }
     );
-    notifyListeners();
   }
 
   Future<int> changeCommissionStatus(CommissionData1 commissionData, int newStatu) async {

@@ -75,7 +75,7 @@ class HousekeeperDataDetail {
      completedOrders = data['completeSingularNumber']?? 10;
      tags = data['tags']?.cast<String>() ?? [];
      keeperImages = data['photoUrl']?.cast<String>() ?? [];
-     introduction = data['introduction']?? [];
+     introduction = data['introduction']?? "";
      certificates = data['certificatePicUrl']?.cast<String>() ?? [];
      contact = data['phoneNumber'] ?? "";
       //evaluations = data['userCommentResults'].map<Evaluation>((item) => Evaluation.fromJson(item)).toList();
