@@ -103,48 +103,6 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
             },
             items: _barItemList()
         ),
-
-      // 修改浮动按钮为圆形
-      floatingActionButton: Container(
-        width: 55.r,  // 设置固定宽度
-        height: 55.r, // 设置固定高度
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.appColor,
-              AppColors.appColor.withOpacity(0.9),
-            ],
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 2,
-              blurRadius: 6,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        child: FloatingActionButton(
-          backgroundColor: Colors.transparent,
-          elevation: 0, // 移除默认阴影
-          onPressed: () {
-            if (TabPageViewModel.currentIndex == 2) return;
-            TabPageViewModel.currentIndex = 2;
-            setState(() {});
-          },
-          child: Image.asset(
-            TabPageViewModel.currentIndex == 2
-                ? widget.tabActiveIcons[2]
-                : widget.tabIcons[2],
-            width: 30.r,
-            height: 30.r,
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
