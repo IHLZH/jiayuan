@@ -77,11 +77,11 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
         //tab页面
-        body: IndexedStack(index: TabPageViewModel.currentIndex, children: widget.tabItems),
+      body: IndexedStack(index: TabPageViewModel.currentIndex, children: widget.tabItems),
         //底部导航栏
-        bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
             iconSize: 22.r,
             selectedFontSize: 13.sp,
             unselectedFontSize: 10.sp,
@@ -102,7 +102,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
               setState(() {});
             },
             items: _barItemList()
-        )
+        ),
     );
   }
 

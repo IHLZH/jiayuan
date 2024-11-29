@@ -7,6 +7,7 @@ import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiayuan/common_ui/floating_support_ball/floating_support_ball.dart';
 import 'package:jiayuan/common_ui/navigation/navigation_bar_widget.dart';
 import 'package:jiayuan/page/chat_page/conversation_page.dart';
 import 'package:jiayuan/page/commission_page/commission_page.dart';
@@ -117,12 +118,17 @@ class _TabPageState extends State<TabPage>{
         child: Scaffold(
           resizeToAvoidBottomInset: false, // 禁止布局被键盘顶掉
           appBar: null,
-          body: NavigationBarWidget(
-            tabItems: _tabItems,
-            tabLabels: _tabLabels,
-            tabIcons: _tabIcons,
-            tabActiveIcons: _tabActiveIcons,
-            bottomBarIconHeight: 25.h,
+          body: Stack(
+            children: [
+              NavigationBarWidget(
+                tabItems: _tabItems,
+                tabLabels: _tabLabels,
+                tabIcons: _tabIcons,
+                tabActiveIcons: _tabActiveIcons,
+                bottomBarIconHeight: 25.h,
+              ),
+              FloatingSupportBall(),
+            ],
           ),
         ),
         onWillPop: _onWillPop

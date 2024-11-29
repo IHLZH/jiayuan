@@ -9,6 +9,7 @@ import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../../common_ui/buttons/red_button.dart';
 import '../../../common_ui/dialog/dialog_factory.dart';
@@ -39,7 +40,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
   }
 
   Future<void> _initOrders() async {
-    await _orderViewModel.getServedOrders();
+    await _orderViewModel.initOrders();
     setState(() {
     });
   }
@@ -56,7 +57,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
         create: (context){
           return _orderViewModel;
         },
-        child: Consumer(
+        child: Consumer<OrderPageViewModel>(
             builder: (context, vm, child){
               return Scaffold(
                 appBar: PreferredSize(
@@ -130,13 +131,13 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                       ),
                       Expanded(
                           child: TabBarView(
-                            controller: _tabController,
-                            children: [
-                              _orderList(2),
-                              _orderList(3),
-                              _orderList(4),
-                              _orderList(5),
-                            ]
+                              controller: _tabController,
+                              children: [
+                                _orderList(2),
+                                _orderList(3),
+                                _orderList(4),
+                                _orderList(5),
+                              ]
                           )
                       )
                     ],
@@ -150,12 +151,80 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
 
   Widget _orderList(int id){
     List<CommissionData1> orders = _orderViewModel.getStatusOrder(id);
-    return ListView.builder(
-      itemCount: orders.length,
-        itemBuilder: (context, index){
-          return _orderCard(orders[index]);
-        }
-    );
+    switch(id){
+      case 2:
+        return SmartRefresher(
+          controller: _orderViewModel.unServedRefreshController,
+          enablePullDown: true,
+          header: MaterialClassicHeader(
+            color: AppColors.appColor,
+            backgroundColor: AppColors.endColor,
+          ),
+          onRefresh: _orderViewModel.onRefreshUnServed,
+          child: ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (context, index){
+                return _orderCard(orders[index]);
+              }
+          ),
+        );
+      case 3:
+        return SmartRefresher(
+          controller: _orderViewModel.inServiceRefreshController,
+          enablePullDown: true,
+          header: MaterialClassicHeader(
+            color: AppColors.appColor,
+            backgroundColor: AppColors.endColor,
+          ),
+          onRefresh: _orderViewModel.onRefreshInService,
+          child: ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (context, index){
+                return _orderCard(orders[index]);
+              }
+          ),
+        );
+      case 4:
+        return SmartRefresher(
+          controller: _orderViewModel.unPayRefreshController,
+          enablePullDown: true,
+          header: MaterialClassicHeader(
+            color: AppColors.appColor,
+            backgroundColor: AppColors.endColor,
+          ),
+          onRefresh: _orderViewModel.onRefreshUnPay,
+          child: ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (context, index){
+                return _orderCard(orders[index]);
+              }
+          ),
+        );
+      case 5:
+        return SmartRefresher(
+          controller: _orderViewModel.downRefreshController,
+          enablePullUp: true,
+          enablePullDown: true,
+          header: MaterialClassicHeader(
+            color: AppColors.appColor,
+            backgroundColor: AppColors.endColor,
+          ),
+          footer: ClassicFooter(
+            canLoadingText: "松开加载更多~",
+            loadingText: "努力加载中~",
+            noDataText: "已经到底了~",
+          ),
+          onLoading: _orderViewModel.onLoadingDown,
+          onRefresh: _orderViewModel.onRefreshDown,
+          child: ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (context, index){
+                return _orderCard(orders[index]);
+              }
+          ),
+        );
+    }
+    throw Exception("=============== 请求状态订单错误 ==================");
   }
 
   Widget _orderCard(CommissionData1 commission){
@@ -490,7 +559,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                           RouteUtils.pop(context);
                           await _orderViewModel.changeCommissionStatus(commission, 4);
                           showToast("操作成功，委托已完成！");
-                          await _orderViewModel.getServedOrders();
+                          await _orderViewModel.initOrders();
                           setState(() {
                           });
                         },
@@ -578,7 +647,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                           RouteUtils.pop(context);
                           await _orderViewModel.changeCommissionStatus(commission, 0);
                           showToast("操作成功，委托已取消");
-                          await _orderViewModel.getServedOrders();
+                          await _orderViewModel.initOrders();
                           setState(() {
                           });
                         },
@@ -660,7 +729,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                           RouteUtils.pop(context);
                           await _orderViewModel.changeCommissionStatus(commission, 3);
                           showToast("操作成功，委托已开始");
-                          await _orderViewModel.getServedOrders();
+                          await _orderViewModel.initOrders();
                           setState(() {
                           });
                         },

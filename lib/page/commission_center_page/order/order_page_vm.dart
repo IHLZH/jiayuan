@@ -4,6 +4,7 @@ import 'package:jiayuan/repository/api/commission_api.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/utils/common_data.dart';
 import 'package:jiayuan/utils/global.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
 class OrderPageViewModel with ChangeNotifier{
@@ -19,6 +20,11 @@ class OrderPageViewModel with ChangeNotifier{
 
   int? currentIndex;
 
+  RefreshController unServedRefreshController = RefreshController();
+  RefreshController inServiceRefreshController = RefreshController();
+  RefreshController unPayRefreshController = RefreshController();
+  RefreshController downRefreshController = RefreshController();
+
   List<CommissionData1> getStatusOrder(int id){
     switch(id){
       case 2:
@@ -33,10 +39,73 @@ class OrderPageViewModel with ChangeNotifier{
     }
   }
 
+  Future<void> onRefreshUnServed() async {
+    await getUnServedOrders();
+    unServedRefreshController.refreshCompleted();
+    notifyListeners();
+  }
+
+  Future<void> onRefreshInService() async {
+    await getInServiceOrders();
+    inServiceRefreshController.refreshCompleted();
+    notifyListeners();
+  }
+
+  Future<void> onRefreshUnPay() async {
+    await getUnPayOrders();
+    unPayRefreshController.refreshCompleted();
+    notifyListeners();
+  }
+
+  Future<void> onRefreshDown() async {
+    await getDownOrders();
+    downHasMoreData = true;
+    downRefreshController.resetNoData();
+    downRefreshController.refreshCompleted();
+    notifyListeners();
+  }
+
+  Future<void> onLoadingDown() async {
+    if(downHasMoreData){
+      downOrderCurrentpage++;
+      List<CommissionData1> downData = await CommissionApi.instance.getOrderByStatus(
+          {
+            "keeperId" : Global.keeperInfo?.keeperId,
+            "status" : 5,
+            "page" : downOrderCurrentpage,
+            "pageSize" : 10
+          }
+      );
+      if(downData.length < 10){
+        down.addAll(downData);
+        downHasMoreData = false;
+        downRefreshController.loadNoData();
+        notifyListeners();
+      }else{
+        down.addAll(downData);
+        downRefreshController.loadComplete();
+        notifyListeners();
+      }
+    }else{
+      downRefreshController.loadNoData();
+      notifyListeners();
+    }
+  }
+
   //已完成订单分页请求页码
   int downOrderCurrentpage = 1;
 
-  Future<void> getServedOrders() async {
+  bool downHasMoreData = true;
+
+  Future<void> initOrders() async {
+    await getUnServedOrders();
+    await getInServiceOrders();
+    await getUnPayOrders();
+    await getDownOrders();
+    notifyListeners();
+  }
+
+  Future<void> getUnServedOrders() async {
     unServed = await CommissionApi.instance.getOrderByStatus(
         {
           "keeperId" : Global.keeperInfo?.keeperId,
@@ -45,14 +114,20 @@ class OrderPageViewModel with ChangeNotifier{
           "pageSize" : 100
         }
     );
+  }
+
+  Future<void> getInServiceOrders() async {
     inService = await CommissionApi.instance.getOrderByStatus(
-      {
-        "keeperId" : Global.keeperInfo?.keeperId,
-        "status" : 3,
-        "page" : 1,
-        "pageSize" : 100
-      }
+        {
+          "keeperId" : Global.keeperInfo?.keeperId,
+          "status" : 3,
+          "page" : 1,
+          "pageSize" : 100
+        }
     );
+  }
+
+  Future<void> getUnPayOrders() async {
     unPay = await CommissionApi.instance.getOrderByStatus(
         {
           "keeperId" : Global.keeperInfo?.keeperId,
@@ -61,6 +136,9 @@ class OrderPageViewModel with ChangeNotifier{
           "pageSize" : 100
         }
     );
+  }
+
+  Future<void> getDownOrders() async {
     down = await CommissionApi.instance.getOrderByStatus(
         {
           "keeperId" : Global.keeperInfo?.keeperId,
@@ -69,7 +147,6 @@ class OrderPageViewModel with ChangeNotifier{
           "pageSize" : 10
         }
     );
-    notifyListeners();
   }
 
   Future<int> changeCommissionStatus(CommissionData1 commissionData, int newStatu) async {
@@ -89,6 +166,10 @@ class OrderPageViewModel with ChangeNotifier{
 
   String getCountyAddress(CommissionData1 commission){
     return commission.county + " " + commission.commissionAddress + "河北师范大学诚朴园三号楼204";
+  }
+
+  void clear(){
+
   }
 
 }

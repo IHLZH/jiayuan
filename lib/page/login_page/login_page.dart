@@ -256,7 +256,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Padding(
               padding: EdgeInsets.only(top: 100.h),
               child: SingleChildScrollView(
-                // physics: NeverScrollableScrollPhysics(),
+                physics: NeverScrollableScrollPhysics(),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
