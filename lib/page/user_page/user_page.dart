@@ -74,6 +74,7 @@ class _UserPageState extends State<UserPage> {
               Global.isLogin = false;
               Global.password = null;
               Global.userInfoNotifier.value = null;
+              Global.keeperInfoNotifier.value = null;
 
               //IM注销登录
               await ImChatApi.getInstance().logout();

@@ -77,11 +77,11 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
         //tab页面
-        body: IndexedStack(index: TabPageViewModel.currentIndex, children: widget.tabItems),
+      body: IndexedStack(index: TabPageViewModel.currentIndex, children: widget.tabItems),
         //底部导航栏
-        bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
             iconSize: 22.r,
             selectedFontSize: 13.sp,
             unselectedFontSize: 10.sp,
@@ -102,7 +102,49 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
               setState(() {});
             },
             items: _barItemList()
-        )
+        ),
+
+      // 修改浮动按钮为圆形
+      floatingActionButton: Container(
+        width: 55.r,  // 设置固定宽度
+        height: 55.r, // 设置固定高度
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColors.appColor,
+              AppColors.appColor.withOpacity(0.9),
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 6,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        child: FloatingActionButton(
+          backgroundColor: Colors.transparent,
+          elevation: 0, // 移除默认阴影
+          onPressed: () {
+            if (TabPageViewModel.currentIndex == 2) return;
+            TabPageViewModel.currentIndex = 2;
+            setState(() {});
+          },
+          child: Image.asset(
+            TabPageViewModel.currentIndex == 2
+                ? widget.tabActiveIcons[2]
+                : widget.tabIcons[2],
+            width: 30.r,
+            height: 30.r,
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
