@@ -68,18 +68,35 @@ class HousekeeperDataDetail {
      realName = data['realName'];
      age = data['age'];
      avatar = data['avatar'];
-     workExperience = data['workExperience'];
-     highlight = data['highlight'];
-     rating = data['averageRating'] as double;
+     workExperience = data['workExperience'] ?? 1;
+     highlight = data['highLight'] ?? "";
+     rating = data['averageRating'] as double ?? 4.5;
      city = data['city'];
-     completedOrders = data['completeSingularNumber'];
+     completedOrders = data['completeSingularNumber']?? 10;
      tags = data['tags']?.cast<String>() ?? [];
      keeperImages = data['photoUrl']?.cast<String>() ?? [];
-     introduction = data['introduction'];
+     introduction = data['introduction']?? [];
      certificates = data['certificatePicUrl']?.cast<String>() ?? [];
-     contact = data['phoneNumber'];
+     contact = data['phoneNumber'] ?? "";
       //evaluations = data['userCommentResults'].map<Evaluation>((item) => Evaluation.fromJson(item)).toList();
    }
+
+   Map<String, dynamic> toJson() => {
+     "keeperId":keeperId,
+     "realName":realName,
+     "age":age,
+     "avatar":avatar,
+     "workExperience":workExperience,
+     "highLight":highlight,
+     "averageRating":rating,
+     "city":city,
+     "completeSingularNumber":completedOrders,
+     "tags":tags,
+     "photoUrl":keeperImages,
+     "introduction":introduction,
+     "certificatePicUrl":certificates,
+     "phoneNumber":contact,
+   };
 }
 
 class Evaluation{

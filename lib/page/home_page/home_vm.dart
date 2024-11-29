@@ -19,7 +19,7 @@ class HomeViewModel with ChangeNotifier {
   Timer? _timer1;
 
   // 轮播图数据
-  List<String?>? bannerData = [];
+  List<String?> bannerData = [];
 
   Map<String, dynamic> weatherData = {};
 

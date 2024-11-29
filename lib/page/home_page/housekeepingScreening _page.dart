@@ -26,11 +26,7 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
         _houseKeepingScreeningVM.loadMoreHouseKeepers(0);
-      }
-    });
   }
 
   @override
@@ -110,6 +106,7 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
               Expanded(
                   child: Consumer<HouseKeepingScreeningVM>(
                       builder: (context, vm, child) {
+                        print("刷新数据sssss: index = ${vm.currentIndex}");
                         return PageView.builder(
                             controller: _pageController,
                             scrollDirection: Axis.vertical,
@@ -121,11 +118,6 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
                             itemBuilder: (context, index) {
                               List housekeepers = _houseKeepingScreeningVM
                                   .housekeepersByType[index]! ;
-                              if (housekeepers.isEmpty) {
-                                //返回一个圆形的进度条指示器
-                                return Center(
-                                    child: CircularProgressIndicator());
-                              }
                               return Container(
                                 color: Colors.white,
                                 child: SmartRefresher(
@@ -133,7 +125,11 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
                                   enablePullDown: true,
                                   enablePullUp: true,
                                   header: MaterialClassicHeader(),
-                                  footer:ClassicFooter(),
+                                  footer:ClassicFooter(
+                                    canLoadingText: "松开加载更多~",
+                                    loadingText: "努力加载中~",
+                                    noDataText: "已经到底了~",
+                                  ),
                                   onRefresh: () async {
                                     await _houseKeepingScreeningVM.refreshHouseKeepers(index);
                                   },

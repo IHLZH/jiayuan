@@ -7,7 +7,11 @@ import '../../utils/global.dart';
 import 'home_vm.dart';
 
 class HouseKeepingScreeningVM with ChangeNotifier {
-  Map<int, List<Housekeeper>> housekeepersByType = {};
+  Map<int, List<Housekeeper>> housekeepersByType = Map.fromIterable(
+    HomeViewModel.CommissionTypes.asMap().keys,
+    key: (index) => index,
+    value: (index) => <Housekeeper>[],
+  );
   int currentIndex = 0;
   List<bool> hasMoreData = List.generate(HomeViewModel.CommissionTypes.length, (index) => true);
 
@@ -17,41 +21,47 @@ class HouseKeepingScreeningVM with ChangeNotifier {
     print("开始加载更多数据: index = $typeIndex");
     if (hasMoreData[typeIndex]) {
       try {
-        List<Housekeeper>? housekeepers = await KeeperApi.instance
+        List<Housekeeper> housekeepers = await KeeperApi.instance
             .getHousekeeperData(
-            Global.locationInfo!.longitude, Global.locationInfo!.longitude,
-                id: typeIndex);
-        if(housekeepersByType[typeIndex] == null){
-          housekeepersByType[typeIndex] = [];
-        }
+          Global.locationInfo!.longitude, Global.locationInfo!.latitude,
+        );
         housekeepersByType[typeIndex]!.addAll(housekeepers);
-        refreshControllers[typeIndex].loadComplete();
         if (housekeepers.length < 10) {
           hasMoreData[typeIndex] = false;
           refreshControllers[typeIndex].loadNoData();
+        }else{
+          refreshControllers[typeIndex].loadComplete();
         }
-        notifyListeners();
       } catch (e) {
         print("加载更多数据失败: $e");
       }
     }
+    notifyListeners();
   }
 
   //下拉刷新
   Future<void> refreshHouseKeepers(int typeIndex) async {
     print("开始刷新数据: index = $typeIndex");
-    try {
-      //模拟网络请求
-      await Future.delayed(Duration(milliseconds: 500)); // 缩短延迟时间
-      List<Housekeeper>? housekeepers = await KeeperApi.instance
-          .getHousekeeperData(
+    if(hasMoreData[typeIndex]){
+      try {
+        //模拟网络请求
+        await Future.delayed(Duration(milliseconds: 500)); // 缩短延迟时间
+        List<Housekeeper> housekeepers = await KeeperApi.instance
+            .getHousekeeperData(
           Global.locationInfo!.longitude, Global.locationInfo!.longitude,
-              id: typeIndex);
-      housekeepersByType[typeIndex] = housekeepers;
-      notifyListeners();
-    } catch (e) {
-      print("刷新数据失败: $e");
+        );
+        housekeepersByType[typeIndex] = housekeepers;
+        if(housekeepers.length < 10){
+          hasMoreData[typeIndex] = false;
+          refreshControllers[typeIndex].loadNoData();
+        }
+
+      } catch (e) {
+        print("刷新数据失败: $e");
+      }
     }
+    refreshControllers[typeIndex].refreshCompleted();
+    notifyListeners();
   }
 
   void updateCurrentIndex(int index) {
