@@ -64,21 +64,21 @@ class HousekeeperDataDetail {
   });
 
    HousekeeperDataDetail.fromJson(data) {
-     keeperId = data['keeperId'];
+     keeperId = data['keeperId'] ;
      realName = data['realName'] ?? "";
-     age = data['age'] ?? "";
+     age = data['age'] ?? 0;
      avatar = data['avatar'] ?? "";
      workExperience = data['workExperience'] ?? 1;
      highlight = data['highLight'] ?? "";
-     rating = data['averageRating'] as double ?? 4.5;
+     rating = (data['averageRating']  ?? 4.5) as double ;
      city = data['city'] ?? "";
-     completedOrders = data['completeSingularNumber']?? 10;
+     completedOrders = data['completeSingularNumber']?? 0;
      tags = data['tags']?.cast<String>() ?? [];
      keeperImages = data['photoUrl']?.cast<String>() ?? [];
      introduction = data['introduction']?? "";
      certificates = data['certificatePicUrl']?.cast<String>() ?? [];
      contact = data['phoneNumber'] ?? "";
-      //evaluations = data['userCommentResults'].map<Evaluation>((item) => Evaluation.fromJson(item)).toList();
+      evaluations = [] ;
    }
 
    Map<String, dynamic> toJson() => {
@@ -101,9 +101,6 @@ class HousekeeperDataDetail {
 
 class Evaluation{
 
-  // 评价者id
-  int? userId;
-
   //评价者头像
   String? avatar;
 
@@ -121,10 +118,9 @@ class Evaluation{
   List<String>? images;
 
   //评分
-  double? rating;
+  int? rating;
 
   Evaluation({
-    this.userId,
     this.avatar,
     this.nickName,
     this.content,
@@ -134,12 +130,11 @@ class Evaluation{
   });
 
   Evaluation.fromJson(item) {
-    userId = item['userId'];
     avatar = item['userAvatar'];
     nickName = item['nickName'];
     content = item['comment'];
     time = DateTime.parse(item['createTime']);
     images = item['commentPicUrl'].cast<String>();
-    rating = item['star '];
+    rating = item['star'];
   }
 }

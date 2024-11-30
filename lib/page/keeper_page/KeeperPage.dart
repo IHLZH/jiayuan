@@ -136,15 +136,20 @@ class _KeeperpageState extends State<Keeperpage>
                     child: Container(
                       height: 60.h,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          vm.addFavorite();
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.favorite_border),
+                            Icon(
+                              Icons.favorite_border,
+                              color: vm.isFavorite ? Colors.red : Colors.black,
+                            ),
                             SizedBox(
                               width: 5.w,
                             ),
-                            Text('加入收藏')
+                            Text(vm.isFavorite ? '收藏成功' : '是否收藏')
                           ],
                         ),
                         style: ButtonStyle(
@@ -330,11 +335,27 @@ class _KeeperpageState extends State<Keeperpage>
           margin: EdgeInsets.only(left: 6.w, top: 7.h, bottom: 10.h),
           child: Text('工作内容'),
         ),
-        Text(' 标签:  ${keeperViewModel.keeperData?.tags}',
-            style: TextStyle(
-                color: Colors.black,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w400)),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(' 标签: ',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400)),
+            Expanded(
+              child: Text(' ${keeperViewModel.keeperData?.tags} ',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400)),
+            )
+          ],
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        // ${keeperViewModel.keeperData?.tags}
         Text(
           ' 完成单数  ${keeperViewModel.keeperData?.completedOrders}',
           style: TextStyle(
@@ -457,7 +478,11 @@ class _KeeperpageState extends State<Keeperpage>
                   physics: NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.zero,
                   // 清除默认内边距
-                  itemCount: keeperViewModel.keeperData?.evaluations?.length,
+                  itemCount:
+                      (keeperViewModel.keeperData?.evaluations?.isNotEmpty ??
+                              false)
+                          ? 1
+                          : 0,
                   itemBuilder: (context, index) => Container(
                         margin: EdgeInsets.only(top: 10),
                         child: Column(
@@ -503,7 +528,7 @@ class _KeeperpageState extends State<Keeperpage>
                                       Spacer(),
                                       //评价日期
                                       Text(
-                                          '${DateFormat('yyyy-MM-dd').format(keeperViewModel.keeperData?.evaluations![index].time ?? DateTime.now())}'),
+                                          '${DateFormat('yyyy-MM-dd').format(keeperViewModel.keeperData?.evaluations?[index].time ?? DateTime.now())}'),
                                     ],
                                   ),
                                   Text(

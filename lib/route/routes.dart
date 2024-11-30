@@ -166,7 +166,8 @@ class Routes {
         return pageRoute(CertificatePage());
       //家政员中心展示用户评论的页面
       case RoutePath.commentPage:
-        return pageRoute(CommentPage());
+        final keeperId = settings.arguments as int?;
+        return pageRoute(CommentPage(keeperId: keeperId!,));
       case RoutePath.chatPage:
         return pageRoute(ChatPage(), settings: settings);
       // 用户搜索页

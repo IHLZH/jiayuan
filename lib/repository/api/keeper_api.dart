@@ -7,12 +7,30 @@ import 'package:oktoast/oktoast.dart';
 
 import '../../http/dio_instance.dart';
 import '../../http/http_method.dart';
-import '../model/certificate.dart';
 
 class KeeperApi {
   static KeeperApi instance = KeeperApi._();
 
   KeeperApi._();
+
+  //收藏家政员
+  Future<void> addFavorite(int? id) async {
+    try {
+      final Response response = await DioInstance.instance().post(
+        path: UrlPath.collectKeeper,
+        queryParameters: {"keeperId": id},
+        options: Options(headers: {"Authorization": Global.token}),
+      );
+      print('收藏返回数据:${response.data}');
+      if (response.data['code'] == 200) {
+        print("收藏成功");
+      } else {
+        print("收藏失败");
+      }
+    } catch (e) {
+      print("收藏失败：" + e.toString());
+    }
+  }
 
   //根据家政员id获取家政员详细信息
   Future<HousekeeperDataDetail> getKeeperDataDetail(int id) async {
@@ -24,69 +42,15 @@ class KeeperApi {
       });
       if (response.data['code'] == 200) {
         print('获取到的家政员详细信息:${response.data}');
+        if (response.data['data'] == null) response.data['data'] = {};
         housekeeperDataDetail =
             HousekeeperDataDetail.fromJson(response.data['data']);
         print('获取到的家政员详细信息:${response.data['data']}');
       }
     } catch (e) {
       print("网络错误error:" + e.toString());
+      housekeeperDataDetail = HousekeeperDataDetail();
     }
-    housekeeperDataDetail = HousekeeperDataDetail(
-        keeperId: id,
-        realName: "刘子恒",
-        age: 30,
-        avatar:
-            'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-        workExperience: 10,
-        rating: 4.5,
-        city: "北京市",
-        completedOrders: 20,
-        tags: ["日常保洁", "住家保姆"],
-        keeperImages: [
-          'https://tse1-mm.cn.bing.net/th/id/OIP-C.rl-4Fq8iiNCXDKLUWMMj5wHaHa?w=210&h=210&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-          'https://tse1-mm.cn.bing.net/th/id/OIP-C.rl-4Fq8iiNCXDKLUWMMj5wHaHa?w=210&h=210&c=7&r=0&o=5&dpr=1.3&pid=1.7',
-          'https://tse1-mm.cn.bing.net/th/id/OIP-C.rl-4Fq8iiNCXDKLUWMMj5wHaHa?w=210&h=210&c=7&r=0&o=5&dpr=1.3&pid=1.7'
-        ],
-        introduction:
-            "我是一个非常 normalization 的人，我的服务非常好，深受顾客好评,我是一个非常 normalization 的人，我的服务非常好，深受顾客好评我是一个非常 normalization 的人，我的服务非常好，深受顾客好评我是一个非常 normalization 的人，我的服务非常好，深受顾客好评我是一个非常 normalization 的人，我的服务非常好，深受顾客好评我是一个非常 normalization 的人，我的服务非常好，深受顾客好评我是一个非常 normalization 的人，我的服务非常好，深受顾客好评我是一个非常 normalization 的人，我的服务非常好，深受顾客好评我是一个非常 normalization 的人，我的服务非常好，深受顾客好评我是一个非常 normalization 的人，我的服务非常好，深受顾客好评",
-        certificates: [
-          'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-          'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-          'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-          'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-        ],
-        contact: "19358097918",
-        evaluations: [
-          Evaluation(
-              userId: 1,
-              avatar:
-                  'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-              nickName: "王女士",
-              content: "服务态度很好，态度很好",
-              time: DateTime(2021, 2, 23),
-              images: [
-                'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-                'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2'
-              ],
-              rating: 4.5),
-          Evaluation(
-              userId: 2,
-              avatar:
-                  'https://ts4.cn.mm.bing.net/th?id=OIP-C.mPGy-QSWMXym-J4zC_MJfwAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-              nickName: "张先生",
-              content:
-                  "服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意服务态度很好，态度很好，对商家很满意",
-              time: DateTime(2024, 2, 25),
-              images: [
-                'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-                'https://ts4.cn.mm.bing.net/th?id=OIP-C.mPGy-QSWMXym-J4zC_MJfwAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-                'https://ts4.cn.mm.bing.net/th?id=OIP-C.tkf6dOy8a385XvaSTPjccwHaHa&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-                'https://ts4.cn.mm.bing.net/th?id=OIP-C.mPGy-QSWMXym-J4zC_MJfwAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-                'https://ts4.cn.mm.bing.net/th?id=OIP-C.mPGy-QSWMXym-J4zC_MJfwAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-                'https://ts4.cn.mm.bing.net/th?id=OIP-C.mPGy-QSWMXym-J4zC_MJfwAAAA&w=250&h=250&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2',
-              ],
-              rating: 3.2),
-        ]);
     return housekeeperDataDetail;
   }
 
@@ -177,4 +141,25 @@ class KeeperApi {
     }
   }
 
+  // 根据家政员id获取相关评论
+  Future<List<Evaluation>> getComments(int id, int page, int size) async {
+    List<Evaluation> evaluations = [];
+    try {
+      final Response response = await DioInstance.instance().get(
+          path: "/keeper/comment",
+          param: {"keeperId": id, "page": page, "pageSize":size},
+          options: Options(headers: {"Authorization": Global.token}));
+      if (response.data['data'] != null) {
+        print('获取到的评论数据${response.data["data"]}');
+        evaluations.addAll((response.data["data"] as List)
+            .map((e) => Evaluation.fromJson(e))
+            .toList());
+        evaluations.forEach((item) => print(item.nickName));
+      }
+
+    } catch (e) {
+      print("请求失败ss" + e.toString());
+    }
+    return evaluations;
+  }
 }

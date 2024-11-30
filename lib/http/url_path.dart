@@ -3,7 +3,7 @@ class UrlPath {
 
    // static const String BaseUrl = "http://www.shinesuning.top:8080";
   // static const String BaseUrl = "http://192.168.31.189:8080";
-  static const String BaseUrl = "http://10.7.89.191:8080";
+  static const String BaseUrl = "http://www.shinesuning.top:8080";
   static const String wangBaseUrl = "http://10.7.89.154:8080";
 
   static const String testBaseUrl = "http://10.7.89.171:8080";
@@ -133,4 +133,6 @@ class UrlPath {
   static const String updateKeeperInfo = "/keeper/update";
   //获取单个用户信息
   static const String getSignalUserInfo = "/searchUserById";
+  //收藏家政员
+  static const String collectKeeper = "/release/keeper/collection";
 }

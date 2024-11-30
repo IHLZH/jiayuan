@@ -8,7 +8,17 @@ class KeeperViewModel with ChangeNotifier {
   HousekeeperDataDetail? keeperData ;
   bool isLoading = false;
   String? error;
-
+  bool isFavorite = false;
+  //收藏家政员
+  Future<void> addFavorite() async {
+    try {
+      await KeeperApi.instance.addFavorite(keeperData!.keeperId);
+      isFavorite = !isFavorite;
+    } catch (e) {
+      print("收藏失败：" + e.toString());
+    }
+    notifyListeners();
+  }
 
   //根据家政员id获取家政员信息
   Future<void> getKeeperDataDetail(int id) async {

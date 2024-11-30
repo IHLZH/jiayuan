@@ -293,7 +293,7 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
            if(title == "个人信息")  RouteUtils.pushForNamed(context, RoutePath.personalKeeper);
            else if(title == "我的证书") RouteUtils.pushForNamed(context, RoutePath.keeperCertificate);
            else if(title == "我的收藏") RouteUtils.pushForNamed(context, RoutePath.myCollectionPage);
-           else if(title == '用户评论') RouteUtils.pushForNamed(context, RoutePath.commentPage);
+           else if(title == '用户评论') RouteUtils.pushForNamed(context, RoutePath.commentPage,arguments: Global.keeperInfo!.keeperId);
         },
         splashColor: Colors.grey[300],
         highlightColor: Theme.of(context).primaryColor.withAlpha(30),
