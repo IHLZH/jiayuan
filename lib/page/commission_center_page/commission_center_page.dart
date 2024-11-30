@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -125,10 +126,9 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
                         Row(
                           children: [
                             CircleAvatar(
-                                child: ClipOval(
-                                  child: Image.network(
-                                      "https://i1.hdslb.com/bfs/face/ff445d09efe51be21b6d8170e746699899fb9c52.jpg@92w_92h.avif"),
-                                )),
+                              backgroundColor: AppColors.backgroundColor3,
+                              backgroundImage: Global.keeperInfo!.avatar != null ? CachedNetworkImageProvider(Global.keeperInfo!.avatar!) : null,
+                            ),
                             SizedBox(
                               width: 5.w,
                             ),

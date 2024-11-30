@@ -67,16 +67,16 @@ class _TabPageState extends State<TabPage>{
     _initGaodeMapAndTab();
   }
 
-  void dispose()  async {
-    _disposeGaodeAndDB();
-
+  @override
+  void dispose() {
     super.dispose();
+    print("=================== tabpage销毁  ====================");
+    _disposeGaodeAndDB();
   }
 
   Future<void> _disposeGaodeAndDB() async {
     //销毁高德及监听器
     await GaodeMap.instance.disposeGaodeMap();
-
     //关闭数据库
     print("数据库关闭");
     await Global.dbUtil?.close();

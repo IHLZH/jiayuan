@@ -15,6 +15,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
+import '../../../im/im_chat_api.dart';
 
 class CommissionDetailPage extends StatefulWidget{
   @override
@@ -267,7 +268,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                               child: Container(
                                                 padding: EdgeInsets.only(top: 4,bottom: 4),
                                                 child: Text(
-                                                  vm.commissionData.commissionAddress,
+                                                  vm.commissionData.county + " " + vm.commissionData.commissionAddress,
                                                   maxLines: 2,
                                                   overflow: TextOverflow.ellipsis,
                                                   style: TextStyle(
@@ -555,6 +556,23 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                             ),
                           ),
 
+                          SizedBox(height: 10,),
+
+                          if(vm.commissionData.commissionStatus == 2)
+                            AppButton(
+                              onTap: (){
+                                _cancelCommission();
+                              },
+                              type: AppButtonType.main,
+                              color: Colors.white,
+                              buttonText: "有问题？取消服务",
+                              buttonTextStyle: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 14.sp
+                              ),
+                              radius: 8.r,
+                            ),
+
                           SizedBox(height: 50.h,),
                         ],
                       )
@@ -606,7 +624,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                       Icon(
                         Icons.help_outline,
                         color: Colors.black26,
-                        size: 20.sp,
+                        size: 16.sp,
                       ),
                     ],
                   ),
@@ -628,22 +646,6 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
             Expanded(
                 child: AppButton(
                   onTap: (){
-                    _cancelCommission();
-                  },
-                  type: AppButtonType.main,
-                  color: CommonData.statusColor[2],
-                  buttonText: "取消服务",
-                  buttonTextStyle: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14.sp
-                  ),
-                  radius: 8.r,
-                  margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                )
-            ),
-            Expanded(
-                child: AppButton(
-                  onTap: (){
                     _startCommission();
                   },
                   type: AppButtonType.main,
@@ -654,7 +656,6 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                       fontSize: 14.sp
                   ),
                   radius: 8.r,
-                  margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                 )
             ),
           ],
@@ -714,7 +715,9 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
     String buttonText = "";
     if(statuId == 0){
       buttonText = "我想接";
-    } else if(statuId == 3){
+    } else if(statuId == 1){
+      buttonText = "提醒用户";
+    }else if(statuId == 3){
       buttonText = "完成服务";
     }else if(statuId == 4){
       buttonText = "提醒用户";
@@ -809,6 +812,9 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
     switch(statuId){
       case 0:
         _receiveCommission();
+        break;
+      case 1:
+        _remindConfirm();
         break;
       case 3:
         _finishCommission();
@@ -990,8 +996,18 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
   }
 
   //提醒用户弹窗事件
-  void _remind(){
+  Future<void> _remind() async {
     //提醒用户
+    String remindText = "我已完成订单编号为 ${_commissionDetailViewModel.commissionData.commissionId} 的委托订单，请尽快支付";
+    await ImChatApi.getInstance().sendTextMessage(_commissionDetailViewModel.commissionData.userId.toString(), remindText);
+    showToast("用户已收到提醒");
+  }
+
+  Future<void> _remindConfirm() async {
+    //提醒用户
+    String remindText = "我已接取订单编号为 ${_commissionDetailViewModel.commissionData.commissionId} 的委托订单，请尽快确认";
+    await ImChatApi.getInstance().sendTextMessage(_commissionDetailViewModel.commissionData.userId.toString(), remindText);
+    showToast("用户已收到提醒");
   }
 
   //取消服务

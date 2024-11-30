@@ -26,10 +26,20 @@ class _ConversationPageState extends State<ConversationPage>{
   void initState() {
     super.initState();
     _initConversation();
+    print("============== conversation init ====================");
   }
 
   Future<void> _initConversation() async {
     await _conversationViewModel.initConversationList();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _conversationViewModel.clear();
+    _conversationViewModel.dispose();
+    print("============== conversation dispose ====================");
   }
 
   @override

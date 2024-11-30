@@ -46,13 +46,17 @@ class _FriendInfoPageState extends State<FriendInfoPage>{
     _friendInfoVM.clear();
   }
 
+  Future<void> _initFriendInfo() async {
+    if (_friendInfoVM.friendInfo == null) {
+      _friendInfoVM.friendInfo = ModalRoute.of(context)?.settings.arguments as V2TimFriendInfo;
+      await _checkIsFriend();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    if (_friendInfoVM.friendInfo == null) {
-      _friendInfoVM.friendInfo = ModalRoute.of(context)?.settings.arguments as V2TimFriendInfo;
-      _checkIsFriend();
-    }
+    _initFriendInfo();
 
     return ChangeNotifierProvider.value(
       value: _friendInfoVM,

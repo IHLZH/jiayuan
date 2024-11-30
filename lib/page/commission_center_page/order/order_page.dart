@@ -263,7 +263,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                     Container(
                       padding: EdgeInsets.only(top: 4,bottom: 4,right: 4),
                       child: Text(
-                        commission.commissionStatus == 2 ?
+                        (commission.commissionStatus == 2 || commission.commissionStatus == 1) ?
                         DateFormat('yyyy-MM-dd HH:mm:ss').format(commission.expectStartTime) :
                         DateFormat('yyyy-MM-dd HH:mm:ss').format(commission.realStartTime ?? DateTime(1999, 1, 1, 12, 0)),
                         style: TextStyle(
@@ -387,7 +387,31 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
   }
 
   Widget getOrderButton(CommissionData1 commission){
-    if(commission.commissionStatus == 2){
+    if(commission.commissionStatus == 1){
+      return Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16.r),
+        child: InkWell(
+          splashColor: AppColors.endColor,
+          borderRadius: BorderRadius.circular(16.r),
+          onTap: (){
+            _remindConfirm(commission);
+          },
+          child: Container(
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: AppColors.appColor,
+                      width: 1
+                  ),
+                  borderRadius: BorderRadius.circular(16.r)
+              ),
+              child: Text("提醒用户")
+          ),
+        ),
+      );
+    }
+    else if(commission.commissionStatus == 2){
       return Row(
         children: [
           Material(
@@ -584,6 +608,13 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
     showToast("用户已收到提醒");
   }
 
+  _remindConfirm(CommissionData1 commission) async {
+    //提醒用户
+    String remindText = "我已接取订单编号为 ${commission.commissionId} 的委托订单，请尽快确认";
+    await ImChatApi.getInstance().sendTextMessage(commission.userId.toString(), remindText);
+    showToast("用户已收到提醒");
+  }
+
   //取消服务
   void _cancelCommission(CommissionData1 commission){
     DialogFactory.instance.showParentDialog(
@@ -698,7 +729,7 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
                     Text(
                       commission.distance <= 0.5
                           ? "检测到您已到达指定地点附近，是否确认开始委托?"
-                          : "检测到您当前位置与指定地点距离过远(1km以外)，是否确认开始委托?",
+                          : "检测到您当前位置与指定地点距离过远(500m以外)，是否确认开始委托?",
                       style: TextStyle(
                           fontSize: 16.sp,
                           color: AppColors.textColor7d

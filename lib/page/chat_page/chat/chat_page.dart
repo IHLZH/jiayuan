@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiayuan/common_ui/dialog/loading.dart';
 import 'package:jiayuan/common_ui/input/app_input.dart';
 import 'package:jiayuan/page/chat_page/chat/chat_page_vm.dart';
 import 'package:jiayuan/route/route_path.dart';
@@ -289,7 +290,7 @@ class _ChatPageState extends State<ChatPage>{
                 ),
                 SizedBox(width: 10,),
                 InkWell(
-                  onTap: (){
+                  onTap: () async {
                     _chatViewModel.gotoUserInfo(context, Global.userInfo!.userId.toString());
                   },
                   child: CircleAvatar(
@@ -325,7 +326,9 @@ class _ChatPageState extends State<ChatPage>{
             children: [
               InkWell(
                 onTap: (){
+                  Loading.showLoading();
                   _chatViewModel.gotoUserInfo(context, message.userID!);
+                  Loading.dismissAll();
                 },
                 child: CircleAvatar(
                     backgroundColor: Colors.white,

@@ -603,18 +603,13 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
                           Container(
                             padding: EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    AppColors.appColor, // 渐变起始颜色
-                                    AppColors.endColor,      // 渐变结束颜色
-                                  ],
-                                ),
+                                color: AppColors.endColor,
                                 borderRadius: BorderRadius.circular(16.r)
                             ),
                             child: Text(
                               commission.typeName,
                               style: TextStyle(
-                                  color: Colors.black45,
+                                  color: Colors.black,
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w600
                               ),
