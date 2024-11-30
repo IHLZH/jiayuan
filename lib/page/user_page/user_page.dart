@@ -428,8 +428,13 @@ class _UserPageState extends State<UserPage> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: AppColors.appColor.withOpacity(0.5),
+        toolbarHeight: 10.h,
+        automaticallyImplyLeading: false,
+      ),
       body: Stack(
         children: [
           SafeArea(
@@ -440,94 +445,110 @@ class _UserPageState extends State<UserPage> {
                   SafeArea(
                     child: Container(
                       padding: EdgeInsets.all(16.r),
-                      child: Row(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.appColor.withOpacity(0.5),
+                            Colors.white
+                          ], // 自定义渐变颜色
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      ),
+                      child: Column(
                         children: [
-                          //头像
-                          Container(
-                            child: ValueListenableBuilder<User?>(
-                                valueListenable: Global.userInfoNotifier,
-                                builder: (context, userInfo, child) {
-                                  if (isProduction)
-                                    print(
-                                        "ValueListenableBuilder重建: ${userInfo?.userAvatar}"); // 调试信息
-                                  if (userInfo == null) {
-                                    return CircleAvatar(
-                                      radius: 40,
-                                      backgroundImage:
-                                      AssetImage('assets/images/ikun1.png'),
-                                    );
-                                  }
+                          Row(
+                            children: [
+                              //头像
+                              Container(
+                                child: ValueListenableBuilder<User?>(
+                                    valueListenable: Global.userInfoNotifier,
+                                    builder: (context, userInfo, child) {
+                                      if (isProduction)
+                                        print(
+                                            "ValueListenableBuilder重建: ${userInfo?.userAvatar}"); // 调试信息
+                                      if (userInfo == null) {
+                                        return CircleAvatar(
+                                          radius: 40,
+                                          backgroundImage: AssetImage(
+                                              'assets/images/ikun1.png'),
+                                        );
+                                      }
 
-                                  return CircleAvatar(
-                                      radius: 40,
-                                      backgroundImage: userInfo?.userAvatar !=
-                                          null &&
-                                          userInfo.userAvatar != "默认头像"
-                                          ? CachedNetworkImageProvider(
-                                          userInfo.userAvatar!)
-                                          : AssetImage('assets/images/ikun1.png'));
-                                }),
-                          ),
-                          SizedBox(width: 16),
+                                      return CircleAvatar(
+                                          radius: 40,
+                                          backgroundImage: userInfo
+                                                          ?.userAvatar !=
+                                                      null &&
+                                                  userInfo.userAvatar != "默认头像"
+                                              ? CachedNetworkImageProvider(
+                                                  userInfo.userAvatar!)
+                                              : AssetImage(
+                                                  'assets/images/ikun1.png'));
+                                    }),
+                              ),
+                              SizedBox(width: 16),
 
-                          // 修改昵称显示部分
-                          Container(
-                            width: 150.w,
-                            child: SafeArea(
-                              child: ValueListenableBuilder<User?>(
-                                valueListenable: Global.userInfoNotifier,
-                                builder: (context, userInfo, child) {
-                                  return ShaderMask(
-                                    shaderCallback: (Rect bounds) {
-                                      return LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                          Theme.of(context).primaryColor,
-                                          AppColors.appColor,
-                                          // AppColors.endDeepColor,
-                                        ],
-                                      ).createShader(bounds);
+                              // 修改昵称显示部分
+                              Container(
+                                width: 150.w,
+                                child: SafeArea(
+                                  child: ValueListenableBuilder<User?>(
+                                    valueListenable: Global.userInfoNotifier,
+                                    builder: (context, userInfo, child) {
+                                      return ShaderMask(
+                                        shaderCallback: (Rect bounds) {
+                                          return LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              Theme.of(context).primaryColor,
+                                              AppColors.appColor,
+                                              // AppColors.endDeepColor,
+                                            ],
+                                          ).createShader(bounds);
+                                        },
+                                        child: Text(
+                                          userInfo?.nickName ?? '未命名',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      );
                                     },
-                                    child: Text(
-                                      userInfo?.nickName ?? '未命名',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  );
-                                },
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
 
-                          Expanded(child: SizedBox()),
-                          //个人信息修改
-                          Material(
-                            color: Colors.transparent, // 确保背景透明
-                            child: ClipOval(
-                              child: InkWell(
-                                onTap: () => _jumpToProfileEditPage(),
-                                // 水波纹颜色
-                                splashColor: Colors.grey[300],
-                                // 高亮颜色
-                                highlightColor: Colors.grey[300],
-                                // 设置水波纹为圆形
-                                customBorder: CircleBorder(),
-                                child: Icon(Icons.chevron_right_outlined, size: 40),
+                              Expanded(child: SizedBox()),
+                              //个人信息修改
+                              Material(
+                                color: Colors.transparent, // 确保背景透明
+                                child: ClipOval(
+                                  child: InkWell(
+                                    onTap: () => _jumpToProfileEditPage(),
+                                    // 水波纹颜色
+                                    splashColor: Colors.grey[300],
+                                    // 高亮颜色
+                                    highlightColor: Colors.grey[300],
+                                    // 设置水波纹为圆形
+                                    customBorder: CircleBorder(),
+                                    child: Icon(Icons.chevron_right_outlined,
+                                        size: 40),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
+                          SizedBox(height: 16.h),
                         ],
                       ),
                     ),
                   ),
-
-                  SizedBox(height: 16.h),
 
                   //水平图标2.0
                   Container(
@@ -559,7 +580,8 @@ class _UserPageState extends State<UserPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              _buildManagementOption(Icons.pending_outlined, '待接取'),
+                              _buildManagementOption(
+                                  Icons.pending_outlined, '待接取'),
                               _buildManagementOption(
                                   Icons.check_box_outlined, '待确认'),
                               _buildManagementOption(
@@ -653,7 +675,8 @@ class _UserPageState extends State<UserPage> {
                               _buildManagementOption(Icons.assignment, '已接订单'),
                               _buildManagementOption(
                                   Icons.format_align_center_outlined, '服务中心'),
-                              _buildManagementOption(Icons.verified_user, '证书认证'),
+                              _buildManagementOption(
+                                  Icons.verified_user, '证书认证'),
                             ],
                           ),
                         ),
