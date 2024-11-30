@@ -155,378 +155,379 @@ class ImChatApi {
       // 登录成功逻辑
       if (isProduction)
         print("============= IM登录成功 UserID: $userID ============");
+
+      // 消息监听
+      // 设置高级消息监听器
+      // 创建消息监听器
+      advancedMsgListener = V2TimAdvancedMsgListener(
+        onRecvC2CReadReceipt: (List<V2TimMessageReceipt> receiptList) {
+          //单聊已读回调
+          if (isProduction) print("============单聊已读回调==========");
+        },
+        onRecvMessageModified: (V2TimMessage message) {
+          // msg 为被修改之后的消息对象
+        },
+        onRecvMessageReadReceipts: (List<V2TimMessageReceipt> receiptList) {
+          //群聊已读回调
+          receiptList.forEach((element) {
+            element.groupID; // 群id
+            element.msgID; // 已读回执消息 ID
+            element.readCount; // 群消息最新已读数
+            element.unreadCount; // 群消息最新未读数
+            element.userID; //  C2C 消息对方 ID
+          });
+        },
+        onRecvMessageRevoked: (String messageid) {
+          // 在本地维护的消息中处理被对方撤回的消息
+          if (isProduction) print("============撤回消息： $messageid=========");
+          // ConversationPageViewModel.instance.initConversationList();
+        },
+        onRecvNewMessage: (V2TimMessage message) async {
+          //ConversationPageViewModel.instance.onRefresh();
+          // 处理文本消息
+          if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
+            String? text = message.textElem!.text;
+
+            if (isProduction) print("============获得新消息： ${text}=========");
+
+            if (ChatPageViewModel.instance.conversation != null &&
+                message.userID ==
+                    ChatPageViewModel.instance.conversation!.userID) {
+              if (isProduction)
+                print("============ userID: ${message.userID} =========");
+              await ChatPageViewModel.instance.refreshChatMessage();
+            }
+          }
+          // 使用自定义消息
+          if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
+            message.customElem?.data;
+            message.customElem?.desc;
+            message.customElem?.extension;
+          }
+          // 使用图片消息
+          if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_IMAGE) {
+            message.imageElem
+                ?.path; // 图片上传时的路径，消息发送者才会有这个字段，消息发送者可用这个字段将图片预先上屏，优化上屏体验。
+            message.imageElem?.imageList?.forEach((element) {
+              // 遍历大图、原图、缩略图
+              // 解析图片属性
+              element?.height;
+              element?.localUrl;
+              element?.size;
+              element?.type; // 大图 缩略图 原图
+              element?.url;
+              element?.uuid;
+              element?.width;
+            });
+          }
+          // 处理视频消息
+          if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_VIDEO) {
+            // 解析视频消息属性，封面、播放地址、宽高、大小等。
+            message.videoElem?.UUID;
+            message.videoElem?.duration;
+            message.videoElem?.localSnapshotUrl;
+            message.videoElem?.localVideoUrl;
+            message.videoElem?.snapshotHeight;
+            message.videoElem?.snapshotPath;
+            // ...
+          }
+          // 处理音频消息
+          if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_SOUND) {
+            // 解析语音消息 播放地址，本地地址，大小，时长等。
+            message.soundElem?.UUID;
+            message.soundElem?.dataSize;
+            message.soundElem?.duration;
+            message.soundElem?.localUrl;
+            message.soundElem?.url;
+            // ...
+          }
+          // 处理文件消息
+          if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_FILE) {
+            // 解析文件消息 文件名、文件大小、url等
+            message.fileElem?.UUID;
+            message.fileElem?.fileName;
+            message.fileElem?.fileSize;
+            message.fileElem?.localUrl;
+            message.fileElem?.path;
+            message.fileElem?.url;
+          }
+          // 处理位置消息
+          if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_LOCATION) {
+            // 解析地理位置消息，经纬度、描述等
+            message.locationElem?.desc;
+            message.locationElem?.latitude;
+            message.locationElem?.longitude;
+          }
+          // 处理表情消息
+          if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_FACE) {
+            message.faceElem?.data;
+            message.faceElem?.index;
+          }
+          // 处理群组tips文本消息
+          if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_GROUP_TIPS) {
+            message.groupTipsElem?.groupID; // 所属群组
+            message.groupTipsElem?.type; // 群Tips类型
+            message.groupTipsElem?.opMember; // 操作人资料
+            message.groupTipsElem?.memberList; // 被操作人资料
+            message.groupTipsElem?.groupChangeInfoList; // 群信息变更详情
+            message.groupTipsElem?.memberChangeInfoList; // 群成员变更信息
+            message.groupTipsElem?.memberCount; // 当前群在线人数
+          }
+          // 处理合并消息消息
+          if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_MERGER) {
+            message.mergerElem?.abstractList;
+            message.mergerElem?.isLayersOverLimit;
+            message.mergerElem?.title;
+            V2TimValueCallback<List<V2TimMessage>> download =
+            await TencentImSDKPlugin.v2TIMManager
+                .getMessageManager()
+                .downloadMergerMessage(
+              msgID: message.msgID!,
+            );
+            if (download.code == 0) {
+              List<V2TimMessage>? messageList = download.data;
+            }
+          }
+          if (message.textElem?.nextElem != null) {
+            //通过第一个 Elem 对象的 nextElem 方法获取下一个 Elem 对象，如果下一个 Elem 对象存在，会返回 Elem 对象实例，如果不存在，会返回 null。
+          }
+        },
+        onSendMessageProgress: (V2TimMessage message, int progress) {
+          //文件上传进度回调
+        },
+      );
+      // 添加高级消息的事件监听器
+      TencentImSDKPlugin.v2TIMManager
+          .getMessageManager()
+          .addAdvancedMsgListener(listener: advancedMsgListener!);
+      if (isProduction) print("============= IM添加高级消息监听器成功 ============");
+
+      //获取信息
+
+      // 会话监听
+      //设置会话监听器
+      conversationListener = V2TimConversationListener(
+        onConversationChanged: (List<V2TimConversation> conversationList) async {
+          //某些会话的关键信息发生变化（未读计数发生变化、最后一条消息被更新等等）的回调函数
+          //conversationList    变化的会话列表
+          if (isProduction) print("============ 会话列表发生变化 ===========");
+          await ConversationPageViewModel.instance.initConversationList();
+        },
+        onConversationGroupCreated:
+            (String groupName, List<V2TimConversation> conversationList) {
+          // 会话分组被创建
+          // groupName 会话分组名称
+          // conversationList 会话分组包含的会话列表
+        },
+        onConversationGroupDeleted: (String groupName) {
+          // 会话分组被删除
+          // groupName  被删除的会话分组名称
+        },
+        onConversationGroupNameChanged: (String oldName, String newName) {
+          // 会话分组名变更
+          // oldName 旧名称
+          // newName 新名称
+        },
+        onConversationsAddedToGroup:
+            (String groupName, List<V2TimConversation> conversationList) {
+          // 会话分组新增会话
+          // groupName 会话分组名称
+          // conversationList 被加入会话分组的会话列表
+        },
+        onConversationsDeletedFromGroup:
+            (String groupName, List<V2TimConversation> conversationList) {
+          // 会话分组删除会话
+          // groupName 会话分组名称
+          // conversationList 被删除的会话列表
+        },
+        onNewConversation: (List<V2TimConversation> conversationList) {
+          // 新会话的回调函数
+          // conversationList 收到的新会话列表
+        },
+        onSyncServerFailed: () {
+          // 同步服务失败的回调函数
+        },
+        onSyncServerFinish: () {
+          // 同步服务完成的回调函数
+        },
+        onSyncServerStart: () {
+          // 同步服务开始的回调函数
+        },
+        onTotalUnreadMessageCountChanged: (int totalUnreadCount) {
+          // 会话未读总数改变的回调函数
+          // totalUnreadCount 会话未读总数
+        },
+      );
+      TencentImSDKPlugin.v2TIMManager
+          .getConversationManager()
+          .addConversationListener(listener: conversationListener!);
+      if (isProduction) print("============= IM添加会话监听器成功 ============");
+
+      //关系监听
+      //设置关系链监听器
+      friendshipListener = V2TimFriendshipListener(
+        onBlackListAdd: (List<V2TimFriendInfo> infoList) async {
+          //黑名单列表新增用户的回调
+          //infoList 新增的用户信息列表
+        },
+        onBlackListDeleted: (List<String> userList) async {
+          //黑名单列表删除的回调
+          //userList 被删除的用户id列表
+        },
+        onFriendApplicationListAdded:
+            (List<V2TimFriendApplication> applicationList) async {
+          //好友请求数量增加的回调
+          //applicationList 新增的好友请求信息列表
+        },
+        onFriendApplicationListDeleted: (List<String> userIDList) async {
+          //好友请求数量减少的回调
+          //减少的好友请求的请求用户id列表
+        },
+        onFriendApplicationListRead: () async {
+          //好友请求已读的回调
+        },
+        onFriendInfoChanged: (List<V2TimFriendInfo> infoList) async {
+          //好友信息改变的回调
+          //infoList 好友信息改变的好友列表
+          if (isProduction) print("=========== 好友信息改变的回调 ============");
+          await FriendListViewModel.instance.getFriendList();
+        },
+        onFriendListAdded: (List<V2TimFriendInfo> users) async {
+          //好友列表增加人员的回调
+          //users 新增的好友信息列表
+          if (isProduction) print("=========== 好友列表增加人员的回调 ============");
+        },
+        onFriendListDeleted: (List<String> userList) async {
+          //好友列表减少人员的回调
+          //userList 减少的好友id列表
+          if (isProduction) print("=========== 好友列表减少人员的回调 ============");
+        },
+      );
+      TencentImSDKPlugin.v2TIMManager
+          .getFriendshipManager()
+          .addFriendListener(listener: friendshipListener!); //添加关系链监听器
+
+      if (isProduction && friendshipListener != null)
+        print("============= IM设置关系链监听器成功 ============");
+
+      //设置群组监听器
+      groupListener = V2TimGroupListener(
+        onApplicationProcessed: (String groupID, V2TimGroupMemberInfo opUser,
+            bool isAgreeJoin, String opReason) async {
+          //加群请求已经被群主或管理员处理了（只有申请人能够收到）
+          //groupID    群 ID
+          //opUser    处理人
+          //isAgreeJoin    是否同意加群
+          //opReason    处理原因
+        },
+        onGrantAdministrator: (String groupID, V2TimGroupMemberInfo opUser,
+            List<V2TimGroupMemberInfo> memberList) async {
+          //指定管理员身份
+          //groupID    群 ID
+          //opUser    处理人
+          //memberList    被处理的群成员
+        },
+        onGroupAttributeChanged:
+            (String groupID, Map<String, String> groupAttributeMap) async {
+          //收到群属性更新的回调
+          //groupID    群 ID
+          //groupAttributeMap    群的所有属性
+        },
+        onGroupCreated: (String groupID) async {
+          //创建群（主要用于多端同步）
+          //groupID    群 ID
+        },
+        onGroupDismissed: (String groupID, V2TimGroupMemberInfo opUser) async {
+          //群被解散了（全员能收到）
+          //groupID    群 ID
+          //opUser    处理人
+        },
+        onGroupInfoChanged:
+            (String groupID, List<V2TimGroupChangeInfo> changeInfos) async {
+          //群信息被修改（全员能收到）
+          //groupID    群 ID
+          //changeInfos    修改的群信息
+        },
+        onGroupRecycled: (String groupID, V2TimGroupMemberInfo opUser) async {
+          //群被回收（全员能收到）
+          //groupID    群 ID
+          //opUser    处理人
+        },
+        onMemberEnter:
+            (String groupID, List<V2TimGroupMemberInfo> memberList) async {
+          //有用户加入群（全员能够收到）
+          //groupID    群 ID
+          //memberList    加入的成员
+        },
+        onMemberInfoChanged: (String groupID,
+            List<V2TimGroupMemberChangeInfo>
+            v2TIMGroupMemberChangeInfoList) async {
+          //群成员信息被修改，仅支持禁言通知（全员能收到）。
+          //groupID    群 ID
+          //v2TIMGroupMemberChangeInfoList    被修改的群成员信息
+        },
+        onMemberInvited: (String groupID, V2TimGroupMemberInfo opUser,
+            List<V2TimGroupMemberInfo> memberList) async {
+          //某些人被拉入某群（全员能够收到）
+          //groupID    群 ID
+          //opUser    处理人
+          //memberList    被拉进群成员
+
+          if (isProduction) print("=========== 有用户加入群 ============");
+
+          if (isProduction) {
+            memberList.forEach((element) {
+              print("=========== 用户 ${element.userID} 被拉入某群 ============");
+            });
+          }
+        },
+        onMemberKicked: (String groupID, V2TimGroupMemberInfo opUser,
+            List<V2TimGroupMemberInfo> memberList) async {
+          //某些人被踢出某群（全员能够收到）
+          //groupID    群 ID
+          //opUser    处理人
+          //memberList    被踢成员
+        },
+        onMemberLeave: (String groupID, V2TimGroupMemberInfo member) async {
+          //有用户离开群（全员能够收到）
+          //groupID    群 ID
+          //member    离开的成员
+        },
+        onQuitFromGroup: (String groupID) async {
+          //主动退出群组（主要用于多端同步，直播群（AVChatRoom）不支持）
+          //groupID    群 ID
+        },
+        onReceiveJoinApplication:
+            (String groupID, V2TimGroupMemberInfo member, String opReason) async {
+          //有新的加群请求（只有群主或管理员会收到）
+          //groupID    群 ID
+          //member    申请人
+          //opReason    申请原因
+        },
+        onReceiveRESTCustomData: (String groupID, String customData) async {
+          //收到 RESTAPI 下发的自定义系统消息
+          //groupID    群 ID
+          //customData    自定义数据
+        },
+        onRevokeAdministrator: (String groupID, V2TimGroupMemberInfo opUser,
+            List<V2TimGroupMemberInfo> memberList) async {
+          //取消管理员身份
+          //groupID    群 ID
+          //opUser    处理人
+          //memberList    被处理的群成员
+        },
+      );
+      //添加群组监听器
+      TencentImSDKPlugin.v2TIMManager.addGroupListener(listener: groupListener!);
+
+      if (isProduction && groupListener != null)
+        print("============= IM设置群组监听器成功 ============");
+
     } else {
       // 登录失败逻辑
       if (isProduction) print("登录失败");
       if (isProduction) print("错误码: ${loginRes.code} 错误信息: ${loginRes.desc}");
     }
-
-    // 消息监听
-    // 设置高级消息监听器
-    // 创建消息监听器
-    advancedMsgListener = V2TimAdvancedMsgListener(
-      onRecvC2CReadReceipt: (List<V2TimMessageReceipt> receiptList) {
-        //单聊已读回调
-        if (isProduction) print("============单聊已读回调==========");
-      },
-      onRecvMessageModified: (V2TimMessage message) {
-        // msg 为被修改之后的消息对象
-      },
-      onRecvMessageReadReceipts: (List<V2TimMessageReceipt> receiptList) {
-        //群聊已读回调
-        receiptList.forEach((element) {
-          element.groupID; // 群id
-          element.msgID; // 已读回执消息 ID
-          element.readCount; // 群消息最新已读数
-          element.unreadCount; // 群消息最新未读数
-          element.userID; //  C2C 消息对方 ID
-        });
-      },
-      onRecvMessageRevoked: (String messageid) {
-        // 在本地维护的消息中处理被对方撤回的消息
-        if (isProduction) print("============撤回消息： $messageid=========");
-        // ConversationPageViewModel.instance.initConversationList();
-      },
-      onRecvNewMessage: (V2TimMessage message) async {
-        //ConversationPageViewModel.instance.onRefresh();
-        // 处理文本消息
-        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
-          String? text = message.textElem!.text;
-
-          if (isProduction) print("============获得新消息： ${text}=========");
-
-          if (ChatPageViewModel.instance.conversation != null &&
-              message.userID ==
-                  ChatPageViewModel.instance.conversation!.userID) {
-            if (isProduction)
-              print("============ userID: ${message.userID} =========");
-            await ChatPageViewModel.instance.refreshChatMessage();
-          }
-        }
-        // 使用自定义消息
-        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_CUSTOM) {
-          message.customElem?.data;
-          message.customElem?.desc;
-          message.customElem?.extension;
-        }
-        // 使用图片消息
-        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_IMAGE) {
-          message.imageElem
-              ?.path; // 图片上传时的路径，消息发送者才会有这个字段，消息发送者可用这个字段将图片预先上屏，优化上屏体验。
-          message.imageElem?.imageList?.forEach((element) {
-            // 遍历大图、原图、缩略图
-            // 解析图片属性
-            element?.height;
-            element?.localUrl;
-            element?.size;
-            element?.type; // 大图 缩略图 原图
-            element?.url;
-            element?.uuid;
-            element?.width;
-          });
-        }
-        // 处理视频消息
-        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_VIDEO) {
-          // 解析视频消息属性，封面、播放地址、宽高、大小等。
-          message.videoElem?.UUID;
-          message.videoElem?.duration;
-          message.videoElem?.localSnapshotUrl;
-          message.videoElem?.localVideoUrl;
-          message.videoElem?.snapshotHeight;
-          message.videoElem?.snapshotPath;
-          // ...
-        }
-        // 处理音频消息
-        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_SOUND) {
-          // 解析语音消息 播放地址，本地地址，大小，时长等。
-          message.soundElem?.UUID;
-          message.soundElem?.dataSize;
-          message.soundElem?.duration;
-          message.soundElem?.localUrl;
-          message.soundElem?.url;
-          // ...
-        }
-        // 处理文件消息
-        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_FILE) {
-          // 解析文件消息 文件名、文件大小、url等
-          message.fileElem?.UUID;
-          message.fileElem?.fileName;
-          message.fileElem?.fileSize;
-          message.fileElem?.localUrl;
-          message.fileElem?.path;
-          message.fileElem?.url;
-        }
-        // 处理位置消息
-        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_LOCATION) {
-          // 解析地理位置消息，经纬度、描述等
-          message.locationElem?.desc;
-          message.locationElem?.latitude;
-          message.locationElem?.longitude;
-        }
-        // 处理表情消息
-        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_FACE) {
-          message.faceElem?.data;
-          message.faceElem?.index;
-        }
-        // 处理群组tips文本消息
-        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_GROUP_TIPS) {
-          message.groupTipsElem?.groupID; // 所属群组
-          message.groupTipsElem?.type; // 群Tips类型
-          message.groupTipsElem?.opMember; // 操作人资料
-          message.groupTipsElem?.memberList; // 被操作人资料
-          message.groupTipsElem?.groupChangeInfoList; // 群信息变更详情
-          message.groupTipsElem?.memberChangeInfoList; // 群成员变更信息
-          message.groupTipsElem?.memberCount; // 当前群在线人数
-        }
-        // 处理合并消息消息
-        if (message.elemType == MessageElemType.V2TIM_ELEM_TYPE_MERGER) {
-          message.mergerElem?.abstractList;
-          message.mergerElem?.isLayersOverLimit;
-          message.mergerElem?.title;
-          V2TimValueCallback<List<V2TimMessage>> download =
-              await TencentImSDKPlugin.v2TIMManager
-                  .getMessageManager()
-                  .downloadMergerMessage(
-                    msgID: message.msgID!,
-                  );
-          if (download.code == 0) {
-            List<V2TimMessage>? messageList = download.data;
-          }
-        }
-        if (message.textElem?.nextElem != null) {
-          //通过第一个 Elem 对象的 nextElem 方法获取下一个 Elem 对象，如果下一个 Elem 对象存在，会返回 Elem 对象实例，如果不存在，会返回 null。
-        }
-      },
-      onSendMessageProgress: (V2TimMessage message, int progress) {
-        //文件上传进度回调
-      },
-    );
-    // 添加高级消息的事件监听器
-    TencentImSDKPlugin.v2TIMManager
-        .getMessageManager()
-        .addAdvancedMsgListener(listener: advancedMsgListener!);
-    if (isProduction) print("============= IM添加高级消息监听器成功 ============");
-
-    //获取信息
-
-    // 会话监听
-    //设置会话监听器
-    conversationListener = V2TimConversationListener(
-      onConversationChanged: (List<V2TimConversation> conversationList) async {
-        //某些会话的关键信息发生变化（未读计数发生变化、最后一条消息被更新等等）的回调函数
-        //conversationList    变化的会话列表
-        if (isProduction) print("============ 会话列表发生变化 ===========");
-        await ConversationPageViewModel.instance.initConversationList();
-      },
-      onConversationGroupCreated:
-          (String groupName, List<V2TimConversation> conversationList) {
-        // 会话分组被创建
-        // groupName 会话分组名称
-        // conversationList 会话分组包含的会话列表
-      },
-      onConversationGroupDeleted: (String groupName) {
-        // 会话分组被删除
-        // groupName  被删除的会话分组名称
-      },
-      onConversationGroupNameChanged: (String oldName, String newName) {
-        // 会话分组名变更
-        // oldName 旧名称
-        // newName 新名称
-      },
-      onConversationsAddedToGroup:
-          (String groupName, List<V2TimConversation> conversationList) {
-        // 会话分组新增会话
-        // groupName 会话分组名称
-        // conversationList 被加入会话分组的会话列表
-      },
-      onConversationsDeletedFromGroup:
-          (String groupName, List<V2TimConversation> conversationList) {
-        // 会话分组删除会话
-        // groupName 会话分组名称
-        // conversationList 被删除的会话列表
-      },
-      onNewConversation: (List<V2TimConversation> conversationList) {
-        // 新会话的回调函数
-        // conversationList 收到的新会话列表
-      },
-      onSyncServerFailed: () {
-        // 同步服务失败的回调函数
-      },
-      onSyncServerFinish: () {
-        // 同步服务完成的回调函数
-      },
-      onSyncServerStart: () {
-        // 同步服务开始的回调函数
-      },
-      onTotalUnreadMessageCountChanged: (int totalUnreadCount) {
-        // 会话未读总数改变的回调函数
-        // totalUnreadCount 会话未读总数
-      },
-    );
-    TencentImSDKPlugin.v2TIMManager
-        .getConversationManager()
-        .addConversationListener(listener: conversationListener!);
-    if (isProduction) print("============= IM添加会话监听器成功 ============");
-
-    //关系监听
-    //设置关系链监听器
-    friendshipListener = V2TimFriendshipListener(
-      onBlackListAdd: (List<V2TimFriendInfo> infoList) async {
-        //黑名单列表新增用户的回调
-        //infoList 新增的用户信息列表
-      },
-      onBlackListDeleted: (List<String> userList) async {
-        //黑名单列表删除的回调
-        //userList 被删除的用户id列表
-      },
-      onFriendApplicationListAdded:
-          (List<V2TimFriendApplication> applicationList) async {
-        //好友请求数量增加的回调
-        //applicationList 新增的好友请求信息列表
-      },
-      onFriendApplicationListDeleted: (List<String> userIDList) async {
-        //好友请求数量减少的回调
-        //减少的好友请求的请求用户id列表
-      },
-      onFriendApplicationListRead: () async {
-        //好友请求已读的回调
-      },
-      onFriendInfoChanged: (List<V2TimFriendInfo> infoList) async {
-        //好友信息改变的回调
-        //infoList 好友信息改变的好友列表
-        if (isProduction) print("=========== 好友信息改变的回调 ============");
-        await FriendListViewModel.instance.getFriendList();
-      },
-      onFriendListAdded: (List<V2TimFriendInfo> users) async {
-        //好友列表增加人员的回调
-        //users 新增的好友信息列表
-        if (isProduction) print("=========== 好友列表增加人员的回调 ============");
-      },
-      onFriendListDeleted: (List<String> userList) async {
-        //好友列表减少人员的回调
-        //userList 减少的好友id列表
-        if (isProduction) print("=========== 好友列表减少人员的回调 ============");
-      },
-    );
-    TencentImSDKPlugin.v2TIMManager
-        .getFriendshipManager()
-        .addFriendListener(listener: friendshipListener!); //添加关系链监听器
-
-    if (isProduction && friendshipListener != null)
-      print("============= IM设置关系链监听器成功 ============");
-
-    //设置群组监听器
-    groupListener = V2TimGroupListener(
-      onApplicationProcessed: (String groupID, V2TimGroupMemberInfo opUser,
-          bool isAgreeJoin, String opReason) async {
-        //加群请求已经被群主或管理员处理了（只有申请人能够收到）
-        //groupID    群 ID
-        //opUser    处理人
-        //isAgreeJoin    是否同意加群
-        //opReason    处理原因
-      },
-      onGrantAdministrator: (String groupID, V2TimGroupMemberInfo opUser,
-          List<V2TimGroupMemberInfo> memberList) async {
-        //指定管理员身份
-        //groupID    群 ID
-        //opUser    处理人
-        //memberList    被处理的群成员
-      },
-      onGroupAttributeChanged:
-          (String groupID, Map<String, String> groupAttributeMap) async {
-        //收到群属性更新的回调
-        //groupID    群 ID
-        //groupAttributeMap    群的所有属性
-      },
-      onGroupCreated: (String groupID) async {
-        //创建群（主要用于多端同步）
-        //groupID    群 ID
-      },
-      onGroupDismissed: (String groupID, V2TimGroupMemberInfo opUser) async {
-        //群被解散了（全员能收到）
-        //groupID    群 ID
-        //opUser    处理人
-      },
-      onGroupInfoChanged:
-          (String groupID, List<V2TimGroupChangeInfo> changeInfos) async {
-        //群信息被修改（全员能收到）
-        //groupID    群 ID
-        //changeInfos    修改的群信息
-      },
-      onGroupRecycled: (String groupID, V2TimGroupMemberInfo opUser) async {
-        //群被回收（全员能收到）
-        //groupID    群 ID
-        //opUser    处理人
-      },
-      onMemberEnter:
-          (String groupID, List<V2TimGroupMemberInfo> memberList) async {
-        //有用户加入群（全员能够收到）
-        //groupID    群 ID
-        //memberList    加入的成员
-      },
-      onMemberInfoChanged: (String groupID,
-          List<V2TimGroupMemberChangeInfo>
-              v2TIMGroupMemberChangeInfoList) async {
-        //群成员信息被修改，仅支持禁言通知（全员能收到）。
-        //groupID    群 ID
-        //v2TIMGroupMemberChangeInfoList    被修改的群成员信息
-      },
-      onMemberInvited: (String groupID, V2TimGroupMemberInfo opUser,
-          List<V2TimGroupMemberInfo> memberList) async {
-        //某些人被拉入某群（全员能够收到）
-        //groupID    群 ID
-        //opUser    处理人
-        //memberList    被拉进群成员
-
-        if (isProduction) print("=========== 有用户加入群 ============");
-
-        if (isProduction) {
-          memberList.forEach((element) {
-            print("=========== 用户 ${element.userID} 被拉入某群 ============");
-          });
-        }
-      },
-      onMemberKicked: (String groupID, V2TimGroupMemberInfo opUser,
-          List<V2TimGroupMemberInfo> memberList) async {
-        //某些人被踢出某群（全员能够收到）
-        //groupID    群 ID
-        //opUser    处理人
-        //memberList    被踢成员
-      },
-      onMemberLeave: (String groupID, V2TimGroupMemberInfo member) async {
-        //有用户离开群（全员能够收到）
-        //groupID    群 ID
-        //member    离开的成员
-      },
-      onQuitFromGroup: (String groupID) async {
-        //主动退出群组（主要用于多端同步，直播群（AVChatRoom）不支持）
-        //groupID    群 ID
-      },
-      onReceiveJoinApplication:
-          (String groupID, V2TimGroupMemberInfo member, String opReason) async {
-        //有新的加群请求（只有群主或管理员会收到）
-        //groupID    群 ID
-        //member    申请人
-        //opReason    申请原因
-      },
-      onReceiveRESTCustomData: (String groupID, String customData) async {
-        //收到 RESTAPI 下发的自定义系统消息
-        //groupID    群 ID
-        //customData    自定义数据
-      },
-      onRevokeAdministrator: (String groupID, V2TimGroupMemberInfo opUser,
-          List<V2TimGroupMemberInfo> memberList) async {
-        //取消管理员身份
-        //groupID    群 ID
-        //opUser    处理人
-        //memberList    被处理的群成员
-      },
-    );
-    //添加群组监听器
-    TencentImSDKPlugin.v2TIMManager.addGroupListener(listener: groupListener!);
-
-    if (isProduction && groupListener != null)
-      print("============= IM设置群组监听器成功 ============");
   }
 
   Future<void> logout() async {
@@ -754,6 +755,8 @@ class ImChatApi {
         element?.type; //会话类型，分为 C2C（单聊）和 Group（群聊）。
         element?.unreadCount; //会话未读消息数，直播群（AVChatRoom）不支持未读计数，默认为 0。
         element?.userID; //对方用户 ID，如果会话类型为单聊，userID 会存储对方的用户 ID，否则为 null。
+
+        if(isProduction)print("${element!.userID} ====== ${element!.lastMessage}");
       });
 
       return getConversationListRes.data?.conversationList ?? [];

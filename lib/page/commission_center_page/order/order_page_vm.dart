@@ -114,6 +114,14 @@ class OrderPageViewModel with ChangeNotifier{
           "pageSize" : 100
         }
     );
+    unServed.addAll(await CommissionApi.instance.getOrderByStatus(
+      {
+        "keeperId" : Global.keeperInfo?.keeperId,
+        "status" : 1,
+        "page" : 1,
+        "pageSize" : 100
+      }
+    ));
   }
 
   Future<void> getInServiceOrders() async {
@@ -165,7 +173,7 @@ class OrderPageViewModel with ChangeNotifier{
   }
 
   String getCountyAddress(CommissionData1 commission){
-    return commission.county + " " + commission.commissionAddress + "河北师范大学诚朴园三号楼204";
+    return commission.county + " " + commission.commissionAddress;
   }
 
   void clear(){

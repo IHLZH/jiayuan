@@ -55,6 +55,7 @@ class ConversationPageViewModel with ChangeNotifier{
 
   //调用sdk，初始化会话列表
   Future<void> initConversationList() async {
+    refreshController = RefreshController();
     conversationList = await ImChatApi.getInstance().getConversationList("0", size);
     if(conversationList.length < size){
       hasData = false;
@@ -99,6 +100,13 @@ class ConversationPageViewModel with ChangeNotifier{
     return date1.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;
+  }
+
+  void clear(){
+    refreshController.dispose();
+    conversationList.clear();
+    currentPage = 0;
+    hasData = true;
   }
 
   @override
