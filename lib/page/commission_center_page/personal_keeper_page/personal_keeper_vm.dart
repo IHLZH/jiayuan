@@ -54,7 +54,6 @@ class PersonalKeeperVm with ChangeNotifier {
 
   // 获取图片
   void getImageUrls(List<String> imageUrls) {
-    print("图片地址: $imageUrls");
     this.imageUrls = imageUrls;
   }
 
@@ -73,7 +72,7 @@ class PersonalKeeperVm with ChangeNotifier {
           : introduction,
       keeperImages: isListEqual(Global.keeperInfo!.keeperImages, imageUrls)
           ? null
-          : imageUrls.map((e)=> e.substring(("http://62.234.165.111:8080/upload/pictures/keeper/work_photo/").length)).toList() ,
+          : imageUrls.map((e)=> e.substring(("http://62.234.165.111/upload/pictures/keeper/work_photo/").length)).toList() ,
       tags: isListEqual(Global.keeperInfo!.tags, tags) ? null : tags,
       workExperience: workExperience == Global.keeperInfo!.workExperience
           ? null
