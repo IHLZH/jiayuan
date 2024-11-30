@@ -52,10 +52,9 @@ class UploadImageApi {
           // 将返回的图片地址赋值给对应的索引
           print("上传成功: ${response.data}");
           isSuccess = true;
-         path ==  UrlPath.uploadEvaluationPicture ?
-          imageUrls[index] = response.data["data"][0] : response.data["data"];
-         //打印图片地址
-          print(imageUrls[index]);
+          imageUrls[index] = (path == UrlPath.uploadEvaluationPicture
+              ? response.data["data"][0]
+              : response.data["data"]);
         } else {
           print("上传失败，状态码: ${response.statusCode}");
         }
@@ -69,6 +68,9 @@ class UploadImageApi {
     else
       EasyLoading.showError('上传失败');
     EasyLoading.dismiss();
+    for (int i = 0; i < imageUrls.length; i++) {
+      print("所有的图片地址 ${imageUrls[i]}");
+    }
     return imageUrls;
   }
 
@@ -114,7 +116,7 @@ class UploadImageApi {
         // 将返回的图片地址赋值给对应的索引
         print("上传成功: ${response.data}");
         isSuccess = true;
-        imageUrls = response.data["data"]?.cast<String>() ?? [] ;
+        imageUrls = response.data["data"]?.cast<String>() ?? [];
       } else {
         print("上传失败，状态码: ${response.statusCode}");
       }
@@ -188,7 +190,11 @@ class UploadImageApi {
     try {
       Response response = await DioInstance.instance().post(
         path: path,
-        queryParameters: {"fileName": imageFileUrl.substring(("http://62.234.165.111:8080/upload/pictures/keeper/work_photo/").length)},
+        queryParameters: {
+          "fileName": imageFileUrl.substring(
+              ("http://62.234.165.111/upload/pictures/keeper/work_photo/")
+                  .length)
+        },
         options: Options(headers: {'Authorization': Global.token}),
       );
       if (response.data['code'] == 200) {

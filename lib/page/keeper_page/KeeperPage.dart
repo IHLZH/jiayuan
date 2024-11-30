@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:jiayuan/common_ui/%20autoHeightPageView/autoHeightPageView.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,9 @@ class _KeeperpageState extends State<Keeperpage>
   void dispose() {
     super.dispose();
   }
+
+  bool isMeasureHeight = true;
+  var _height;
 
   @override
   Widget build(BuildContext context) {
@@ -92,19 +96,33 @@ class _KeeperpageState extends State<Keeperpage>
                       ],
                     ),
                   ),
-                  Expanded(
-                      child: CustomScrollView(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: _keeperPersonInfo(),
-                        ),
-                        SliverToBoxAdapter(child: _keeperIntroduction()),
-                        SliverToBoxAdapter(
-                          child: _keeperEvaluation(),
-                        )
-                      ],
+                  if (isMeasureHeight)
+                    Offstage(
+                      child: HeightMeasureWidget(
+                          child: _keeperInfo(),
+                          onHeightChanged: (height) {
+                            _height = height;
+                            // print("测量高度 ${_height} ");
+                            setState(() {
+                              isMeasureHeight = false;
+                            });
+                          }),
+                      offstage: true,
                     ),
-                  ),
+                  if (!isMeasureHeight)
+                    Expanded(
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: _keeperPersonInfo(),
+                          ),
+                          SliverToBoxAdapter(child: _keeperIntroduction()),
+                          SliverToBoxAdapter(
+                            child: _keeperEvaluation(),
+                          )
+                        ],
+                      ),
+                    )
                 ],
               ),
             ),
@@ -162,7 +180,8 @@ class _KeeperpageState extends State<Keeperpage>
                                   ));
                           if (isCancel == true) {
                             try {
-                              await keeperViewModel.makePhoneCall(keeperViewModel.keeperData!.contact!);
+                              await keeperViewModel.makePhoneCall(
+                                  keeperViewModel.keeperData!.contact!);
                             } catch (e) {
                               if (mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -214,9 +233,10 @@ class _KeeperpageState extends State<Keeperpage>
   }
 
   Widget _keeperPersonInfo() {
+    _height = isMeasureHeight ? 680.h : _height;
     return Consumer<KeeperViewModel>(
-        builder: (context, vm, child) => SizedBox(
-              height: 710.h,
+        builder: (context, vm, child) => Container(
+              height: _height + 280.h,
               child: Stack(
                 children: [
                   BannerWidget(
@@ -246,8 +266,6 @@ class _KeeperpageState extends State<Keeperpage>
       margin: EdgeInsets.only(left: 12.w, right: 12.w),
       padding:
           EdgeInsets.only(left: 15.w, right: 15.w, top: 15.h, bottom: 15.h),
-      height: 420.h,
-      width: double.infinity,
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(15.0.w)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -255,12 +273,11 @@ class _KeeperpageState extends State<Keeperpage>
           children: [
             //切割圆形
             CircleAvatar(
-              radius: 40,
-              backgroundImage: keeperViewModel.keeperData?.avatar != null
-                  ? NetworkImage(keeperViewModel.keeperData!.avatar ?? '')
-                  : AssetImage(
-                          'assets/images/drawkit-grape-pack-illustration-18.png')
-            ),
+                radius: 40,
+                backgroundImage: keeperViewModel.keeperData?.avatar != null
+                    ? NetworkImage(keeperViewModel.keeperData!.avatar ?? '')
+                    : AssetImage(
+                        'assets/images/drawkit-grape-pack-illustration-18.png')),
             Row(
               // 设置文本基线
               textBaseline: TextBaseline.alphabetic,
@@ -341,9 +358,8 @@ class _KeeperpageState extends State<Keeperpage>
         //照片
         Container(
           height: 100.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0.w)
-          ),
+          decoration:
+              BoxDecoration(borderRadius: BorderRadius.circular(15.0.w)),
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: keeperViewModel.keeperData?.certificates?.length,
@@ -365,7 +381,7 @@ class _KeeperpageState extends State<Keeperpage>
 
   Widget _keeperIntroduction() {
     return Container(
-      margin: EdgeInsets.only(left: 15.w, right: 15.w, bottom: 15.h,top: 15.h),
+      margin: EdgeInsets.only(left: 15.w, right: 15.w, bottom: 15.h, top: 15.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(13),
         color: Colors.white,
@@ -419,17 +435,14 @@ class _KeeperpageState extends State<Keeperpage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            height: 33.h,
-            width: 88.w,
+            padding: EdgeInsets.only(left: 10.w, right: 15.w),
             decoration: BoxDecoration(
               color: AppColors.endColor,
               borderRadius: BorderRadius.circular(13),
             ),
-            child: Center(
-              child: Text(
-                '  顾客评价     ',
-                style: TextStyle(color: Colors.black, fontSize: 16.sp),
-              ),
+            child: Text(
+              '顾客评价',
+              style: TextStyle(color: Colors.black, fontSize: 16.sp),
             ),
           ),
           SizedBox(
@@ -440,9 +453,10 @@ class _KeeperpageState extends State<Keeperpage>
               margin: EdgeInsets.only(
                   left: 10.w, right: 15.w, bottom: 60.h, top: 8.h),
               child: ListView.builder(
-                shrinkWrap: true,
+                  shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.zero, // 清除默认内边距
+                  padding: EdgeInsets.zero,
+                  // 清除默认内边距
                   itemCount: keeperViewModel.keeperData?.evaluations?.length,
                   itemBuilder: (context, index) => Container(
                         margin: EdgeInsets.only(top: 10),

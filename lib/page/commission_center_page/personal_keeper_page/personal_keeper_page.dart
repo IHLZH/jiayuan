@@ -563,8 +563,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
                     )),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Wrap(
                   children: [
                     Row(
                       children: [
@@ -662,7 +661,6 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
                 bottom: MediaQuery.of(context).viewInsets.bottom, // 动态适配键盘高度
               ),
               child: Container(
-                height: 250,
                 width: double.infinity,
                 padding:
                     EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 20),
@@ -672,8 +670,7 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10),
                     )),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child:Wrap(
                   children: [
                     Row(
                       children: [
@@ -783,16 +780,20 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
       },
     );
   }
-
+ bool isShowTagsBottomSheet = false;
+  var showTagsBottomSheetHeight ;
   void showTagsBottomSheet() {
     //不可以进行引用赋值
     //_personalKeeperVm.commissionTypeSelected1 = _personalKeeperVm.commissionTypeSelected;
+    
     _personalKeeperVm.commissionTypeSelected1 =
         Map<String, bool>.from(_personalKeeperVm.commissionTypeSelected);
     showModalBottomSheet(
-        isScrollControlled: true, //可滚动 解除showModalBottomSheet最大显示屏幕一半的限制
         context: context,
         isDismissible: false,
+        // constraints: BoxConstraints(
+        //   maxHeight: MediaQuery.of(context).size.height/2
+        // ),
         //禁止拖动关闭
         builder: (context) {
           return ChangeNotifierProvider.value(
@@ -800,168 +801,166 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
             child: Selector<PersonalKeeperVm, Map<String, bool>>(
                 selector: (context, personalKeeperVm) =>
                     personalKeeperVm.commissionTypeSelected1,
-                builder: (context, commissionTypeSelected1, child) => Container(
-                      height: 360,
-                      width: double.infinity,
-                      padding: EdgeInsets.only(
-                          left: 20, right: 20, top: 5, bottom: 20),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                          )),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                builder: (context, commissionTypeSelected1, child) => SafeArea(child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(
+                      left: 20, right: 20, top: 5, bottom: 20),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      )),
+                  child: Wrap(
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Text(
-                                '工作标签',
-                                style: TextStyle(
-                                    fontSize: 16.sp, color: Colors.black),
-                              ),
-                              Spacer(),
-                              IconButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  icon: Icon(
-                                    Icons.close,
-                                    size: 20.sp,
-                                    color: Colors.grey,
-                                  ))
-                            ],
+                          Text(
+                            '工作标签',
+                            style: TextStyle(
+                                fontSize: 16.sp, color: Colors.black),
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '短期',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                SizedBox(height: 10),
-                                GridView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: 6,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3,
-                                      crossAxisSpacing: 10.h,
-                                      mainAxisSpacing: 10.h,
-                                      childAspectRatio: 3,
-                                    ),
-                                    itemBuilder: (context, index) => InkWell(
-                                          onTap: () {
-                                            _personalKeeperVm
-                                                .updateCommissionTypeSelected1(
-                                                    HomeViewModel
-                                                        .CommissionTypes[index]
-                                                        .typeText);
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: commissionTypeSelected1[
-                                                        HomeViewModel
-                                                            .CommissionTypes[
-                                                                index]
-                                                            .typeText]!
-                                                    ? Color.fromRGBO(
-                                                        70, 219, 201, 1)
-                                                    : Colors.grey[100],
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Center(
-                                              child: Text(
-                                                  '${HomeViewModel.CommissionTypes[index].typeText}',
-                                                  style: TextStyle(
-                                                      color: Colors.black)),
-                                            ),
-                                          ),
-                                        )),
-                                Text(
-                                  '长期',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                SizedBox(height: 10),
-                                GridView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: 5,
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 3,
-                                      crossAxisSpacing: 10.h,
-                                      mainAxisSpacing: 10.h,
-                                      childAspectRatio: 3,
-                                    ),
-                                    itemBuilder: (context, index) => InkWell(
-                                          onTap: () {
-                                            _personalKeeperVm
-                                                .updateCommissionTypeSelected1(
-                                                    HomeViewModel
-                                                        .CommissionTypes[
-                                                            index + 6]
-                                                        .typeText);
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: commissionTypeSelected1[
-                                                        HomeViewModel
-                                                            .CommissionTypes[
-                                                                index + 6]
-                                                            .typeText]!
-                                                    ? Color.fromRGBO(
-                                                        70, 219, 201, 1)
-                                                    : Colors.grey[100],
-                                                borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: Center(
-                                              child: Text(
-                                                '${HomeViewModel.CommissionTypes[index + 6].typeText}',
-                                                style: TextStyle(
-                                                    color: Colors.black),
-                                              ),
-                                            ),
-                                          ),
-                                        ))
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              _personalKeeperVm.SaveCommissionTypeSelected();
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(top: 20),
-                              width: double.infinity,
-                              padding: EdgeInsets.all(10.sp),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: [
-                                      Color.fromRGBO(70, 219, 201, 1),
-                                      AppColors.appColor,
-                                    ],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                '保存',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16),
-                              ),
-                            ),
-                          )
+                          Spacer(),
+                          IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: Icon(
+                                Icons.close,
+                                size: 20.sp,
+                                color: Colors.grey,
+                              ))
                         ],
                       ),
-                    )),
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '短期',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            SizedBox(height: 10),
+                            GridView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: 6,
+                                gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 10.h,
+                                  mainAxisSpacing: 10.h,
+                                  childAspectRatio: 3,
+                                ),
+                                itemBuilder: (context, index) => InkWell(
+                                  onTap: () {
+                                    _personalKeeperVm
+                                        .updateCommissionTypeSelected1(
+                                        HomeViewModel
+                                            .CommissionTypes[index]
+                                            .typeText);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: commissionTypeSelected1[
+                                        HomeViewModel
+                                            .CommissionTypes[
+                                        index]
+                                            .typeText]!
+                                            ? Color.fromRGBO(
+                                            70, 219, 201, 1)
+                                            : Colors.grey[100],
+                                        borderRadius:
+                                        BorderRadius.circular(5)),
+                                    child: Center(
+                                      child: Text(
+                                          '${HomeViewModel.CommissionTypes[index].typeText}',
+                                          style: TextStyle(
+                                              color: Colors.black)),
+                                    ),
+                                  ),
+                                )),
+                            Text(
+                              '长期',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            SizedBox(height: 10),
+                            GridView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: 5,
+                                gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 10.h,
+                                  mainAxisSpacing: 10.h,
+                                  childAspectRatio: 3,
+                                ),
+                                itemBuilder: (context, index) => InkWell(
+                                  onTap: () {
+                                    _personalKeeperVm
+                                        .updateCommissionTypeSelected1(
+                                        HomeViewModel
+                                            .CommissionTypes[
+                                        index + 6]
+                                            .typeText);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: commissionTypeSelected1[
+                                        HomeViewModel
+                                            .CommissionTypes[
+                                        index + 6]
+                                            .typeText]!
+                                            ? Color.fromRGBO(
+                                            70, 219, 201, 1)
+                                            : Colors.grey[100],
+                                        borderRadius:
+                                        BorderRadius.circular(5)),
+                                    child: Center(
+                                      child: Text(
+                                        '${HomeViewModel.CommissionTypes[index + 6].typeText}',
+                                        style: TextStyle(
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                  ),
+                                ))
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          _personalKeeperVm.SaveCommissionTypeSelected();
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(top: 20.h),
+                          width: double.infinity,
+                          padding: EdgeInsets.all(10.sp),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                colors: [
+                                  Color.fromRGBO(70, 219, 201, 1),
+                                  AppColors.appColor,
+                                ],
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            '保存',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.black, fontSize: 16),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ))),
           );
         });
   }

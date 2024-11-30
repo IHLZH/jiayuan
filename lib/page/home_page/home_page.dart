@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiayuan/common_ui/sliver/sliver_header.dart';
+import 'package:jiayuan/common_ui/%20autoHeightPageView/autoHeightPageView.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/send_commission_page/send_commision_page.dart';
 import 'package:jiayuan/route/route_path.dart';
@@ -67,11 +67,10 @@ class _HomePageState extends State<HomePage>
                 SizedBox(width: 10.w),
                 ValueListenableBuilder(
                     valueListenable: Global.locationInfoNotifier,
-                    builder: (context, location, child){
+                    builder: (context, location, child) {
                       return Text("${location?.city}",
                           style: TextStyle(fontSize: 15.sp));
-                    }
-                )
+                    })
               ]),
               backgroundColor: Color.fromRGBO(70, 219, 201, 1),
             ),
@@ -93,6 +92,7 @@ class _HomePageState extends State<HomePage>
                   noDataText: "已经到底了~",
                 ),
                 child: CustomScrollView(
+                  shrinkWrap: true,
                   scrollDirection: Axis.vertical,
                   slivers: [
                     //轮播图
@@ -101,8 +101,19 @@ class _HomePageState extends State<HomePage>
                     SliverToBoxAdapter(child: _PageViewWidget()),
                     //天气卡片
                     SliverToBoxAdapter(child: _ServiceViewWidget()),
+                    SliverToBoxAdapter(child: SizedBox(height: 8)),
                     //固定头部
-                    SliverHeader(children: _buildHeaderList()),
+                    SliverAppBar(
+                      floating: true,
+                      snap: true,
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.white,
+                      surfaceTintColor: Colors.white,
+                      title: Column(
+                        children: _buildHeaderList(),
+                      ),
+                    ),
+                    // _buildHeaderList()
                     //推荐
                     SliverToBoxAdapter(
                       child: SizedBox(height: 8),
@@ -117,7 +128,6 @@ class _HomePageState extends State<HomePage>
       SizedBox(height: 10),
       Row(
         children: [
-          SizedBox(width: 20),
           Text("探索",
               style: TextStyle(
                 fontSize: 17.sp,
@@ -126,7 +136,7 @@ class _HomePageState extends State<HomePage>
         ],
       ),
       Container(
-        padding: EdgeInsets.only(left: 15, right: 15, top: 8, bottom: 5),
+        padding: EdgeInsets.only(right: 15, top: 8, bottom: 5),
         child: Row(
           children: [
             InkWell(
@@ -414,12 +424,9 @@ class _HomePageState extends State<HomePage>
           ],
         ),
         Container(
-          height: 180.h,
-          width: double.infinity,
-          padding:
-              EdgeInsets.only(left: 0.w, right: 0.w, top: 10.h, bottom: 10.h),
           margin:
               EdgeInsets.only(left: 15.w, right: 15.w, top: 10.h, bottom: 10.h),
+          padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(color: Colors.grey.withOpacity(0.2), width: 2),
@@ -433,8 +440,8 @@ class _HomePageState extends State<HomePage>
               ),
             ],
           ),
-          child: PageView(
-            controller: _pageController,
+          child: AutoHeightPageView(
+            pageController: _pageController,
             onPageChanged: (index) {
               setState(() {
                 _currentPage = index;

@@ -32,7 +32,7 @@ class CertCertifiedPageViewModel with ChangeNotifier {
     } else {
       Certificate certificate = Certificate(
         certName: certName,
-        imageUrl: imageUrls[0].substring("http://62.234.165.111:8080/upload/pictures/certificate/".length),
+        imageUrl: imageUrls[0].substring("http://62.234.165.111/upload/pictures/keeper/certificate/".length),
         status: 0,
       );
       print('上传的图片url ${certificate.imageUrl}');
@@ -41,7 +41,7 @@ class CertCertifiedPageViewModel with ChangeNotifier {
       if (isSuccess) {
         certImage == null;
         certName == null;
-        certificate.imageUrl = "http://62.234.165.111:8080/upload/pictures/certificate/" + certificate.imageUrl!;
+        certificate.imageUrl = "http://62.234.165.111/upload/pictures/certificate/" + certificate.imageUrl!;
         _certificateList.insert(0, certificate);
         print('上传成功');
       } else {

@@ -22,7 +22,8 @@ class KeeperApi {
           await DioInstance.instance().get(path: "/release/keeper", param: {
         "keeperId": id,
       });
-      if (response.statusCode == 200) {
+      if (response.data['code'] == 200) {
+        print('获取到的家政员详细信息:${response.data}');
         housekeeperDataDetail =
             HousekeeperDataDetail.fromJson(response.data['data']);
         print('获取到的家政员详细信息:${response.data['data']}');
