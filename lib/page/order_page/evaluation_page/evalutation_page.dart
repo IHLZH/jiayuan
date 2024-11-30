@@ -110,7 +110,7 @@ class _EvalutationPageState extends State<EvalutationPage>
                       TextButton(
                         onPressed: () {
                           _viewModel.submitEvaluation();
-                          RouteUtils.pop(context);
+                          Navigator.pop(context,true);
                         },
                         child: Text(
                           "提交",
