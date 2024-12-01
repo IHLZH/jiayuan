@@ -34,6 +34,7 @@ class IdentityApi{
 
       if(response.statusCode == 200){
         if(response.data['code'] == 200){
+          Global.token = response.data['message'];
           return true;
         }else{
           showToast(response.data['message']);

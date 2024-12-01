@@ -47,7 +47,7 @@ class ConversationPageViewModel with ChangeNotifier{
   //下拉刷新
   Future<void> onRefresh() async {
     currentPage = 0;
-    await initConversationList();
+    await refreshConversationList();
     refreshController.resetNoData();
     refreshController.refreshCompleted();
     notifyListeners();
@@ -56,6 +56,14 @@ class ConversationPageViewModel with ChangeNotifier{
   //调用sdk，初始化会话列表
   Future<void> initConversationList() async {
     refreshController = RefreshController();
+    conversationList = await ImChatApi.getInstance().getConversationList("0", size);
+    if(conversationList.length < size){
+      hasData = false;
+    }
+    notifyListeners();
+  }
+
+  Future<void> refreshConversationList() async {
     conversationList = await ImChatApi.getInstance().getConversationList("0", size);
     if(conversationList.length < size){
       hasData = false;

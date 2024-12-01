@@ -16,6 +16,7 @@ import 'package:jiayuan/utils/global.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 //委托页面
+import '../../common_ui/ autoHeightPageView/autoHeightPageView.dart';
 import 'commission_vm.dart';
 
 /*
@@ -148,10 +149,9 @@ class _CommissionPageState extends State<CommissionPage>{
                                     child: Column(
                                       children: [
                                         Container(
-                                            height: 180,
                                             padding: EdgeInsets.only(left: 10, right: 10, top: 20,bottom: 10),
-                                            child: PageView(
-                                              controller: _pageController,
+                                            child: AutoHeightPageView(
+                                              pageController: _pageController,
                                               onPageChanged: (index) {
                                                 setState(() {
                                                   _currentPage = index;
@@ -205,7 +205,7 @@ class _CommissionPageState extends State<CommissionPage>{
                                                   ],
                                                 )
                                               ],
-                                            )
+                                            ),
                                         ),
                                         _buildIndicator(),
                                       ],
