@@ -381,6 +381,7 @@ class _UserPageState extends State<UserPage> {
             } else if (icon == Icons.settings) {
               _jumpToSettingPage();
             } else if (icon == Icons.favorite_border) {
+              RouteUtils.pushForNamed(context, RoutePath.keeperCollection);
               // 其他选项的点击事件处理
             } else if (icon == Icons.history) {
               RouteUtils.pushForNamed(context, RoutePath.browseHistoryPage);

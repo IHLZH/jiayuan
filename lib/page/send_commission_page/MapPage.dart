@@ -326,10 +326,14 @@ class _MapPageState extends State<MapPage> {
             ),
             TextButton(
               onPressed: () {
+                if( locationInfo['address'] != locationInfo['name'] ){
+                  locationInfo['address'] = locationInfo['name'] + " "+ locationInfo['address'];
+                }
+                print('${locationInfo['address']}');
                 Navigator.pop(dialogContext);
                 Navigator.pop(context, {
                   'address':
-                      '${locationInfo['name']}, ${locationInfo['address']}',
+                      '${locationInfo['name']}+${locationInfo['address']}',
                   'latitude': markerLatitude,
                   'longitude': markerLongitude,
                   'locationDetail': locationInfo,

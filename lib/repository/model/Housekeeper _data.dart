@@ -44,7 +44,7 @@ class Housekeeper {
     age = data['age'] ;
     avatar = data['avatar'];
     workExperience = data['workExperience'] == 0 ? 1 : data['workExperience'];
-    highlight = data['highlight'] ??  "";
+    highlight = data['highlight'] ?? data['highLight'] ?? "";
     rating = data['averageRating'] ?? 4.5;
   }
 

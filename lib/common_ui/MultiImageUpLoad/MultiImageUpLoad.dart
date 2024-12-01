@@ -1,11 +1,11 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/repository/api/uploadImage_api.dart';
+import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 
 class MultiImageUploadWidget extends StatefulWidget {
   @override
@@ -18,12 +18,13 @@ class MultiImageUploadWidget extends StatefulWidget {
   List<String> initialImageUrls;
   Map<String, dynamic> queryParameters;
 
-  MultiImageUploadWidget(
-      {required this.onImageSelected,
-      required this.addUrlPath,
-      required this.deleteUrlPath,
-      required this.queryParameters,
-      required this.initialImageUrls,});
+  MultiImageUploadWidget({
+    required this.onImageSelected,
+    required this.addUrlPath,
+    required this.deleteUrlPath,
+    required this.queryParameters,
+    required this.initialImageUrls,
+  });
 }
 
 class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
@@ -48,12 +49,13 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
     final pickedFiles = await _picker.pickMultiImage();
     // 确保总数不超过6张
     if (pickedFiles.length > 0) {
-      _imageUrls.addAll(
-           await UploadImageApi.instance.uploadMultipleImages(
-              pickedFiles.take(6 - _imageFiles.length).toList(),
-              widget.addUrlPath,
-              queryParameters: widget.queryParameters));
-      _imageFiles.addAll(pickedFiles.take(6 - _imageFiles.length));
+      List<String> list = await UploadImageApi.instance.uploadMultipleImages(
+          pickedFiles.take(6 - _imageFiles.length).toList(), widget.addUrlPath,
+          queryParameters: widget.queryParameters);
+      if (list.length > 0) {
+        _imageUrls.addAll(list);
+        _imageFiles.addAll(pickedFiles.take(6 - _imageFiles.length));
+      }
       setState(() {});
     }
     widget.onImageSelected(_imageUrls);
@@ -62,8 +64,11 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
   void _removeImage(int index) async {
     // 删除选中的图片
     _imageFiles.removeAt(index);
-    widget.deleteUrlPath == UrlPath.deleteEvaluationPicture ? await UploadImageApi.instance
-        .deleteImage2(_imageUrls[index], widget.deleteUrlPath) : await UploadImageApi.instance.deleteImage(_imageUrls[index], widget.deleteUrlPath);
+    widget.deleteUrlPath == UrlPath.deleteEvaluationPicture
+        ? await UploadImageApi.instance
+            .deleteImage2(_imageUrls[index], widget.deleteUrlPath)
+        : await UploadImageApi.instance
+            .deleteImage(_imageUrls[index], widget.deleteUrlPath);
     _imageUrls.removeAt(index);
     setState(() {});
     // 调用回调函数将图片传递到父组件
@@ -119,10 +124,23 @@ class _MultiImageUploadWidgetState extends State<MultiImageUploadWidget> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: CachedNetworkImage(
-                              imageUrl: _imageUrls[index],
-                              placeholder: (context, url) {
-                                return CircularProgressIndicator();
-                              })),
+                            imageUrl: _imageUrls[index],
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    LiquidCircularProgressIndicator(
+                              value: downloadProgress.progress ?? 0.0,
+                              // 进度值
+                              valueColor: AlwaysStoppedAnimation(AppColors.endColor),
+                              backgroundColor: Colors.white,
+                              direction: Axis.vertical,
+                              center: Text(
+                                '${((downloadProgress.progress ?? 0.0) * 100).toStringAsFixed(0)}%',
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.white),
+                              ),
+                            ),
+                            fit: BoxFit.cover,
+                          )),
                     ),
                     Positioned(
                       right: 0,

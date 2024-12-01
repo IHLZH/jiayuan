@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/buttons/red_button.dart';
 import 'package:jiayuan/common_ui/input/app_input.dart';
+import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
@@ -255,8 +257,9 @@ class _CertCertifiedPageState extends State<CertCertifiedPage> {
                           certificate.imageUrl != null
                               ? Stack(
                                   children: [
-                                    Image.network(
-                                      certificate.imageUrl!,
+                                    CachedNetworkImage(
+                                     imageUrl:  certificate.imageUrl!,
+                                      progressIndicatorBuilder: (context, url, downloadProgress) => CircularProgressIndicator(value: downloadProgress.progress),
                                       width: 150,
                                       height: 150,
                                       fit: BoxFit.cover,

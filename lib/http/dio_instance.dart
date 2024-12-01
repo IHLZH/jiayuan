@@ -72,7 +72,9 @@ class DioInstance {
       Object? data,
       Map<String, dynamic>? queryParameters,
       Options? options,
-      CancelToken? cancelToken}) async {
+      CancelToken? cancelToken,
+        void Function(int, int)? onSendProgress,
+      }) async {
     if (!_inited) {
       throw Exception("you should call initDio() first!");
     }
@@ -85,7 +87,9 @@ class DioInstance {
               method: HttpMethod.POST,
               receiveTimeout: _defaultTimeout,
               sendTimeout: _defaultTimeout,
-            ));
+            ),
+      onSendProgress: onSendProgress
+    );
   }
 
   ///put请求方式

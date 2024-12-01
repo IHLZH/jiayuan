@@ -133,5 +133,8 @@ class RoutePath {
   static const String friendList = "/friendList";
 
   //好友信息 好友设置页面
-  static const String friendInfo = "/firendInfo";
+  static const String friendInfo = "/friendInfo";
+
+  //收藏页面
+  static const String keeperCollection = "/keeperCollection";
 }

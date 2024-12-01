@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/commission_center_page/certificates/certificate_vm.dart';
@@ -40,64 +41,70 @@ class _CertificatePageState extends State<CertificatePage> {
                 itemCount: certificateVm.certificates?.length,
                 itemBuilder: (context, index) {
                   final certificate = certificateVm.certificates?[index];
-                  return certificate!.status == 1 ? Container(
-                    margin: const EdgeInsets.all(8),
-                    padding: const EdgeInsets.all(10),
-                    width: double.infinity,
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(certificate!.certName ?? '',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16)),
-                            Spacer(),
-                            switch (certificate.status) {
-                              0 => Text(
-                                '待审核',
-                                style: TextStyle(color: Colors.red),
-                              ),
-                              1 => Text('已通过',
-                                  style: TextStyle(color: Colors.red)),
-                              2 => Text('未通过',
-                                  style: TextStyle(color: Colors.red)),
-                              _ => Text('已删除',
-                                  style: TextStyle(color: Colors.red)),
-                            }
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        //图片
-                        certificate.imageUrl != null
-                            ? Stack(
-                          children: [
-                            Image.network(
-                              certificate.imageUrl!,
-                              width: 150,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
-                            Positioned(
-                                top: 0,
-                                right: 0,
-                                child: Image.asset(
+                  return certificate!.status == 1
+                      ? Container(
+                          margin: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(10),
+                          width: double.infinity,
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text(certificate.certName ?? '',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 16)),
+                                  Spacer(),
                                   switch (certificate.status) {
-                                    0 => 'assets/images/ToBeReviewed.png',
-                                    1 => 'assets/images/reviewed.png',
-                                    2 => 'assets/images/approved.png',
-                                    _ => 'assets/images/delete.png'
-                                  },
-                                  color: Colors.red,
-                                  width: 60,
-                                  height: 60,
-                                ))
-                          ],
+                                    0 => Text(
+                                        '待审核',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    1 => Text('已通过',
+                                        style: TextStyle(color: Colors.red)),
+                                    2 => Text('未通过',
+                                        style: TextStyle(color: Colors.red)),
+                                    _ => Text('已删除',
+                                        style: TextStyle(color: Colors.red)),
+                                  }
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              //图片
+                              certificate.imageUrl != null
+                                  ? Stack(
+                                      children: [
+                                        CachedNetworkImage(
+                                          imageUrl: certificate.imageUrl!,
+                                          placeholder: (context, url) => CircularProgressIndicator(),
+                                          width: 150,
+                                          height: 150,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        Positioned(
+                                            top: 0,
+                                            right: 0,
+                                            child: Image.asset(
+                                              switch (certificate.status) {
+                                                0 =>
+                                                  'assets/images/ToBeReviewed.png',
+                                                1 =>
+                                                  'assets/images/reviewed.png',
+                                                2 =>
+                                                  'assets/images/approved.png',
+                                                _ => 'assets/images/delete.png'
+                                              },
+                                              color: Colors.red,
+                                              width: 60,
+                                              height: 60,
+                                            ))
+                                      ],
+                                    )
+                                  : Container(),
+                            ],
+                          ),
                         )
-                            : Container(),
-                      ],
-                    ),
-                  ) : Container();
+                      : Container();
                 },
               );
             },

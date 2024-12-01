@@ -61,6 +61,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
     return ChangeNotifierProvider<SendCommissionViewModel>(
         create: (context) => _sendCommissionViewModel,
         child: Scaffold(
+          backgroundColor: Colors.white,
           resizeToAvoidBottomInset: false,
           body: TextSelectionTheme(
             data: TextSelectionThemeData(
@@ -130,54 +131,10 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
             ),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: FloatingActionButton(
-           shape: CircleBorder(),
-            onPressed: () async {
-              // 获取验证结
-              if (_isProcessing) return;
-              setState(() {
-                _isProcessing = true;
-              });
-              try {
-                String? errorMessage = context
-                    .read<SendCommissionViewModel>()
-                    .validateCommission();
-                if (errorMessage != null) {
-                  // 显示错误提示
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('提示'),
-                      content: Text(errorMessage),
-                      actions: [
-                        TextButton(
-
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('确定'),
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  // 验证通过，执行发布操作
-                  if (await _sendCommissionViewModel.sendCommission()) {
-                    showToast('发布成功');
-                    Navigator.pop(context);
-                  } else {
-                    showToast("发布失败");
-                  }
-                }
-              } finally {
-                setState(() {
-                  _isProcessing = false;
-                });
-              }
-            },
-            child: Icon(Icons.check),
-          ),
+          floatingActionButton: _buildPostService(),
           bottomNavigationBar: BottomAppBar(
             shape: CircularNotchedRectangle(),
-            height: 30.h,
+            height: 40.h,
             color: Colors.transparent,
           ),
         ));
@@ -188,6 +145,8 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
       selector: (_, viewModel) => viewModel.checkCommisssion(),
       builder: (context, canSubmit, child) {
         return Container(
+          height:70.h,
+          width: 70.h,
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey.shade300),
             borderRadius: BorderRadius.circular(35),

@@ -162,4 +162,24 @@ class KeeperApi {
     }
     return evaluations;
   }
+
+  //获取收藏的家政员
+  Future<List<Housekeeper>> getCollectKeeper() async {
+    List<Housekeeper> housekeepers = [];
+    try {
+      final Response response = await DioInstance.instance().post(
+          path: "/release/keeper/collection/list",
+          options: Options(headers: {"Authorization": Global.token}));
+      if (response.data['data'] != null) {
+        print('获取到的收藏数据${response.data["data"]}');
+        housekeepers.addAll((response.data["data"] as List)
+            .map((e) => Housekeeper.fromJson(e))
+            .toList());
+        housekeepers.forEach((item) => print(item.realName));
+      }
+    } catch (e) {
+      print("请求失败ss" + e.toString());
+    }
+    return housekeepers;
+  }
 }

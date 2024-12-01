@@ -135,7 +135,7 @@ class SendCommissionViewModel with ChangeNotifier{
     required String longitude,
     required Map<String, dynamic> locationDetail,
   }) {
-    _address = locationDetail['address'];
+    _address = locationDetail['address'] ;
     _latitude = double.tryParse(latitude);
     _longitude = double.tryParse(longitude);
     _locationDetail = locationDetail;

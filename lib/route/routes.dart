@@ -38,6 +38,7 @@ import '../page/order_page/order_page.dart';
 import '../page/send_commission_page/send_commision_page.dart';
 import '../page/tab_page/tab_page.dart';
 import '../page/user_page/browser_history_page/browser_history_page.dart';
+import '../page/user_page/keeper_collection/keeper_collection.dart';
 import '../page/user_page/profile_edit_page/profile_edit_page.dart';
 import '../page/user_page/setting_page/change_phone_page/bind_phone_page.dart';
 import '../page/user_page/setting_page/change_phone_page/change_phone_page.dart';
@@ -181,6 +182,8 @@ class Routes {
         return pageRoute(UserInfoPage(user: arg['user'] as SearchUser));
       case RoutePath.friendInfo:
         return pageRoute(FriendInfoPage(), settings: settings);
+      case RoutePath.keeperCollection:
+        return pageRoute(KeeperCollectionPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
