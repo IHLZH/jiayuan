@@ -9,25 +9,47 @@ class KeeperViewModel with ChangeNotifier {
   bool isLoading = false;
   String? error;
   bool isFavorite = false;
+
   //收藏家政员
   Future<void> addFavorite() async {
     try {
-      await KeeperApi.instance.addFavorite(keeperData!.keeperId);
-      isFavorite = !isFavorite;
+    isFavorite =  await KeeperApi.instance.addFavorite(keeperData!.keeperId);
     } catch (e) {
       print("收藏失败：" + e.toString());
     }
     notifyListeners();
   }
 
+  //判断是否被收藏
+  Future<void> checkIsFavorite() async {
+    try {
+      isFavorite = await KeeperApi.instance.addFavorite(keeperData!.keeperId);
+      isFavorite = await KeeperApi.instance.addFavorite(keeperData!.keeperId);
+    } catch (e) {
+      print("判断收藏失败：" + e.toString());
+    }
+  }
+
+  //获取评论
+  Future<void> getComments(int id) async {
+    try {
+      keeperData!.evaluations = [];
+      keeperData!.evaluations!.addAll(await KeeperApi.instance.getComments(id,1,1))  ;
+    } catch (e) {
+      print("获取评论失败：" + e.toString());
+    }
+  }
+
   //根据家政员id获取家政员信息
   Future<void> getKeeperDataDetail(int id) async {
+    await checkIsFavorite();
     try {
       isLoading = true;
       notifyListeners();
       //模拟网络延迟
       await Future.delayed(Duration(seconds: 1));
       keeperData = await KeeperApi.instance.getKeeperDataDetail(id);
+      await getComments(id);
       isLoading = false;
       error = null;
       notifyListeners();

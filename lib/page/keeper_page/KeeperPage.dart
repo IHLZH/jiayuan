@@ -1,8 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:jiayuan/common_ui/%20autoHeightPageView/autoHeightPageView.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
+import 'package:jiayuan/route/route_path.dart';
+import 'package:jiayuan/route/route_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../common_ui/banner/home_banner_widget.dart';
@@ -386,10 +389,11 @@ class _KeeperpageState extends State<Keeperpage>
             itemCount: keeperViewModel.keeperData?.certificates?.length,
             itemBuilder: (context, index) {
               return Container(
-                width: 162.w,
+                width: 130.w,
                 margin: EdgeInsets.only(right: 10.w),
-                child: Image.network(
-                  keeperViewModel.keeperData?.certificates?[index] ?? '',
+                child: CachedNetworkImage(
+                imageUrl:   keeperViewModel.keeperData?.certificates?[index] ?? '',
+                  placeholder: (context, url) => CircularProgressIndicator(),
                   fit: BoxFit.fill,
                 ),
               );
@@ -455,19 +459,33 @@ class _KeeperpageState extends State<Keeperpage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: EdgeInsets.only(left: 10.w, right: 15.w),
-            decoration: BoxDecoration(
-              color: AppColors.endColor,
-              borderRadius: BorderRadius.circular(13),
-            ),
-            child: Text(
-              '顾客评价',
-              style: TextStyle(color: Colors.black, fontSize: 16.sp),
-            ),
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 10.w, right: 15.w),
+                decoration: BoxDecoration(
+                  color: AppColors.endColor,
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: Text(
+                  '顾客评价',
+                  style: TextStyle(color: Colors.black, fontSize: 16.sp),
+                ),
+              ),
+              Spacer(),
+              TextButton(
+                onPressed: () {
+                  RouteUtils.pushForNamed(context, RoutePath.commentPage,arguments: keeperViewModel.keeperData?.keeperId);
+                },
+                child: Text(
+                  '查看全部评价',
+                  style: TextStyle(color: Colors.black, fontSize: 14.sp,),
+                ),
+              )
+            ],
           ),
           SizedBox(
-            height: 10.h,
+            height: 5.h,
           ),
           Divider(height: 1, indent: 18, endIndent: 18),
           Container(
@@ -531,9 +549,10 @@ class _KeeperpageState extends State<Keeperpage>
                                           '${DateFormat('yyyy-MM-dd').format(keeperViewModel.keeperData?.evaluations?[index].time ?? DateTime.now())}'),
                                     ],
                                   ),
+                                  SizedBox(height: 2),
                                   Text(
                                     '${keeperViewModel.keeperData?.evaluations?[index].content}',
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(color: Colors.black,fontSize: 15.sp),
                                   ),
                                 ],
                               ),

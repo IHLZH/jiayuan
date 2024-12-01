@@ -14,7 +14,8 @@ class KeeperApi {
   KeeperApi._();
 
   //收藏家政员
-  Future<void> addFavorite(int? id) async {
+  Future<bool> addFavorite(int? id) async {
+    bool isFavorite = false;
     try {
       final Response response = await DioInstance.instance().post(
         path: UrlPath.collectKeeper,
@@ -22,6 +23,9 @@ class KeeperApi {
         options: Options(headers: {"Authorization": Global.token}),
       );
       print('收藏返回数据:${response.data}');
+      if(response.data['data'] == '收藏成功'){
+        isFavorite = true;
+      }
       if (response.data['code'] == 200) {
         print("收藏成功");
       } else {
@@ -30,6 +34,7 @@ class KeeperApi {
     } catch (e) {
       print("收藏失败：" + e.toString());
     }
+    return isFavorite;
   }
 
   //根据家政员id获取家政员详细信息
