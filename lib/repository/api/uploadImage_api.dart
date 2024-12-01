@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -48,7 +50,7 @@ class UploadImageApi {
               contentType: 'multipart/form-data',
               headers: {'Authorization': Global.token}),
         );
-        if (response.statusCode == 200) {
+        if (response.data['code'] == 200) {
           // 将返回的图片地址赋值给对应的索引
           print("上传成功: ${response.data}");
           isSuccess = true;
@@ -71,6 +73,7 @@ class UploadImageApi {
     for (int i = 0; i < imageUrls.length; i++) {
       print("所有的图片地址 ${imageUrls[i]}");
     }
+    EasyLoading.removeAllCallbacks();
     return imageUrls;
   }
 
