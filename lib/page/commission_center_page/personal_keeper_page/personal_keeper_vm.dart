@@ -79,6 +79,7 @@ class PersonalKeeperVm with ChangeNotifier {
           : workExperience,
     );
     await KeeperApi.instance.updateKeeperInfo(housekeeperDataDetail);
+    print(Global.token);
     await KeeperApi.instance.getKeeperDataByUserId();
   }
 
