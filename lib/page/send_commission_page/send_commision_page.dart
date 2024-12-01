@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:flutter_pickers/time_picker/model/date_mode.dart';
+import 'package:flutter_pickers/time_picker/model/pduration.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/page/home_page/home_vm.dart';
 import 'package:jiayuan/page/send_commission_page/send_commission_vm.dart';
@@ -657,6 +658,10 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
             child: GestureDetector(
                 onTap: () {
                   Pickers.showDatePicker(context, mode: DateMode.YMDHM,
+                      minDate: PDuration.parse(DateTime.now()),
+                      maxDate: PDuration(year: DateTime.now().year+1, month: 12, day: 31),
+
+
                       onConfirm: (value) {
                     _sendCommissionViewModel.updateSelectedDate(DateTime(
                         value.year ?? 0,
@@ -871,32 +876,5 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
         ),
       ),
     ));
-  }
-
-  // 打开地图选择位置
-  void _openLocationPicker() async {
-    // 获取当前已选择的坐（如果有的话）
-    final double? currentLat = _sendCommissionViewModel.latitude;
-    final double? currentLng = _sendCommissionViewModel.longitude;
-
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MapPage(
-          initialLatitude: currentLat,
-          initialLongitude: currentLng,
-        ),
-      ),
-    );
-
-    if (result != null) {
-      // 处理选择的位置结果
-      _sendCommissionViewModel.updateLocation(
-        address: result['address'],
-        latitude: result['latitude'],
-        longitude: result['longitude'],
-        locationDetail: result['locationDetail'],
-      );
-    }
   }
 }
