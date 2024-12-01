@@ -10,8 +10,8 @@ class FloatingSupportBall extends StatefulWidget {
 }
 
 class _FloatingSupportBallState extends State<FloatingSupportBall> {
-  double _xPosition = 0;
-  double _yPosition = 40;
+  double _xPosition = 0-25;
+  double _yPosition = 340;
   int _clickCount = 0;
   bool _isFirstClick = true;
 
