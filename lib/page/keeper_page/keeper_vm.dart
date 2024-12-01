@@ -42,13 +42,14 @@ class KeeperViewModel with ChangeNotifier {
 
   //根据家政员id获取家政员信息
   Future<void> getKeeperDataDetail(int id) async {
-    await checkIsFavorite();
+
     try {
       isLoading = true;
       notifyListeners();
       //模拟网络延迟
       await Future.delayed(Duration(seconds: 1));
       keeperData = await KeeperApi.instance.getKeeperDataDetail(id);
+      await checkIsFavorite();
       await getComments(id);
       isLoading = false;
       error = null;
