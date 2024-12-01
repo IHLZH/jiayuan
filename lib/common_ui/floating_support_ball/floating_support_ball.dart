@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
+import 'package:jiayuan/page/send_commission_page/send_commision_page.dart';
+import 'package:jiayuan/utils/constants.dart';
 
 import '../../route/route_path.dart';
 import '../../route/route_utils.dart';
+
+bool isProduction = Constants.IS_Production;
 
 class FloatingSupportBall extends StatefulWidget {
   @override
@@ -20,8 +24,57 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
     await RouteUtils.pushForNamed(context, RoutePath.settingPage);
   }
 
-  Future<void> _jumpToSendComissionPage() async {
-    await RouteUtils.pushForNamed(context, RoutePath.sendCommissionPage);
+  Future<void> _jumpToSendComissionPage(int index) async {
+    await RouteUtils.push(context, SendCommissionPage(id: index));
+  }
+
+  void _showCommissionOptionsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: 200), // 设置最大高度
+          child: AlertDialog(
+            backgroundColor: AppColors.backgroundColor5,
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            title: Container(
+              padding: EdgeInsets.only(bottom: 3),
+              child: Column(
+                children: [
+                  Text('选择委托服务'),
+                ],
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: List.generate(11, (index) {
+                final options = [
+                  '日常保洁',
+                  '家电维修',
+                  '搬家搬厂',
+                  '收纳整理',
+                  '管道疏通',
+                  '维修拆装',
+                  '保姆月嫂',
+                  '居家养老',
+                  '居家托育',
+                  '专业养护',
+                  '家庭保健'
+                ];
+                return ListTile(
+                  title: Text(options[index]),
+                  onTap: () {
+                    if (isProduction) print("========= id: $index ==========");
+                    Navigator.of(context).pop(); // 关闭对话框
+                    _jumpToSendComissionPage(index);
+                  },
+                );
+              }),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -49,7 +102,12 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 ),
               ),
             ),
-            childWhenDragging: Container(), // 当拖动时，原位置不显示任何内容
+            childWhenDragging: Container(),
+            // 当拖动时，原位置不显示任何内容
+            onDragStarted: () {
+              _isIconsVisible = false;
+              setState(() {});
+            },
             onDragEnd: (details) {
               final renderBox = context.findRenderObject() as RenderBox;
               final position = details.offset;
@@ -100,8 +158,8 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 setState(() {});
               },
               child: Container(
-                width: 60,
-                height: 60,
+                width: 55,
+                height: 55,
                 decoration: BoxDecoration(
                   color: _isFirstClick
                       ? AppColors.appColor.withOpacity(0.7)
@@ -110,20 +168,21 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 ),
                 child: Center(
                   child: Icon(Icons.accessibility_new_outlined,
-                      size: 40, color: Colors.white),
+                      size: 38, color: Colors.white),
                 ),
               ),
             ),
           ),
         ),
         if (_isIconsVisible)
+          //发布委托
           Positioned(
             left: _xPosition < MediaQuery.of(context).size.width / 2
                 ? _xPosition + 30
                 : _xPosition - 30,
             top: _yPosition - 50,
             child: GestureDetector(
-              onTap: _jumpToSendComissionPage,
+              onTap: _showCommissionOptionsDialog,
               child: Container(
                 width: 50,
                 height: 50,
@@ -132,7 +191,8 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: Icon(Icons.publish_sharp, size: 35, color: Colors.white),
+                  child:
+                      Icon(Icons.add, size: 35, color: Colors.white),
                 ),
               ),
             ),
