@@ -277,9 +277,7 @@ class _SendCommissionPageState extends State<SendCommissionPage> {
   void _showCustomKeyboard() {
     if (_sendCommissionViewModel.price.toStringAsFixed(2) != '0.00')
       _priceController.text = _sendCommissionViewModel.price.toStringAsFixed(2);
-    print('价格:_priceController.text:${_priceController.text}');
     _tempPriceController.text = _priceController.text; // 初始化临时输入框内容
-    print('临时价格_tempPriceController.text:${_tempPriceController.text}');
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
