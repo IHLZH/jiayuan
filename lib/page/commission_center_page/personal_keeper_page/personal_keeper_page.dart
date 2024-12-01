@@ -210,11 +210,10 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
         Row(
           children: [
             Text('联系方式', style: TextStyle(fontSize: 16, color: Colors.black)),
-            Spacer(),
-            Icon(Icons.phone, color: AppColors.appColor),
-            SizedBox(width: 10.w),
+            SizedBox(width: 80.w),
             Expanded(
               child: TextField(
+
                 controller: _phoneController,
                 focusNode: _focusNodePhone,
                 keyboardType: TextInputType.number,
@@ -235,12 +234,13 @@ class _PersonalKeeperPageState extends State<PersonalKeeperPage> {
                     color: Colors.black,
                     fontWeight: FontWeight.w400),
                 decoration: InputDecoration(
+                  icon: Icon(Icons.phone, color: AppColors.appColor),
                   hintText: "请输入手机号",
                   hintStyle: TextStyle(color: Colors.grey),
                   border: InputBorder.none,
                 ),
               ),
-            )
+            ),
           ],
         )
       ]),
