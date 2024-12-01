@@ -432,7 +432,7 @@ class _UserPageState extends State<UserPage> {
       backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: AppColors.appColor.withOpacity(0.5),
+        backgroundColor: AppColors.endDeepColor.withOpacity(0.7),
         toolbarHeight: 10.h,
         automaticallyImplyLeading: false,
       ),
@@ -449,7 +449,7 @@ class _UserPageState extends State<UserPage> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            AppColors.appColor.withOpacity(0.5),
+                            AppColors.endDeepColor.withOpacity(0.7),
                             Colors.white
                           ], // 自定义渐变颜色
                           begin: Alignment.topCenter,
@@ -566,7 +566,7 @@ class _UserPageState extends State<UserPage> {
                           offset: Offset(0, 1),
                         ),
                       ],
-                      border: Border.all(color: Colors.grey, width: 1.w),
+                      border: Border.all(color: Colors.grey, width: 0.1.w),
                     ),
                     child: Column(
                       children: [
@@ -657,7 +657,7 @@ class _UserPageState extends State<UserPage> {
                           offset: Offset(0, 1),
                         ),
                       ],
-                      border: Border.all(color: Colors.grey, width: 1.w),
+                      border: Border.all(color: Colors.grey, width: 0.1.w),
                     ),
                     child: Column(
                       children: [
@@ -701,7 +701,7 @@ class _UserPageState extends State<UserPage> {
                           offset: Offset(0, 0),
                         ),
                       ],
-                      border: Border.all(color: Colors.grey, width: 1.w),
+                      border: Border.all(color: Colors.grey, width: 0.1.w),
                     ),
                     child: Column(
                       children: [

@@ -201,13 +201,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(1.0),
+            color: Colors.grey.withOpacity(0.5.w),
             spreadRadius: 0,
             blurRadius: 2,
             offset: Offset(1, -1),
           ),
         ],
-        border: Border.all(color: Colors.grey, width: 1.w),
+        border: Border.all(color: Colors.grey, width: 0.1.w),
       ),
       child: content,
     );

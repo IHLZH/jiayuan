@@ -191,56 +191,62 @@ class _SettingPageState extends State<SettingPage> {
           },
         ),
       ),
-      body: SafeArea(
-          child: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 10.r),
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 0,
-                    blurRadius: 2,
-                    offset: Offset(0, 0),
-                  ),
-                ],
-                border: Border.all(color: Colors.grey, width: 1.w),
-              ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor5,
+        ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(top: 10.r),
               child: Column(
                 children: [
-                  _buildOption(Icons.email_outlined, '邮箱地址'),
-                  _line(),
-                  _buildOption(Icons.phone, '手机号码'),
-                  _line(),
-                  _buildOption(Icons.lock, '修改密码'),
-                  // _line(),
-                  // _buildOption(Icons.send_outlined, '发送给喜多郁代'),
-                  // _line(),
-                  // _buildOption(Icons.record_voice_over_outlined, '拉取所有会话列表'),
-                  // _line(),
-                  // _buildOption(Icons.record_voice_over_outlined, '拉取单聊会话'),
-                  // _line(),
-                  // _buildOption(
-                  //     Icons.record_voice_over_outlined, '拉取和喜多的单聊历史信息'),
-                  // _line(),
-                  // _buildOption(Icons.cleaning_services_rounded, '清空和喜多的聊天'),
-                  // _line(),
-                  // _buildOption(Icons.search, '搜索用户'),
-                  // _line(),
-                  // _buildOption(Icons.search, '获得好友列表'),
-                  // _line(),
-                  // _buildOption(Icons.person_add_alt, '添加好友'),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 0,
+                          blurRadius: 2,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                      border: Border.all(color: Colors.grey, width: 0.1.w),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildOption(Icons.email_outlined, '邮箱地址'),
+                        _line(),
+                        _buildOption(Icons.phone, '手机号码'),
+                        _line(),
+                        _buildOption(Icons.lock, '修改密码'),
+                        // _line(),
+                        // _buildOption(Icons.send_outlined, '发送给喜多郁代'),
+                        // _line(),
+                        // _buildOption(Icons.record_voice_over_outlined, '拉取所有会话列表'),
+                        // _line(),
+                        // _buildOption(Icons.record_voice_over_outlined, '拉取单聊会话'),
+                        // _line(),
+                        // _buildOption(
+                        //     Icons.record_voice_over_outlined, '拉取和喜多的单聊历史信息'),
+                        // _line(),
+                        // _buildOption(Icons.cleaning_services_rounded, '清空和喜多的聊天'),
+                        // _line(),
+                        // _buildOption(Icons.search, '搜索用户'),
+                        // _line(),
+                        // _buildOption(Icons.search, '获得好友列表'),
+                        // _line(),
+                        // _buildOption(Icons.person_add_alt, '添加好友'),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
-      )),
+          )),
     );
   }
 }

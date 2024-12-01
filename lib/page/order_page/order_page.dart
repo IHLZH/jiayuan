@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:jiayuan/app.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
@@ -157,11 +159,11 @@ class _OrderPageState extends State<OrderPage> {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Colors.grey),
+            border: Border.all(color: Colors.grey,width: 0.1.w),
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.grey.withOpacity(0.1),
                 spreadRadius: 2,
                 blurRadius: 5,
                 offset: Offset(0, 0),
