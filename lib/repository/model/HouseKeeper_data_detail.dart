@@ -77,8 +77,8 @@ class HousekeeperDataDetail {
      keeperImages = data['photoUrl']?.cast<String>() ?? [];
      introduction = data['introduction']?? "";
      certificates = data['certificatePicUrl']?.cast<String>() ?? [];
-     contact = data['phoneNumber'] ?? "";
-      evaluations = [] ;
+     contact = data['dailyPhoneNumber'] ?? data['phoneNumber'] ??  "";
+     evaluations = [] ;
    }
 
    Map<String, dynamic> toJson() => {
