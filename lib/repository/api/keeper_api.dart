@@ -7,6 +7,7 @@ import 'package:oktoast/oktoast.dart';
 
 import '../../http/dio_instance.dart';
 import '../../http/http_method.dart';
+import '../../utils/sp_utils.dart';
 
 class KeeperApi {
   static KeeperApi instance = KeeperApi._();
@@ -127,6 +128,11 @@ class KeeperApi {
       print('更新信息: ${housekeeperDataDetail.toJson()}');
       print('返回数据: ${response.data}');
       if (response.data['code'] == 200) {
+        final List<String> token =
+        response.headers["Authorization"] as List<String>;
+        Global.token = token.first;
+        //持久化
+        await SpUtils.saveString("token", Global.token!);
         print("更新家政员信息成功");
       } else {
         print("更新家政员信息失败");

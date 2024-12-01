@@ -10,6 +10,8 @@ import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
+import '../../utils/sp_utils.dart';
+
 class IdentityApi{
 
   static IdentityApi instance = IdentityApi._();
@@ -35,6 +37,8 @@ class IdentityApi{
       if(response.statusCode == 200){
         if(response.data['code'] == 200){
           Global.token = response.data['message'];
+          //持久化
+          await SpUtils.saveString("token", Global.token!);
           return true;
         }else{
           showToast(response.data['message']);
