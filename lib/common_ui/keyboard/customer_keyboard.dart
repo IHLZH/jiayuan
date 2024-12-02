@@ -67,10 +67,10 @@ class CustomKeyboard extends StatelessWidget {
             children: [
               SizedBox(width: 8,),
               Text('最低价¥  '),
-              id < 6 ? Text('${Global.standPrices?[id].lowestPrice}/小时',) : Text('${Global.standPrices?[id].lowestPrice}/月'),
+              id < 6 ? Text('${Global.standPrices[id].lowestPrice!.toStringAsFixed(2)} /小时',) : Text('${Global.standPrices[id].lowestPrice!.toStringAsFixed(2)}/月'),
               SizedBox(width: 40,),
               Text('参考价¥  '),
-              id < 6 ? Text('${Global.standPrices?[id].referencePrice}/小时',) : Text('${Global.standPrices?[id].referencePrice}/月'),
+              id < 6 ? Text('${Global.standPrices[id].referencePrice!.toStringAsFixed(2)}/ 小时',) : Text('${Global.standPrices[id].referencePrice!.toStringAsFixed(2)}/月'),
             ],
           ),
           Row(
