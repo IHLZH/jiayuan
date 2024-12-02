@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
+import 'package:jiayuan/page/send_commission_page/send_commision_page.dart';
+import 'package:jiayuan/utils/constants.dart';
 
+import '../../page/home_page/home_vm.dart';
 import '../../route/route_path.dart';
 import '../../route/route_utils.dart';
+
+bool isProduction = Constants.IS_Production;
 
 class FloatingSupportBall extends StatefulWidget {
   @override
@@ -20,8 +25,157 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
     await RouteUtils.pushForNamed(context, RoutePath.settingPage);
   }
 
-  Future<void> _jumpToSendComissionPage() async {
-    await RouteUtils.pushForNamed(context, RoutePath.sendCommissionPage);
+  Future<void> _jumpToSendComissionPage(int index) async {
+    await RouteUtils.push(context, SendCommissionPage(id: index));
+  }
+
+  // void _showCommissionOptionsDialog() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return SafeArea(
+  //         child: AlertDialog(
+  //           backgroundColor: AppColors.backgroundColor5,
+  //           // contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  //           title: Container(
+  //             padding: EdgeInsets.only(bottom: 3),
+  //             child: Center(
+  //               child: Text(
+  //                 '选择委托服务',
+  //                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+  //               ),
+  //             ),
+  //           ),
+  //           content: SizedBox(
+  //             width: 300, // 设置一个固定的宽度
+  //             height: 350,
+  //             child: SingleChildScrollView(
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: List.generate(11, (index) {
+  //                   final options = [
+  //                     '日常保洁',
+  //                     '家电维修',
+  //                     '搬家搬厂',
+  //                     '收纳整理',
+  //                     '管道疏通',
+  //                     '维修拆装',
+  //                     '保姆月嫂',
+  //                     '居家养老',
+  //                     '居家托育',
+  //                     '专业养护',
+  //                     '家庭保健'
+  //                   ];
+  //                   return Column(
+  //                     children: [
+  //                       ListTile(
+  //                         title: Text(options[index]),
+  //                         onTap: () {
+  //                           if (isProduction)
+  //                             print("========= id: $index ==========");
+  //                           Navigator.of(context).pop(); // 关闭对话框
+  //                           _jumpToSendComissionPage(index);
+  //                         },
+  //                       ),
+  //                       if (index < 10) // 添加分隔线，最后一个选项不加
+  //                         Divider(height: 1, color: Colors.grey),
+  //                     ],
+  //                   );
+  //                 }),
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+  void _showCommissionOptionsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: AlertDialog(
+            backgroundColor: AppColors.backgroundColor5,
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            title: Container(
+              padding: EdgeInsets.only(bottom: 8),
+              child: Center(
+                child: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return LinearGradient(
+                      begin: Alignment.bottomLeft,
+                      end: Alignment.topRight,
+                      colors: [
+                        // Theme.of(context).primaryColor,
+                        AppColors.appColor,
+                        AppColors.appColor,
+                        // AppColors.endColor,
+                      ],
+                    ).createShader(bounds);
+                  },
+                  child: Text(
+                    '选择委托服务',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+            content: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 400, maxWidth: 400),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(HomeViewModel.CommissionTypes.length,
+                      (index) {
+                    final commissionType = HomeViewModel.CommissionTypes[index];
+                    return Column(
+                      children: [
+                        ListTile(
+                          leading: ShaderMask(
+                            shaderCallback: (Rect bounds) {
+                              return LinearGradient(
+                                begin: Alignment.bottomLeft,
+                                end: Alignment.topRight,
+                                colors: [
+                                  Theme.of(context).primaryColor,
+                                  AppColors.appColor,
+                                  AppColors.endColor,
+                                ],
+                              ).createShader(bounds);
+                            },
+                            child: Icon(
+                              commissionType.icon,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                          title: Text(commissionType.typeText),
+                          onTap: () {
+                            if (isProduction)
+                              print("========= id: $index ==========");
+                            Navigator.of(context).pop(); // 关闭对话框
+                            _jumpToSendComissionPage(index);
+                          },
+                        ),
+                        if (index <
+                            HomeViewModel.CommissionTypes.length -
+                                1) // 添加分隔线，最后一个选项不加
+                          Divider(height: 1, color: Colors.grey),
+                      ],
+                    );
+                  }),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -49,7 +203,12 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 ),
               ),
             ),
-            childWhenDragging: Container(), // 当拖动时，原位置不显示任何内容
+            childWhenDragging: Container(),
+            // 当拖动时，原位置不显示任何内容
+            onDragStarted: () {
+              _isIconsVisible = false;
+              setState(() {});
+            },
             onDragEnd: (details) {
               final renderBox = context.findRenderObject() as RenderBox;
               final position = details.offset;
@@ -100,8 +259,8 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 setState(() {});
               },
               child: Container(
-                width: 60,
-                height: 60,
+                width: 55,
+                height: 55,
                 decoration: BoxDecoration(
                   color: _isFirstClick
                       ? AppColors.appColor.withOpacity(0.7)
@@ -110,20 +269,21 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 ),
                 child: Center(
                   child: Icon(Icons.accessibility_new_outlined,
-                      size: 40, color: Colors.white),
+                      size: 38, color: Colors.white),
                 ),
               ),
             ),
           ),
         ),
         if (_isIconsVisible)
+          //发布委托
           Positioned(
             left: _xPosition < MediaQuery.of(context).size.width / 2
                 ? _xPosition + 30
                 : _xPosition - 30,
             top: _yPosition - 50,
             child: GestureDetector(
-              onTap: _jumpToSendComissionPage,
+              onTap: _showCommissionOptionsDialog,
               child: Container(
                 width: 50,
                 height: 50,
@@ -132,7 +292,7 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: Icon(Icons.publish_sharp, size: 35, color: Colors.white),
+                  child: Icon(Icons.add, size: 35, color: Colors.white),
                 ),
               ),
             ),
