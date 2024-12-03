@@ -114,7 +114,7 @@ class ImChatApi {
         if (isProduction)
           print("当前用户被踢下线，此时可以 UI 提示用户，并再次调用 V2TIMManager 的 login() 函数重新登录。");
 
-          showToast("其他设备登录当前账户", duration: Duration(seconds: 2));
+        showToast("其他设备登录当前账户", duration: Duration(seconds: 2));
       },
       onSelfInfoUpdated: (V2TimUserFullInfo info) {
         // 登录用户的资料发生了更新
@@ -190,11 +190,18 @@ class ImChatApi {
 
             if (isProduction) print("============获得新消息： ${text}=========");
 
-            if (ChatPageViewModel.instance.conversation != null &&
-                message.userID ==
-                    ChatPageViewModel.instance.conversation!.userID) {
-              if (isProduction)
-                print("============ userID: ${message.userID} =========");
+            if ((ChatPageViewModel.instance.conversation != null &&
+                    message.userID != null &&
+                    message.userID ==
+                        ChatPageViewModel.instance.conversation!.userID) ||
+                (ChatPageViewModel.instance.conversation != null &&
+                    message.groupID != null &&
+                    message.groupID ==
+                        ChatPageViewModel.instance.conversation!.groupID)) {
+              if (isProduction) {
+                print(
+                    "============ ID: ${message.userID ?? message.groupID} =========");
+              }
               await ChatPageViewModel.instance.refreshChatMessage();
             }
           }
@@ -279,11 +286,11 @@ class ImChatApi {
             message.mergerElem?.isLayersOverLimit;
             message.mergerElem?.title;
             V2TimValueCallback<List<V2TimMessage>> download =
-            await TencentImSDKPlugin.v2TIMManager
-                .getMessageManager()
-                .downloadMergerMessage(
-              msgID: message.msgID!,
-            );
+                await TencentImSDKPlugin.v2TIMManager
+                    .getMessageManager()
+                    .downloadMergerMessage(
+                      msgID: message.msgID!,
+                    );
             if (download.code == 0) {
               List<V2TimMessage>? messageList = download.data;
             }
@@ -307,7 +314,8 @@ class ImChatApi {
       // 会话监听
       //设置会话监听器
       conversationListener = V2TimConversationListener(
-        onConversationChanged: (List<V2TimConversation> conversationList) async {
+        onConversationChanged:
+            (List<V2TimConversation> conversationList) async {
           //某些会话的关键信息发生变化（未读计数发生变化、最后一条消息被更新等等）的回调函数
           //conversationList    变化的会话列表
           if (isProduction) print("============ 会话列表发生变化 ===========");
@@ -461,7 +469,7 @@ class ImChatApi {
         },
         onMemberInfoChanged: (String groupID,
             List<V2TimGroupMemberChangeInfo>
-            v2TIMGroupMemberChangeInfoList) async {
+                v2TIMGroupMemberChangeInfoList) async {
           //群成员信息被修改，仅支持禁言通知（全员能收到）。
           //groupID    群 ID
           //v2TIMGroupMemberChangeInfoList    被修改的群成员信息
@@ -497,8 +505,8 @@ class ImChatApi {
           //主动退出群组（主要用于多端同步，直播群（AVChatRoom）不支持）
           //groupID    群 ID
         },
-        onReceiveJoinApplication:
-            (String groupID, V2TimGroupMemberInfo member, String opReason) async {
+        onReceiveJoinApplication: (String groupID, V2TimGroupMemberInfo member,
+            String opReason) async {
           //有新的加群请求（只有群主或管理员会收到）
           //groupID    群 ID
           //member    申请人
@@ -518,11 +526,11 @@ class ImChatApi {
         },
       );
       //添加群组监听器
-      TencentImSDKPlugin.v2TIMManager.addGroupListener(listener: groupListener!);
+      TencentImSDKPlugin.v2TIMManager
+          .addGroupListener(listener: groupListener!);
 
       if (isProduction && groupListener != null)
         print("============= IM设置群组监听器成功 ============");
-
     } else {
       // 登录失败逻辑
       if (isProduction) print("登录失败");
@@ -756,7 +764,8 @@ class ImChatApi {
         element?.unreadCount; //会话未读消息数，直播群（AVChatRoom）不支持未读计数，默认为 0。
         element?.userID; //对方用户 ID，如果会话类型为单聊，userID 会存储对方的用户 ID，否则为 null。
 
-        if(isProduction)print("${element!.userID} ====== ${element!.lastMessage}");
+        if (isProduction)
+          print("${element!.userID} ====== ${element!.lastMessage}");
       });
 
       return getConversationListRes.data?.conversationList ?? [];
@@ -947,7 +956,7 @@ class ImChatApi {
       // 标记成功
       if (isProduction)
         print("============= groupID: $groupID 清空群聊未读数成功 ===========");
-    }else{
+    } else {
       if (isProduction) print("============= 清空群聊未读数失败 ===========");
       if (isProduction)
         print(
