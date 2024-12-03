@@ -41,6 +41,9 @@ import '../page/tab_page/tab_page.dart';
 import '../page/user_page/browser_history_page/browser_history_page.dart';
 import '../page/user_page/keeper_collection/keeper_collection.dart';
 import '../page/user_page/profile_edit_page/profile_edit_page.dart';
+import '../page/user_page/setting_page/change_password_page/change_password_page.dart';
+import '../page/user_page/setting_page/change_password_page/password_check_page.dart';
+import '../page/user_page/setting_page/change_password_page/reset_password_page.dart';
 import '../page/user_page/setting_page/change_phone_page/bind_phone_page.dart';
 import '../page/user_page/setting_page/change_phone_page/change_phone_page.dart';
 import '../page/user_page/setting_page/change_phone_page/check_phone_page.dart';
@@ -131,6 +134,17 @@ class Routes {
       //检验手机号页
       case RoutePath.checkPhonePage:
         return pageRoute(CheckPhonePage());
+      //修改密码页
+      case RoutePath.changePasswordPage:
+        return pageRoute(ChangePasswordPage());
+      //检验密码页
+      case RoutePath.passwordCheckPage:
+        return pageRoute(PasswordCheckPage());
+      //重设密码页
+      case RoutePath.resetPasswordPage:
+        final args = settings.arguments as Map<String, dynamic>;
+        final input = args['input'] as String;
+        return pageRoute(ResetPasswordPage(input: input));
       //家政员个人页面
       case RoutePath.KeeperPage:
         final keeperId = settings.arguments as int;
@@ -169,7 +183,9 @@ class Routes {
       //家政员中心展示用户评论的页面
       case RoutePath.commentPage:
         final keeperId = settings.arguments as int?;
-        return pageRoute(CommentPage(keeperId: keeperId!,));
+        return pageRoute(CommentPage(
+          keeperId: keeperId!,
+        ));
       case RoutePath.chatPage:
         return pageRoute(ChatPage(), settings: settings);
       // 用户搜索页
