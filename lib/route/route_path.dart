@@ -74,6 +74,12 @@ class RoutePath {
   //修改密码页
   static const String changePasswordPage = "/changePasswordPage";
 
+  //验证码修改密码页
+  static const String passwordCheckPage = "/passwordCheckPage";
+
+  //重设密码页
+  static const String resetPasswordPage = "/resetPasswordPage";
+
   //委托分类页
   static const String commissionType = "/commissionType";
 

@@ -1,9 +1,9 @@
 class UrlPath {
   static const String realBaseUrl = "http://192.168.3.32:9900/";
 
-   // static const String BaseUrl = "http://www.shinesuning.top:8080";
+   static const String BaseUrl = "http://10.7.89.43:8080";
   // static const String BaseUrl = "http://192.168.31.189:8080";
-  static const String BaseUrl = "http://www.shinesuning.top:8080";
+  // static const String BaseUrl = "http://www.shinesuning.top:8080";
   static const String wangBaseUrl = "http://10.7.89.154:8080";
 
   static const String testBaseUrl = "http://10.7.89.171:8080";
@@ -65,6 +65,9 @@ class UrlPath {
 
   //手机号验证接口
   static const String verifyPhoneUrl = "/verify/phone";
+
+  //旧密码修改密码接口
+  static const String updatePasswordUrl = "/password/resetPassword/old";
 
   //用户头像上传接口
   static const String uploadAvatarUrl = "/avatar/upload";

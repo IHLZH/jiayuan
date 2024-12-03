@@ -87,7 +87,11 @@ class _SettingPageState extends State<SettingPage> {
       RouteUtils.pushForNamed(context, RoutePath.changePhonePage);
     }
 
-    Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
+    Future<void> _jumpToChangePasswordPage() async {
+      RouteUtils.pushForNamed(context, RoutePath.changePasswordPage);
+    }
+
+    Widget _buildOption(IconData icon, String title) {
       return Material(
         color: Colors.transparent,
         child: InkWell(
@@ -100,6 +104,7 @@ class _SettingPageState extends State<SettingPage> {
                 _jumpToChangePhonePage();
                 break;
               case '修改密码':
+                _jumpToChangePasswordPage();
                 break;
               case '发送给喜多郁代':
                 _test();
