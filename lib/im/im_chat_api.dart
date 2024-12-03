@@ -936,6 +936,25 @@ class ImChatApi {
     }
   }
 
+  //清空群聊未读数
+  Future<void> clearGroupUnread(String groupID) async {
+    // 设置群消息已读
+    V2TimCallback markGroupMessageAsReadRes = await TencentImSDKPlugin
+        .v2TIMManager
+        .getMessageManager()
+        .markGroupMessageAsRead(groupID: groupID); // 需要设置消息已读的群id
+    if (markGroupMessageAsReadRes.code == 0) {
+      // 标记成功
+      if (isProduction)
+        print("============= groupID: $groupID 清空群聊未读数成功 ===========");
+    }else{
+      if (isProduction) print("============= 清空群聊未读数失败 ===========");
+      if (isProduction)
+        print(
+            "错误码：${markGroupMessageAsReadRes.code} 错误信息： ${markGroupMessageAsReadRes.desc}");
+    }
+  }
+
   //撤回消息
   Future<void> revokeMessage(String msgID) async {
     V2TimCallback revokeMessageRes = await TencentImSDKPlugin.v2TIMManager
