@@ -1,7 +1,10 @@
 import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/utils/global.dart';
+import 'package:tencent_cloud_chat_sdk/enum/group_member_filter_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/group_member_role_enum.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member_full_info.dart';
 
 class GroupApi {
   static final GroupApi _instance = GroupApi._internal();
@@ -12,6 +15,7 @@ class GroupApi {
     return _instance;
   }
 
+  // 创建群组
   Future<String> createGroup(String groupName, List<String> userList) async {
     List<V2TimGroupMember> memberList;
 
@@ -31,6 +35,35 @@ class GroupApi {
 
     String res =
         await ImChatApi.getInstance().createGroup(groupName, memberList);
+
+    return res;
+  }
+
+  //获取群聊信息
+  Future<V2TimGroupInfo> getGroupInfo(String groupId) async {
+    V2TimGroupInfo res = await ImChatApi.getInstance().getGroupInfo(groupId);
+
+    return res;
+  }
+
+  //获取群成员列表
+  Future<List<V2TimGroupMemberFullInfo?>> getGroupMemberList(String groupId,GroupMemberFilterTypeEnum filter) async {
+    //filter: 群成员过滤类型
+    //类型
+    // GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_ALL   拉取所有群成员的信息列表
+    // GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_OWNER  仅拉取群主的信息列表
+    // GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_ADMIN  仅拉取群管理员的信息列表
+    // GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_COMMON  仅拉取普通群成员的信息列表
+
+    List<V2TimGroupMemberFullInfo?> res =
+        await ImChatApi.getInstance().getGroupMemberList(groupId,GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_ALL);
+
+    return res;
+  }
+
+  // 退出群组
+  Future<bool> quitGroup(String groupId) async {
+    bool res = await ImChatApi.getInstance().quitGroup(groupId);
 
     return res;
   }
