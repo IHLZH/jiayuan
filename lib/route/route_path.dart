@@ -137,4 +137,6 @@ class RoutePath {
 
   //收藏页面
   static const String keeperCollection = "/keeperCollection";
+
+  static const String createGroup = "/createGroup";
 }

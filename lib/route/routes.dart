@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jiayuan/page/certified_page/cert/cert_certified_page.dart';
 import 'package:jiayuan/page/certified_page/keeper/keeper_certified_page.dart';
 import 'package:jiayuan/page/chat_page/conversation_page.dart';
+import 'package:jiayuan/page/chat_page/create_group/create_group_page.dart';
 import 'package:jiayuan/page/chat_page/friend_info/friend_info_page.dart';
 import 'package:jiayuan/page/chat_page/friend_list/friend_list.dart';
 import 'package:jiayuan/page/commission_center_page/commission_center_page.dart';
@@ -184,6 +185,8 @@ class Routes {
         return pageRoute(FriendInfoPage(), settings: settings);
       case RoutePath.keeperCollection:
         return pageRoute(KeeperCollectionPage());
+      case RoutePath.createGroup:
+        return pageRoute(CreateGroupPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
