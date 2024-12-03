@@ -95,7 +95,7 @@ class HousekeeperDataDetail {
      "photoUrl":keeperImages,
      "introduction":introduction,
      "certificatePicUrl":certificates,
-     "phoneNumber":contact,
+     "dailyPhoneNumber":contact,
    };
 }
 

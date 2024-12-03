@@ -8,6 +8,7 @@ import 'package:jiayuan/route/route_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_info.dart';
 import '../../../common_ui/styles/app_colors.dart';
 import '../../../route/route_path.dart';
 class FriendList extends StatefulWidget{
@@ -26,8 +27,14 @@ class FriendListState extends State<FriendList> with TickerProviderStateMixin{
         length: 2,
         vsync: this
     );
-    _friendListVM.getFriendList();
+    _initList();
   }
+
+  Future<void> _initList() async {
+    await _friendListVM.getFriendList();
+    await _friendListVM.getGroupList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
@@ -137,7 +144,7 @@ class FriendListState extends State<FriendList> with TickerProviderStateMixin{
 
   Widget _friendList(){
     return SmartRefresher(
-        controller: _friendListVM.refreshController,
+        controller: _friendListVM.friendListRefreshController,
         enablePullDown: true,
         header: MaterialClassicHeader(
           color: AppColors.appColor,
@@ -154,8 +161,54 @@ class FriendListState extends State<FriendList> with TickerProviderStateMixin{
   }
 
   Widget _groupList(){
-    return Container(
+    return SmartRefresher(
+        controller: _friendListVM.groupListRefreshController,
+        enablePullDown: true,
+        header: MaterialClassicHeader(
+          color: AppColors.appColor,
+          backgroundColor: AppColors.endColor,
+        ),
+        onRefresh: _friendListVM.onGroupRefresh,
+        child: ListView.builder(
+            itemCount: _friendListVM.groupList.length,
+            itemBuilder: (context, index){
+              return _groupListItem(_friendListVM.groupList[index]);
+            }
+        )
+    );
+  }
 
+  Widget _groupListItem(V2TimGroupInfo groupInfo){
+    return Material(
+      color: Colors.white,
+      child: InkWell(
+        onTap: (){
+          _friendListVM.gotoGroupChatPage(context, groupInfo.groupID);
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.white
+          ),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          height: 60,
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: AppColors.backgroundColor3,
+                backgroundImage: groupInfo.faceUrl != "默认头像" ? CachedNetworkImageProvider(groupInfo.faceUrl!) : null,
+              ),
+              SizedBox(width: 10,),
+              Text(
+                (groupInfo.groupName != null && groupInfo.groupName != "") ? groupInfo.groupName! : (groupInfo.groupName ?? "群组111"),
+                style: TextStyle(
+                    color: AppColors.textColor2b,
+                    fontSize: 16.sp
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 

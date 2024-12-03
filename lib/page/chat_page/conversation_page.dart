@@ -129,6 +129,8 @@ class _ConversationPageState extends State<ConversationPage>{
                                   case '1':
                                     RouteUtils.pushForNamed(context, RoutePath.userSearchPage);
                                     break;
+                                  case '2':
+                                    RouteUtils.pushForNamed(context, RoutePath.createGroup);
                                 }
                               }
                             },

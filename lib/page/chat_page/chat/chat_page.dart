@@ -10,6 +10,7 @@ import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:tencent_cloud_chat_sdk/enum/v2_tim_conversation_marktype.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
 
@@ -213,7 +214,11 @@ class _ChatPageState extends State<ChatPage>{
                             ),
                             child: TextButton(
                                 onPressed: (){
-                                  _chatViewModel.sendSingMessage();
+                                  if(_chatViewModel.conversation!.type! == 1){
+                                    _chatViewModel.sendSingMessage();
+                                  }else{
+                                    _chatViewModel.sendGroupMessage();
+                                  }
                                   _chatViewModel.textController.clear();
                                 },
                                 child: Text(

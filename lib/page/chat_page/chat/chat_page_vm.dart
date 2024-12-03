@@ -37,9 +37,12 @@ class ChatPageViewModel with ChangeNotifier{
 
   bool isLoading = false;
 
+  //获取消息列表
   Future<void> getChatMessage() async {
     if(conversation != null){
-      List<V2TimMessage> chatMessageData = await ImChatApi.getInstance().getHistorySignalMessageList(conversation!.userID!, count, lastMessageId);
+      List<V2TimMessage> chatMessageData = conversation!.type == 1
+          ? await ImChatApi.getInstance().getHistorySignalMessageList(conversation!.userID!, count, lastMessageId)
+          : await ImChatApi.getInstance().getHistoryGroupMessageList(conversation!.groupID!, count, lastMessageId);
       if(chatMessageData.isNotEmpty){
         lastMessageId = chatMessageData.last.msgID;
         if(chatMessageData.length < count){
@@ -62,17 +65,21 @@ class ChatPageViewModel with ChangeNotifier{
     chatMessageList.clear();
   }
 
+  //刷新会话 刷新消息列表
   Future<void> refreshConversation() async {
     conversation = await ImChatApi.getInstance().getConversation(conversation!.conversationID);
     notifyListeners();
     await refreshChatMessage();
   }
 
+  //刷新消息列表
   Future<void> refreshChatMessage() async {
     if(conversation != null){
       lastMessageId = null;
       chatMessageList.clear();
-      List<V2TimMessage> chatMessageData = await ImChatApi.getInstance().getHistorySignalMessageList(conversation!.userID!, count, lastMessageId);
+      List<V2TimMessage> chatMessageData = conversation!.type == 1
+          ? await ImChatApi.getInstance().getHistorySignalMessageList(conversation!.userID!, count, lastMessageId)
+          : await ImChatApi.getInstance().getHistoryGroupMessageList(conversation!.groupID!, count, lastMessageId);
       lastMessageId = chatMessageData.last.msgID;
       chatMessageList.addAll(chatMessageData);
       await clearUnReadCount(conversation!);
@@ -80,11 +87,24 @@ class ChatPageViewModel with ChangeNotifier{
     }
   }
 
+  //加载更多消息
+  Future<void> _loadMoreMessages() async {
+    if(hasMoreData && !isLoading){
+      isLoading = true;
+      notifyListeners();
+      await getChatMessage();
+    }
+  }
+
+  //清空未读数
   Future<void> clearUnReadCount(V2TimConversation conversation) async {
-    await ImChatApi.getInstance().clearSignalUnread(conversation.userID!);
+    conversation.type == 1
+        ? await ImChatApi.getInstance().clearSignalUnread(conversation.userID!)
+        : await ImChatApi.getInstance().clearGroupUnread(conversation.groupID!);
     notifyListeners();
   }
 
+  //发送单聊消息
   Future<void> sendSingMessage() async {
     if(conversation != null){
       await ImChatApi.getInstance().sendTextMessage(conversation!.userID!, textController.text);
@@ -93,6 +113,15 @@ class ChatPageViewModel with ChangeNotifier{
     }
   }
 
+  //发送群聊消息
+  Future<void> sendGroupMessage() async {
+    if(conversation != null){
+      await ImChatApi.getInstance().sendGroupTextMessage(conversation!.groupID!, textController.text);
+      await refreshChatMessage();
+    }
+  }
+
+  //查看好友信息
   Future<void> gotoFriendInfo(BuildContext context, String userId) async {
     V2TimFriendInfoResult friendInfoResult = await ImChatApi.getInstance().getFriendProfile(userId);
     V2TimFriendInfo? friendInfo = friendInfoResult.friendInfo;
@@ -107,6 +136,7 @@ class ChatPageViewModel with ChangeNotifier{
     }
   }
 
+  //查看非好友信息
   Future<void> gotoUserInfo(BuildContext context, String userId) async {
     SearchUser searchUser = await UserApi.instance.getSignalUser(int.parse(userId));
     if(userId != Global.userInfo!.userId.toString() || conversation?.userID == Global.userInfo!.userId.toString()) {
@@ -126,14 +156,6 @@ class ChatPageViewModel with ChangeNotifier{
         scrollController.position.minScrollExtent + preloadThreshold) {
       // 滑动到顶部时加载更多
       await _loadMoreMessages();
-    }
-  }
-
-  Future<void> _loadMoreMessages() async {
-    if(hasMoreData && !isLoading){
-      isLoading = true;
-      notifyListeners();
-      await getChatMessage();
     }
   }
 
