@@ -30,19 +30,31 @@ class _BrowseHistoryPageState extends State<BrowseHistoryPage> {
     return ChangeNotifierProvider.value(
       value: browseHistoryViewModel,
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: Text("浏览过的家政员"),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () async {
-                showBrowseHistoryDialog(context);
-              },
+        appBar: PreferredSize(preferredSize: Size.fromHeight(kToolbarHeight), child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.backgroundColor4,
+                Colors.white
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-          ],
-        ),
+          ),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            title: Text("浏览过的家政员"),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () async {
+                  showBrowseHistoryDialog(context);
+                },
+              ),
+            ],
+          ),
+        )),
         body: Container(
           height: double.infinity,
           width: double.infinity,

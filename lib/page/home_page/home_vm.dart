@@ -50,20 +50,25 @@ class HomeViewModel with ChangeNotifier {
   void loadingStandardPrice() async {
     Global.standPrices = await CommissionApi.instance.getAllPrice();
   }
-
+  // try {
+  //   final Response response =
+  //       await DioInstance.instance().get(path: '/release/carousel');
+  //   if (response.data['code'] != 200) {
+  //     print('获取轮播图数据失败${response.data['message']}');
+  //   } else
+  //     bannerData = response.data['data'].cast<String?>();
+  //   print('获取轮播图数据response: ${response.data}');
+  // } catch (e) {
+  //   print(e.toString());
+  // }
   //获取首页banner数据
   Future<void> getBannerData() async {
-    try {
-      final Response response =
-          await DioInstance.instance().get(path: '/release/carousel');
-      if (response.data['code'] != 200) {
-        print('获取轮播图数据失败${response.data['message']}');
-      } else
-        bannerData = response.data['data'].cast<String?>();
-      print('获取轮播图数据response: ${response.data}');
-    } catch (e) {
-      print(e.toString());
-    }
+
+    bannerData= [
+      "assets/images/home2.png",
+      "assets/images/home1.png",
+      "assets/images/home3.png"
+    ];
     //实际上是从网络获取首页轮播图的 url 数据
     notifyListeners();
   }

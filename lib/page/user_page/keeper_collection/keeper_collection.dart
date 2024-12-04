@@ -35,10 +35,30 @@ class _KeeperCollectionPageState extends State<KeeperCollectionPage> {
     return ChangeNotifierProvider.value(
         value: _keeperCollectionVm,
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('收藏的家政员'),
-            centerTitle: true,
-          ),
+          appBar: PreferredSize(preferredSize: Size.fromHeight( kToolbarHeight), child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                    AppColors.backgroundColor4,
+                    Colors.white
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              title: Text(
+                '我的收藏',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              centerTitle: true,
+            ),
+          )),
           body: Container(
             height: double.infinity,
             width: double.infinity,

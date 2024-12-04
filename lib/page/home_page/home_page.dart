@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage>
               ]),
               backgroundColor: Color.fromRGBO(70, 219, 201, 1),
             ),
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.white70,
             body: SmartRefresher(
                 enablePullUp: true,
                 enablePullDown: false,
@@ -97,10 +97,20 @@ class _HomePageState extends State<HomePage>
                   slivers: [
                     //轮播图
                     SliverToBoxAdapter(child: _banner()),
+                    // SliverToBoxAdapter(child: Container(
+                    //   height: 180,
+                    //   child: Container(
+                    //     height: 180,
+                    //     child: Image(
+                    //       image: AssetImage("assets/images/home1.png"),
+                    //       fit: BoxFit.cover, // 可选，根据需要调整
+                    //     ),
+                    //   ),
+                    // ),),
                     //委托服务类型
                     SliverToBoxAdapter(child: _PageViewWidget()),
                     //天气卡片
-                    SliverToBoxAdapter(child: _ServiceViewWidget()),
+                   // SliverToBoxAdapter(child: _ServiceViewWidget()),
                     SliverToBoxAdapter(child: SizedBox(height: 8)),
                     //固定头部
                     SliverAppBar(
@@ -440,63 +450,70 @@ class _HomePageState extends State<HomePage>
               ),
             ],
           ),
-          child: AutoHeightPageView(
-            pageController: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _currentPage = index;
-              });
-            },
+          child: Column(
             children: [
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      CType(0),
-                      CType(1),
-                      CType(2),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      CType(3),
-                      CType(4),
-                      CType(5),
-                    ],
-                  ),
-                ],
+              Container(
+                child:  AutoHeightPageView(
+                  pageController: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                  children: [
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            CType(0),
+                            CType(1),
+                            CType(2),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            CType(3),
+                            CType(4),
+                            CType(5),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            CType(6),
+                            CType(7),
+                            CType(8),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            CType(9),
+                            CType(10),
+                            Container(
+                              width: 50.w,
+                              height: 50.h,
+                            )
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      CType(6),
-                      CType(7),
-                      CType(8),
-                    ],
-                  ),
-                  SizedBox(height: 10.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      CType(9),
-                      CType(10),
-                      Container(
-                        width: 50.w,
-                        height: 50.h,
-                      )
-                    ],
-                  ),
-                ],
-              )
+              _buildIndicator(),
             ],
           ),
         ),
-        _buildIndicator(),
+
         SizedBox(
           height: 10,
         ),
