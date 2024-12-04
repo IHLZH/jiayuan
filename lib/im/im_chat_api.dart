@@ -1421,34 +1421,6 @@ class ImChatApi {
     }
   }
 
-  //邀请进入群聊
-  Future<void> inviteGroupMember(
-      String groupID, List<String> memberList) async {
-    // 邀请他人入群
-    V2TimValueCallback<List<V2TimGroupMemberOperationResult>>
-        inviteUserToGroupRes = await TencentImSDKPlugin.v2TIMManager
-            .getGroupManager()
-            .inviteUserToGroup(
-      groupID: "groupID", // 需要加入的群组id
-      userList: [], // 邀请的用户id列表
-    );
-    if (inviteUserToGroupRes.code == 0) {
-      // 邀请成功
-      inviteUserToGroupRes.data?.forEach((element) {
-        element.memberID; // 被操作成员 ID
-        // 邀请结果状态
-        // 0:操作失败，1:操作成功，2:无效操作，加群时已经是群成员
-        // 3:等待处理，邀请入群时等待对方处理，4:操作失败，创建群指定初始群成员列表或邀请入群时，被邀请者加入的群总数超限
-        element.result; // 邀请结果状态
-      });
-    } else {
-      if (isProduction) print("============= 邀请进入群聊失败 ===========");
-      if (isProduction)
-        print(
-            "错误码：${inviteUserToGroupRes.code} 错误信息： ${inviteUserToGroupRes.desc}");
-    }
-  }
-
   //获取群聊信息
   Future<V2TimGroupInfo> getGroupInfo(String groupID) async {
     //获取群资料
@@ -1527,6 +1499,36 @@ class ImChatApi {
         print(
             "错误码：${getGroupMemberListRes.code} 错误信息： ${getGroupMemberListRes.desc}");
       throw Exception("获取群成员列表失败");
+    }
+  }
+
+  //邀请群成员
+  Future<bool> inviteGroupMember(String groupID, List<String> memberList) async{
+    // 邀请他人入群
+    V2TimValueCallback<List<V2TimGroupMemberOperationResult>>
+    inviteUserToGroupRes = await TencentImSDKPlugin.v2TIMManager
+        .getGroupManager()
+        .inviteUserToGroup(
+      groupID: groupID,// 需要加入的群组id
+      userList: memberList,// 邀请的用户id列表
+    );
+    if (inviteUserToGroupRes.code == 0) {
+      // 邀请成功
+      inviteUserToGroupRes.data?.forEach((element) {
+        element.memberID;// 被操作成员 ID
+        // 邀请结果状态
+        // 0:操作失败，1:操作成功，2:无效操作，加群时已经是群成员
+        // 3:等待处理，邀请入群时等待对方处理，4:操作失败，创建群指定初始群成员列表或邀请入群时，被邀请者加入的群总数超限
+        element.result;// 邀请结果状态
+      });
+
+      return true;
+    }else{
+      if (isProduction) print("============= 邀请群成员失败 ===========");
+      if (isProduction)
+        print(
+            "错误码：${inviteUserToGroupRes.code} 错误信息： ${inviteUserToGroupRes.desc}");
+      return false;
     }
   }
 
