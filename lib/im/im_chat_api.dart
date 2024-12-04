@@ -8,6 +8,8 @@ import 'package:tencent_cloud_chat_sdk/enum/V2TimConversationListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimFriendshipListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimGroupListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimSDKListener.dart';
+import 'package:tencent_cloud_chat_sdk/enum/friend_application_type_enum.dart';
+import 'package:tencent_cloud_chat_sdk/enum/friend_response_type_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/friend_type_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/group_add_opt_enum.dart';
 import 'package:tencent_cloud_chat_sdk/enum/group_member_filter_enum.dart';
@@ -18,6 +20,7 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_callback.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_application.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_application_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_check_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info_result.dart';
@@ -390,13 +393,16 @@ class ImChatApi {
             (List<V2TimFriendApplication> applicationList) async {
           //好友请求数量增加的回调
           //applicationList 新增的好友请求信息列表
+          if (isProduction) print("=========== 好友请求数量增加的回调 ============");
         },
         onFriendApplicationListDeleted: (List<String> userIDList) async {
           //好友请求数量减少的回调
-          //减少的好友请求的请求用户id列表
+          //减少的好友请求的请求用户id列表、
+          if (isProduction) print("=========== 好友请求数量减少的回调 ============");
         },
         onFriendApplicationListRead: () async {
           //好友请求已读的回调
+          if (isProduction) print("=========== 好友请求已读的回调 ============");
         },
         onFriendInfoChanged: (List<V2TimFriendInfo> infoList) async {
           //好友信息改变的回调
@@ -631,19 +637,19 @@ class ImChatApi {
     V2TimUserFullInfo userFullInfo = V2TimUserFullInfo(
       nickName: nickName,
       // 用户昵称
-      allowType: 0,
+      // allowType: 0,
       //用户的好友验证方式 0:允许所有人加我好友 1:不允许所有人加我好友 2:加我好友需我确认
-      birthday: 0,
+      // birthday: 0,
       //用户生日
       faceUrl: userAvatar,
       //用户头像 url
       gender: userSex,
       //用户的性别 1:男 2:女
-      level: 0,
+      // level: 0,
       //用户的等级
       role: userType,
       //用户的角色
-      selfSignature: "",
+      // selfSignature: "",
       //用户的签名
       userID: userID, //用户 ID
     );
@@ -652,6 +658,41 @@ class ImChatApi {
     if (setSelfInfoRes.code == 0) {
       // 修改成功
       if (isProduction) print("============= IM修改成功 ============");
+    } else {
+      // 修改失败
+      if (isProduction)
+        print("修改失败，错误码: ${setSelfInfoRes.code}, 错误信息: ${setSelfInfoRes.desc}");
+    }
+  }
+
+  //设置好友验证方式
+  Future<void> setFriendAllowType(int allowType) async {
+    //用户资料设置信息
+    V2TimUserFullInfo userFullInfo = V2TimUserFullInfo(
+      // nickName: nickName,
+      // 用户昵称
+      allowType: allowType,
+      //用户的好友验证方式 0:允许所有人加我好友 1:不允许所有人加我好友 2:加我好友需我确认
+      // birthday: 0,
+      //用户生日
+      // faceUrl: userAvatar,
+      //用户头像 url
+      // gender: userSex,
+      //用户的性别 1:男 2:女
+      // level: 0,
+      //用户的等级
+      // role: userType,
+      //用户的角色
+      // selfSignature: "",
+      //用户的签名
+      // userID: userID, //用户 ID
+    );
+
+    V2TimCallback setSelfInfoRes = await TencentImSDKPlugin.v2TIMManager
+        .setSelfInfo(userFullInfo: userFullInfo); //用户资料设置信息
+    if (setSelfInfoRes.code == 0) {
+      // 修改成功
+      if (isProduction) print("============= IM修改好友验证方式成功 ============");
     } else {
       // 修改失败
       if (isProduction)
@@ -984,55 +1025,55 @@ class ImChatApi {
   }
 
   //搜索
-  Future<void> searchUser(String keyword) async {
-    //搜索好友的搜索条件
-    V2TimFriendSearchParam searchParam = V2TimFriendSearchParam(
-      isSearchNickName: true, //是否搜索昵称
-      isSearchRemark: true, //是否搜索备注
-      isSearchUserID: true, //是否搜索id
-      keywordList: [keyword], //关键字列表，最多支持5个。
-    );
-    V2TimValueCallback<List<V2TimFriendInfoResult>> searchFriendsRes =
-        await TencentImSDKPlugin.v2TIMManager
-            .getFriendshipManager()
-            .searchFriends(searchParam: searchParam); //搜索好友的搜索条件
-    if (searchFriendsRes.code == 0) {
-      // if(isProduction) print("============= 搜索好友成功 ===========");
-
-      // 查询成功
-      searchFriendsRes.data?.forEach((element) {
-        element.relation; //好友类型 0:不是好友 1:对方在我的好友列表中 2:我在对方的好友列表中 3:互为好友
-        element.resultCode; //此条记录的查询结果错误码
-        element.resultInfo; //此条查询结果描述
-        //friendInfo为好友个人资料，如果不是好友，除了 userID 字段，其他字段都为空
-        element.friendInfo
-            ?.friendCustomInfo; //好友自定义字段 首先要在 控制台 (功能配置 -> 好友自定义字段) 配置好友自定义字段，然后再调用接口进行设置
-        element.friendInfo?.friendGroups; //好友所在分组列表
-        element.friendInfo?.friendRemark; //好友备注
-        element.friendInfo?.userID; //用户的id
-        element.friendInfo?.userProfile
-            ?.allowType; //用户的好友验证方式 0:允许所有人加我好友 1:不允许所有人加我好友 2:加我好友需我确认
-        element.friendInfo?.userProfile?.birthday; //用户生日
-        element.friendInfo?.userProfile?.customInfo; //用户的自定义状态
-        element.friendInfo?.userProfile?.faceUrl; //用户头像 url
-        element.friendInfo?.userProfile?.gender; //用户的性别 1:男 2:女
-        element.friendInfo?.userProfile?.level; //用户的等级
-        element.friendInfo?.userProfile?.nickName; //用户昵称
-        element.friendInfo?.userProfile?.role; //用户的角色
-        element.friendInfo?.userProfile?.selfSignature; //用户的签名
-        element.friendInfo?.userProfile?.userID; //用户 ID
-
-        if (isProduction) print("============= 搜索好友成功 ===========");
-        if (isProduction)
-          print(
-              "关键字：${keyword} 搜索结果：${element.friendInfo?.userID} 类型：${element.relation} 昵称：${element.friendInfo?.userProfile?.nickName} ");
-      });
-    } else {
-      if (isProduction) print("============= 搜索失败 ===========");
-      if (isProduction)
-        print("错误码：${searchFriendsRes.code} 错误信息： ${searchFriendsRes.desc}");
-    }
-  }
+  // Future<void> searchUser(String keyword) async {
+  //   //搜索好友的搜索条件
+  //   V2TimFriendSearchParam searchParam = V2TimFriendSearchParam(
+  //     isSearchNickName: true, //是否搜索昵称
+  //     isSearchRemark: true, //是否搜索备注
+  //     isSearchUserID: true, //是否搜索id
+  //     keywordList: [keyword], //关键字列表，最多支持5个。
+  //   );
+  //   V2TimValueCallback<List<V2TimFriendInfoResult>> searchFriendsRes =
+  //       await TencentImSDKPlugin.v2TIMManager
+  //           .getFriendshipManager()
+  //           .searchFriends(searchParam: searchParam); //搜索好友的搜索条件
+  //   if (searchFriendsRes.code == 0) {
+  //     // if(isProduction) print("============= 搜索好友成功 ===========");
+  //
+  //     // 查询成功
+  //     searchFriendsRes.data?.forEach((element) {
+  //       element.relation; //好友类型 0:不是好友 1:对方在我的好友列表中 2:我在对方的好友列表中 3:互为好友
+  //       element.resultCode; //此条记录的查询结果错误码
+  //       element.resultInfo; //此条查询结果描述
+  //       //friendInfo为好友个人资料，如果不是好友，除了 userID 字段，其他字段都为空
+  //       element.friendInfo
+  //           ?.friendCustomInfo; //好友自定义字段 首先要在 控制台 (功能配置 -> 好友自定义字段) 配置好友自定义字段，然后再调用接口进行设置
+  //       element.friendInfo?.friendGroups; //好友所在分组列表
+  //       element.friendInfo?.friendRemark; //好友备注
+  //       element.friendInfo?.userID; //用户的id
+  //       element.friendInfo?.userProfile
+  //           ?.allowType; //用户的好友验证方式 0:允许所有人加我好友 1:不允许所有人加我好友 2:加我好友需我确认
+  //       element.friendInfo?.userProfile?.birthday; //用户生日
+  //       element.friendInfo?.userProfile?.customInfo; //用户的自定义状态
+  //       element.friendInfo?.userProfile?.faceUrl; //用户头像 url
+  //       element.friendInfo?.userProfile?.gender; //用户的性别 1:男 2:女
+  //       element.friendInfo?.userProfile?.level; //用户的等级
+  //       element.friendInfo?.userProfile?.nickName; //用户昵称
+  //       element.friendInfo?.userProfile?.role; //用户的角色
+  //       element.friendInfo?.userProfile?.selfSignature; //用户的签名
+  //       element.friendInfo?.userProfile?.userID; //用户 ID
+  //
+  //       if (isProduction) print("============= 搜索好友成功 ===========");
+  //       if (isProduction)
+  //         print(
+  //             "关键字：${keyword} 搜索结果：${element.friendInfo?.userID} 类型：${element.relation} 昵称：${element.friendInfo?.userProfile?.nickName} ");
+  //     });
+  //   } else {
+  //     if (isProduction) print("============= 搜索失败 ===========");
+  //     if (isProduction)
+  //       print("错误码：${searchFriendsRes.code} 错误信息： ${searchFriendsRes.desc}");
+  //   }
+  // }
 
   //获取好友列表
   Future<List<V2TimFriendInfo>> getFriendList() async {
@@ -1071,9 +1112,9 @@ class ImChatApi {
             addType: FriendTypeEnum.V2TIM_FRIEND_TYPE_BOTH);
 
     if (addFriendResult.code == 0) {
-      if (isProduction) print("============= 添加好友成功 ===========");
+      if (isProduction) print("============= 好友申请成功 ===========");
     } else {
-      if (isProduction) print("============= 添加好友失败 ===========");
+      if (isProduction) print("============= 好友申请失败 ===========");
       if (isProduction)
         print("错误码：${addFriendResult.code} 错误信息： ${addFriendResult.desc}");
     }
@@ -1160,6 +1201,149 @@ class ImChatApi {
       if (isProduction) print("============= 检验是否是好友失败 ===========");
       if (isProduction) print("错误码：${checkres.code} 错误信息： ${checkres.desc}");
       throw Exception("检验是否是好友失败");
+    }
+  }
+
+  //获取好友申请列表
+  Future<V2TimFriendApplicationResult> getFriendApplicationList() async {
+    // 获取好友申请列表
+
+    // V2TimFriendCheckResult.unreadCount : 未读数
+    // V2TimFriendCheckResult.friendApplicationList : 申请列表( 类型: List< V2TimFriendApplication > )
+
+    //获取好友申请列表
+    V2TimValueCallback<V2TimFriendApplicationResult>
+        getFriendApplicationListRes = await TencentImSDKPlugin.v2TIMManager
+            .getFriendshipManager()
+            .getFriendApplicationList();
+
+    if (getFriendApplicationListRes.code == 0) {
+      // 查询成功
+      // getFriendApplicationListRes.data?.unreadCount;//未读申请数量
+      // getFriendApplicationListRes.data?.friendApplicationList
+      //     ?.forEach((element) {
+      //   element?.addSource;//申请添加来源 flutter会在发出请求的source前添加AddSource_Type_
+      //   element?.addTime;//申请时间
+      //   element?.addWording;//申请添加的信息
+      //   element?.faceUrl;//申请好友头像Url
+      //   element?.nickname;//申请用户昵称
+      //   element?.type;//申请好友类型
+      //   element?.userID;//申请用户id
+      // });
+
+      if (isProduction) print("============= 获取好友申请列表成功 ===========");
+
+      return getFriendApplicationListRes.data!;
+    } else {
+      if (isProduction) print("============= 获取好友申请列表失败 ===========");
+      if (isProduction)
+        print(
+            "错误码：${getFriendApplicationListRes.code} 错误信息： ${getFriendApplicationListRes.desc}");
+
+      throw Exception("获取好友申请列表失败");
+    }
+  }
+
+  //同意好友申请
+  Future<bool> acceptFriendApplication(String userID) async {
+    //同意好友申请
+    V2TimValueCallback<V2TimFriendOperationResult> acceptFriendApplicationRes =
+        await TencentImSDKPlugin.v2TIMManager
+            .getFriendshipManager()
+            .acceptFriendApplication(
+                responseType: FriendResponseTypeEnum.V2TIM_FRIEND_ACCEPT_AGREE,
+                //建立好友关系时选择单向/双向好友关系
+                type: FriendApplicationTypeEnum.V2TIM_FRIEND_APPLICATION_BOTH,
+                //加好友类型 要与getApplicationList查询到的type相同，否则会报错。
+                userID: userID); //同意好友的用户id
+    if (acceptFriendApplicationRes.code == 0) {
+      // 同意成功
+      acceptFriendApplicationRes.data?.resultCode; //操作结果错误码
+      acceptFriendApplicationRes.data?.resultInfo; //操作结果描述
+      acceptFriendApplicationRes.data?.userID; //同意好友的id
+
+      if (isProduction) print("============= 同意好友申请成功 ===========");
+      return true;
+    } else {
+      if (isProduction) print("============= 同意好友申请失败 ===========");
+      if (isProduction)
+        print(
+            "错误码：${acceptFriendApplicationRes.code} 错误信息： ${acceptFriendApplicationRes.desc}");
+
+      return false;
+    }
+  }
+
+  //拒绝好友申请
+  Future<bool> refuseFriendApplication(String userID) async {
+    //拒绝好友申请
+    V2TimValueCallback<V2TimFriendOperationResult> refuseFriendApplicationRes =
+        await TencentImSDKPlugin.v2TIMManager
+            .getFriendshipManager()
+            .refuseFriendApplication(
+                type: FriendApplicationTypeEnum
+                    .V2TIM_FRIEND_APPLICATION_BOTH, //拒绝好友类型
+                userID: ""); //拒绝好友的用户id
+    if (refuseFriendApplicationRes.code == 0) {
+      // 拒绝成功
+      refuseFriendApplicationRes.data?.resultCode; //操作结果错误码
+      refuseFriendApplicationRes.data?.resultInfo; //操作结果描述
+      refuseFriendApplicationRes.data?.userID; //拒绝好友的id
+      if (isProduction) print("============= 拒绝好友申请成功 ===========");
+      return true;
+    } else {
+      if (isProduction) print("============= 拒绝好友申请失败 ===========");
+      if (isProduction)
+        print(
+            "错误码：${refuseFriendApplicationRes.code} 错误信息： ${refuseFriendApplicationRes.desc}");
+
+      return false;
+    }
+  }
+
+  //已读好友申请
+  Future<bool> readFriendApplication() async {
+    //设置好友申请已读
+    V2TimCallback setFriendApplicationReadRes = await TencentImSDKPlugin
+        .v2TIMManager
+        .getFriendshipManager()
+        .setFriendApplicationRead();
+    if (setFriendApplicationReadRes.code == 0) {
+      // 设置成功
+      if (isProduction) print("============= 设置好友申请已读成功 ===========");
+      return true;
+    } else {
+      if (isProduction) print("============= 设置好友申请已读失败 ===========");
+      if (isProduction)
+        print(
+            "错误码：${setFriendApplicationReadRes.code} 错误信息： ${setFriendApplicationReadRes.desc}");
+
+      return false;
+    }
+  }
+
+  //删除好友申请
+  Future<bool> deleteFriendApplication(String userID) async {
+    //删除好友申请
+    V2TimCallback deleteFriendApplicationRes = await TencentImSDKPlugin
+        .v2TIMManager
+        .getFriendshipManager()
+        .deleteFriendApplication(
+          type: FriendApplicationTypeEnum.V2TIM_FRIEND_APPLICATION_BOTH,
+          //加好友类型 要与getApplicationList查询到的type相同，否则会报错。
+          userID: userID, //被删除好友申请的用户id
+        );
+    if (deleteFriendApplicationRes.code == 0) {
+      // 删除成功
+      if (isProduction) print("============= 删除好友申请成功 ===========");
+      return true;
+    } else {
+      if (isProduction) print("============= 删除好友申请失败 ===========");
+      if (isProduction)
+        print(
+            "错误码：${deleteFriendApplicationRes.code} 错误信息： ${deleteFriendApplicationRes.desc}");
+
+      return false;
     }
   }
 
@@ -1269,76 +1453,75 @@ class ImChatApi {
   Future<V2TimGroupInfo> getGroupInfo(String groupID) async {
     //获取群资料
     V2TimValueCallback<List<V2TimGroupInfoResult>> getGroupsInfoRes =
-    await TencentImSDKPlugin.v2TIMManager
-        .getGroupManager()
-        .getGroupsInfo(groupIDList: [groupID]);// 需要查询的群组id列表
+        await TencentImSDKPlugin.v2TIMManager
+            .getGroupManager()
+            .getGroupsInfo(groupIDList: [groupID]); // 需要查询的群组id列表
     if (getGroupsInfoRes.code == 0) {
       // 查询成功
       getGroupsInfoRes.data?.forEach((element) {
-        element.resultCode;// 此群组查询结果码
-        element.resultMessage;// 此群查询结果描述
-        element.groupInfo?.createTime;// 群创建时间
-        element.groupInfo?.customInfo;// 群自定义字段
-        element.groupInfo?.faceUrl;// 群头像Url
-        element.groupInfo?.groupAddOpt;// 群添加选项设置
-        element.groupInfo?.groupID;// 群ID
-        element.groupInfo?.groupName;// 群名
-        element.groupInfo?.groupType;// 群类型
-        element.groupInfo?.introduction;// 群介绍
-        element.groupInfo?.isAllMuted;// 群是否全体禁言
-        element.groupInfo?.isSupportTopic;// 群是否支持话题
-        element.groupInfo?.joinTime;// 当前用户在此群的加入时间
-        element.groupInfo?.lastInfoTime;// 最后一次群修改资料的时间
-        element.groupInfo?.lastMessageTime;// 最后一次群发消息的时间
-        element.groupInfo?.memberCount;// 群员数量
-        element.groupInfo?.notification;// 群公告
-        element.groupInfo?.onlineCount;// 群在线人数
-        element.groupInfo?.owner;// 群主
-        element.groupInfo?.recvOpt;// 当前用户在此群中接受信息的选项
-        element.groupInfo?.role;// 此用户在群中的角色
+        element.resultCode; // 此群组查询结果码
+        element.resultMessage; // 此群查询结果描述
+        element.groupInfo?.createTime; // 群创建时间
+        element.groupInfo?.customInfo; // 群自定义字段
+        element.groupInfo?.faceUrl; // 群头像Url
+        element.groupInfo?.groupAddOpt; // 群添加选项设置
+        element.groupInfo?.groupID; // 群ID
+        element.groupInfo?.groupName; // 群名
+        element.groupInfo?.groupType; // 群类型
+        element.groupInfo?.introduction; // 群介绍
+        element.groupInfo?.isAllMuted; // 群是否全体禁言
+        element.groupInfo?.isSupportTopic; // 群是否支持话题
+        element.groupInfo?.joinTime; // 当前用户在此群的加入时间
+        element.groupInfo?.lastInfoTime; // 最后一次群修改资料的时间
+        element.groupInfo?.lastMessageTime; // 最后一次群发消息的时间
+        element.groupInfo?.memberCount; // 群员数量
+        element.groupInfo?.notification; // 群公告
+        element.groupInfo?.onlineCount; // 群在线人数
+        element.groupInfo?.owner; // 群主
+        element.groupInfo?.recvOpt; // 当前用户在此群中接受信息的选项
+        element.groupInfo?.role; // 此用户在群中的角色
       });
       return getGroupsInfoRes.data![0].groupInfo!;
-    }else{
+    } else {
       if (isProduction) print("============= 获取群聊信息失败 ===========");
       if (isProduction)
-        print(
-            "错误码：${getGroupsInfoRes.code} 错误信息： ${getGroupsInfoRes.desc}");
+        print("错误码：${getGroupsInfoRes.code} 错误信息： ${getGroupsInfoRes.desc}");
       throw Exception("获取群聊信息失败");
     }
   }
 
   //获取群成员列表
   Future<List<V2TimGroupMemberFullInfo?>> getGroupMemberList(
-      String groupID,GroupMemberFilterTypeEnum filter) async {
-
+      String groupID, GroupMemberFilterTypeEnum filter) async {
     // 获取群成员列表
     V2TimValueCallback<V2TimGroupMemberInfoResult> getGroupMemberListRes =
-    await TencentImSDKPlugin.v2TIMManager
-        .getGroupManager()
-        .getGroupMemberList(
-      groupID: groupID,// 需要查询的群组 ID
-      filter:filter,//查询群成员类型
-      nextSeq: "0",// 分页拉取标志，第一次拉取填0，回调成功如果 nextSeq 不为零，需要分页，传入返回值再次拉取，直至为0。
-      //count: 100,// 需要拉取的数量。最大值：100，避免回包过大导致请求失败。若传入超过100，则只拉取前100个。
-      offset:0,// 偏移量，默认从0开始拉取。
-    );
+        await TencentImSDKPlugin.v2TIMManager
+            .getGroupManager()
+            .getGroupMemberList(
+              groupID: groupID, // 需要查询的群组 ID
+              filter: filter, //查询群成员类型
+              nextSeq:
+                  "0", // 分页拉取标志，第一次拉取填0，回调成功如果 nextSeq 不为零，需要分页，传入返回值再次拉取，直至为0。
+              //count: 100,// 需要拉取的数量。最大值：100，避免回包过大导致请求失败。若传入超过100，则只拉取前100个。
+              offset: 0, // 偏移量，默认从0开始拉取。
+            );
 
     if (getGroupMemberListRes.code == 0) {
       // 拉取成功
       getGroupMemberListRes.data?.memberInfoList?.forEach((element) {
-        element?.customInfo;// 群成员自定义字段
-        element?.faceUrl;// 头像Url
-        element?.friendRemark;// 好友备注
-        element?.joinTime;// 群成员入群时间
-        element?.muteUntil;// 群成员禁言持续时间
-        element?.nameCard;// 群成员名片
-        element?.nickName;// 群成员昵称
-        element?.role;// 群成员角色
-        element?.userID;// 群成员ID
+        element?.customInfo; // 群成员自定义字段
+        element?.faceUrl; // 头像Url
+        element?.friendRemark; // 好友备注
+        element?.joinTime; // 群成员入群时间
+        element?.muteUntil; // 群成员禁言持续时间
+        element?.nameCard; // 群成员名片
+        element?.nickName; // 群成员昵称
+        element?.role; // 群成员角色
+        element?.userID; // 群成员ID
       });
 
       return getGroupMemberListRes.data!.memberInfoList!;
-    }else{
+    } else {
       if (isProduction) print("============= 获取群成员列表失败 ===========");
       if (isProduction)
         print(
@@ -1346,7 +1529,6 @@ class ImChatApi {
       throw Exception("获取群成员列表失败");
     }
   }
-
 
   // 退出群聊
   Future<bool> quitGroup(String groupID) async {
