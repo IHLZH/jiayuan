@@ -46,8 +46,8 @@ class GroupApi {
     return res;
   }
 
-  //获取群成员列表
-  Future<List<V2TimGroupMemberFullInfo?>> getGroupMemberList(String groupId,GroupMemberFilterTypeEnum filter) async {
+  //获取全部群成员列表
+  Future<List<V2TimGroupMemberFullInfo?>> getGroupMemberList(String groupId) async {
     //filter: 群成员过滤类型
     //类型
     // GroupMemberFilterTypeEnum.V2TIM_GROUP_MEMBER_FILTER_ALL   拉取所有群成员的信息列表
