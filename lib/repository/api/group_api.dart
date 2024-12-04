@@ -67,4 +67,11 @@ class GroupApi {
 
     return res;
   }
+
+  //邀请成员入群
+  Future<bool> inviteUserToGroup(String groupId,List<String> userList) async {
+    bool res = await ImChatApi.getInstance().inviteGroupMember(groupId,userList);
+
+    return res;
+  }
 }
