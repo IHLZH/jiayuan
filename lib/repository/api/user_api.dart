@@ -29,6 +29,7 @@ class UserApi {
 
   UserApi._internal();
 
+  //非IM获取用户
   Future<SearchUserResult> searchUsers(String query, int page) async {
     String url = UrlPath.searchUser;
 
@@ -67,6 +68,7 @@ class UserApi {
     return SearchUserResult([], 0);
   }
 
+  // 获取单个用户信息
   Future<SearchUser> getSignalUser(int userID) async {
     String url = UrlPath.getSignalUserInfo;
 
@@ -105,6 +107,7 @@ class UserApi {
     throw Exception("获取用户信息失败");
   }
 
+  // 检查是否为好友
   Future<bool> checkFriend(int userID) async {
     bool result = false;
 
@@ -124,6 +127,7 @@ class UserApi {
     return result;
   }
 
+  // 添加好友
   Future<void> addFriend(int userID, String friendRemark) async {
     await ImChatApi.getInstance().addFriend(userID.toString(), friendRemark);
   }
