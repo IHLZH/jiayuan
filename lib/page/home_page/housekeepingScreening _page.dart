@@ -36,14 +36,14 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
 
   Widget _houseKeepingType(int index) {
     return Container(
-      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.all(10),
+      color: _houseKeepingScreeningVM.currentIndex == index
+          ? Colors.transparent
+          : Colors.white,
       child: Material(
         color: _houseKeepingScreeningVM.currentIndex == index
             ? AppColors.endColor
-            : Theme
-            .of(context)
-            .colorScheme
-            .background,
+            : Colors.transparent,
         borderRadius: BorderRadius.circular(10),
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
@@ -78,8 +78,9 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
     return ChangeNotifierProvider.value(
       value: _houseKeepingScreeningVM,
       child: Scaffold(
+        backgroundColor: AppColors.backgroundColor2,
           appBar: AppBar(
-            backgroundColor: AppColors.appColor,
+            backgroundColor: AppColors.backgroundColor4,
             title: Text(
               '服务分类',
               style: TextStyle(fontSize: 20),
@@ -118,7 +119,7 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
                               List housekeepers = _houseKeepingScreeningVM
                                   .housekeepersByType[index]! ;
                               return Container(
-                                color: Colors.white,
+                                color: AppColors.backgroundColor2,
                                 child: SmartRefresher(
                                   controller: _houseKeepingScreeningVM.refreshControllers[index],
                                   enablePullDown: true,
@@ -151,7 +152,7 @@ class _HouseKeepingScreeningPageState extends State<HouseKeepingScreeningPage> {
   //家政员推荐卡片
   Widget _buildHousekeeperCard(Housekeeper housekeeper) {
     return Container(
-      margin: EdgeInsets.only(left: 12, right: 12, bottom: 10),
+      margin: EdgeInsets.only(left: 6, right: 12, bottom: 10,top: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         border: Border.all(color: Colors.grey.shade300, width: 0.5),

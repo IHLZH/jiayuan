@@ -71,6 +71,7 @@ class _BannerWidgetState extends State<BannerWidget> {
           autoplayDelay: 5000,
           duration: 800,
           autoplay: true,
+          scale: 0.9,
           onIndexChanged: widget.onIndexChanged,
           pagination: widget.dotType == BannerDotType.none ? null : _pagination(),
           autoplayDisableOnInteraction: false,
@@ -81,7 +82,7 @@ class _BannerWidgetState extends State<BannerWidget> {
             // widget.onIndexChanged?.call(index);
             return ClipRRect(
                 borderRadius: widget.dotType == BannerDotType.circle
-                    ? BorderRadius.all(Radius.circular(10.r))
+                    ? BorderRadius.all(Radius.circular(15.r))
                     : BorderRadius.zero,
                 child:
                 Image.asset(widget.bannerData?[index] ?? "",fit: BoxFit.fill,)

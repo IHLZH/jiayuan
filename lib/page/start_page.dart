@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ifly_speech_recognition/ifly_speech_recognition.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/route/route_path.dart';
@@ -26,6 +27,7 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   @override
   void initState() {
+    Global.SpeechRecognitionServiceinit();
     super.initState();
     //全面屏手势
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);

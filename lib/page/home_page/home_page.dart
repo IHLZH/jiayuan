@@ -61,87 +61,117 @@ class _HomePageState extends State<HomePage>
     return ChangeNotifierProvider<HomeViewModel>(
         create: (context) => homeViewModel,
         child: Scaffold(
-            appBar: AppBar(
-              title: Row(children: [
-                Icon(Icons.location_on, color: Colors.black),
-                SizedBox(width: 10.w),
-                ValueListenableBuilder(
-                    valueListenable: Global.locationInfoNotifier,
-                    builder: (context, location, child) {
-                      return Text("${location?.city}",
-                          style: TextStyle(fontSize: 15.sp));
-                    })
-              ]),
-              backgroundColor: Color.fromRGBO(70, 219, 201, 1),
-            ),
-            backgroundColor: Colors.white70,
-            body: SmartRefresher(
-                enablePullUp: true,
-                enablePullDown: false,
-                controller: homeViewModel.refreshController,
-                onLoading: () {
-                  homeViewModel.getHousekeeperData();
-                },
-                header: MaterialClassicHeader(
-                  color: AppColors.appColor,
-                  backgroundColor: AppColors.endColor,
+            backgroundColor: AppColors.backgroundColor2,
+            body: Stack(
+              children: [
+                Container(
+                  height: 260.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    // color: Color.fromRGBO(148, 251, 195, 1),
+                    //70, 219, 201
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromRGBO(70, 219, 201, 1), // 渐变起始颜色
+                        AppColors.backgroundColor2, // 渐变结束颜色
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
                 ),
-                footer: ClassicFooter(
-                  canLoadingText: "松开加载更多~",
-                  loadingText: "努力加载中~",
-                  noDataText: "已经到底了~",
-                ),
-                child: CustomScrollView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  slivers: [
-                    //轮播图
-                    SliverToBoxAdapter(child: _banner()),
-                    // SliverToBoxAdapter(child: Container(
-                    //   height: 180,
-                    //   child: Container(
-                    //     height: 180,
-                    //     child: Image(
-                    //       image: AssetImage("assets/images/home1.png"),
-                    //       fit: BoxFit.cover, // 可选，根据需要调整
-                    //     ),
-                    //   ),
-                    // ),),
-                    //委托服务类型
-                    SliverToBoxAdapter(child: _PageViewWidget()),
-                    //天气卡片
-                   // SliverToBoxAdapter(child: _ServiceViewWidget()),
-                    SliverToBoxAdapter(child: SizedBox(height: 8)),
-                    //固定头部
-                    SliverAppBar(
-                      floating: true,
-                      snap: true,
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.white,
-                      surfaceTintColor: Colors.white,
-                      title: Column(
-                        children: _buildHeaderList(),
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Column(
+                    children: [
+                      AppBar(
+                          title: Row(children: [
+                            Icon(Icons.location_on, color: Colors.black),
+                            SizedBox(width: 10.w),
+                            ValueListenableBuilder(
+                                valueListenable: Global.locationInfoNotifier,
+                                builder: (context, location, child) {
+                                  return Text("${location?.city}",
+                                      style: TextStyle(fontSize: 15.sp));
+                                })
+                          ]),
+                          backgroundColor: Colors.transparent,
+                        surfaceTintColor: Colors.transparent,
                       ),
-                    ),
-                    // _buildHeaderList()
-                    //推荐
-                    SliverToBoxAdapter(
-                      child: SizedBox(height: 8),
-                    ),
-                    _HouseKeeperRecommendedWidget(),
-                  ],
-                ))));
+                      Expanded(child: SmartRefresher(
+                          enablePullUp: true,
+                          enablePullDown: false,
+                          controller: homeViewModel.refreshController,
+                          onLoading: () {
+                            homeViewModel.getHousekeeperData();
+                          },
+                          header: MaterialClassicHeader(
+                            color: AppColors.appColor,
+                            backgroundColor: AppColors.endColor,
+                          ),
+                          footer: ClassicFooter(
+                            canLoadingText: "松开加载更多~",
+                            loadingText: "努力加载中~",
+                            noDataText: "已经到底了~",
+                          ),
+                          child: CustomScrollView(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            slivers: [
+                              //轮播图
+                              SliverToBoxAdapter(child: _banner()),
+                              // SliverToBoxAdapter(child: Container(
+                              //   height: 180,
+                              //   child: Container(
+                              //     height: 180,
+                              //     child: Image(
+                              //       image: AssetImage("assets/images/home1.png"),
+                              //       fit: BoxFit.cover, // 可选，根据需要调整
+                              //     ),
+                              //   ),
+                              // ),),
+                              //委托服务类型
+                              SliverToBoxAdapter(child: _PageViewWidget()),
+                              //天气卡片
+                              // SliverToBoxAdapter(child: _ServiceViewWidget()),
+                             // SliverToBoxAdapter(child: SizedBox(height: 8)),
+                              //固定头部
+                            SliverToBoxAdapter(
+                              child:Container(
+                                margin: EdgeInsets.only(left: 15),
+                                child:  Column(
+                                  children: _buildHeaderList(),
+                                ),
+                              ),
+                              ),
+                              // _buildHeaderList()
+                              //推荐
+                              const SliverToBoxAdapter(
+                                child: SizedBox(height: 8),
+                              ),
+                              _HouseKeeperRecommendedWidget(),
+                            ],
+                          ))
+                      )
+                    ],
+                  ),
+                )
+              ],
+            )
+        ));
   }
 
   List<Widget> _buildHeaderList() {
     return [
-      SizedBox(height: 10),
       Row(
         children: [
-          Text("探索",
+          Text("探索 家缘",
               style: TextStyle(
                 fontSize: 17.sp,
-                color: Colors.black87,
+                fontFamily: "PingFang SC",
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
               )),
         ],
       ),
@@ -276,10 +306,17 @@ class _HomePageState extends State<HomePage>
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
         border: Border.all(color: Colors.grey.shade300, width: 0.5),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade300,
+            blurRadius: 1,
+            spreadRadius: 1,
+            offset: Offset(1, 1),
+          ),
+        ],
       ),
       child: Material(
         borderRadius: BorderRadius.circular(10.0),
-        elevation: 3,
         borderOnForeground: true,
         color: Colors.white,
         child: InkWell(
@@ -386,8 +423,8 @@ class _HomePageState extends State<HomePage>
         return BannerWidget(
           dotType: BannerDotType.circle,
           bannerData: bannerData,
-          height: 181,
-          margin: EdgeInsets.only(top: 2, left: 12, right: 12.w),
+          height: 160,
+          margin: EdgeInsets.only(top: 2, left: 10, right: 10.w),
         );
       },
     );
@@ -405,10 +442,10 @@ class _HomePageState extends State<HomePage>
             return Container(
               margin: EdgeInsets.only(left: 5.w, right: 5.w, top: 5.h),
               width: _currentPage == index ? 8.0.w : 4.0.w,
-              height: 4.0.h,
+              height: 5.0.h,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _currentPage == index ? Colors.black : Colors.grey,
+                color: _currentPage == index ? AppColors.appColor : Colors.grey,
               ),
             );
           }),
@@ -425,9 +462,11 @@ class _HomePageState extends State<HomePage>
               child: Text(
                 "服务类型",
                 style: TextStyle(
-                  fontSize: 17.sp,
-                  color: Colors.black87,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 18.sp,
+                  fontFamily: "PingFang SC",
+                //  fontFamily: "ChanyuZhenyan",
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
                 ),
               ),
             )
@@ -436,7 +475,7 @@ class _HomePageState extends State<HomePage>
         Container(
           margin:
               EdgeInsets.only(left: 15.w, right: 15.w, top: 10.h, bottom: 10.h),
-          padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
+          padding: EdgeInsets.only(top: 15.h, bottom: 10.h),
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(color: Colors.grey.withOpacity(0.2), width: 2),
@@ -509,13 +548,14 @@ class _HomePageState extends State<HomePage>
                   ],
                 ),
               ),
+              SizedBox(height: 3,),
               _buildIndicator(),
             ],
           ),
         ),
 
         SizedBox(
-          height: 10,
+          height: 5,
         ),
       ],
     );
@@ -535,7 +575,7 @@ class _HomePageState extends State<HomePage>
               height: 50.h,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25.r),
-                  color: AppColors.appColor),
+                  color: Color.fromRGBO(60, 205, 200, 1)),
               child: Icon(
                 HomeViewModel.CommissionTypes[index].icon,
                 size: 30.h,
