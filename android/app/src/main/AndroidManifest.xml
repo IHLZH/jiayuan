@@ -1,4 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+<!--    允许设置闹钟，必选-->
+<!--    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>-->
+<!--    允许 exact alarm-->
+<!--    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />-->
+
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -58,7 +65,7 @@
         android:usesCleartextTraffic="true"
         android:label="jiayuan"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@drawable/ikun">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -89,6 +96,9 @@
             android:value="2" />
         <!-- 配置定位Service -->
         <service android:name="com.amap.api.location.APSService"/>
+        <meta-data
+            android:name="flutter_local_notifications_icon"
+            android:resource="@mipmap/ikun" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
