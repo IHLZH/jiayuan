@@ -27,7 +27,6 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_check_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_operation_result.dart';
-import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_search_param.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_change_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_info_result.dart';
@@ -210,11 +209,17 @@ class ImChatApi {
               if (isProduction) {
                 print(
                     "============ ID: ${message.userID ?? message.groupID} =========");
+              }
 
+              if (isProduction) {
                 BuildContext context = RouteUtils.context;
 
-                showToast("收到新消息", context: context);
+                print("============ constext: $context =========");
+
+                showToast(text ?? "新消息",
+                    context: context, duration: Duration(seconds: 2));
               }
+
               await ChatPageViewModel.instance.refreshChatMessage();
             }
           }
@@ -482,7 +487,8 @@ class ImChatApi {
           //有用户加入群（全员能够收到）
           //groupID    群 ID
           //memberList    加入的成员
-          if (isProduction) print("=========== 群 ${groupID} 有用户加入群 ============");
+          if (isProduction)
+            print("=========== 群 ${groupID} 有用户加入群 ============");
         },
         onMemberInfoChanged: (String groupID,
             List<V2TimGroupMemberChangeInfo>
@@ -498,7 +504,8 @@ class ImChatApi {
           //opUser    处理人
           //memberList    被拉进群成员
 
-          if (isProduction) print("=========== 群 ${groupID} 有用户加入群 ============");
+          if (isProduction)
+            print("=========== 群 ${groupID} 有用户加入群 ============");
 
           if (isProduction) {
             memberList.forEach((element) {
@@ -1544,7 +1551,7 @@ class ImChatApi {
   Future<bool> quitGroup(String groupID) async {
     V2TimCallback quitGroupRes =
         await TencentImSDKPlugin.v2TIMManager.quitGroup(
-      groupID: "groupID",
+      groupID: groupID,
     ); // 需要退出的群组 ID
     if (quitGroupRes.code == 0) {
       // 退出成功
