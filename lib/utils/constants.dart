@@ -1,10 +1,9 @@
-import 'package:dio/dio.dart';
-
 class Constants {
   Constants._();
 
   //高德地图安卓端key
-  static const String Gao_DE_MAP_KEP_ANDROID = "deec9d608ddc51b91c745ba02af59a96";
+  static const String Gao_DE_MAP_KEP_ANDROID =
+      "deec9d608ddc51b91c745ba02af59a96";
 
   //用户名称
   static const String SP_USER_NAME = "SP_USER_NAME";
@@ -19,7 +18,7 @@ class Constants {
   static const String SP_TOKEN = "SP_TOKEN";
 
   //是否开发模式
-  static const bool IS_Production = false;
+  static const bool IS_Production = true;
 
   //本地sqlite数据库
   static const String DB_NAME = "jiayuan.db";
