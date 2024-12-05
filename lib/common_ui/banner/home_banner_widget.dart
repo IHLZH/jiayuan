@@ -83,15 +83,18 @@ class _BannerWidgetState extends State<BannerWidget> {
                 borderRadius: widget.dotType == BannerDotType.circle
                     ? BorderRadius.all(Radius.circular(10.r))
                     : BorderRadius.zero,
-                child: CachedNetworkImage(
-                    fit: BoxFit.fill,
-                    placeholder: (context, url) {
-                      return const Center(
-                        //圆形进度条指示器
-                        child: CircularProgressIndicator(color: AppColors.redBtnColor),
-                      );
-                    },
-                    imageUrl: widget.bannerData?[index] ?? ""));
+                child:
+                Image.asset(widget.bannerData?[index] ?? "",fit: BoxFit.fill,)
+                // CachedNetworkImage(
+                //     fit: BoxFit.fill,
+                //     placeholder: (context, url) {
+                //       return const Center(
+                //         //圆形进度条指示器
+                //         child: CircularPr\ogressIndicator(color: AppColors.redBtnColor),
+                //       );
+                //     },
+                //     imageUrl: widget.bannerData?[index] ?? "")
+            );
           },
           itemCount: widget.bannerData?.length ?? 0,
         ),
