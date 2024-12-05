@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/page/chat_page/conversation_page.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
+import 'package:jiayuan/page/chat_page/group_info/group_info_page_vm.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/global.dart';
@@ -11,6 +12,9 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info_result.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_info.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_info_result.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
 
 import '../../../repository/api/user_api.dart';
@@ -121,6 +125,34 @@ class ChatPageViewModel with ChangeNotifier{
     }
   }
 
+  String getSystemMessage(V2TimMessage message){
+    StringBuffer result = StringBuffer("系统通知：");
+    if(message.groupTipsElem != null){
+      if(message.groupTipsElem!.memberList != null){
+        V2TimGroupMemberInfo? groupMemberInfo = message.groupTipsElem!.memberList!.first;
+        if(groupMemberInfo != null){
+          result.write(groupMemberInfo.nickName);
+          switch(message.groupTipsElem!.type){
+            case 2:
+              result.write(" 被邀请入群");
+              break;
+            case 3:
+              result.write(" 退出群聊");
+              break;
+            case 4:
+              result.write(" 被踢出群聊");
+              break;
+            case 7:
+              result.write("群资料变更");
+              break;
+          }
+        }
+      }
+    }
+
+    return result.toString();
+  }
+
   //查看好友信息
   Future<void> gotoFriendInfo(BuildContext context, String userId) async {
     V2TimFriendInfoResult friendInfoResult = await ImChatApi.getInstance().getFriendProfile(userId);
@@ -133,6 +165,16 @@ class ChatPageViewModel with ChangeNotifier{
       }
     }else{
       showToast("用户信息获取失败");
+    }
+  }
+
+  Future<void> gotoGroupInfo(BuildContext context, String groupId) async {
+    V2TimGroupInfo groupInfo = await ImChatApi.getInstance().getGroupInfo(groupId);
+    GroupInfoPageViewModel.instance.groupInfo = groupInfo;
+    int result = await RouteUtils.pushForNamed(context, RoutePath.groupInfo, arguments: groupInfo) as int;
+    if(result == 1){
+      print("群信息改变");
+      refreshConversation();
     }
   }
 

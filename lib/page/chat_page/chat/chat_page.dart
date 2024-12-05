@@ -5,11 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/dialog/loading.dart';
 import 'package:jiayuan/common_ui/input/app_input.dart';
 import 'package:jiayuan/page/chat_page/chat/chat_page_vm.dart';
+import 'package:jiayuan/page/chat_page/group_info/group_info_page_vm.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:tencent_cloud_chat_sdk/enum/message_elem_type.dart';
 import 'package:tencent_cloud_chat_sdk/enum/v2_tim_conversation_marktype.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
@@ -118,10 +120,10 @@ class _ChatPageState extends State<ChatPage>{
                               IconButton(
                                 icon: Icon(Icons.more_horiz),
                                 onPressed: () {
-                                  if(vm.conversation?.userID != null){
+                                  if(vm.conversation!.type == 1){
                                     vm.gotoFriendInfo(context, vm.conversation!.userID!);
                                   }else{
-                                    showToast("用户不存在");
+                                    vm.gotoGroupInfo(context, vm.conversation!.groupID!);
                                   }
                                 },
                               ),
@@ -151,10 +153,14 @@ class _ChatPageState extends State<ChatPage>{
                             }else{
                               hasShowTime = true;
                             }
-                            if(message.isSelf ?? true){
-                              return selfMessage(message, hasShowTime);
+                            if(message.elemType != MessageElemType.V2TIM_ELEM_TYPE_GROUP_TIPS){
+                              if(message.isSelf ?? true){
+                                return selfMessage(message, hasShowTime);
+                              }else{
+                                return otherMessage(message, hasShowTime);
+                              }
                             }else{
-                              return otherMessage(message, hasShowTime);
+                              return systemMessage(message);
                             }
                           }
                       ),
@@ -242,138 +248,168 @@ class _ChatPageState extends State<ChatPage>{
   }
 
   Widget selfMessage(V2TimMessage message,bool hasShowTime){
-    return Container(
-      margin: EdgeInsets.only(left: 20),
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Column(
-          children: [
-            if(hasShowTime)
-              Center(
-                child: Text(
-                  _chatViewModel.formatTimestamp(message.timestamp ?? 0) + " " + (_chatViewModel.formatTimestampToHours(message.timestamp ?? 0) ?? ""),
-                  style: TextStyle(
-                      color: AppColors.textColor7d
-                  ),
-                ),
+    return Column(
+      children: [
+        if(hasShowTime)
+          Center(
+            child: Text(
+              _chatViewModel.formatTimestamp(message.timestamp ?? 0) + " " + (_chatViewModel.formatTimestampToHours(message.timestamp ?? 0) ?? ""),
+              style: TextStyle(
+                  color: AppColors.textColor7d
               ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+          ),
+        Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(left: 20),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Column(
               children: [
-                Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          message.nickName ?? "",
-                          style: TextStyle(
-                              color: AppColors.textColor5a
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.r)
-                          ),
-                          child: Wrap(
-                            children: [
-                              Text(
-                                message.textElem?.text ?? "",
-                                style: TextStyle(
-                                  color: AppColors.textColor2b,
-                                  fontSize: 16.sp,
-                                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              message.nickName ?? "",
+                              style: TextStyle(
+                                  color: AppColors.textColor5a
                               ),
-                            ],
-                          )
+                            ),
+                            Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8.r)
+                                ),
+                                child: Wrap(
+                                  children: [
+                                    Text(
+                                      message.textElem?.text ?? "",
+                                      style: TextStyle(
+                                        color: AppColors.textColor2b,
+                                        fontSize: 16.sp,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                            )
+                          ],
                         )
-                      ],
-                    )
-                ),
-                SizedBox(width: 10,),
-                InkWell(
-                  onTap: () async {
-                    _chatViewModel.gotoUserInfo(context, Global.userInfo!.userId.toString());
-                  },
-                  child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: message.faceUrl != "默认头像" ? CachedNetworkImageProvider(message.faceUrl!) : null
-                  ),
+                    ),
+                    SizedBox(width: 10,),
+                    InkWell(
+                      onTap: () async {
+                        _chatViewModel.gotoUserInfo(context, Global.userInfo!.userId.toString());
+                      },
+                      child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: message.faceUrl != "默认头像" ? CachedNetworkImageProvider(message.faceUrl!) : null
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ],
-        )
+            )
+        ),
+      ],
     );
   }
 
   Widget otherMessage(V2TimMessage message,bool hasShowTime){
-    return Container(
-      width: double.infinity,
-      margin: EdgeInsets.only(right: 20),
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Column(
-        children: [
-          if(hasShowTime)
-            Center(
-              child: Text(
-                _chatViewModel.formatTimestamp(message.timestamp ?? 0) + " " + (_chatViewModel.formatTimestampToHours(message.timestamp ?? 0) ?? ""),
-                style: TextStyle(
-                    color: AppColors.textColor7d
-                ),
+    return Column(
+      children: [
+        if(hasShowTime)
+          Center(
+            child: Text(
+              _chatViewModel.formatTimestamp(message.timestamp ?? 0) + " " + (_chatViewModel.formatTimestampToHours(message.timestamp ?? 0) ?? ""),
+              style: TextStyle(
+                  color: AppColors.textColor7d
               ),
             ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              InkWell(
-                onTap: (){
-                  Loading.showLoading();
-                  _chatViewModel.gotoUserInfo(context, message.userID!);
-                  Loading.dismissAll();
-                },
-                child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    backgroundImage: message.faceUrl != "默认头像" ? CachedNetworkImageProvider(message.faceUrl!) : null
-                ),
-              ),
-              SizedBox(width: 10,),
-              Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        (message.friendRemark != null && message.friendRemark != "") ? message.friendRemark! : message.nickName ?? "",
-                        style: TextStyle(
-                            color: AppColors.textColor5a
-                        ),
+          ),
+        Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(right: 20),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                      onTap: (){
+                        _chatViewModel.gotoUserInfo(context, message.sender!);
+                      },
+                      child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          backgroundImage: message.faceUrl != "默认头像" ? CachedNetworkImageProvider(message.faceUrl!) : null
                       ),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8.r)
-                        ),
-                        child: Wrap(
+                    ),
+                    SizedBox(width: 10,),
+                    Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              message.textElem?.text ?? "",
+                              (message.friendRemark != null && message.friendRemark != "") ? message.friendRemark! : message.nickName ?? "",
                               style: TextStyle(
-                                color: AppColors.textColor2b,
-                                fontSize: 16.sp,
+                                  color: AppColors.textColor5a
                               ),
                             ),
+                            Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8.r)
+                                ),
+                                child: Wrap(
+                                  children: [
+                                    Text(
+                                      message.textElem?.text ?? "",
+                                      style: TextStyle(
+                                        color: AppColors.textColor2b,
+                                        fontSize: 16.sp,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                            )
                           ],
                         )
-                      )
-                    ],
-                  )
-              ),
-            ],
+                    ),
+                  ],
+                ),
+              ],
+            )
+        )
+      ],
+    );
+  }
+
+  Widget systemMessage(V2TimMessage message){
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.white.withAlpha(180),
+        borderRadius: BorderRadius.circular(8.r)
+      ),
+      margin: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+      child: Wrap(
+        children: [
+          Text(
+            maxLines: null,
+            _chatViewModel.getSystemMessage(message),
+            style: TextStyle(
+                color: AppColors.textColor2b,
+                fontSize: 10.sp
+            ),
           ),
         ],
       )
