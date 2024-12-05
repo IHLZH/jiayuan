@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:jiayuan/page/chat_page/chat/chat_page_vm.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
 import 'package:jiayuan/page/chat_page/friend_list/friend_list_vm.dart';
+import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
@@ -208,6 +210,10 @@ class ImChatApi {
               if (isProduction) {
                 print(
                     "============ ID: ${message.userID ?? message.groupID} =========");
+
+                BuildContext context = RouteUtils.context;
+
+                showToast("收到新消息", context: context);
               }
               await ChatPageViewModel.instance.refreshChatMessage();
             }
