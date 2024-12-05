@@ -5,6 +5,8 @@ import 'package:jiayuan/page/chat_page/conversation_page.dart';
 import 'package:jiayuan/page/chat_page/create_group/create_group_page.dart';
 import 'package:jiayuan/page/chat_page/friend_info/friend_info_page.dart';
 import 'package:jiayuan/page/chat_page/friend_list/friend_list.dart';
+import 'package:jiayuan/page/chat_page/group_info/group_info_page.dart';
+import 'package:jiayuan/page/chat_page/group_info/invite_member_page.dart';
 import 'package:jiayuan/page/commission_center_page/commission_center_page.dart';
 import 'package:jiayuan/page/commission_center_page/order/order_page.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
@@ -203,6 +205,10 @@ class Routes {
         return pageRoute(KeeperCollectionPage());
       case RoutePath.createGroup:
         return pageRoute(CreateGroupPage());
+      case RoutePath.groupInfo:
+        return pageRoute(GroupInfoPage(), settings: settings);
+      case RoutePath.inviteFriend:
+        return pageRoute(InviteMemberPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
