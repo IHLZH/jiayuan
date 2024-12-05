@@ -121,7 +121,7 @@ class InviteMemberPageState extends State<InviteMemberPage>{
                             ),
                             SizedBox(width: 10),
                             Text(
-                              friend.friendRemark ?? friend.userProfile!.nickName!,
+                              friend.friendRemark != null && friend.friendRemark != "" ? friend.friendRemark! : friend.userProfile!.nickName!,
                               style: TextStyle(
                                 color: AppColors.textColor2b,
                                 fontSize: 16.sp,
