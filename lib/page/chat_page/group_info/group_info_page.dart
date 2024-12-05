@@ -236,7 +236,7 @@ class _GroupInfoPageState extends State<GroupInfoPage>{
                                 if(Global.userInfo!.userId.toString() == vm.groupInfo!.owner){
 
                                 }else{
-
+                                  showQuitGroup();
                                 }
                               },
                               child: Center(
@@ -287,14 +287,19 @@ class _GroupInfoPageState extends State<GroupInfoPage>{
                 ],
               ),
               SizedBox(height: 10,),
-              Row(
-                children: [
-                  Wrap(
-                    children: [
-                      Text("确认退出群聊?，退群信息仅管理员与群主可见")
-                    ],
-                  )
-                ],
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Wrap(
+                  children: [
+                    Text(
+                      "确认退出群聊，退群信息仅管理员与群主可见",
+                      style: TextStyle(
+                          fontSize: 16.sp,
+                          color: AppColors.textColor7d
+                      ),
+                    )
+                  ],
+                ),
               ),
               SizedBox(height: 20,),
               Row(
@@ -315,16 +320,13 @@ class _GroupInfoPageState extends State<GroupInfoPage>{
                   Expanded(
                       child: AppButton(
                         onTap: () async {
-                          bool res = await GroupApi().quitGroup(_groupVm.groupInfo!.groupID);
-                          if(res){
-                            showToast("退群成功");
-                          }else{
-                            showToast("退群失败");
-                          }
+                          bool res = await _groupVm.quitGroup();
+                          RouteUtils.pop(context);
+                          if(res)RouteUtils.pop(context);
                         },
                         type: AppButtonType.main,
                         radius: 8.r,
-                        buttonText: "退出",
+                        buttonText: "退群",
                       )
                   )
                 ],

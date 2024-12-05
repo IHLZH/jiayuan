@@ -57,6 +57,20 @@ class GroupInfoPageViewModel with ChangeNotifier{
     }
   }
 
+  Future<bool> quitGroup() async {
+    if(groupInfo != null){
+      bool res = await GroupApi().quitGroup(groupInfo!.groupID);
+      if(res){
+        isChange = 1;
+        showToast("退群成功");
+      }else{
+        showToast("退群失败");
+      }
+      return res;
+    }
+    return false;
+  }
+
   void clear(){
     isChange = 0;
     groupInfo = null;
