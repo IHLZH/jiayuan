@@ -144,5 +144,11 @@ class RoutePath {
   //收藏页面
   static const String keeperCollection = "/keeperCollection";
 
+  //创建群组
   static const String createGroup = "/createGroup";
+
+  //群组信息
+  static const String groupInfo = "/groupInfo";
+
+  static const String inviteFriend = "/inviteFriend";
 }

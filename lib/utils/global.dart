@@ -5,27 +5,13 @@ import 'package:jiayuan/repository/model/HouseKeeper_data_detail.dart';
 import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
 import 'package:jiayuan/repository/model/standardPrice.dart';
 import 'package:jiayuan/repository/model/user.dart';
+import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/sqlite/dbutil.dart';
 import 'package:jiayuan/utils/location_data.dart';
 
 import '../page/commission_page/commission_vm.dart';
 
 class Global {
-  static User? userTmp = User(
-      userId: 1,
-      userName: "ikun",
-      nickName: "nickName",
-      userPassword: "123456",
-      userAvatar: "userAvatar",
-      userSex: 1,
-      userPhoneNumber: "userPhoneNumber",
-      createdTime: "createdTime",
-      updatedTime: "updatedTime",
-      loginIp: "loginIp",
-      loginTime: "loginTime",
-      userType: 1,
-      userStatus: 1);
-
   //个人信息与监听器
   //Global.userInfoNotifier.value = (User)updatedUser;//这样来实现更新
   static final userInfoNotifier = ValueNotifier<User?>(null);

@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/buttons/red_button.dart';
 import 'package:jiayuan/page/chat_page/create_group/create_group_page_vm.dart';
+import 'package:jiayuan/route/route_path.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
+import '../../../common_ui/dialog/dialog_factory.dart';
+import '../../../common_ui/input/app_input.dart';
 import '../../../common_ui/styles/app_colors.dart';
 import '../../../route/route_utils.dart';
 
@@ -162,8 +165,7 @@ class _CreateGroupPageState extends State<CreateGroupPage>{
                         type: AppButtonType.main,
                         buttonText: "确认创建",
                         onTap: () async {
-                          await _createGPVM.createGroup();
-                          showToast("创建成功");
+                          _setGroupName();
                         },
                       ),
                   )
@@ -171,6 +173,78 @@ class _CreateGroupPageState extends State<CreateGroupPage>{
               )
             ),
         ),
+    );
+  }
+
+  void _setGroupName(){
+    DialogFactory.instance.showParentDialog(
+        touchOutsideDismiss: true,
+        context: context,
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          width: 200,
+          height: 180,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "输入群聊名称",
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10,),
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: Expanded(
+                      child: AppInput(
+                        controller: _createGPVM.textEditingController
+                      )
+                  )
+              ),
+              SizedBox(height: 20,),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      onTap: (){
+                        RouteUtils.pop(context);
+                      },
+                      type: AppButtonType.minor,
+                      radius: 8.r,
+                      buttonText: "取消",
+                      buttonTextStyle: TextStyle(
+                          color: AppColors.textColor2b
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: AppButton(
+                        onTap: () async {
+                          String groupId = await _createGPVM.createGroup(_createGPVM.textEditingController.text);
+                          RouteUtils.pop(context);
+                          _createGPVM.gotoChatPage(context, groupId);
+                          showToast("创建成功");
+                        },
+                        type: AppButtonType.main,
+                        radius: 8.r,
+                        buttonText: "创建",
+                      )
+                  )
+                ],
+              )
+            ],
+          ),
+        )
     );
   }
 

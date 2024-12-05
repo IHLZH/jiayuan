@@ -113,6 +113,9 @@ dependencies:
   # 腾讯云IM SDK
   tencent_cloud_chat_sdk: ^8.2.6325+4
 
+  #通知栏
+  flutter_local_notifications: ^18.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:jiayuan/page/chat_page/chat/chat_page_vm.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
 import 'package:jiayuan/page/chat_page/friend_list/friend_list_vm.dart';
+import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
+import 'package:jiayuan/utils/notification_helper.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimConversationListener.dart';
@@ -25,7 +28,6 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_check_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_info_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_operation_result.dart';
-import 'package:tencent_cloud_chat_sdk/models/v2_tim_friend_search_param.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_change_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_info_result.dart';
@@ -197,6 +199,15 @@ class ImChatApi {
 
             if (isProduction) print("============获得新消息： ${text}=========");
 
+            if (isProduction) {
+              BuildContext context = RouteUtils.context;
+
+              print("============ constext: $context =========");
+
+              //TODO 弹窗
+              NotificationHelper.getInstance().showNotification(title: "${message.nickName}", body: "$text");
+            }
+
             if ((ChatPageViewModel.instance.conversation != null &&
                     message.userID != null &&
                     message.userID ==
@@ -209,6 +220,7 @@ class ImChatApi {
                 print(
                     "============ ID: ${message.userID ?? message.groupID} =========");
               }
+
               await ChatPageViewModel.instance.refreshChatMessage();
             }
           }
@@ -476,7 +488,8 @@ class ImChatApi {
           //有用户加入群（全员能够收到）
           //groupID    群 ID
           //memberList    加入的成员
-          if (isProduction) print("=========== 群 ${groupID} 有用户加入群 ============");
+          if (isProduction)
+            print("=========== 群 ${groupID} 有用户加入群 ============");
         },
         onMemberInfoChanged: (String groupID,
             List<V2TimGroupMemberChangeInfo>
@@ -492,7 +505,8 @@ class ImChatApi {
           //opUser    处理人
           //memberList    被拉进群成员
 
-          if (isProduction) print("=========== 群 ${groupID} 有用户加入群 ============");
+          if (isProduction)
+            print("=========== 群 ${groupID} 有用户加入群 ============");
 
           if (isProduction) {
             memberList.forEach((element) {
@@ -1538,7 +1552,7 @@ class ImChatApi {
   Future<bool> quitGroup(String groupID) async {
     V2TimCallback quitGroupRes =
         await TencentImSDKPlugin.v2TIMManager.quitGroup(
-      groupID: "groupID",
+      groupID: groupID,
     ); // 需要退出的群组 ID
     if (quitGroupRes.code == 0) {
       // 退出成功
