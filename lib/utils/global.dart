@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:ifly_speech_recognition/ifly_speech_recognition.dart';
 import 'package:jiayuan/repository/model/HouseKeeper_data_detail.dart';
 import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
 import 'package:jiayuan/repository/model/standardPrice.dart';
@@ -28,7 +29,16 @@ class Global {
   //个人信息与监听器
   //Global.userInfoNotifier.value = (User)updatedUser;//这样来实现更新
   static final userInfoNotifier = ValueNotifier<User?>(null);
-
+  static late SpeechRecognitionService speechRecognitionService;
+  //初始化语音识别服务
+  static Future SpeechRecognitionServiceinit() async {
+    Global.speechRecognitionService = SpeechRecognitionService(
+      appId: '6ccedc6f',
+      appKey: 'YmQxN2U1OWU3ZjRlMmM2ZmU0MDAwZTMw',
+      appSecret: '6fef031bd90be01d7b51fc84465f24fa',
+    );
+    Global.speechRecognitionService.initRecorder();
+  }
   static User? get userInfo => userInfoNotifier.value;
   static set userInfo(User? value) {
     userInfoNotifier.value = value;
