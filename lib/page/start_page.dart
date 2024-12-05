@@ -14,6 +14,7 @@ import 'package:oktoast/oktoast.dart';
 import '../im/im_chat_api.dart';
 import '../repository/api/keeper_api.dart';
 import '../repository/model/user.dart';
+import '../utils/notification_helper.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -28,6 +29,11 @@ class _StartPageState extends State<StartPage> {
     super.initState();
     //全面屏手势
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+    //获取通知权限
+    NotificationHelper.getInstance().requestNotificationPermissions();
+    //初始化通知
+    NotificationHelper.getInstance().initialize();
 
     // 初始化CookieJar
     DioInstance.instance().initDio(baseUrl: "");
