@@ -4,6 +4,7 @@ import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
 import 'package:jiayuan/page/chat_page/friend_list/friend_list_vm.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/constants.dart';
+import 'package:jiayuan/utils/notification_helper.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimAdvancedMsgListener.dart';
 import 'package:tencent_cloud_chat_sdk/enum/V2TimConversationListener.dart';
@@ -198,6 +199,15 @@ class ImChatApi {
 
             if (isProduction) print("============获得新消息： ${text}=========");
 
+            if (isProduction) {
+              BuildContext context = RouteUtils.context;
+
+              print("============ constext: $context =========");
+
+              //TODO 弹窗
+              NotificationHelper.getInstance().showNotification(title: "${message.nickName}", body: "$text");
+            }
+
             if ((ChatPageViewModel.instance.conversation != null &&
                     message.userID != null &&
                     message.userID ==
@@ -209,15 +219,6 @@ class ImChatApi {
               if (isProduction) {
                 print(
                     "============ ID: ${message.userID ?? message.groupID} =========");
-              }
-
-              if (isProduction) {
-                BuildContext context = RouteUtils.context;
-
-                print("============ constext: $context =========");
-
-                showToast(text ?? "新消息",
-                    context: context, duration: Duration(seconds: 2));
               }
 
               await ChatPageViewModel.instance.refreshChatMessage();
