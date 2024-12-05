@@ -6,7 +6,7 @@ packages:
     description:
       name: amap_flutter_base
       sha256: "9ef2439b8de7100cdd1b4357701b8ca8c059c0f2d9d0257b81750bbf0c6f53bb"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.0"
   amap_flutter_location:
@@ -14,7 +14,7 @@ packages:
     description:
       name: amap_flutter_location
       sha256: f35ff00e196d579608e0bc28ccbc1f6f53787644702f947de941f775769cc701
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.0"
   amap_flutter_map:
@@ -22,7 +22,7 @@ packages:
     description:
       name: amap_flutter_map
       sha256: "9cebb0b2f5fc7d3ae0427e99c41edc883e8f5459f6a28bc850f0f9e16918cf2f"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.0"
   archive:
@@ -30,15 +30,23 @@ packages:
     description:
       name: archive
       sha256: cb6a278ef2dbb298455e1a713bda08524a175630ec643a242c399c932a0a1f7d
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.6.1"
+  args:
+    dependency: transitive
+    description:
+      name: args
+      sha256: bf9f5caeea8d8fe6721a9c358dd8a5c1947b27f1cfaa18b39c301273594919e6
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.6.0"
   async:
     dependency: transitive
     description:
       name: async
       sha256: "947bfcf187f74dbc5e146c9eb9c0f10c9f8b30743e341481c1e2ed3ecc18c20c"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.11.0"
   bloc:
@@ -46,7 +54,7 @@ packages:
     description:
       name: bloc
       sha256: "106842ad6569f0b60297619e9e0b1885c2fb9bf84812935490e6c5275777804e"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "8.1.4"
   boolean_selector:
@@ -54,7 +62,7 @@ packages:
     description:
       name: boolean_selector
       sha256: "6cfb5af12253eaf2b368f07bacc5a80d1301a071c73360d746b7f2e32d762c66"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.1"
   cached_network_image:
@@ -62,7 +70,7 @@ packages:
     description:
       name: cached_network_image
       sha256: "7c1183e361e5c8b0a0f21a28401eecdbde252441106a9816400dd4c2b2424916"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.4.1"
   cached_network_image_platform_interface:
@@ -70,7 +78,7 @@ packages:
     description:
       name: cached_network_image_platform_interface
       sha256: "35814b016e37fbdc91f7ae18c8caf49ba5c88501813f73ce8a07027a395e2829"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.1.1"
   cached_network_image_web:
@@ -78,7 +86,7 @@ packages:
     description:
       name: cached_network_image_web
       sha256: "980842f4e8e2535b8dbd3d5ca0b1f0ba66bf61d14cc3a17a9b4788a3685ba062"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.3.1"
   characters:
@@ -86,7 +94,7 @@ packages:
     description:
       name: characters
       sha256: "04a925763edad70e8443c99234dc3328f442e811f1d8fd1a72f1c8ad0f69a605"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.3.0"
   city_pickers:
@@ -94,7 +102,7 @@ packages:
     description:
       name: city_pickers
       sha256: "583102c8d9eecb1f7abc5ff52a22d7cb019b9808cdb24b80c7692c769f8da153"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.3.0"
   clock:
@@ -102,7 +110,7 @@ packages:
     description:
       name: clock
       sha256: cb6d7f03e1de671e34607e909a7213e31d7752be4fb66a86d29fe1eb14bfb5cf
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.1"
   collection:
@@ -110,7 +118,7 @@ packages:
     description:
       name: collection
       sha256: ee67cb0715911d28db6bf4af1026078bd6f0128b07a5f66fb2ed94ec6783c09a
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.18.0"
   common_utils:
@@ -118,7 +126,7 @@ packages:
     description:
       name: common_utils
       sha256: c26884339b13ff99b0739e56f4b02090c84054ed9dd3a045435cd24e7b99c2c1
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.0"
   convert:
@@ -126,7 +134,7 @@ packages:
     description:
       name: convert
       sha256: b30acd5944035672bc15c6b7a8b47d773e41e2f17de064350988c5d02adb1c68
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.1.2"
   cookie_jar:
@@ -134,7 +142,7 @@ packages:
     description:
       name: cookie_jar
       sha256: a6ac027d3ed6ed756bfce8f3ff60cb479e266f3b0fdabd6242b804b6765e52de
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.0.8"
   cross_file:
@@ -142,7 +150,7 @@ packages:
     description:
       name: cross_file
       sha256: "7caf6a750a0c04effbb52a676dce9a4a592e10ad35c34d6d2d0e4811160d5670"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.3.4+2"
   crypto:
@@ -150,7 +158,7 @@ packages:
     description:
       name: crypto
       sha256: "1e445881f28f22d6140f181e07737b22f1e099a5e1ff94b0af2f9e4a463f4855"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.6"
   cupertino_icons:
@@ -158,7 +166,7 @@ packages:
     description:
       name: cupertino_icons
       sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.8"
   custom_pop_up_menu:
@@ -166,15 +174,23 @@ packages:
     description:
       name: custom_pop_up_menu
       sha256: eeac484c6ddffffb25e803dc2a5cc9381e700a29f074e9fcc76fe36b62fde850
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.2.4"
+  dbus:
+    dependency: transitive
+    description:
+      name: dbus
+      sha256: "365c771ac3b0e58845f39ec6deebc76e3276aa9922b0cc60840712094d9047ac"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.7.10"
   decimal:
     dependency: transitive
     description:
       name: decimal
       sha256: "4140a688f9e443e2f4de3a1162387bf25e1ac6d51e24c9da263f245210f41440"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.2"
   device_info_plus:
@@ -182,7 +198,7 @@ packages:
     description:
       name: device_info_plus
       sha256: f545ffbadee826f26f2e1a0f0cbd667ae9a6011cc0f77c0f8f00a969655e6e95
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "11.1.1"
   device_info_plus_platform_interface:
@@ -190,7 +206,7 @@ packages:
     description:
       name: device_info_plus_platform_interface
       sha256: "282d3cf731045a2feb66abfe61bbc40870ae50a3ed10a4d3d217556c35c8c2ba"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "7.0.1"
   dio:
@@ -198,7 +214,7 @@ packages:
     description:
       name: dio
       sha256: "5598aa796bbf4699afd5c67c0f5f6e2ed542afc956884b9cd58c306966efc260"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "5.7.0"
   dio_cookie_manager:
@@ -206,7 +222,7 @@ packages:
     description:
       name: dio_cookie_manager
       sha256: e79498b0f632897ff0c28d6e8178b4bc6e9087412401f618c31fa0904ace050d
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.1.1"
   dio_web_adapter:
@@ -214,7 +230,7 @@ packages:
     description:
       name: dio_web_adapter
       sha256: "33259a9276d6cea88774a0000cfae0d861003497755969c92faa223108620dc8"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.0"
   dotted_border:
@@ -222,23 +238,23 @@ packages:
     description:
       name: dotted_border
       sha256: "108837e11848ca776c53b30bc870086f84b62ed6e01c503ed976e8f8c7df9c04"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.0"
   equatable:
     dependency: transitive
     description:
       name: equatable
-      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
       name: fake_async
       sha256: "511392330127add0b769b75a987850d136345d9227c6b94c96a04cf4a391bf78"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.3.1"
   ffi:
@@ -246,7 +262,7 @@ packages:
     description:
       name: ffi
       sha256: "16ed7b077ef01ad6170a3d0c57caa4a112a38d7a2ed5602e0aca9ca6f3d98da6"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.3"
   file:
@@ -254,23 +270,23 @@ packages:
     description:
       name: file
       sha256: a3b4f84adafef897088c160faf7dfffb7696046cb13ae90b508c2cbc95d3b8d4
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "7.0.1"
   file_selector_linux:
     dependency: transitive
     description:
       name: file_selector_linux
-      sha256: b2b91daf8a68ecfa4a01b778a6f52edef9b14ecd506e771488ea0f2e0784198b
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      sha256: "54cbbd957e1156d29548c7d9b9ec0c0ebb6de0a90452198683a7d23aed617a33"
+      url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.9.3+1"
+    version: "0.9.3+2"
   file_selector_macos:
     dependency: transitive
     description:
       name: file_selector_macos
       sha256: "271ab9986df0c135d45c3cdb6bd0faa5db6f4976d3e4b437cf7d0f258d941bfc"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.9.4+2"
   file_selector_platform_interface:
@@ -278,7 +294,7 @@ packages:
     description:
       name: file_selector_platform_interface
       sha256: a3994c26f10378a039faa11de174d7b78eb8f79e4dd0af2a451410c1a5c3f66b
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.6.2"
   file_selector_windows:
@@ -286,7 +302,7 @@ packages:
     description:
       name: file_selector_windows
       sha256: "8f5d2f6590d51ecd9179ba39c64f722edc15226cc93dcc8698466ad36a4a85a4"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.9.3+3"
   fixnum:
@@ -294,23 +310,23 @@ packages:
     description:
       name: fixnum
       sha256: b6dc7065e46c974bc7c5f143080a6764ec7a4be6da1285ececdc37be96de53be
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.1"
   fl_chart:
     dependency: "direct main"
     description:
       name: fl_chart
-      sha256: "974ea2a8096b612d233d07f475aa91111708e4de99d26f448aa756d46da7f19e"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      sha256: "74959b99b92b9eebeed1a4049426fd67c4abc3c5a0f4d12e2877097d6a11ae08"
+      url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.69.1"
+    version: "0.69.2"
   flustars:
     dependency: "direct main"
     description:
       name: flustars
       sha256: "7019ab8d68c0d4759ee122644d91a165d450b0492717f9e7e9d0ce277dcf664b"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.1"
   flutter:
@@ -323,7 +339,7 @@ packages:
     description:
       name: flutter_bloc
       sha256: b594505eac31a0518bdcb4b5b79573b8d9117b193cc80cc12e17d639b10aa27a
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "8.1.6"
   flutter_cache_manager:
@@ -331,7 +347,7 @@ packages:
     description:
       name: flutter_cache_manager
       sha256: "400b6592f16a4409a7f2bb929a9a7e38c72cceb8ffb99ee57bbf2cb2cecf8386"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.4.1"
   flutter_easyloading:
@@ -339,7 +355,7 @@ packages:
     description:
       name: flutter_easyloading
       sha256: ba21a3c883544e582f9cc455a4a0907556714e1e9cf0eababfcb600da191d17c
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.5"
   flutter_image_compress:
@@ -347,7 +363,7 @@ packages:
     description:
       name: flutter_image_compress
       sha256: "45a3071868092a61b11044c70422b04d39d4d9f2ef536f3c5b11fb65a1e7dd90"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.3.0"
   flutter_image_compress_common:
@@ -355,7 +371,7 @@ packages:
     description:
       name: flutter_image_compress_common
       sha256: "7f79bc6c8a363063620b4e372fa86bc691e1cb28e58048cd38e030692fbd99ee"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.5"
   flutter_image_compress_macos:
@@ -363,7 +379,7 @@ packages:
     description:
       name: flutter_image_compress_macos
       sha256: "26df6385512e92b3789dc76b613b54b55c457a7f1532e59078b04bf189782d47"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.2"
   flutter_image_compress_ohos:
@@ -371,7 +387,7 @@ packages:
     description:
       name: flutter_image_compress_ohos
       sha256: e76b92bbc830ee08f5b05962fc78a532011fcd2041f620b5400a593e96da3f51
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.0.3"
   flutter_image_compress_platform_interface:
@@ -379,7 +395,7 @@ packages:
     description:
       name: flutter_image_compress_platform_interface
       sha256: "579cb3947fd4309103afe6442a01ca01e1e6f93dc53bb4cbd090e8ce34a41889"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.5"
   flutter_image_compress_web:
@@ -387,7 +403,7 @@ packages:
     description:
       name: flutter_image_compress_web
       sha256: f02fe352b17f82b72f481de45add240db062a2585850bea1667e82cc4cd6c311
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.4+1"
   flutter_lints:
@@ -395,9 +411,33 @@ packages:
     description:
       name: flutter_lints
       sha256: "3f41d009ba7172d5ff9be5f6e6e6abb4300e263aab8866d2a0842ed2a70f8f0c"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.0.0"
+  flutter_local_notifications:
+    dependency: "direct main"
+    description:
+      name: flutter_local_notifications
+      sha256: ef41ae901e7529e52934feba19ed82827b11baa67336829564aeab3129460610
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "18.0.1"
+  flutter_local_notifications_linux:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_linux
+      sha256: "8f685642876742c941b29c32030f6f4f6dacd0e4eaecb3efbb187d6a3812ca01"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "5.0.0"
+  flutter_local_notifications_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_local_notifications_platform_interface
+      sha256: "6c5b83c86bf819cdb177a9247a3722067dd8cc6313827ce7c77a4b238a26fd52"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "8.0.0"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -408,7 +448,7 @@ packages:
     description:
       name: flutter_pickers
       sha256: f38a9d9229afed75f76bae64e628b78b9c20194873e3c141783523cf21ac8a95
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.9"
   flutter_plugin_android_lifecycle:
@@ -416,7 +456,7 @@ packages:
     description:
       name: flutter_plugin_android_lifecycle
       sha256: "9b78450b89f059e96c9ebb355fa6b3df1d6b330436e0b885fb49594c41721398"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.23"
   flutter_screenutil:
@@ -424,7 +464,7 @@ packages:
     description:
       name: flutter_screenutil
       sha256: "8239210dd68bee6b0577aa4a090890342d04a136ce1c81f98ee513fc0ce891de"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "5.9.3"
   flutter_speed_dial:
@@ -432,7 +472,7 @@ packages:
     description:
       name: flutter_speed_dial
       sha256: "84d0a3e86640efb9feb9fd0f8e236fffd3fb6c83e40ad6fb617654faabc86936"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.3.0"
   flutter_spinkit:
@@ -440,7 +480,7 @@ packages:
     description:
       name: flutter_spinkit
       sha256: d2696eed13732831414595b98863260e33e8882fc069ee80ec35d4ac9ddb0472
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "5.2.1"
   flutter_staggered_grid_view:
@@ -448,7 +488,7 @@ packages:
     description:
       name: flutter_staggered_grid_view
       sha256: "19e7abb550c96fbfeb546b23f3ff356ee7c59a019a651f8f102a4ba9b7349395"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.7.0"
   flutter_swiper_view:
@@ -456,7 +496,7 @@ packages:
     description:
       name: flutter_swiper_view
       sha256: "2a165b259e8a4c49d4da5626b967ed42a73dac2d075bd9e266ad8d23b9f01879"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.8"
   flutter_test:
@@ -474,7 +514,7 @@ packages:
     description:
       name: http
       sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.2.2"
   http_parser:
@@ -482,7 +522,7 @@ packages:
     description:
       name: http_parser
       sha256: "2aa08ce0341cc9b354a498388e30986515406668dbcc4f7c950c3e715496693b"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.0.2"
   image:
@@ -490,7 +530,7 @@ packages:
     description:
       name: image
       sha256: "8e9d133755c3e84c73288363e6343157c383a0c6c56fc51afcc5d4d7180306d6"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.3.0"
   image_picker:
@@ -498,23 +538,23 @@ packages:
     description:
       name: image_picker
       sha256: "021834d9c0c3de46bf0fe40341fa07168407f694d9b2bb18d532dc1261867f7a"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.2"
   image_picker_android:
     dependency: transitive
     description:
       name: image_picker_android
-      sha256: "8faba09ba361d4b246dc0a17cb4289b3324c2b9f6db7b3d457ee69106a86bd32"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      sha256: fa8141602fde3f7e2f81dbf043613eb44dfa325fa0bcf93c0f142c9f7a2c193e
+      url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.8.12+17"
+    version: "0.8.12+18"
   image_picker_for_web:
     dependency: transitive
     description:
       name: image_picker_for_web
       sha256: "717eb042ab08c40767684327be06a5d8dbb341fe791d514e4b92c7bbe1b7bb83"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.6"
   image_picker_ios:
@@ -522,7 +562,7 @@ packages:
     description:
       name: image_picker_ios
       sha256: "4f0568120c6fcc0aaa04511cb9f9f4d29fc3d0139884b1d06be88dcec7641d6b"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.8.12+1"
   image_picker_linux:
@@ -530,7 +570,7 @@ packages:
     description:
       name: image_picker_linux
       sha256: "4ed1d9bb36f7cd60aa6e6cd479779cc56a4cb4e4de8f49d487b1aaad831300fa"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.2.1+1"
   image_picker_macos:
@@ -538,7 +578,7 @@ packages:
     description:
       name: image_picker_macos
       sha256: "3f5ad1e8112a9a6111c46d0b57a7be2286a9a07fc6e1976fdf5be2bd31d4ff62"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.2.1+1"
   image_picker_platform_interface:
@@ -546,7 +586,7 @@ packages:
     description:
       name: image_picker_platform_interface
       sha256: "9ec26d410ff46f483c5519c29c02ef0e02e13a543f882b152d4bfd2f06802f80"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.10.0"
   image_picker_windows:
@@ -554,7 +594,7 @@ packages:
     description:
       name: image_picker_windows
       sha256: "6ad07afc4eb1bc25f3a01084d28520496c4a3bb0cb13685435838167c9dcedeb"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.2.1+1"
   intl:
@@ -562,7 +602,7 @@ packages:
     description:
       name: intl
       sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.19.0"
   js:
@@ -570,7 +610,7 @@ packages:
     description:
       name: js
       sha256: cf7243a0c29626284ada2add68a33f5b1102affe3509393e75136e0f6616bd68
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.6.8"
   leak_tracker:
@@ -578,7 +618,7 @@ packages:
     description:
       name: leak_tracker
       sha256: "3f87a60e8c63aecc975dda1ceedbc8f24de75f09e4856ea27daf8958f2f0ce05"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "10.0.5"
   leak_tracker_flutter_testing:
@@ -586,7 +626,7 @@ packages:
     description:
       name: leak_tracker_flutter_testing
       sha256: "932549fb305594d82d7183ecd9fa93463e9914e1b67cacc34bc40906594a1806"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.5"
   leak_tracker_testing:
@@ -594,7 +634,7 @@ packages:
     description:
       name: leak_tracker_testing
       sha256: "6ba465d5d76e67ddf503e1161d1f4a6bc42306f9d66ca1e8f079a47290fb06d3"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.1"
   lints:
@@ -602,7 +642,7 @@ packages:
     description:
       name: lints
       sha256: "976c774dd944a42e83e2467f4cc670daef7eed6295b10b36ae8c85bcbf828235"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.0.0"
   liquid_progress_indicator_v2:
@@ -610,7 +650,7 @@ packages:
     description:
       name: liquid_progress_indicator_v2
       sha256: "6bb2c675bab4936864a63ccd503be417e407974e11c62711917a4006bb9288b8"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.5.0"
   lpinyin:
@@ -618,7 +658,7 @@ packages:
     description:
       name: lpinyin
       sha256: "0bb843363f1f65170efd09fbdfc760c7ec34fc6354f9fcb2f89e74866a0d814a"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.3"
   matcher:
@@ -626,7 +666,7 @@ packages:
     description:
       name: matcher
       sha256: d2323aa2060500f906aa31a895b4030b6da3ebdcc5619d14ce1aada65cd161cb
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.12.16+1"
   material_color_utilities:
@@ -634,7 +674,7 @@ packages:
     description:
       name: material_color_utilities
       sha256: f7142bb1154231d7ea5f96bc7bde4bda2a0945d2806bb11670e30b850d56bdec
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.11.1"
   meta:
@@ -642,7 +682,7 @@ packages:
     description:
       name: meta
       sha256: bdb68674043280c3428e9ec998512fb681678676b3c54e773629ffe74419f8c7
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.15.0"
   mime:
@@ -650,7 +690,7 @@ packages:
     description:
       name: mime
       sha256: "41a20518f0cb1256669420fdba0cd90d21561e560ac240f26ef8322e45bb7ed6"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.0"
   mime_type:
@@ -658,7 +698,7 @@ packages:
     description:
       name: mime_type
       sha256: d652b613e84dac1af28030a9fba82c0999be05b98163f9e18a0849c6e63838bb
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.1"
   nested:
@@ -666,7 +706,7 @@ packages:
     description:
       name: nested
       sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.0"
   octo_image:
@@ -674,7 +714,7 @@ packages:
     description:
       name: octo_image
       sha256: "34faa6639a78c7e3cbe79be6f9f96535867e879748ade7d17c9b1ae7536293bd"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.0"
   oktoast:
@@ -682,7 +722,7 @@ packages:
     description:
       name: oktoast
       sha256: f1366c5c793ddfb8f55bc6fc3e45db43c45debf173b765fb4c5ec096cbdeb84a
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.4.0"
   package_info_plus:
@@ -690,7 +730,7 @@ packages:
     description:
       name: package_info_plus
       sha256: "7e76fad405b3e4016cd39d08f455a4eb5199723cf594cd1b8916d47140d93017"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.2.0"
   package_info_plus_platform_interface:
@@ -698,7 +738,7 @@ packages:
     description:
       name: package_info_plus_platform_interface
       sha256: "9bc8ba46813a4cc42c66ab781470711781940780fd8beddd0c3da62506d3a6c6"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.1"
   path:
@@ -706,7 +746,7 @@ packages:
     description:
       name: path
       sha256: "087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.9.0"
   path_drawing:
@@ -714,7 +754,7 @@ packages:
     description:
       name: path_drawing
       sha256: bbb1934c0cbb03091af082a6389ca2080345291ef07a5fa6d6e078ba8682f977
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.1"
   path_parsing:
@@ -722,7 +762,7 @@ packages:
     description:
       name: path_parsing
       sha256: "883402936929eac138ee0a45da5b0f2c80f89913e6dc3bf77eb65b84b409c6ca"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.0"
   path_provider:
@@ -730,23 +770,23 @@ packages:
     description:
       name: path_provider
       sha256: "50c5dd5b6e1aaf6fb3a78b33f6aa3afca52bf903a8a5298f53101fdaee55bbcd"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.5"
   path_provider_android:
     dependency: transitive
     description:
       name: path_provider_android
-      sha256: c464428172cb986b758c6d1724c603097febb8fb855aa265aeecc9280c294d4a
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      sha256: "8c4967f8b7cb46dc914e178daa29813d83ae502e0529d7b0478330616a691ef7"
+      url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.2.12"
+    version: "2.2.14"
   path_provider_foundation:
     dependency: transitive
     description:
       name: path_provider_foundation
       sha256: f234384a3fdd67f989b4d54a5d73ca2a6c422fa55ae694381ae0f4375cd1ea16
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.0"
   path_provider_linux:
@@ -754,7 +794,7 @@ packages:
     description:
       name: path_provider_linux
       sha256: f7a1fe3a634fe7734c8d3f2766ad746ae2a2884abe22e241a8b301bf5cac3279
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.2.1"
   path_provider_platform_interface:
@@ -762,7 +802,7 @@ packages:
     description:
       name: path_provider_platform_interface
       sha256: "88f5779f72ba699763fa3a3b06aa4bf6de76c8e5de842cf6f29e2e06476c2334"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.2"
   path_provider_windows:
@@ -770,7 +810,7 @@ packages:
     description:
       name: path_provider_windows
       sha256: bd6f00dbd873bfb70d0761682da2b3a2c2fccc2b9e84c495821639601d81afe7
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.3.0"
   permission_handler:
@@ -778,7 +818,7 @@ packages:
     description:
       name: permission_handler
       sha256: "18bf33f7fefbd812f37e72091a15575e72d5318854877e0e4035a24ac1113ecb"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "11.3.1"
   permission_handler_android:
@@ -786,7 +826,7 @@ packages:
     description:
       name: permission_handler_android
       sha256: "71bbecfee799e65aff7c744761a57e817e73b738fedf62ab7afd5593da21f9f1"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "12.0.13"
   permission_handler_apple:
@@ -794,7 +834,7 @@ packages:
     description:
       name: permission_handler_apple
       sha256: e6f6d73b12438ef13e648c4ae56bd106ec60d17e90a59c4545db6781229082a0
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "9.4.5"
   permission_handler_html:
@@ -802,7 +842,7 @@ packages:
     description:
       name: permission_handler_html
       sha256: "38f000e83355abb3392140f6bc3030660cfaef189e1f87824facb76300b4ff24"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.1.3+5"
   permission_handler_platform_interface:
@@ -810,7 +850,7 @@ packages:
     description:
       name: permission_handler_platform_interface
       sha256: e9c8eadee926c4532d0305dff94b85bf961f16759c3af791486613152af4b4f9
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.2.3"
   permission_handler_windows:
@@ -818,7 +858,7 @@ packages:
     description:
       name: permission_handler_windows
       sha256: "1a790728016f79a41216d88672dbc5df30e686e811ad4e698bfc51f76ad91f1e"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.2.1"
   petitparser:
@@ -826,7 +866,7 @@ packages:
     description:
       name: petitparser
       sha256: c15605cd28af66339f8eb6fbe0e541bfe2d1b72d5825efc6598f3e0a31b9ad27
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.0.2"
   platform:
@@ -834,7 +874,7 @@ packages:
     description:
       name: platform
       sha256: "5d6b1b0036a5f331ebc77c850ebc8506cbc1e9416c27e59b439f917a902a4984"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.1.6"
   plugin_platform_interface:
@@ -842,7 +882,7 @@ packages:
     description:
       name: plugin_platform_interface
       sha256: "4820fbfdb9478b1ebae27888254d445073732dae3d6ea81f0b7e06d5dedc3f02"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.8"
   provider:
@@ -850,7 +890,7 @@ packages:
     description:
       name: provider
       sha256: c8a055ee5ce3fd98d6fc872478b03823ffdb448699c6ebdbbc71d59b596fd48c
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.1.2"
   pull_to_refresh:
@@ -858,7 +898,7 @@ packages:
     description:
       name: pull_to_refresh
       sha256: bbadd5a931837b57739cf08736bea63167e284e71fb23b218c8c9a6e042aad12
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.0"
   rational:
@@ -866,7 +906,7 @@ packages:
     description:
       name: rational
       sha256: cb808fb6f1a839e6fc5f7d8cb3b0a10e1db48b3be102de73938c627f0b636336
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.2.3"
   rxdart:
@@ -874,7 +914,7 @@ packages:
     description:
       name: rxdart
       sha256: "5c3004a4a8dbb94bd4bf5412a4def4acdaa12e12f269737a5751369e12d1a962"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.28.0"
   scrollable_positioned_list:
@@ -882,7 +922,7 @@ packages:
     description:
       name: scrollable_positioned_list
       sha256: "1b54d5f1329a1e263269abc9e2543d90806131aa14fe7c6062a8054d57249287"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.3.8"
   shared_preferences:
@@ -890,23 +930,23 @@ packages:
     description:
       name: shared_preferences
       sha256: "95f9997ca1fb9799d494d0cb2a780fd7be075818d59f00c43832ed112b158a82"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.3.3"
   shared_preferences_android:
     dependency: transitive
     description:
       name: shared_preferences_android
-      sha256: "3b9febd815c9ca29c9e3520d50ec32f49157711e143b7a4ca039eb87e8ade5ab"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      sha256: "7f172d1b06de5da47b6264c2692ee2ead20bbbc246690427cdb4fc301cd0c549"
+      url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.3.3"
+    version: "2.3.4"
   shared_preferences_foundation:
     dependency: transitive
     description:
       name: shared_preferences_foundation
       sha256: "07e050c7cd39bad516f8d64c455f04508d09df104be326d8c02551590a0d513d"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.5.3"
   shared_preferences_linux:
@@ -914,7 +954,7 @@ packages:
     description:
       name: shared_preferences_linux
       sha256: "580abfd40f415611503cae30adf626e6656dfb2f0cee8f465ece7b6defb40f2f"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.1"
   shared_preferences_platform_interface:
@@ -922,7 +962,7 @@ packages:
     description:
       name: shared_preferences_platform_interface
       sha256: "57cbf196c486bc2cf1f02b85784932c6094376284b3ad5779d1b1c6c6a816b80"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.1"
   shared_preferences_web:
@@ -930,7 +970,7 @@ packages:
     description:
       name: shared_preferences_web
       sha256: d2ca4132d3946fec2184261726b355836a82c33d7d5b67af32692aff18a4684e
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.2"
   shared_preferences_windows:
@@ -938,7 +978,7 @@ packages:
     description:
       name: shared_preferences_windows
       sha256: "94ef0f72b2d71bc3e700e025db3710911bd51a71cefb65cc609dd0d9a982e3c1"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.1"
   sky_engine:
@@ -951,7 +991,7 @@ packages:
     description:
       name: source_span
       sha256: "53e943d4206a5e30df338fd4c6e7a077e02254531b138a15aec3bd143c1a8b3c"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.10.0"
   sp_util:
@@ -959,7 +999,7 @@ packages:
     description:
       name: sp_util
       sha256: "9da43dce5de79c17a787d0626bf01538d63090ca32521200d22a232171c495dc"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.3"
   sprintf:
@@ -967,7 +1007,7 @@ packages:
     description:
       name: sprintf
       sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "7.0.0"
   sqflite:
@@ -975,7 +1015,7 @@ packages:
     description:
       name: sqflite
       sha256: "2d7299468485dca85efeeadf5d38986909c5eb0cd71fd3db2c2f000e6c9454bb"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.1"
   sqflite_android:
@@ -983,23 +1023,23 @@ packages:
     description:
       name: sqflite_android
       sha256: "78f489aab276260cdd26676d2169446c7ecd3484bbd5fead4ca14f3ed4dd9ee3"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.0"
   sqflite_common:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: "4468b24876d673418a7b7147e5a08a715b4998a7ae69227acafaab762e0e5490"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      sha256: "761b9740ecbd4d3e66b8916d784e581861fd3c3553eda85e167bc49fdb68f709"
+      url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.5.4+5"
+    version: "2.5.4+6"
   sqflite_darwin:
     dependency: transitive
     description:
       name: sqflite_darwin
       sha256: "96a698e2bc82bd770a4d6aab00b42396a7c63d9e33513a56945cbccb594c2474"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.1"
   sqflite_platform_interface:
@@ -1007,7 +1047,7 @@ packages:
     description:
       name: sqflite_platform_interface
       sha256: "8dd4515c7bdcae0a785b0062859336de775e8c65db81ae33dd5445f35be61920"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.0"
   stack_trace:
@@ -1015,7 +1055,7 @@ packages:
     description:
       name: stack_trace
       sha256: "73713990125a6d93122541237550ee3352a2d84baad52d375a4cad2eb9b7ce0b"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.11.1"
   stream_channel:
@@ -1023,7 +1063,7 @@ packages:
     description:
       name: stream_channel
       sha256: ba2aa5d8cc609d96bbb2899c28934f9e1af5cddbd60a827822ea467161eb54e7
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.2"
   stream_transform:
@@ -1031,7 +1071,7 @@ packages:
     description:
       name: stream_transform
       sha256: "14a00e794c7c11aa145a170587321aedce29769c08d7f58b1d141da75e3b1c6f"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.0"
   string_scanner:
@@ -1039,7 +1079,7 @@ packages:
     description:
       name: string_scanner
       sha256: "556692adab6cfa87322a115640c11f13cb77b3f076ddcc5d6ae3c20242bedcde"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.2.0"
   synchronized:
@@ -1047,23 +1087,23 @@ packages:
     description:
       name: synchronized
       sha256: "69fe30f3a8b04a0be0c15ae6490fc859a78ef4c43ae2dd5e8a623d45bfcf9225"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.3.0+3"
   tencent_cloud_chat_sdk:
     dependency: "direct main"
     description:
       name: tencent_cloud_chat_sdk
-      sha256: "0772de4fe003626e08f54c31cc2d28e3757ed31d7a80e48923cd3caa513ef737"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      sha256: "9cbc916e1673cc34cfd63296217cffc9c22ebca571e1d819e83a2e87933b1676"
+      url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "8.2.6325+4"
+    version: "8.3.6498"
   term_glyph:
     dependency: transitive
     description:
       name: term_glyph
       sha256: a29248a84fbb7c79282b40b8c72a1209db169a2e0542bce341da992fe1bc7e84
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.2.1"
   test_api:
@@ -1071,15 +1111,23 @@ packages:
     description:
       name: test_api
       sha256: "5b8a98dafc4d5c4c9c72d8b31ab2b23fc13422348d2997120294d3bac86b4ddb"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.7.2"
+  timezone:
+    dependency: transitive
+    description:
+      name: timezone
+      sha256: ffc9d5f4d1193534ef051f9254063fa53d588609418c84299956c3db9383587d
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.10.0"
   typed_data:
     dependency: transitive
     description:
       name: typed_data
       sha256: f9049c039ebfeb4cf7a7104a675823cd72dba8297f264b6637062516699fa006
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.4.0"
   universal_io:
@@ -1087,7 +1135,7 @@ packages:
     description:
       name: universal_io
       sha256: "1722b2dcc462b4b2f3ee7d188dad008b6eb4c40bbd03a3de451d82c78bba9aad"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.2.2"
   url_launcher:
@@ -1095,7 +1143,7 @@ packages:
     description:
       name: url_launcher
       sha256: "9d06212b1362abc2f0f0d78e6f09f726608c74e3b9462e8368bb03314aa8d603"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.3.1"
   url_launcher_android:
@@ -1103,7 +1151,7 @@ packages:
     description:
       name: url_launcher_android
       sha256: "6fc2f56536ee873eeb867ad176ae15f304ccccc357848b351f6f0d8d4a40d193"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.3.14"
   url_launcher_ios:
@@ -1111,7 +1159,7 @@ packages:
     description:
       name: url_launcher_ios
       sha256: e43b677296fadce447e987a2f519dcf5f6d1e527dc35d01ffab4fff5b8a7063e
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.3.1"
   url_launcher_linux:
@@ -1119,7 +1167,7 @@ packages:
     description:
       name: url_launcher_linux
       sha256: "4e9ba368772369e3e08f231d2301b4ef72b9ff87c31192ef471b380ef29a4935"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.2.1"
   url_launcher_macos:
@@ -1127,7 +1175,7 @@ packages:
     description:
       name: url_launcher_macos
       sha256: "769549c999acdb42b8bcfa7c43d72bf79a382ca7441ab18a808e101149daf672"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.2.1"
   url_launcher_platform_interface:
@@ -1135,7 +1183,7 @@ packages:
     description:
       name: url_launcher_platform_interface
       sha256: "552f8a1e663569be95a8190206a38187b531910283c3e982193e4f2733f01029"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.3.2"
   url_launcher_web:
@@ -1143,7 +1191,7 @@ packages:
     description:
       name: url_launcher_web
       sha256: "772638d3b34c779ede05ba3d38af34657a05ac55b06279ea6edd409e323dca8e"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.3.3"
   url_launcher_windows:
@@ -1151,7 +1199,7 @@ packages:
     description:
       name: url_launcher_windows
       sha256: "44cf3aabcedde30f2dba119a9dea3b0f2672fbe6fa96e85536251d678216b3c4"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.1.3"
   uuid:
@@ -1159,7 +1207,7 @@ packages:
     description:
       name: uuid
       sha256: a5be9ef6618a7ac1e964353ef476418026db906c4facdedaa299b7a2e71690ff
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.5.1"
   vector_math:
@@ -1167,7 +1215,7 @@ packages:
     description:
       name: vector_math
       sha256: "80b3257d1492ce4d091729e3a67a60407d227c27241d6927be0130c98e741803"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.4"
   vm_service:
@@ -1175,7 +1223,7 @@ packages:
     description:
       name: vm_service
       sha256: "5c5f338a667b4c644744b661f309fb8080bb94b18a7e91ef1dbd343bed00ed6d"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "14.2.5"
   web:
@@ -1183,7 +1231,7 @@ packages:
     description:
       name: web
       sha256: cd3543bd5798f6ad290ea73d210f423502e71900302dde696f8bff84bf89a1cb
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.0"
   web_socket_channel:
@@ -1191,23 +1239,23 @@ packages:
     description:
       name: web_socket_channel
       sha256: d88238e5eac9a42bb43ca4e721edba3c08c6354d4a53063afaa568516217621b
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.0"
   win32:
     dependency: transitive
     description:
       name: win32
-      sha256: "84ba388638ed7a8cb3445a320c8273136ab2631cd5f2c57888335504ddab1bc2"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      sha256: "8b338d4486ab3fbc0ba0db9f9b4f5239b6697fcee427939a40e720cbb9ee0a69"
+      url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.8.0"
+    version: "5.9.0"
   win32_registry:
     dependency: transitive
     description:
       name: win32_registry
       sha256: "21ec76dfc731550fd3e2ce7a33a9ea90b828fdf19a5c3bcf556fa992cfa99852"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.5"
   xdg_directories:
@@ -1215,7 +1263,7 @@ packages:
     description:
       name: xdg_directories
       sha256: "7a3f37b05d989967cdddcbb571f1ea834867ae2faa29725fd085180e0883aa15"
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.1.0"
   xml:
@@ -1223,7 +1271,7 @@ packages:
     description:
       name: xml
       sha256: b015a8ad1c488f66851d762d3090a21c600e479dc75e68328c52774040cf9226
-      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+      url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.5.0"
 sdks:
