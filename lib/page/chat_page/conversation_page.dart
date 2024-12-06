@@ -207,7 +207,9 @@ class _ConversationPageState extends State<ConversationPage>{
                 children: [
                   CircleAvatar(
                     backgroundColor: AppColors.backgroundColor3,
-                    backgroundImage: conversation.faceUrl != "默认头像" ? CachedNetworkImageProvider(conversation.faceUrl!) : null
+                    backgroundImage: conversation.groupID == null
+                        ? (conversation.faceUrl != "默认头像" ? CachedNetworkImageProvider(conversation.faceUrl!) : null)
+                        : (conversation.faceUrl != "默认头像" ? CachedNetworkImageProvider(conversation.faceUrl!) : AssetImage("assets/images/icons/group.png"))
                   ),
                   SizedBox(width: 5,),
                   Expanded(
