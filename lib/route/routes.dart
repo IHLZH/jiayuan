@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jiayuan/page/ai_customer_service_page/ai_customer_service_vm.dart';
 import 'package:jiayuan/page/certified_page/cert/cert_certified_page.dart';
 import 'package:jiayuan/page/certified_page/keeper/keeper_certified_page.dart';
 import 'package:jiayuan/page/chat_page/conversation_page.dart';
@@ -29,7 +30,9 @@ import 'package:jiayuan/page/user_page/setting_page/change_email_page/check_emai
 import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
 import 'package:jiayuan/route/route_path.dart';
+import 'package:provider/provider.dart';
 
+import '../page/ai_customer_service_page/ai_customer_service_page.dart';
 import '../page/chat_page/chat/chat_page.dart';
 import '../page/commission_center_page/certificates/certificate_page.dart';
 import '../page/commission_center_page/comment/comment_page.dart';
@@ -209,6 +212,11 @@ class Routes {
         return pageRoute(GroupInfoPage(), settings: settings);
       case RoutePath.inviteFriend:
         return pageRoute(InviteMemberPage());
+      case RoutePath.aiCustomerService:
+        return pageRoute(ChangeNotifierProvider(
+          create: (_) => AiCustomerServiceViewModel(),
+          child: AiCustomerServicePage(),
+        ));
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
