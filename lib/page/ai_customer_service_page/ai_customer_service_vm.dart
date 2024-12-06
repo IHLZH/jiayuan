@@ -7,6 +7,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../repository/model/ai_message.dart';
 
 class AiCustomerServiceViewModel with ChangeNotifier {
+
+  // 私有构造函数
+  AiCustomerServiceViewModel._internal();
+
+  // 静态实例
+  static final AiCustomerServiceViewModel _instance = AiCustomerServiceViewModel._internal();
+
+  // 工厂构造函数
+  factory AiCustomerServiceViewModel() => _instance;
+
   RefreshController refreshController =
   RefreshController(initialRefresh: false);
 
@@ -43,6 +53,13 @@ class AiCustomerServiceViewModel with ChangeNotifier {
     // 使用 toJsonList 方法将消息列表转换为 JSON 字符串
     final String messagesJson = AiMessage.toJsonList(messages);
     await prefs.setString('cachedMessages', messagesJson);
+  }
+
+  // 清空聊天记录
+  Future<void> clearMessages() async {
+    messages.clear();
+    notifyListeners();
+    await saveMessagesToCache();
   }
 }
    

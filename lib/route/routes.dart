@@ -213,10 +213,7 @@ class Routes {
       case RoutePath.inviteFriend:
         return pageRoute(InviteMemberPage());
       case RoutePath.aiCustomerService:
-        return pageRoute(ChangeNotifierProvider(
-          create: (_) => AiCustomerServiceViewModel(),
-          child: AiCustomerServicePage(),
-        ));
+        return pageRoute(AiCustomerServicePage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
