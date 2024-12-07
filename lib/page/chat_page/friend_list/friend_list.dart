@@ -195,7 +195,7 @@ class FriendListState extends State<FriendList> with TickerProviderStateMixin{
             children: [
               CircleAvatar(
                 backgroundColor: AppColors.backgroundColor3,
-                backgroundImage: groupInfo.faceUrl != "默认头像" ? CachedNetworkImageProvider(groupInfo.faceUrl!) : null,
+                backgroundImage: groupInfo.faceUrl != "默认头像" ? CachedNetworkImageProvider(groupInfo.faceUrl!) : AssetImage("assets/images/icons/group.png"),
               ),
               SizedBox(width: 10,),
               Text(

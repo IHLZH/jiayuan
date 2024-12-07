@@ -29,67 +29,9 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
     await RouteUtils.push(context, SendCommissionPage(id: index));
   }
 
-  // void _showCommissionOptionsDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return SafeArea(
-  //         child: AlertDialog(
-  //           backgroundColor: AppColors.backgroundColor5,
-  //           // contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-  //           title: Container(
-  //             padding: EdgeInsets.only(bottom: 3),
-  //             child: Center(
-  //               child: Text(
-  //                 '选择委托服务',
-  //                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-  //               ),
-  //             ),
-  //           ),
-  //           content: SizedBox(
-  //             width: 300, // 设置一个固定的宽度
-  //             height: 350,
-  //             child: SingleChildScrollView(
-  //               child: Column(
-  //                 mainAxisSize: MainAxisSize.min,
-  //                 children: List.generate(11, (index) {
-  //                   final options = [
-  //                     '日常保洁',
-  //                     '家电维修',
-  //                     '搬家搬厂',
-  //                     '收纳整理',
-  //                     '管道疏通',
-  //                     '维修拆装',
-  //                     '保姆月嫂',
-  //                     '居家养老',
-  //                     '居家托育',
-  //                     '专业养护',
-  //                     '家庭保健'
-  //                   ];
-  //                   return Column(
-  //                     children: [
-  //                       ListTile(
-  //                         title: Text(options[index]),
-  //                         onTap: () {
-  //                           if (isProduction)
-  //                             print("========= id: $index ==========");
-  //                           Navigator.of(context).pop(); // 关闭对话框
-  //                           _jumpToSendComissionPage(index);
-  //                         },
-  //                       ),
-  //                       if (index < 10) // 添加分隔线，最后一个选项不加
-  //                         Divider(height: 1, color: Colors.grey),
-  //                     ],
-  //                   );
-  //                 }),
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  Future<void> _jumpToAiCustomerService() async {
+    await RouteUtils.pushForNamed(context, RoutePath.aiCustomerService);
+  }
 
   void _showCommissionOptionsDialog() {
     showDialog(
@@ -303,16 +245,19 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 ? _xPosition + 70
                 : _xPosition - 60,
             top: _yPosition + 5,
-            child: Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: AppColors.appColor, // 设置背景色
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Icon(Icons.support_agent_outlined,
-                    size: 35, color: Colors.white),
+            child: GestureDetector(
+              onTap: _jumpToAiCustomerService,
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: AppColors.appColor, // 设置背景色
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Icon(Icons.support_agent_outlined,
+                      size: 35, color: Colors.white),
+                ),
               ),
             ),
           ),
