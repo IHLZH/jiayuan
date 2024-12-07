@@ -1,14 +1,14 @@
 class UrlPath {
   static const String realBaseUrl = "http://192.168.3.32:9900/";
 
-   static const String BaseUrl = "http://10.7.89.43:8080";
+  // static const String BaseUrl = "http://10.7.89.43:8080";
   // static const String BaseUrl = "http://192.168.31.189:8080";
-  // static const String BaseUrl = "http://www.shinesuning.top:8080";
+   static const String BaseUrl = "http://www.shinesuning.top:8080";
   static const String wangBaseUrl = "http://10.7.89.154:8080";
 
   static const String testBaseUrl = "http://10.7.89.171:8080";
 
-  static const String yuwenBaseUrl = "http://192.168.153.44:8080";
+  static const String yuwenBaseUrl = "http://192.168.205.44:8080";
   //Token登录
   static const String loginAutoUrl = "/login/autoLogin";
 
@@ -138,4 +138,9 @@ class UrlPath {
   static const String getSignalUserInfo = "/searchUserById";
   //收藏家政员
   static const String collectKeeper = "/release/keeper/collection";
+  //创建订单id
+  static const String createOrderUrl = "/api/housekeeper/create-order";
+  //获取订单url
+  static const String getOrderStr = "/api/user/get-order-str" ;
 }
+

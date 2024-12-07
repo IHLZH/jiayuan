@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_pay/flutter_pay.dart';
+import 'package:flutter_pay/model/ali_pay_result.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:jiayuan/app.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
@@ -43,10 +45,92 @@ class _OrderPageState extends State<OrderPage> {
     super.initState();
   }
 
+
+  //创建订单
+  Future<int> createOrder(int index) async{
+    String url = UrlPath.createOrderUrl;
+    try {
+      final response = await DioInstance.instance().post(
+          path: url,
+          queryParameters: {
+            'userId' : _orderDataList[index].userId,
+            'housekeeperId' : _orderDataList[index].keeperId,
+             'amount': _orderDataList[index].commissionBudget,
+            'commissionId': _orderDataList[index].commissionId,
+          },
+      );
+      if (response.statusCode == 200) {
+        return response.data['id'];
+      }  else {
+        showToast("网络请求常", duration: const Duration(seconds: 1));
+        return -1;
+      }
+    } catch (e) {
+      showToast("服务器异常", duration: const Duration(seconds: 1));
+      return -1;
+    }
+  }
+
+  //获取orderStr
+  Future<String> getOrderInfo(int orderId) async {
+    String url = UrlPath.getOrderStr;
+    try {
+      final response = await DioInstance.instance().get(
+          path: url,
+          param: {
+            'orderId' : orderId,
+          },
+      );
+      // print('获取到的orderStr数据${response.data}');
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        showToast("服务器异常", duration: const Duration(seconds: 1));
+        return "";
+      }
+    } catch (e) {
+      // 处理错误
+      if (isProduction) print('Error: $e');
+      showToast("服务器异常", duration: const Duration(seconds: 1));
+      return "";
+    }
+  }
+  //支付
+  Future<AliPayResult> payWithAliPay(String payInfo, {bool? isSandbox}){
+      return FlutterPay.payWithAliPay(payInfo, isSandbox: isSandbox);
+  }
+
+
+  Future<void> _payOrder(int index) async {
+    int orderId = await createOrder(index);
+    if(orderId == -1){
+      showToast('订单创建失败');
+      return;
+    }
+    String orderStr = await getOrderInfo(orderId);
+    if(orderStr == ""){
+      showToast('获取orderStr失败');
+      return;
+    }
+    AliPayResult aliPayResult = await payWithAliPay(orderStr,isSandbox: true);
+    if(aliPayResult.resultStatus == "9000"){
+      showToast("支付成功", duration: const Duration(seconds: 1));
+
+    //  EasyLoading.showProgress();
+      _refreshOrders();
+      await Future.delayed(const Duration(seconds: 1));
+      //刷新界面
+
+    }else{
+      print("支付失败 ${aliPayResult.result} + ${aliPayResult.resultStatus} + ${aliPayResult.memo}");
+      //支付失败
+      showToast("支付失败", duration: const Duration(seconds: 1));
+    }
+  }
+
   Future<void> _jumpToOrderDetailPage(int index) async {
     OrderDetailPageVm.nowOrder = _orderDataList[index];
     await RouteUtils.pushForNamed(context, RoutePath.orderDetailPage);
-
     _refreshOrders();
   }
 
@@ -357,8 +441,8 @@ class _OrderPageState extends State<OrderPage> {
                                   style: TextStyle(
                                       color: AppColors.orangeBtnColor,
                                       fontWeight: FontWeight.normal)),
-                              onPressed: () {
-                                print('用户点击了去支付按钮');
+                              onPressed: () async{
+                               await _payOrder(index);
                               },
                             )
                           ],

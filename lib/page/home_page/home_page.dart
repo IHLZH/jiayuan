@@ -86,80 +86,79 @@ class _HomePageState extends State<HomePage>
                   child: Column(
                     children: [
                       AppBar(
-                          title: Row(children: [
-                            Icon(Icons.location_on, color: Colors.black),
-                            SizedBox(width: 10.w),
-                            ValueListenableBuilder(
-                                valueListenable: Global.locationInfoNotifier,
-                                builder: (context, location, child) {
-                                  return Text("${location?.city}",
-                                      style: TextStyle(fontSize: 15.sp));
-                                })
-                          ]),
-                          backgroundColor: Colors.transparent,
+                        title: Row(children: [
+                          Icon(Icons.location_on, color: Colors.black),
+                          SizedBox(width: 10.w),
+                          ValueListenableBuilder(
+                              valueListenable: Global.locationInfoNotifier,
+                              builder: (context, location, child) {
+                                return Text("${location?.city}",
+                                    style: TextStyle(fontSize: 15.sp));
+                              })
+                        ]),
+                        backgroundColor: Colors.transparent,
                         surfaceTintColor: Colors.transparent,
                       ),
-                      Expanded(child: SmartRefresher(
-                          enablePullUp: true,
-                          enablePullDown: false,
-                          controller: homeViewModel.refreshController,
-                          onLoading: () {
-                            homeViewModel.getHousekeeperData();
-                          },
-                          header: MaterialClassicHeader(
-                            color: AppColors.appColor,
-                            backgroundColor: AppColors.endColor,
-                          ),
-                          footer: ClassicFooter(
-                            canLoadingText: "松开加载更多~",
-                            loadingText: "努力加载中~",
-                            noDataText: "已经到底了~",
-                          ),
-                          child: CustomScrollView(
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            slivers: [
-                              //轮播图
-                              SliverToBoxAdapter(child: _banner()),
-                              // SliverToBoxAdapter(child: Container(
-                              //   height: 180,
-                              //   child: Container(
-                              //     height: 180,
-                              //     child: Image(
-                              //       image: AssetImage("assets/images/home1.png"),
-                              //       fit: BoxFit.cover, // 可选，根据需要调整
-                              //     ),
-                              //   ),
-                              // ),),
-                              //委托服务类型
-                              SliverToBoxAdapter(child: _PageViewWidget()),
-                              //天气卡片
-                              // SliverToBoxAdapter(child: _ServiceViewWidget()),
-                             // SliverToBoxAdapter(child: SizedBox(height: 8)),
-                              //固定头部
-                            SliverToBoxAdapter(
-                              child:Container(
-                                margin: EdgeInsets.only(left: 15),
-                                child:  Column(
-                                  children: _buildHeaderList(),
-                                ),
+                      Expanded(
+                          child: SmartRefresher(
+                              enablePullUp: true,
+                              enablePullDown: false,
+                              controller: homeViewModel.refreshController,
+                              onLoading: () {
+                                homeViewModel.getHousekeeperData();
+                              },
+                              header: MaterialClassicHeader(
+                                color: AppColors.appColor,
+                                backgroundColor: AppColors.endColor,
                               ),
+                              footer: ClassicFooter(
+                                canLoadingText: "松开加载更多~",
+                                loadingText: "努力加载中~",
+                                noDataText: "已经到底了~",
                               ),
-                              // _buildHeaderList()
-                              //推荐
-                              const SliverToBoxAdapter(
-                                child: SizedBox(height: 8),
-                              ),
-                              _HouseKeeperRecommendedWidget(),
-                            ],
-                          ))
-                      )
+                              child: CustomScrollView(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                slivers: [
+                                  //轮播图
+                                  SliverToBoxAdapter(child: _banner()),
+                                  // SliverToBoxAdapter(child: Container(
+                                  //   height: 180,
+                                  //   child: Container(
+                                  //     height: 180,
+                                  //     child: Image(
+                                  //       image: AssetImage("assets/images/home1.png"),
+                                  //       fit: BoxFit.cover, // 可选，根据需要调整
+                                  //     ),
+                                  //   ),
+                                  // ),),
+                                  //委托服务类型
+                                  SliverToBoxAdapter(child: _PageViewWidget()),
+                                  //天气卡片
+                                  // SliverToBoxAdapter(child: _ServiceViewWidget()),
+                                  // SliverToBoxAdapter(child: SizedBox(height: 8)),
+                                  //固定头部
+                                  SliverToBoxAdapter(
+                                    child: Container(
+                                      margin: EdgeInsets.only(left: 15),
+                                      child: Column(
+                                        children: _buildHeaderList(),
+                                      ),
+                                    ),
+                                  ),
+                                  // _buildHeaderList()
+                                  //推荐
+                                  const SliverToBoxAdapter(
+                                    child: SizedBox(height: 8),
+                                  ),
+                                  _HouseKeeperRecommendedWidget(),
+                                ],
+                              )))
                     ],
                   ),
                 )
               ],
-            )
-        ));
+            )));
   }
 
   List<Widget> _buildHeaderList() {
@@ -464,7 +463,7 @@ class _HomePageState extends State<HomePage>
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontFamily: "PingFang SC",
-                //  fontFamily: "ChanyuZhenyan",
+                  //  fontFamily: "ChanyuZhenyan",
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),
@@ -492,7 +491,7 @@ class _HomePageState extends State<HomePage>
           child: Column(
             children: [
               Container(
-                child:  AutoHeightPageView(
+                child: AutoHeightPageView(
                   pageController: _pageController,
                   onPageChanged: (index) {
                     setState(() {
@@ -531,16 +530,13 @@ class _HomePageState extends State<HomePage>
                             CType(8),
                           ],
                         ),
-                        SizedBox(height: 10.h),
+                        SizedBox(height: 10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             CType(9),
                             CType(10),
-                            Container(
-                              width: 50.w,
-                              height: 50.h,
-                            )
+                            CType(0),
                           ],
                         ),
                       ],
@@ -548,12 +544,11 @@ class _HomePageState extends State<HomePage>
                   ],
                 ),
               ),
-              SizedBox(height: 3,),
+              SizedBox(height: 3),
               _buildIndicator(),
             ],
           ),
         ),
-
         SizedBox(
           height: 5,
         ),

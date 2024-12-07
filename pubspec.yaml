@@ -97,8 +97,8 @@ dependencies:
   amap_flutter_location: ^3.0.0
   amap_flutter_map: ^3.0.0
   amap_flutter_base: ^3.0.0
-#  #科大讯飞语音识别
-  ifly_speech_recognition: ^1.0.4
+  #  #科大讯飞语音识别
+  #ifly_speech_recognition: ^1.0.4
   #图表
   fl_chart: ^0.69.0
   flutter_bloc: ^8.1.6
@@ -115,7 +115,11 @@ dependencies:
 
   #通知栏
   flutter_local_notifications: ^18.0.1
-
+  #支付宝支付插件
+  flutter_pay:
+    git:
+      url: "https://gitee.com/jlgithub/flutter-pay.git"
+      ref: "IAP"
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -141,10 +145,10 @@ flutter:
   assets:
     - assets/images/
     - assets/images/icons/
-#  fonts:
-#    - family: ChanyuZhenyan
-#      fonts:
-#        - asset: assets/font/ChanyuZhenyan.ttf
+  #  fonts:
+  #    - family: ChanyuZhenyan
+  #      fonts:
+  #        - asset: assets/font/ChanyuZhenyan.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

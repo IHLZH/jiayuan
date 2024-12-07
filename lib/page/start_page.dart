@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ifly_speech_recognition/ifly_speech_recognition.dart';
+import 'package:flutter_pay/flutter_pay.dart';
+// import 'package:ifly_speech_recognition/ifly_speech_recognition.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/route/route_path.dart';
@@ -27,7 +28,7 @@ class StartPage extends StatefulWidget {
 class _StartPageState extends State<StartPage> {
   @override
   void initState() {
-    Global.SpeechRecognitionServiceinit();
+ //   Global.SpeechRecognitionServiceinit();
     super.initState();
     //全面屏手势
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -38,8 +39,7 @@ class _StartPageState extends State<StartPage> {
     NotificationHelper.getInstance().initialize();
 
     // 初始化CookieJar
-    DioInstance.instance().initDio(baseUrl: "");
-   DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
+   DioInstance.instance().changeBaseUrl(UrlPath.yuwenBaseUrl);
    // DioInstance.instance().changeBaseUrl(UrlPath.yuwenBaseUrl);
     //DioInstance.instance().changeBaseUrl(UrlPath.testBaseUrl);
    // DioInstance.instance().changeBaseUrl(UrlPath.realBaseUrl);
@@ -54,6 +54,24 @@ class _StartPageState extends State<StartPage> {
     // 检验token是否存活
     // 异步初始化持久化数据
     _initializeData();
+    //初始化支付插件
+    FlutterPay.initConfig(
+      aliPayAppId: "9021000142642965",
+      iapLaunchCheckout: (result) async {
+        if (result.success == true) {
+          //iap支付成功
+          debugPrint("iap支付成功");
+          debugPrint(result.errorMsg);
+        } else {
+          //iap支付失败
+          debugPrint("iap支付失败");
+        }
+      },
+      wechatPayResult: (bool success) {
+        //wechat支付结果
+        debugPrint("微信支付结果: ${success == true ? "成功" : "失败"}");
+      },
+    );
   }
 
   Future<void> _initializeData() async {
