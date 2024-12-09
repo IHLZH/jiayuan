@@ -134,9 +134,7 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: _isFirstClick
-                      ? AppColors.appColor.withOpacity(0.7)
-                      : AppColors.appColor,
+                  color: Colors.blue.withOpacity(0.7),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -205,8 +203,8 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 height: 55,
                 decoration: BoxDecoration(
                   color: _isFirstClick
-                      ? AppColors.appColor.withOpacity(0.7)
-                      : AppColors.appColor,
+                      ? Colors.grey.withOpacity(0.6)
+                      : Colors.blue,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -230,7 +228,7 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: AppColors.appColor, // 设置背景色
+                  color: Colors.lightBlue, // 设置背景色
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -251,7 +249,7 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: AppColors.appColor, // 设置背景色
+                  color: Colors.orange[400], // 设置背景色
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -273,7 +271,7 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: AppColors.appColor, // 设置背景色
+                  color: Colors.grey, // 设置背景色
                   shape: BoxShape.circle,
                 ),
                 child: Center(
