@@ -21,6 +21,7 @@ class GaodeMap{
 
   Completer<void> _locationCompleter = Completer<void>(); // 用于等待定位完成
 
+  static bool isMapInitialized = false;
 
   Future<void> initGaodeMap() async {
     //实例化

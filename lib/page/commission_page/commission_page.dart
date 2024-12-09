@@ -489,7 +489,7 @@ class _CommissionPageState extends State<CommissionPage>{
                     color: AppColors.textColor2b,
                   ),
                   Text(
-                    locationInfo?.city ?? "定位中..",
+                    locationInfo?.city != null && locationInfo?.city != "" ? locationInfo!.city! : "定位中..",
                     style: TextStyle(
                         color: AppColors.textColor2b,
                         fontSize: 16.sp,
