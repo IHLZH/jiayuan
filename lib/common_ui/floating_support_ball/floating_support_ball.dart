@@ -203,8 +203,8 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 height: 55,
                 decoration: BoxDecoration(
                   color: _isFirstClick
-                      ? AppColors.appColor.withOpacity(0.6)
-                      : Colors.blue,
+                      ? Color.fromRGBO(60, 205, 200, 1).withOpacity(0.6)
+                      : Color.fromRGBO(60, 205, 200, 1),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
