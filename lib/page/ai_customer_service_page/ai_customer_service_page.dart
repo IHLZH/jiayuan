@@ -130,7 +130,7 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                   border: Border(
                     top: BorderSide(
                       color: const Color(0xffd3d3d3),
-                      width: 0.5,
+                      width: 0.1,
                     ),
                   ),
                   color: Colors.white,
