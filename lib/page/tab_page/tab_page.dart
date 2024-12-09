@@ -64,7 +64,7 @@ class _TabPageState extends State<TabPage>{
     Global.dbUtil?.open();
 
     //初始化地图以及tabitem
-    _initGaodeMapAndTab();
+    _initWithTimeout();
   }
 
   @override
@@ -81,6 +81,30 @@ class _TabPageState extends State<TabPage>{
     print("数据库关闭");
     await Global.dbUtil?.close();
     print("已被销毁dispose");
+  }
+
+  Future<void> _initWithTimeout() async {
+    try {
+      // 创建一个5秒超时的Future
+      await Future.any([
+        _initGaodeMapAndTab(),
+        Future.delayed(Duration(seconds: 3)).then((_) {
+          throw TimeoutException('高德地图初始化超时');
+        }),
+      ]);
+    } catch (e) {
+      print("初始化错误: $e");
+      if (e is TimeoutException) {
+        showToast("定位服务初始化失败，部分功能可能受限");
+      }
+      // 无论是否超时，都初始化业务页面
+      _initTabItems();
+      if (mounted) {
+        setState(() {
+          GaodeMap.isMapInitialized = true;
+        });
+      }
+    }
   }
 
   Future<void> _initGaodeMapAndTab() async {
