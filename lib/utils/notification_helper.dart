@@ -34,7 +34,11 @@ class NotificationHelper {
       final AndroidInitializationSettings initializationSettingsAndroid =
           AndroidInitializationSettings('@mipmap/ikun');
       final DarwinInitializationSettings initializationSettingsIOS =
-          DarwinInitializationSettings();
+          DarwinInitializationSettings(
+              requestSoundPermission: false,
+              requestBadgePermission: false,
+              requestAlertPermission: false,
+          );
       final InitializationSettings initializationSettings =
           InitializationSettings(
               android: initializationSettingsAndroid,
