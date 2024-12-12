@@ -28,6 +28,7 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
     viewModel.loadCachedMessages();
   }
 
+  // 构建委托简要消息
   Widget _buildComissionMessageItem(
       BuildContext context, Object obj) {
     MessageCommission commissionData;
@@ -105,88 +106,7 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
     );
   }
 
-  // Widget _buildKeeperMessageItem(BuildContext context, Object obj) {
-  //   MessageKeeper keeperData;
-  //   if (obj is Map<String, dynamic>) {
-  //     keeperData = MessageKeeper.fromJson(obj);
-  //   } else {
-  //     keeperData = obj as MessageKeeper;
-  //   }
-  //   return GestureDetector(
-  //     onTap: () {
-  //       // 处理点击事件，例如跳转到详情页面
-  //     },
-  //     child: Container(
-  //       decoration: BoxDecoration(
-  //         color: Colors.white,
-  //         border: Border.all(color: Colors.grey, width: 0.5),
-  //         borderRadius: BorderRadius.circular(10),
-  //         boxShadow: [
-  //           BoxShadow(
-  //             color: Colors.grey.withOpacity(0.1),
-  //             spreadRadius: 2,
-  //             blurRadius: 5,
-  //             offset: Offset(0, 0),
-  //           ),
-  //         ],
-  //       ),
-  //       padding: EdgeInsets.all(12),
-  //       margin: EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //             children: [
-  //               Text(
-  //                 "姓名: ${keeperData.realName}",
-  //                 style: TextStyle(
-  //                     color: Colors.black, fontWeight: FontWeight.bold),
-  //               ),
-  //               Text(
-  //                 "用户ID: ${keeperData.userId}",
-  //                 style: TextStyle(color: Colors.grey, fontSize: 12),
-  //               ),
-  //             ],
-  //           ),
-  //           SizedBox(height: 4),
-  //           Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //             children: [
-  //               Text(
-  //                 "完成任务数: ${keeperData.completeSingularNumber}",
-  //                 style: TextStyle(
-  //                     color: Colors.black, fontWeight: FontWeight.bold),
-  //               ),
-  //               Text(
-  //                 "平均评分: ${keeperData.averageRating}",
-  //                 style: TextStyle(
-  //                     color: Colors.green, fontWeight: FontWeight.bold),
-  //               ),
-  //             ],
-  //           ),
-  //           SizedBox(height: 4),
-  //           Row(
-  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //             children: [
-  //               CircleAvatar(
-  //                 backgroundImage: NetworkImage(keeperData.avatar),
-  //                 radius: 20,
-  //               ),
-  //               SizedBox(width: 10),
-  //               Text(
-  //                 "Keeper ID: ${keeperData.keeperId}",
-  //                 style: TextStyle(color: Colors.grey, fontSize: 12),
-  //               ),
-  //             ],
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
-
-
+  // 构建家政员简要消息
   Widget _buildKeeperMessageItem(BuildContext context, Object obj) {
     MessageKeeper keeperData;
     if (obj is Map<String, dynamic>) {
