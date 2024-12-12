@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../http/url_path.dart';
 import '../../repository/model/ai_message.dart';
+import '../../repository/model/message_keeper.dart';
 import '../../utils/global.dart';
 
 bool isProduction = Constants.IS_Production;
@@ -32,8 +33,8 @@ class FullAiMessage {
     return {
       'aiMessage': aiMessage.toJson(),
       'type': type,
-      'data': data.map((item) => item is AiMessage ? item.toJson() : item)
-          .toList(),
+      'data':
+          data.map((item) => item is AiMessage ? item.toJson() : item).toList(),
     };
   }
 
@@ -60,20 +61,19 @@ class FullAiMessage {
   }
 }
 
-
 class AiCustomerServiceViewModel with ChangeNotifier {
   // 私有构造函数
   AiCustomerServiceViewModel._internal();
 
   // 静态实例
   static final AiCustomerServiceViewModel _instance =
-  AiCustomerServiceViewModel._internal();
+      AiCustomerServiceViewModel._internal();
 
   // 工厂构造函数
   factory AiCustomerServiceViewModel() => _instance;
 
   RefreshController refreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
 
   List<FullAiMessage> messages = [];
 
@@ -81,9 +81,9 @@ class AiCustomerServiceViewModel with ChangeNotifier {
   Future<void> sendMessage(String message) async {
     // 模拟发送消息
     AiMessage userMessage =
-    AiMessage(isSelf: true, message: message, sendTime: DateTime.now());
-    FullAiMessage fullAiMessageMe = FullAiMessage(
-        aiMessage: userMessage, type: 'Me', data: []);
+        AiMessage(isSelf: true, message: message, sendTime: DateTime.now());
+    FullAiMessage fullAiMessageMe =
+        FullAiMessage(aiMessage: userMessage, type: 'Me', data: []);
     messages.add(fullAiMessageMe);
     notifyListeners();
 
@@ -118,8 +118,7 @@ class AiCustomerServiceViewModel with ChangeNotifier {
               duration: Duration(seconds: 1));
         }
       } else {
-        if (isProduction) showToast(
-            "服务器连接失败", duration: Duration(seconds: 1));
+        if (isProduction) showToast("服务器连接失败", duration: Duration(seconds: 1));
       }
     } catch (e) {
       if (isProduction) print("error: $e");
@@ -137,7 +136,7 @@ class AiCustomerServiceViewModel with ChangeNotifier {
         if (response.statusCode == 200) {
           if (response.data['code'] == 200) {
             List<MessageCommission> commissionList =
-            MessageCommission.fromJsonList(response.data['data']);
+                MessageCommission.fromJsonList(response.data['data']);
 
             if (isProduction) print("======== 回复： =============");
             if (isProduction) print(response.data['data']);
@@ -151,7 +150,7 @@ class AiCustomerServiceViewModel with ChangeNotifier {
             messages.add(fullAiMessageAi);
             notifyListeners();
           } else {
-            showToast("退出登录失败 ${response.data['message']}",
+            showToast("失败： ${response.data['message']}",
                 duration: Duration(seconds: 1));
             if (isProduction) print("error: ${response.data['message']}");
           }
@@ -163,13 +162,51 @@ class AiCustomerServiceViewModel with ChangeNotifier {
       } catch (e) {
         if (isProduction) print("error: $e");
       }
-    } else if (answer == '家政员id') {} else {
+    } else if (answer == '家政员id') {
+      print("======== 进入查找 =========");
+
+      try {
+        final response = await DioInstance.instance().get(
+          path: UrlPath.getAiKeeperList,
+          param: {'keeperIds': messagesList},
+          options: Options(headers: {"Authorization": Global.token}),
+        );
+
+        if (response.statusCode == 200) {
+          if (response.data['code'] == 200) {
+            List<MessageKeeper> keeperList =
+                MessageKeeper.fromJsonList(response.data['data']);
+
+            if (isProduction) print("======== 回复： =============");
+            if (isProduction) print(response.data['data']);
+
+            AiMessage newMessage = AiMessage(
+                isSelf: false, message: answer, sendTime: DateTime.now());
+
+            FullAiMessage fullAiMessageAi = FullAiMessage(
+                aiMessage: newMessage, type: '家政员id', data: keeperList);
+            messages.add(fullAiMessageAi);
+            notifyListeners();
+          } else {
+            showToast("失败： ${response.data['message']}",
+                duration: Duration(seconds: 1));
+            if (isProduction) print("error: ${response.data['message']}");
+          }
+        } else {
+          if (isProduction)
+            showToast("服务器连接失败", duration: Duration(seconds: 1));
+          if (isProduction) print("error: ${response.statusMessage}");
+        }
+      } catch (e) {
+        print("error: $e");
+      }
+    } else {
       // 模拟接收回复
       // await Future.delayed(Duration(seconds: 2));
       AiMessage aiResponse =
-      AiMessage(isSelf: false, message: answer, sendTime: DateTime.now());
-      FullAiMessage fullAiMessageAi = FullAiMessage(
-          aiMessage: aiResponse, type: 'Ai', data: []);
+          AiMessage(isSelf: false, message: answer, sendTime: DateTime.now());
+      FullAiMessage fullAiMessageAi =
+          FullAiMessage(aiMessage: aiResponse, type: 'Ai', data: []);
       messages.add(fullAiMessageAi);
       notifyListeners();
     }
@@ -182,7 +219,7 @@ class AiCustomerServiceViewModel with ChangeNotifier {
     if (cachedMessagesJson != null) {
       // 使用 fromJsonList 方法解析 JSON 字符串
       messages = await FullAiMessage.fromJsonList(cachedMessagesJson);
-      if(isProduction){
+      if (isProduction) {
         //打印本地缓存的信息
         print("========== 本地缓存的消息 ===========");
         print(cachedMessagesJson);
@@ -198,7 +235,7 @@ class AiCustomerServiceViewModel with ChangeNotifier {
     final String messagesJson = FullAiMessage.toJsonList(messages);
     await prefs.setString('cachedMessages', messagesJson);
 
-    if(isProduction){
+    if (isProduction) {
       print("========== 保存到本地缓存的消息 ===========");
       print(messagesJson);
     }

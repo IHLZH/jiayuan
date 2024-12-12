@@ -148,5 +148,8 @@ class UrlPath {
 
   //ai页获取委托列表接口
   static const String getAiCommissionList = "/getCommission";
+
+  //ai页获取家政员列表接口
+  static const String getAiKeeperList = "/getKeeper";
 }
 

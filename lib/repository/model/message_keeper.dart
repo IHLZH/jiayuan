@@ -4,6 +4,7 @@ class MessageKeeper {
   final String avatar;
   final int completeSingularNumber;
   final double averageRating;
+  final String realName;
 
   MessageKeeper({
     required this.keeperId,
@@ -11,6 +12,7 @@ class MessageKeeper {
     required this.avatar,
     required this.completeSingularNumber,
     required this.averageRating,
+    required this.realName,
   });
 
   Map<String, dynamic> toJson() {
@@ -20,6 +22,7 @@ class MessageKeeper {
       'avatar': avatar,
       'completeSingularNumber': completeSingularNumber,
       'averageRating': averageRating,
+      'realName': realName,
     };
   }
 
@@ -32,6 +35,7 @@ class MessageKeeper {
       averageRating: json['averageRating'] is int
           ? json['averageRating'].toDouble()
           : json['averageRating'],
+      realName: json['realName'],
     );
   }
 
