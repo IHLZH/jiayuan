@@ -432,7 +432,7 @@ class _UserPageState extends State<UserPage> {
       backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: AppColors.endDeepColor.withOpacity(0.7),
+        backgroundColor: AppColors.backgroundColor4.withOpacity(0.6),
         toolbarHeight: 10.h,
         automaticallyImplyLeading: false,
       ),
@@ -449,8 +449,8 @@ class _UserPageState extends State<UserPage> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            AppColors.endDeepColor.withOpacity(0.7),
-                            Colors.white
+                            AppColors.backgroundColor4.withOpacity(0.6),
+                            Colors.white.withOpacity(0.3),
                           ], // 自定义渐变颜色
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
