@@ -30,12 +30,12 @@ class MessageKeeper {
     return MessageKeeper(
       keeperId: json['keeperId'],
       userId: json['userId'],
-      avatar: json['avatar'],
+      avatar: json['avatar'] ?? '',
       completeSingularNumber: json['completeSingularNumber'],
       averageRating: json['averageRating'] is int
           ? json['averageRating'].toDouble()
           : json['averageRating'],
-      realName: json['realName'],
+      realName: json['realName'] ?? '',
     );
   }
 
