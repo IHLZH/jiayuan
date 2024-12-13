@@ -74,4 +74,11 @@ class GroupApi {
 
     return res;
   }
+
+  //修改群聊信息
+  Future<bool> setGroupInfo(String groupId,String groupName,String faceUrl) async {
+    bool res = await ImChatApi.getInstance().setGroupInfo(groupId,groupName,faceUrl);
+
+    return res;
+  }
 }

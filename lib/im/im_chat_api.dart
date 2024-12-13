@@ -205,7 +205,8 @@ class ImChatApi {
               print("============ constext: $context =========");
 
               //TODO 弹窗
-              NotificationHelper.getInstance().showNotification(title: "${message.nickName}", body: "$text");
+              NotificationHelper.getInstance().showNotification(
+                  title: "${message.nickName}", body: "$text");
             }
 
             if ((ChatPageViewModel.instance.conversation != null &&
@@ -1566,6 +1567,31 @@ class ImChatApi {
       if (isProduction)
         print("错误码：${quitGroupRes.code} 错误信息： ${quitGroupRes.desc}");
 
+      return false;
+    }
+  }
+
+  //群信息修改
+  Future<bool> setGroupInfo(
+      String groupID, String groupName, String faceUrl) async {
+    // 修改指定的群资料
+    V2TimCallback setGroupInfoRes =
+        await TencentImSDKPlugin.v2TIMManager.getGroupManager().setGroupInfo(
+                info: V2TimGroupInfo(
+              groupID: groupID, // 群组id
+              groupType: "Work", // 群组类型
+              groupName: groupName,
+              faceUrl: faceUrl,
+              // 其余属性可见 V2TimGroupInfo
+            ));
+    if (setGroupInfoRes.code == 0) {
+      // 修改成功
+      if (isProduction) print("============ 修改群信息成功 ===========");
+      return true;
+    } else {
+      if (isProduction) print("============= 修改群信息失败 ===========");
+      if (isProduction)
+        print("错误码：${setGroupInfoRes.code} 错误信息： ${setGroupInfoRes.desc}");
       return false;
     }
   }
