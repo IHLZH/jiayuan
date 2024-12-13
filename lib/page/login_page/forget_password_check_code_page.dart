@@ -6,7 +6,9 @@ import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/page/login_page/email_login_page.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
-import 'package:oktoast/oktoast.dart'; // 引入oktoast包
+import 'package:oktoast/oktoast.dart';
+
+import '../../common_ui/styles/app_colors.dart'; // 引入oktoast包
 
 class ForgetPasswordCheckCodePage extends StatefulWidget {
   const ForgetPasswordCheckCodePage({Key? key}) : super(key: key);
@@ -165,9 +167,9 @@ class _ForgetPasswordCheckCodePageState
     return OKToast(
       // 包裹整个页面
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor2,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.backgroundColor2,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,

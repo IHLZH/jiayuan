@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:oktoast/oktoast.dart';
 
+import '../../common_ui/styles/app_colors.dart';
 import '../../http/dio_instance.dart';
 import '../../http/url_path.dart';
 import '../../route/route_path.dart';
@@ -173,9 +174,9 @@ class _RegisterCheckCodePageState extends State<RegisterCheckCodePage> {
     return OKToast(
       // 包裹整个页面
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor2,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.backgroundColor2,
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,

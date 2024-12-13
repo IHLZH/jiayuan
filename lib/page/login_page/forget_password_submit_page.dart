@@ -6,6 +6,8 @@ import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:oktoast/oktoast.dart';
 
+import '../../common_ui/styles/app_colors.dart';
+
 class ForgetPasswordSubmitPage extends StatefulWidget {
   final String input;
   final bool isEmail;
@@ -78,9 +80,9 @@ class _ForgetPasswordSubmitPageState extends State<ForgetPasswordSubmitPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor2,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor2,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
