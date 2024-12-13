@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/repository/model/message_comission.dart';
 import 'package:provider/provider.dart';
@@ -142,7 +143,7 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(keeperData.avatar),
+                  backgroundImage: CachedNetworkImageProvider(keeperData.avatar),
                   radius: 24,
                 ),
                 SizedBox(width: 12),

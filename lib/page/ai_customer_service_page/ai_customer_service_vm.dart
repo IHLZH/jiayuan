@@ -113,8 +113,9 @@ class AiCustomerServiceViewModel with ChangeNotifier {
 
           if (isProduction)
             print("============== answer: $answer ================");
+          if (isProduction) print("======== 回复： ${messagesList.join(',')}=============");
         } else {
-          showToast("退出登录失败 ${response.data['message']}",
+          showToast("error: ${response.data['message']}",
               duration: Duration(seconds: 1));
         }
       } else {
@@ -195,7 +196,7 @@ class AiCustomerServiceViewModel with ChangeNotifier {
         } else {
           if (isProduction)
             showToast("服务器连接失败", duration: Duration(seconds: 1));
-          if (isProduction) print("error: ${response.statusMessage}");
+          if (isProduction) print("失败: ${response.statusMessage}");
         }
       } catch (e) {
         print("error: $e");
