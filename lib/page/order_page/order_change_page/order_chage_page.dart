@@ -382,38 +382,6 @@ class _OrderChangePageState extends State<OrderChangePage> {
     );
   }
 
-  // 构建预付金输入框
-  // Widget _buildDownPaymentField() {
-  //   return Container(
-  //     margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-  //     padding: EdgeInsets.all(15),
-  //     decoration: BoxDecoration(
-  //       color: Colors.white,
-  //       borderRadius: BorderRadius.circular(10.r),
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: Colors.grey.withOpacity(0.2),
-  //           spreadRadius: 1,
-  //           blurRadius: 3,
-  //           offset: Offset(0, 1),
-  //         ),
-  //       ],
-  //     ),
-  //     child: TextField(
-  //       controller: _downPaymentController,
-  //       keyboardType: TextInputType.numberWithOptions(decimal: true),
-  //       inputFormatters: [
-  //         FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-  //       ],
-  //       decoration: InputDecoration(
-  //         border: InputBorder.none,
-  //         hintText: '请输入预付金',
-  //         icon: Icon(Icons.money, color: AppColors.appColor),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   // 构建结算金额输入框
   Widget _buildCommissionBudgetField() {
     return Container(
