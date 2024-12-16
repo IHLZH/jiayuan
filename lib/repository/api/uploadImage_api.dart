@@ -188,6 +188,60 @@ class UploadImageApi {
     return imageUrl;
   }
 
+  //单图片上传
+  Future<String> uploadGroupImage(XFile file, String groupId) async {
+    //显示加载动画
+    EasyLoading.instance.maskColor = Colors.transparent;
+    EasyLoading.instance.indicatorType = EasyLoadingIndicatorType.cubeGrid;
+    EasyLoading.show(
+      status: "上传中...",
+      maskType: EasyLoadingMaskType.custom,
+    );
+    String imageUrl = "";
+    bool isSuccess = false;
+    // 图片压缩处理
+    List<int>? imageData = await ImageUtils.compressIfNeededToMemory(file, 0.5);
+    FormData formData = FormData.fromMap({
+      "file": await MultipartFile.fromBytes(imageData!,
+          filename: file.path.split('/').last),
+    });
+    //把formData转化为图片存储到指定位置
+    // 打印上传文件信息
+    try {
+      // 发起 POST 请求上传文件
+      Response response = await DioInstance.instance().post(
+        path: UrlPath.uploadGroupAvatar,
+        queryParameters: {"groupId": groupId},
+        data: formData,
+        options: Options(
+            contentType: 'multipart/form-data',
+            headers: {'Authorization': Global.token}),
+      );
+      if (response.statusCode == 200) {
+        imageUrl = response.data["data"];
+        print("上传成功: ${response.data['message']}");
+        // 保存token
+        if (response.headers.map.containsKey('Authorization') &&
+            response.headers["authorization"]!.isNotEmpty) {
+          final List<String> token =
+          response.headers["Authorization"] as List<String>;
+          Global.token = token.first;
+        }
+
+        isSuccess = true;
+      } else {
+        print("上传失败，状态码: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("上传出错: $e");
+    }
+    if (isSuccess)
+      EasyLoading.showSuccess('上传成功');
+    else
+      EasyLoading.showError('上传失败');
+    return imageUrl;
+  }
+
   //delete 删除图片方式 post
   Future<void> deleteImage(String imageFileUrl, String path) async {
     try {

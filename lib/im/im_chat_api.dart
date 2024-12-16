@@ -1573,7 +1573,7 @@ class ImChatApi {
 
   //群信息修改
   Future<bool> setGroupInfo(
-      String groupID, String groupName, String faceUrl) async {
+      String groupID, String? groupName, String? faceUrl) async {
     // 修改指定的群资料
     V2TimCallback setGroupInfoRes =
         await TencentImSDKPlugin.v2TIMManager.getGroupManager().setGroupInfo(
