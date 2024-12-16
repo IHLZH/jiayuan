@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:jiayuan/repository/model/message_comission.dart';
 import 'package:provider/provider.dart';
 
+// import 'package:keyboard_avoider/keyboard_avoider.dart';
+
 import '../../common_ui/styles/app_colors.dart';
 import '../../repository/model/message_keeper.dart';
 import '../../utils/constants.dart';
@@ -19,6 +21,7 @@ class AiCustomerServicePage extends StatefulWidget {
 
 class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   AiCustomerServiceViewModel viewModel = AiCustomerServiceViewModel();
   bool isSending = false;
 
@@ -27,11 +30,14 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
     super.initState();
     viewModel = AiCustomerServiceViewModel();
     viewModel.loadCachedMessages();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 滚动到列表底部
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
   }
 
   // 构建委托简要消息
-  Widget _buildComissionMessageItem(
-      BuildContext context, Object obj) {
+  Widget _buildComissionMessageItem(BuildContext context, Object obj) {
     MessageCommission commissionData;
     if (obj is Map<String, dynamic>) {
       commissionData = viewModel.parseCommission(obj);
@@ -143,7 +149,8 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(keeperData.avatar),
+                  backgroundImage:
+                      CachedNetworkImageProvider(keeperData.avatar),
                   radius: 24,
                 ),
                 SizedBox(width: 12),
@@ -214,73 +221,79 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AiCustomerServiceViewModel>(context);
 
     return Scaffold(
-        backgroundColor: AppColors.backgroundColor3,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(45), // 设置高度
-          child: Container(
-            padding: EdgeInsets.only(top: 30),
-            decoration: BoxDecoration(
-              color: AppColors.backgroundColor3, // 设置背景颜色
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back_ios_new,
-                            color: AppColors.textColor2b), // 设置图标颜色
-                        onPressed: () {
-                          Navigator.of(context).pop(); // 返回上一页
-                        },
+      resizeToAvoidBottomInset: true,
+      backgroundColor: AppColors.backgroundColor3,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(45),
+        child: Container(
+          padding: EdgeInsets.only(top: 30),
+          decoration: BoxDecoration(
+            color: AppColors.backgroundColor3,
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios_new,
+                          color: AppColors.textColor2b),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    Text(
+                      'AI智能助手',
+                      style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
                       ),
-                      Text(
-                        'AI智能助手',
-                        style: TextStyle(
-                          color: AppColors.textColor2b, // 设置标题颜色
-                          fontSize: 20, // 设置标题字体大小
-                          fontWeight: FontWeight.w500, // 设置标题字体粗细
-                        ),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete, color: AppColors.textColor2b),
-                    // 设置图标颜色
-                    onPressed: () async {
-                      await viewModel.clearMessages();
-                    },
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete, color: AppColors.textColor2b),
+                  onPressed: () async {
+                    await viewModel.clearMessages();
+                  },
+                ),
+              ],
             ),
           ),
         ),
-        body: Container(
+      ),
+      body: GestureDetector(
+        onTap: () {
+          // 点击空白处收起键盘
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              Expanded(
+              Container(
+                height: MediaQuery.of(context).size.height - 150,
                 child: ListView.builder(
+                  controller: _scrollController,
                   itemCount: viewModel.messages.length,
                   itemBuilder: (context, index) {
                     final message = viewModel.messages[index];
                     return Padding(
                       padding:
-                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
                       child: Align(
                         alignment: message.aiMessage.isSelf
                             ? Alignment.centerRight
                             : Alignment.centerLeft,
                         child: Container(
-                          padding: EdgeInsets.all(12.0),
+                          padding: EdgeInsets.all(10.0),
                           decoration: BoxDecoration(
                             color: message.aiMessage.isSelf
                                 ? Colors.blue
@@ -292,6 +305,7 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                                 ? CrossAxisAlignment.end
                                 : CrossAxisAlignment.start,
                             children: [
+                              // 使用 switch 语句处理不同类型的消息
                               switch (message.type) {
                                 '委托id' => ListView.builder(
                                     shrinkWrap: true,
@@ -321,7 +335,6 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                                     ),
                                   ),
                               },
-                              SizedBox(height: 4.0),
                               Text(
                                 message.aiMessage.isSelf ? '用户' : 'AI',
                                 style: TextStyle(
@@ -395,6 +408,12 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                                   setState(() {
                                     isSending = false;
                                   });
+                                  // 发送消息后滚动到底部
+                                  _scrollController.animateTo(
+                                    _scrollController.position.maxScrollExtent,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.easeOut,
+                                  );
                                 }
                               },
                         style: TextButton.styleFrom(
@@ -420,6 +439,8 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
