@@ -123,14 +123,23 @@ class _OrderChangePageState extends State<OrderChangePage> {
           ),
         ],
       ),
-      child: TextField(
-        controller: _remarkController,
-        maxLines: 3,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: '请输入备注信息',
-          icon: Icon(Icons.edit, color: AppColors.appColor),
-        ),
+      child: Stack(
+        children: [
+          TextField(
+            controller: _remarkController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: '请输入备注信息',
+              contentPadding: EdgeInsets.only(left: 48, top: 16),
+            ),
+          ),
+          Positioned(
+            left: 8,
+            top: 17,
+            child: Icon(Icons.edit, color: AppColors.appColor),
+          ),
+        ],
       ),
     );
   }
