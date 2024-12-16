@@ -27,8 +27,8 @@ class _OrderChangePageState extends State<OrderChangePage> {
       text: OrderDetailPageVm.nowOrder!.commissionAddress); //门牌号
   final TextEditingController _customDurationController =
       TextEditingController(); //自定义时长
-  final TextEditingController _downPaymentController = TextEditingController(
-      text: OrderDetailPageVm.nowOrder!.downPayment?.toString() ?? ''); //预付金
+  // final TextEditingController _downPaymentController = TextEditingController(
+  //     text: OrderDetailPageVm.nowOrder!.downPayment?.toString() ?? ''); //预付金
   final TextEditingController _commissionBudgetController =
       TextEditingController(
           text: OrderDetailPageVm.nowOrder!.commissionBudget?.toString() ??
@@ -76,7 +76,7 @@ class _OrderChangePageState extends State<OrderChangePage> {
     _remarkController.dispose();
     _doorNumberController.dispose();
     _customDurationController.dispose();
-    _downPaymentController.dispose();
+    // _downPaymentController.dispose();
     _commissionBudgetController.dispose();
     super.dispose();
   }
@@ -383,36 +383,36 @@ class _OrderChangePageState extends State<OrderChangePage> {
   }
 
   // 构建预付金输入框
-  Widget _buildDownPaymentField() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: Offset(0, 1),
-          ),
-        ],
-      ),
-      child: TextField(
-        controller: _downPaymentController,
-        keyboardType: TextInputType.numberWithOptions(decimal: true),
-        inputFormatters: [
-          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-        ],
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: '请输入预付金',
-          icon: Icon(Icons.money, color: AppColors.appColor),
-        ),
-      ),
-    );
-  }
+  // Widget _buildDownPaymentField() {
+  //   return Container(
+  //     margin: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
+  //     padding: EdgeInsets.all(15),
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       borderRadius: BorderRadius.circular(10.r),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.grey.withOpacity(0.2),
+  //           spreadRadius: 1,
+  //           blurRadius: 3,
+  //           offset: Offset(0, 1),
+  //         ),
+  //       ],
+  //     ),
+  //     child: TextField(
+  //       controller: _downPaymentController,
+  //       keyboardType: TextInputType.numberWithOptions(decimal: true),
+  //       inputFormatters: [
+  //         FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+  //       ],
+  //       decoration: InputDecoration(
+  //         border: InputBorder.none,
+  //         hintText: '请输入预付金',
+  //         icon: Icon(Icons.money, color: AppColors.appColor),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // 构建结算金额输入框
   Widget _buildCommissionBudgetField() {
@@ -461,7 +461,7 @@ class _OrderChangePageState extends State<OrderChangePage> {
       userId: _order.userId,
       keeperId: _order.keeperId,
       commissionBudget: double.tryParse(_commissionBudgetController.text),
-      downPayment: double.tryParse(_downPaymentController.text),
+      // downPayment: double.tryParse(_downPaymentController.text),
       commissionDescription: _remarkController.text,
       province: _province,
       city: _city,
@@ -523,7 +523,7 @@ class _OrderChangePageState extends State<OrderChangePage> {
               _buildAddressSelector(),
               _buildDateTimePicker(),
               _buildDurationSelector(),
-              _buildDownPaymentField(),
+              // _buildDownPaymentField(),
               _buildCommissionBudgetField(),
             ],
           ),
