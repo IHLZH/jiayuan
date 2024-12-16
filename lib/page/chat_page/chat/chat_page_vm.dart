@@ -129,22 +129,24 @@ class ChatPageViewModel with ChangeNotifier{
     StringBuffer result = StringBuffer("系统通知：");
     if(message.groupTipsElem != null){
       if(message.groupTipsElem!.memberList != null){
-        V2TimGroupMemberInfo? groupMemberInfo = message.groupTipsElem!.memberList!.first;
-        if(groupMemberInfo != null){
-          result.write(groupMemberInfo.nickName);
-          switch(message.groupTipsElem!.type){
-            case 2:
-              result.write(" 被邀请入群");
-              break;
-            case 3:
-              result.write(" 退出群聊");
-              break;
-            case 4:
-              result.write(" 被踢出群聊");
-              break;
-            case 7:
-              result.write("群资料变更");
-              break;
+        List<V2TimGroupMemberInfo?> groupMemberInfos = message.groupTipsElem!.memberList!;
+        for(V2TimGroupMemberInfo? groupMemberInfo in groupMemberInfos){
+          if(groupMemberInfo != null){
+            result.write(groupMemberInfo.nickName);
+            switch(message.groupTipsElem!.type){
+              case 2:
+                result.write(" 被邀请入群");
+                break;
+              case 3:
+                result.write(" 退出群聊");
+                break;
+              case 4:
+                result.write(" 被踢出群聊");
+                break;
+              case 7:
+                result.write("群资料变更");
+                break;
+            }
           }
         }
       }
