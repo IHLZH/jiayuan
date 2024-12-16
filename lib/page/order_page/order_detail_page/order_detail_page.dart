@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page_vm.dart';
 import 'package:jiayuan/repository/model/full_order.dart';
@@ -138,6 +139,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     }
   }
 
+  // 修改订单信息
+  Future<void> _changeOrderInfo() async {
+    // 在 OrderDetailPage 中调用
+    RouteUtils.pushForNamed(context, RoutePath.orderChangePage).then((updated) {
+      if (updated == true) {
+        _order = OrderDetailPageVm.nowOrder!;
+        setState(() {}); // 刷新页面显示
+      }
+    });
+  }
+
   // 构建图标按钮
   Widget _buildIconButton(IconData icon, String title, Color color) {
     return ElevatedButton.icon(
@@ -165,6 +177,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             _jumpToEvaluatePage();
           case '取消订单':
             _cancelOrder();
+          case '修改信息':
+            _changeOrderInfo();
         }
       },
     );
@@ -334,6 +348,21 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             _buildOrderInfo(
                 _order.keeperName == null ? '未确认' : _order.keeperName!,
                 Colors.purple[600]!),
+            SizedBox(width: 10),
+          ],
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: [
+            SizedBox(width: 10),
+            _buildOrderInfoPrefix('期望开始时间'),
+            Expanded(child: SizedBox()),
+            _buildOrderInfo(
+                _order.expectStartTime == null
+                    ? '未确认'
+                    : DateFormat('yyyy-MM-dd HH:mm')
+                        .format(_order.expectStartTime!),
+                Colors.grey[600]!),
             SizedBox(width: 10),
           ],
         ),
@@ -641,7 +670,6 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   child: SizedBox(),
                 ),
               ),
-
               _buildIconButton(Icons.edit, '修改信息', Colors.green),
               if (_order.commissionStatus == 0 ||
                   _order.commissionStatus == 1 ||
