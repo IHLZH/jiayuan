@@ -52,7 +52,7 @@ class UploadImageApi {
         );
         if (response.data['code'] == 200) {
           // 将返回的图片地址赋值给对应的索引
-          print("上传成功: ${response.data}");
+        //  print("上传成功: ${response.data}");
           isSuccess = true;
           imageUrls[index] = (path == UrlPath.uploadEvaluationPicture
               ? response.data["data"][0]

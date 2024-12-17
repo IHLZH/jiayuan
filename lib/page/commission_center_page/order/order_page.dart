@@ -531,7 +531,6 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
               borderRadius: BorderRadius.circular(16.r)
           ),
           width: 200,
-          height: 180,
           child: Column(
             children: [
               Row(
@@ -626,7 +625,6 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
               borderRadius: BorderRadius.circular(16.r)
           ),
           width: 200,
-          height: 180,
           child: Column(
             children: [
               Row(
@@ -706,7 +704,6 @@ class _OrderPageState extends State<CenterOrderPage> with TickerProviderStateMix
               borderRadius: BorderRadius.circular(16.r)
           ),
           width: 200,
-          height: 180,
           child: Column(
             children: [
               Row(

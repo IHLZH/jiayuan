@@ -8,7 +8,7 @@ class UrlPath {
 
   static const String testBaseUrl = "http://10.7.89.68:8080";
 
-  static const String yuwenBaseUrl = "http://192.168.205.44:8080";
+  static const String yuwenBaseUrl = "http://192.168.201.44:8080";
   //Token登录
   static const String loginAutoUrl = "/login/autoLogin";
 
@@ -148,6 +148,8 @@ class UrlPath {
 
   //ai页获取委托列表接口
   static const String getAiCommissionList = "/getCommission";
+  //获取已完成订单
+  static const String getOrderCompleted = "/order/view/byYearMonth";
 
   //ai页获取家政员列表接口
   static const String getAiKeeperList = "/getKeeper";

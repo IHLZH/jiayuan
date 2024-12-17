@@ -24,6 +24,7 @@ import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
 import 'package:jiayuan/page/search_user/user_info/user_info_page.dart';
 import 'package:jiayuan/page/search_user/user_search_page.dart';
 import 'package:jiayuan/page/start_page.dart';
+import 'package:jiayuan/page/user_page/faq_page/faq_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/change_email_page/bind_email_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/change_email_page/change_email_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/change_email_page/check_email_page.dart';
@@ -36,6 +37,7 @@ import '../page/chat_page/chat/chat_page.dart';
 import '../page/commission_center_page/certificates/certificate_page.dart';
 import '../page/commission_center_page/comment/comment_page.dart';
 import '../page/commission_center_page/personal_keeper_page/personal_keeper_page.dart';
+import '../page/commission_center_page/wallet_center/wallet_center_page.dart';
 import '../page/keeper_page/KeeperPage.dart';
 import '../page/login_page/phone_login_page.dart';
 import '../page/order_page/evaluation_page/evalutation_page.dart';
@@ -231,6 +233,10 @@ class Routes {
             print("============= title ==========$webTitle");
           },
         ));
+      case RoutePath.walletCenter:
+        return pageRoute(WalletCenterPage());
+      case RoutePath.faq:
+        return pageRoute(FaqPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

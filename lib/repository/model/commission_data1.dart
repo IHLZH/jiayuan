@@ -74,9 +74,9 @@ class CommissionData1 {
 
   CommissionData1.fromJson(dynamic json) {
     _commissionId = json['commissionId'];
-    _userId = json['userId'];
-    _userName = User.fromJson(json['user']).nickName;
-    _userAvatar = User.fromJson(json['user']).userAvatar;
+    _userId = json['userId'] ;
+    _userName = User.fromJson(json['user'] ?? {}).nickName ;
+    _userAvatar = User.fromJson(json['user'] ?? {}).userAvatar;
     _keeperId = json['keeperId'];
     _typeName = json['service'];
     _commissionBudget = json['commissionBudget'].toDouble();
@@ -234,7 +234,7 @@ CommissionData1 copyWith({
   String? get userAvatar => _userAvatar;
   int get keeperId => _keeperId ?? 0;
   int get typeId => _typeId ?? 1;
-  String get typeName => _typeName ?? "家政服务";
+  String get typeName => _typeName ?? "日常保洁";
   double get commissionBudget => _commissionBudget ?? 999999;
   String get commissionDescription => _commissionDescription ?? "";
   String get province => _province ?? "";

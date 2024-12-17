@@ -60,6 +60,9 @@ class PersonalKeeperVm with ChangeNotifier {
   //上传家政员信息，只上传改变的部分
   Future<void> upLoadKeeperInfo() async {
    // List<String> imageUrls2 = imageUrls.forEach((e) => return e);
+    if(reg_tel.hasMatch(phoneNumber!)){
+      phoneNumber == null ;
+    }
     HousekeeperDataDetail housekeeperDataDetail = HousekeeperDataDetail(
       avatar: isEqual(avatarUrl, Global.keeperInfo!.avatar) ? null : avatarUrl,
       city: isEqual(city, Global.keeperInfo!.city) ? null : city,

@@ -30,8 +30,6 @@ class _StartPageState extends State<StartPage> {
   void initState() {
  //   Global.SpeechRecognitionServiceinit();
     super.initState();
-    //全面屏手势
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     //获取通知权限
     NotificationHelper.getInstance().requestNotificationPermissions();
@@ -39,10 +37,7 @@ class _StartPageState extends State<StartPage> {
     NotificationHelper.getInstance().initialize();
 
     // 初始化CookieJar
-   DioInstance.instance().changeBaseUrl(UrlPath.yuwenBaseUrl);
-   // DioInstance.instance().changeBaseUrl(UrlPath.yuwenBaseUrl);
-    //DioInstance.instance().changeBaseUrl(UrlPath.testBaseUrl);
-   // DioInstance.instance().changeBaseUrl(UrlPath.realBaseUrl);
+   DioInstance.instance().changeBaseUrl(UrlPath.testBaseUrl);
 
     //初始化sqlite数据库
     _initDB();
@@ -57,20 +52,6 @@ class _StartPageState extends State<StartPage> {
     //初始化支付插件
     FlutterPay.initConfig(
       aliPayAppId: "9021000142642965",
-      iapLaunchCheckout: (result) async {
-        if (result.success == true) {
-          //iap支付成功
-          debugPrint("iap支付成功");
-          debugPrint(result.errorMsg);
-        } else {
-          //iap支付失败
-          debugPrint("iap支付失败");
-        }
-      },
-      wechatPayResult: (bool success) {
-        //wechat支付结果
-        debugPrint("微信支付结果: ${success == true ? "成功" : "失败"}");
-      },
     );
   }
 

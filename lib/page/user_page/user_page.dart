@@ -385,6 +385,8 @@ class _UserPageState extends State<UserPage> {
               // 其他选项的点击事件处理
             } else if (icon == Icons.history) {
               RouteUtils.pushForNamed(context, RoutePath.browseHistoryPage);
+            } else if(icon == Icons.help_outline){
+              RouteUtils.pushForNamed(context, RoutePath.faq);
             }
           },
           // 水波纹颜色
