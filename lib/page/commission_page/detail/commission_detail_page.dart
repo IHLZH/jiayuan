@@ -269,8 +269,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                                                 padding: EdgeInsets.only(top: 4,bottom: 4),
                                                 child: Text(
                                                   vm.commissionData.county + " " + vm.commissionData.commissionAddress,
-                                                  maxLines: 2,
-                                                  overflow: TextOverflow.ellipsis,
+                                                  maxLines: null,
                                                   style: TextStyle(
                                                       color: AppColors.textColor2b
                                                   ),
@@ -837,7 +836,6 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
               borderRadius: BorderRadius.circular(16.r)
           ),
           width: 200,
-          height: 180,
           child: Column(
             children: [
               Row(
@@ -923,7 +921,6 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
               borderRadius: BorderRadius.circular(16.r)
           ),
           width: 200,
-          height: 180,
           child: Column(
             children: [
               Row(
@@ -1021,7 +1018,6 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
               borderRadius: BorderRadius.circular(16.r)
           ),
           width: 200,
-          height: 180,
           child: Column(
             children: [
               Row(
@@ -1104,7 +1100,6 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
               borderRadius: BorderRadius.circular(16.r)
           ),
           width: 200,
-          height: 180,
           child: Column(
             children: [
               Row(
