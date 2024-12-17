@@ -78,14 +78,17 @@ class UrlPath {
   //取消接取委托接口
   static const String cancelReceiveCommissionUrl = "/cancel_receive";
 
-  //根据userId获取委托信息接口
+  //根据userId获取订单信息接口
   static const String getOrderInfoByUserIdUrl = "/order/view/list";
 
-  //根据userId和status获取委托信息接口
+  //根据userId和status获取订单信息接口
   static const String getOrderInfoByUserIdAndStatusUrl = "/order/view/status";
 
   //订单状态更改接口
   static const String updateOrderStatusUrl = "/order/update/status";
+
+  //订单信息更改接口
+  static const String updateOrderInfoUrl = "/order/update/commissionInfo";
 
   //发送委托的接口
   static const String sendCommissionUrl = "/release/add";
