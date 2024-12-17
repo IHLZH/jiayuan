@@ -127,6 +127,8 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Future<void> _jumpToOrderDetailPage(int index) async {
+    //TODO:对于未通过的订单提前获取未通过原因
+
     OrderDetailPageVm.nowOrder = _orderDataList[index];
     await RouteUtils.pushForNamed(context, RoutePath.orderDetailPage);
     _refreshOrders();
