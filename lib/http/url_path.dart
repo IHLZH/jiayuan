@@ -6,7 +6,7 @@ class UrlPath {
   // static const String BaseUrl = "http://www.shinesuning.top:8080";
   static const String wangBaseUrl = "http://10.7.89.154:8080";
 
-  static const String testBaseUrl = "http://10.7.89.171:8080";
+  static const String testBaseUrl = "http://10.7.89.68:8080";
 
   static const String yuwenBaseUrl = "http://192.168.201.44:8080";
   //Token登录

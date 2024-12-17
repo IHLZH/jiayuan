@@ -24,6 +24,7 @@ import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
 import 'package:jiayuan/page/search_user/user_info/user_info_page.dart';
 import 'package:jiayuan/page/search_user/user_search_page.dart';
 import 'package:jiayuan/page/start_page.dart';
+import 'package:jiayuan/page/user_page/faq_page/faq_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/change_email_page/bind_email_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/change_email_page/change_email_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/change_email_page/check_email_page.dart';
@@ -219,6 +220,8 @@ class Routes {
         return pageRoute(AiCustomerServicePage());
       case RoutePath.walletCenter:
         return pageRoute(WalletCenterPage());
+      case RoutePath.faq:
+        return pageRoute(FaqPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

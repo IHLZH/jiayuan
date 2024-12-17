@@ -160,4 +160,6 @@ class RoutePath {
 
   //收益中心
   static const String walletCenter = "/walletCenter";
+
+  static const String faq = "/faq";
 }

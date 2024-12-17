@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'http/dio_instance.dart';
 
 Future<void> main() async {
-  DioInstance.instance().initDio(baseUrl: UrlPath.yuwenBaseUrl);
+  DioInstance.instance().initDio(baseUrl: UrlPath.testBaseUrl);
   await ScreenUtil.ensureScreenSize();
   runApp(MultiProvider(
     providers: [

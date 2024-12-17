@@ -30,8 +30,6 @@ class _StartPageState extends State<StartPage> {
   void initState() {
  //   Global.SpeechRecognitionServiceinit();
     super.initState();
-    //全面屏手势
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     //获取通知权限
     NotificationHelper.getInstance().requestNotificationPermissions();
@@ -39,10 +37,7 @@ class _StartPageState extends State<StartPage> {
     NotificationHelper.getInstance().initialize();
 
     // 初始化CookieJar
-   DioInstance.instance().changeBaseUrl(UrlPath.yuwenBaseUrl);
-   // DioInstance.instance().changeBaseUrl(UrlPath.yuwenBaseUrl);
-    //DioInstance.instance().changeBaseUrl(UrlPath.testBaseUrl);
-   // DioInstance.instance().changeBaseUrl(UrlPath.realBaseUrl);
+   DioInstance.instance().changeBaseUrl(UrlPath.testBaseUrl);
 
     //初始化sqlite数据库
     _initDB();
