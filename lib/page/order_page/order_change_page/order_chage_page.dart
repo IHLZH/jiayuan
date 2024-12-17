@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pickers/pickers.dart';
@@ -6,11 +7,15 @@ import 'package:flutter_pickers/time_picker/model/pduration.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/floating_support_ball/floating_support_ball.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
+import 'package:jiayuan/http/dio_instance.dart';
+import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page_vm.dart';
 import 'package:jiayuan/page/send_commission_page/MapPage.dart';
 import 'package:jiayuan/repository/model/full_order.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:oktoast/oktoast.dart';
+
+import '../../../utils/global.dart';
 
 class OrderChangePage extends StatefulWidget {
   @override
@@ -391,6 +396,38 @@ class _OrderChangePageState extends State<OrderChangePage> {
     );
   }
 
+  Future<bool> _updateOrderInfo(FullOrder order) async {
+    String url = UrlPath.updateOrderInfoUrl;
+
+    try {
+      final response = await DioInstance.instance().put(
+          path: url,
+          data: order.toMap(),
+          options: Options(headers: {
+            'Authorization': Global.token!,
+            'Content-Type': 'application/json',
+          }));
+
+      if (response.statusCode == 200) {
+        if (response.data['code'] == 200) {
+          if (isProduction) print(response.data['message']);
+          return true;
+        } else {
+          if (isProduction) print("error: ${response.data['message']}");
+          showToast(response.data['message']);
+        }
+      } else {
+        if (isProduction) print("error: ${response.statusCode}");
+        showToast("error: ${response.statusCode}");
+      }
+    } catch (e) {
+      if (isProduction) print("error: $e");
+      showToast("error: $e");
+    }
+
+    return false;
+  }
+
   // 构建结算金额输入框
   Widget _buildCommissionBudgetField() {
     return Container(
@@ -424,7 +461,7 @@ class _OrderChangePageState extends State<OrderChangePage> {
   }
 
   // 保存修改
-  void _saveChanges() {
+  Future<void> _saveChanges() async {
     if (_doorNumberController.text == '' ||
         _selectedDate == null ||
         _duration == 0) {
@@ -458,12 +495,15 @@ class _OrderChangePageState extends State<OrderChangePage> {
       endTime: _order.endTime,
     );
 
-    // 更新 OrderDetailPageVm 中的订单
-    OrderDetailPageVm.nowOrder = updatedOrder;
+    final res = await _updateOrderInfo(updatedOrder);
+
+    if (res == true) {
+      // 更新 OrderDetailPageVm 中的订单
+      OrderDetailPageVm.nowOrder = updatedOrder;
+    }
 
     // 返回上一页并传递更新成功的结果
     Navigator.pop(context, true);
-    showToast('修改成功');
   }
 
   @override
