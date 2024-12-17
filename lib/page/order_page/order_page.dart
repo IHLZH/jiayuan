@@ -328,6 +328,9 @@ class _OrderPageState extends State<OrderPage> {
                           style: TextStyle(
                               color: Colors.green,
                               fontWeight: FontWeight.bold)),
+                      8 => Text("未通过",
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold)),
                       _ => Text("未知",
                           style: TextStyle(
                               color: Colors.redAccent,
@@ -505,7 +508,22 @@ class _OrderPageState extends State<OrderPage> {
     // 构建单选框选项
     Widget _buildRadioOption(String title, int value) {
       return ListTile(
-        title: Text(title),
+        title: Text(
+          title,
+          style: TextStyle(color: value == nowOrderStatus ? switch (title) {
+            '全部' => AppColors.appColor,
+            '待接取' => Colors.blue,
+            '待确认' => Colors.redAccent,
+            '待服务' => Colors.blueAccent,
+            '服务中' => Colors.orange,
+            '待支付' => Colors.red,
+            '已完成' => Colors.lightGreen,
+            '已取消' => Colors.grey,
+            '已评价' => Colors.green,
+            '未通过' => Colors.red,
+            _ => Colors.grey,
+          } : Colors.black),
+        ),
         leading: Radio<int>(
           value: value,
           groupValue: nowOrderStatus,
@@ -525,11 +543,12 @@ class _OrderPageState extends State<OrderPage> {
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.appColor, AppColors.endDeepColor],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
+            // gradient: LinearGradient(
+            //   colors: [AppColors.appColor, Colors.white],
+            //   begin: Alignment.topCenter,
+            //   end: Alignment.bottomCenter,
+            // ),
+            color: AppColors.appColor.withOpacity(0.9),
           ),
         ),
         title: Text(
@@ -539,18 +558,13 @@ class _OrderPageState extends State<OrderPage> {
                     ? '待接取'
                     : widget.status == 1
                         ? '待确认'
-                        : widget.status == 2
-                            ? '待服务'
-                            : widget.status == 3
-                                ? '服务中'
-                                : widget.status == 4
-                                    ? '待支付'
-                                    : widget.status == 5
-                                        ? '已完成'
-                                        : widget.status == 6
-                                            ? '已取消'
-                                            : '已完成(已评价)',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                        : widget.status == 4
+                            ? '待支付'
+                            : widget.status == 5
+                                ? '已完成'
+                                : '其他',
+            style: TextStyle(
+                color: AppColors.backgroundColor, fontWeight: FontWeight.bold)),
         centerTitle: true,
         elevation: 0,
         leading: IconButton(
@@ -584,11 +598,13 @@ class _OrderPageState extends State<OrderPage> {
                 decoration: BoxDecoration(
                   color: AppColors.appColor,
                 ),
-                child: Text(
-                  '订单类型',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
+                child: Center(
+                  child: Text(
+                    '订单类型',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
               ),
@@ -602,6 +618,7 @@ class _OrderPageState extends State<OrderPage> {
             _buildRadioOption('已完成', 5),
             _buildRadioOption('已取消', 6),
             _buildRadioOption('已评价', 7),
+            _buildRadioOption('未通过', 8),
           ],
         ),
       ),
