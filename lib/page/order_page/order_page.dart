@@ -80,7 +80,7 @@ class _OrderPageState extends State<OrderPage> {
           'orderId': orderId,
         },
       );
-      print('获取到的orderStr数据${response.data}');
+      if(isProduction)print('获取到的orderStr数据${response.data}');
       if (response.statusCode == 200) {
         return response.data;
       } else {
@@ -119,7 +119,7 @@ class _OrderPageState extends State<OrderPage> {
       _refreshOrders();
       //刷新界面
     } else {
-      print(
+      if(isProduction)print(
           "支付失败 ${aliPayResult.result} + ${aliPayResult.resultStatus} + ${aliPayResult.memo}");
       //支付失败
       showToast("支付失败", duration: const Duration(seconds: 1));
@@ -144,7 +144,7 @@ class _OrderPageState extends State<OrderPage> {
       _isRefreshing = true;
     });
 
-    print("================ nowOrderStatus: $nowOrderStatus ==============");
+    if(isProduction)print("================ nowOrderStatus: $nowOrderStatus ==============");
 
     String url = widget.status != -1
         ? UrlPath.getOrderInfoByUserIdAndStatusUrl +
@@ -548,7 +548,7 @@ class _OrderPageState extends State<OrderPage> {
             //   begin: Alignment.topCenter,
             //   end: Alignment.bottomCenter,
             // ),
-            color: AppColors.appColor.withOpacity(0.9),
+            color: AppColors.appColor,
           ),
         ),
         title: Text(
