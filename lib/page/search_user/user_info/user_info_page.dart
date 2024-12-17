@@ -1,14 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
+import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/page/search_user/user_info/user_info_vm.dart';
 import 'package:jiayuan/repository/api/user_api.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
+import 'package:jiayuan/utils/constants.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 
+import '../../../http/url_path.dart';
 import '../../../im/im_chat_api.dart';
 import '../../../route/route_path.dart';
 import '../../../route/route_utils.dart';
+import '../../../utils/global.dart';
+
+bool isProduction = Constants.IS_Production;
 
 class UserInfoPage extends StatefulWidget {
   final SearchUser user;
@@ -158,9 +166,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                             color: Colors.orange,
                             onPressed: () {
                               // TODO: 实现家政员信息功能
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('家政员信息功能开发中')),
-                              );
+                              _jumpToKeeperInfoPage();
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   SnackBar(content: Text('家政员信息功能开发中')),
+                              // );
                             },
                           ),
                           const Expanded(child: SizedBox()),
@@ -291,6 +300,40 @@ class _UserInfoPageState extends State<UserInfoPage> {
 
   Future<void> _backToChatPage() async {
     Navigator.pop(context, "backToChatPage");
+  }
+
+  Future<void> _jumpToKeeperInfoPage() async {
+    // TODO: 跳转到家政员信息页面
+    //获取家政员ID
+    String url = UrlPath.getKeeperId;
+
+    try {
+      final response = await DioInstance.instance().get(
+          path: url,
+          param: {"userId": widget.user.userId},
+          options: Options(headers: {
+            'Authorization': Global.token!,
+          }));
+
+      if(response.statusCode == 200){
+        if(response.data['code'] == 200){
+          int keeperId = int.parse(response.data['data']);
+
+          if(isProduction)print("=========== keeperId: $keeperId ===========");
+
+          RouteUtils.pushForNamed(context, RoutePath.KeeperPage,arguments: keeperId);
+        }else{
+          if(isProduction)print("${response.data['message']}");
+          showToast("${response.data['message']}");
+        }
+      }else{
+        if(isProduction)print("error: ${response.statusMessage}");
+        showToast("发送异常");
+      }
+    } catch (e) {
+      if (isProduction) print("error: $e");
+      showToast("无法连接服务器");
+    }
   }
 
   // 显示加好友弹窗
