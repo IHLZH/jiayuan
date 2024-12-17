@@ -24,7 +24,7 @@ class _OrderChangePageState extends State<OrderChangePage> {
   final TextEditingController _remarkController = TextEditingController(
       text: OrderDetailPageVm.nowOrder!.commissionDescription); //备注
   final TextEditingController _doorNumberController = TextEditingController(
-      text: OrderDetailPageVm.nowOrder!.commissionAddress); //门牌号
+      text: OrderDetailPageVm.nowOrder!.commissionAddress); //详细地址
   final TextEditingController _customDurationController =
       TextEditingController(); //自定义时长
   // final TextEditingController _downPaymentController = TextEditingController(

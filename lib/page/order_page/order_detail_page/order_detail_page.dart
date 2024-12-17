@@ -718,7 +718,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           AppColors.appColor),
                       _ => Container(),
                     },
-                    SizedBox(width: 15),
+                    SizedBox(width: 8),
                   ],
                 ),
               ),
