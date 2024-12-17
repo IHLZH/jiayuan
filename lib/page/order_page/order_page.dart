@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_pay/flutter_pay.dart';
 import 'package:flutter_pay/model/ali_pay_result.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,6 +33,7 @@ class _OrderPageState extends State<OrderPage> {
   int _currentPage = 1;
   int _totalPages = 10;
   int _pageSize = 5;
+  int nowOrderStatus = -1;
 
   void sortByDate() {
     _orderDataList.sort((a, b) => b.createTime!.compareTo(a.createTime!));
@@ -45,23 +45,22 @@ class _OrderPageState extends State<OrderPage> {
     super.initState();
   }
 
-
   //创建订单
-  Future<int> createOrder(int index) async{
+  Future<int> createOrder(int index) async {
     String url = UrlPath.createOrderUrl;
     try {
       final response = await DioInstance.instance().post(
-          path: url,
-          queryParameters: {
-            'userId' : _orderDataList[index].userId,
-            'housekeeperId' : _orderDataList[index].keeperId,
-             'amount': _orderDataList[index].commissionBudget,
-            'commissionId': _orderDataList[index].commissionId,
-          },
+        path: url,
+        queryParameters: {
+          'userId': _orderDataList[index].userId,
+          'housekeeperId': _orderDataList[index].keeperId,
+          'amount': _orderDataList[index].commissionBudget,
+          'commissionId': _orderDataList[index].commissionId,
+        },
       );
       if (response.statusCode == 200) {
         return response.data['id'];
-      }  else {
+      } else {
         showToast("网络请求常", duration: const Duration(seconds: 1));
         return -1;
       }
@@ -76,12 +75,12 @@ class _OrderPageState extends State<OrderPage> {
     String url = UrlPath.getOrderStr;
     try {
       final response = await DioInstance.instance().get(
-          path: url,
-          param: {
-            'orderId' : orderId,
-          },
+        path: url,
+        param: {
+          'orderId': orderId,
+        },
       );
-       print('获取到的orderStr数据${response.data}');
+      print('获取到的orderStr数据${response.data}');
       if (response.statusCode == 200) {
         return response.data;
       } else {
@@ -95,33 +94,33 @@ class _OrderPageState extends State<OrderPage> {
       return "";
     }
   }
-  //支付
-  Future<AliPayResult> payWithAliPay(String payInfo, {bool? isSandbox}){
-      return FlutterPay.payWithAliPay(payInfo, isSandbox: isSandbox);
-  }
 
+  //支付
+  Future<AliPayResult> payWithAliPay(String payInfo, {bool? isSandbox}) {
+    return FlutterPay.payWithAliPay(payInfo, isSandbox: isSandbox);
+  }
 
   Future<void> _payOrder(int index) async {
     int orderId = await createOrder(index);
-    if(orderId == -1){
+    if (orderId == -1) {
       showToast('订单创建失败');
       return;
     }
     String orderStr = await getOrderInfo(orderId);
-    if(orderStr == ""){
+    if (orderStr == "") {
       showToast('获取orderStr失败');
       return;
     }
-    AliPayResult aliPayResult = await payWithAliPay(orderStr,isSandbox: true);
-    if(aliPayResult.resultStatus == "9000"){
+    AliPayResult aliPayResult = await payWithAliPay(orderStr, isSandbox: true);
+    if (aliPayResult.resultStatus == "9000") {
       showToast("支付成功", duration: const Duration(seconds: 1));
 
-    //  EasyLoading.showProgress();
+      //  EasyLoading.showProgress();
       _refreshOrders();
       //刷新界面
-
-    }else{
-      print("支付失败 ${aliPayResult.result} + ${aliPayResult.resultStatus} + ${aliPayResult.memo}");
+    } else {
+      print(
+          "支付失败 ${aliPayResult.result} + ${aliPayResult.resultStatus} + ${aliPayResult.memo}");
       //支付失败
       showToast("支付失败", duration: const Duration(seconds: 1));
     }
@@ -145,11 +144,16 @@ class _OrderPageState extends State<OrderPage> {
       _isRefreshing = true;
     });
 
+    print("================ nowOrderStatus: $nowOrderStatus ==============");
+
     String url = widget.status != -1
         ? UrlPath.getOrderInfoByUserIdAndStatusUrl +
             "?userId=${Global.userInfoNotifier.value!.userId}&status=${widget.status}&page=${_currentPage}&size=${_pageSize}"
-        : UrlPath.getOrderInfoByUserIdUrl +
-            "?userId=${Global.userInfoNotifier.value!.userId}&page=${_currentPage}&size=${_pageSize}";
+        : nowOrderStatus != -1
+            ? UrlPath.getOrderInfoByUserIdAndStatusUrl +
+                "?userId=${Global.userInfoNotifier.value!.userId}&status=${nowOrderStatus}&page=${_currentPage}&size=${_pageSize}"
+            : UrlPath.getOrderInfoByUserIdUrl +
+                "?userId=${Global.userInfoNotifier.value!.userId}&page=${_currentPage}&size=${_pageSize}";
 
     try {
       final response = await DioInstance.instance().get(
@@ -242,7 +246,7 @@ class _OrderPageState extends State<OrderPage> {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Colors.grey,width: 0.1.w),
+            border: Border.all(color: Colors.grey, width: 0.1.w),
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
@@ -440,8 +444,8 @@ class _OrderPageState extends State<OrderPage> {
                                   style: TextStyle(
                                       color: AppColors.orangeBtnColor,
                                       fontWeight: FontWeight.normal)),
-                              onPressed: () async{
-                               await _payOrder(index);
+                              onPressed: () async {
+                                await _payOrder(index);
                               },
                             )
                           ],
@@ -498,6 +502,24 @@ class _OrderPageState extends State<OrderPage> {
       );
     }
 
+    // 构建单选框选项
+    Widget _buildRadioOption(String title, int value) {
+      return ListTile(
+        title: Text(title),
+        leading: Radio<int>(
+          value: value,
+          groupValue: nowOrderStatus,
+          activeColor: AppColors.appColor, // 设置选中时的颜色
+          onChanged: (int? newValue) async {
+            setState(() {
+              nowOrderStatus = newValue!;
+            });
+            await _refreshOrders();
+          },
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
@@ -536,6 +558,51 @@ class _OrderPageState extends State<OrderPage> {
           onPressed: () {
             RouteUtils.pop(context);
           },
+        ),
+        actions: [
+          Builder(
+            builder: (BuildContext context) {
+              return widget.status == -1
+                  ? IconButton(
+                      icon: Icon(Icons.menu, color: Colors.black),
+                      onPressed: () {
+                        Scaffold.of(context).openEndDrawer();
+                      },
+                    )
+                  : SizedBox();
+            },
+          ),
+        ],
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            Container(
+              height: 100, // 设置高度
+              child: DrawerHeader(
+                decoration: BoxDecoration(
+                  color: AppColors.appColor,
+                ),
+                child: Text(
+                  '订单类型',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
+              ),
+            ),
+            _buildRadioOption('全部', -1), // 添加“全部”状态
+            _buildRadioOption('待接取', 0),
+            _buildRadioOption('待确认', 1),
+            _buildRadioOption('待服务', 2),
+            _buildRadioOption('服务中', 3),
+            _buildRadioOption('待支付', 4),
+            _buildRadioOption('已完成', 5),
+            _buildRadioOption('已取消', 6),
+            _buildRadioOption('已评价', 7),
+          ],
         ),
       ),
       body: RefreshIndicator(
