@@ -51,6 +51,7 @@ import '../page/user_page/setting_page/change_password_page/reset_password_page.
 import '../page/user_page/setting_page/change_phone_page/bind_phone_page.dart';
 import '../page/user_page/setting_page/change_phone_page/change_phone_page.dart';
 import '../page/user_page/setting_page/change_phone_page/check_phone_page.dart';
+import '../page/web_view_page/web_view_page.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -214,8 +215,22 @@ class Routes {
         return pageRoute(GroupInfoPage(), settings: settings);
       case RoutePath.inviteFriend:
         return pageRoute(InviteMemberPage());
+      // AI客服
       case RoutePath.aiCustomerService:
         return pageRoute(AiCustomerServicePage());
+      //Web 页
+      case RoutePath.webViewPage:
+        final args = settings.arguments as Map<String, dynamic>;
+        final url = args['url'] as String;
+        return pageRoute(WebViewPage(
+          url: url,
+          onLoadFinished: (String? url) {
+            print("============= finish =========");
+          },
+          onWebTitleLoaded: (String? webTitle) {
+            print("============= title ==========$webTitle");
+          },
+        ));
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

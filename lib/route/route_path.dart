@@ -1,5 +1,5 @@
 //路由地址
-class RoutePath {
+class  RoutePath {
   //首页tab
   static const String tab = "/tab";
 
@@ -157,4 +157,7 @@ class RoutePath {
 
   // ai智能助手
   static const String aiCustomerService = "/aiCustomerService";
+
+  // Web页
+  static const String webViewPage = "/webViewPage";
 }
