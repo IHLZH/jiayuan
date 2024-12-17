@@ -146,15 +146,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     }
   }
 
-  //TODO:服务器上传头像
-  //服务器上传头像
-  // static Future<String> saveAvatar(
-  //   XFile image,
-  //   int userId,
-  // ) async {
-  //   String url = UrlPath.uploadAvatarUrl;
-  // }
-
   void _saveChanges() async {
     // 创建一个新的 User 对象并更新
     User updatedUser = User(
