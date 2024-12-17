@@ -154,4 +154,7 @@ class RoutePath {
 
   // ai智能助手
   static const String aiCustomerService = "/aiCustomerService";
+
+  //收益中心
+  static const String walletCenter = "/walletCenter";
 }

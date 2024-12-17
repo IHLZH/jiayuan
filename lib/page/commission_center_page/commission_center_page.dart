@@ -28,6 +28,7 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
   @override
   void initState() {
     super.initState();
+    _centerViewModel.init();
   }
 
   @override
@@ -294,6 +295,7 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
            else if(title == "我的证书") RouteUtils.pushForNamed(context, RoutePath.keeperCertificate);
            else if(title == "我的收藏") RouteUtils.pushForNamed(context, RoutePath.myCollectionPage);
            else if(title == '用户评论') RouteUtils.pushForNamed(context, RoutePath.commentPage,arguments: Global.keeperInfo!.keeperId);
+           else if(title == '收益中心') RouteUtils.pushForNamed(context, RoutePath.walletCenter);
         },
         splashColor: Colors.grey[300],
         highlightColor: Theme.of(context).primaryColor.withAlpha(30),
@@ -414,7 +416,7 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
                   children: [
                     Text("本月接单(单)"),
                     Text(
-                      "10",
+                      "${Global.keeperInfo?.completedOrders}",
                       style: TextStyle(fontSize: 40.sp),
                     ),
                   ],
@@ -427,8 +429,9 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
                 Column(
                   children: [
                     Text("本月收入(元)"),
+                    //超过万，显示多少w
                     Text(
-                      "255.25",
+                      _centerViewModel.sumPrice > 10000 ? "${(_centerViewModel.sumPrice/1000).toInt()}K" :   "${_centerViewModel.sumPrice}",
                       style: TextStyle(fontSize: 40.sp),
                     ),
                   ],
@@ -463,57 +466,27 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Indicator(
-                  color: Colors.blue,
-                  text: '居家保洁',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  color: Colors.orange,
-                  text: '收纳整理',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  color: Colors.green,
-                  text: '专业养护',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Indicator(
-                  color: Colors.red,
-                  text: '家庭保健',
-                  isSquare: true,
-                ),
-                SizedBox(
-                  height: 18,
-                ),
-              ],
+              children: List.generate(_centerViewModel.downTypeMap.keys.length, (index){
+                return Indicator(color: _centerViewModel.colorMap![_centerViewModel.downTypeMap.keys.elementAt(index)]!, text: _centerViewModel.downTypeMap.keys.elementAt(index),  isSquare: true);
+              })
+            ),
+            SizedBox(
+              height: 10,
             ),
           ]),
         ));
   }
 
   List<PieChartSectionData> _buildPieChartSections() {
-    return List.generate(4, (i) {
+    return List.generate(_centerViewModel.downTypeMap.keys.length, (i) {
       final isTouched = i == touchedIndex;
       final fontSize = isTouched ? 25.0 : 16.0;
       final radius = isTouched ? 60.0 : 50.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
-      switch (i) {
-        case 0:
           return PieChartSectionData(
-            color: Colors.blue,
-            value: 40,
-            title: '40%',
+            color: _centerViewModel.colorMap![_centerViewModel.downTypeMap.keys.elementAt(i)]!,
+            value: (_centerViewModel.downTypeMap[_centerViewModel.downTypeMap.keys.elementAt(i)])?.toDouble(),
+            title: '${(_centerViewModel.downTypeMap[_centerViewModel.downTypeMap.keys.elementAt(i)])}%',
             radius: radius,
             titleStyle: TextStyle(
               fontSize: fontSize,
@@ -522,48 +495,6 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
               shadows: shadows,
             ),
           );
-        case 1:
-          return PieChartSectionData(
-            color: Colors.orange,
-            value: 30,
-            title: '30%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 2:
-          return PieChartSectionData(
-            color: Colors.green,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        case 3:
-          return PieChartSectionData(
-            color: Colors.red,
-            value: 15,
-            title: '15%',
-            radius: radius,
-            titleStyle: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              shadows: shadows,
-            ),
-          );
-        default:
-          throw Error();
-      }
     });
   }
 }

@@ -81,7 +81,7 @@ class _OrderPageState extends State<OrderPage> {
             'orderId' : orderId,
           },
       );
-      // print('获取到的orderStr数据${response.data}');
+       print('获取到的orderStr数据${response.data}');
       if (response.statusCode == 200) {
         return response.data;
       } else {
@@ -118,7 +118,6 @@ class _OrderPageState extends State<OrderPage> {
 
     //  EasyLoading.showProgress();
       _refreshOrders();
-      await Future.delayed(const Duration(seconds: 1));
       //刷新界面
 
     }else{

@@ -17,11 +17,11 @@ class CertificateApi {
             data:certificate.toJson(),
             options: Options(headers: {"Authorization": Global.token}));
         if(response.data['code'] == 200){
-          print('上传证书成功');
+        //  print('上传证书成功');
           return true ;
         }
         else {
-          print('上传证书失败${response.data}');
+          //print('上传证书失败${response.data}');
         }
       } catch (e) {
         print("上传证书失败 网络请求异常" + e.toString());
@@ -36,7 +36,7 @@ class CertificateApi {
         final Response response = await DioInstance.instance().post(
             path: "/keeper/certificate/list",
             options: Options(headers: {"Authorization": Global.token}));
-        print('获取证书信息成功');
+       // print('获取证书信息成功');
         if (response.data['code'] == 200){
           print("${response.data}");
           certInfo = response.data['data']
@@ -45,7 +45,7 @@ class CertificateApi {
         }
 
         else {
-          print('获取证书信息失败');
+        //  print('获取证书信息失败');
         }
       } catch (e) {
         print("获取证书信息失败 网络请求异常" + e.toString());

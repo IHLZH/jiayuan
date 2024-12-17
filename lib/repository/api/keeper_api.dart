@@ -23,7 +23,7 @@ class KeeperApi {
         queryParameters: {"keeperId": id},
         options: Options(headers: {"Authorization": Global.token}),
       );
-      print('收藏返回数据:${response.data}');
+    //  print('收藏返回数据:${response.data}');
       if(response.data['data'] == '收藏成功'){
         isFavorite = true;
       }
@@ -47,11 +47,11 @@ class KeeperApi {
         "keeperId": id,
       });
       if (response.data['code'] == 200) {
-        print('获取到的家政员详细信息:${response.data}');
+    //    print('获取到的家政员详细信息:${response.data}');
         if (response.data['data'] == null) response.data['data'] = {};
         housekeeperDataDetail =
             HousekeeperDataDetail.fromJson(response.data['data']);
-        print('获取到的家政员详细信息:${response.data['data']}');
+       // print('获取到的家政员详细信息:${response.data['data']}');
       }
     } catch (e) {
       print("网络错误error:" + e.toString());
@@ -76,9 +76,9 @@ class KeeperApi {
         housekeepers = (response.data["data"] as List)
             .map((e) => Housekeeper.fromJson(e))
             .toList();
-        housekeepers.forEach((item) => print(item.realName));
+      //  housekeepers.forEach((item) => print(item.realName));
       }
-      print('获取到的推荐数据${response.data["data"]}');
+     // print('获取到的推荐数据${response.data["data"]}');
     } catch (e) {
       print("请求失败ss" + e.toString());
     }
@@ -97,7 +97,7 @@ class KeeperApi {
 
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
-          print("获取家政员信息成功" + response.data['data'].toString());
+         // print("获取家政员信息成功" + response.data['data'].toString());
           Global.keeperInfo =
               HousekeeperDataDetail.fromJson(response.data['data']);
         } else {
@@ -125,8 +125,8 @@ class KeeperApi {
           headers: {"Authorization": Global.token},
         ),
       );
-      print('更新信息: ${housekeeperDataDetail.toJson()}');
-      print('返回数据: ${response.data}');
+  //    print('更新信息: ${housekeeperDataDetail.toJson()}');
+    //  print('返回数据: ${response.data}');
       if (response.data['code'] == 200) {
         if(response.headers["Authorization"] != null){
           final List<String> token =
@@ -163,7 +163,7 @@ class KeeperApi {
           param: {"keeperId": id, "page": page, "pageSize":size},
           options: Options(headers: {"Authorization": Global.token}));
       if (response.data['data'] != null) {
-        print('获取到的评论数据${response.data["data"]}');
+    //    print('获取到的评论数据${response.data["data"]}');
         evaluations.addAll((response.data["data"] as List)
             .map((e) => Evaluation.fromJson(e))
             .toList());
@@ -184,7 +184,7 @@ class KeeperApi {
           path: "/release/keeper/collection/list",
           options: Options(headers: {"Authorization": Global.token}));
       if (response.data['data'] != null) {
-        print('获取到的收藏数据${response.data["data"]}');
+     //   print('获取到的收藏数据${response.data["data"]}');
         housekeepers.addAll((response.data["data"] as List)
             .map((e) => Housekeeper.fromJson(e))
             .toList());

@@ -37,6 +37,7 @@ import '../page/chat_page/chat/chat_page.dart';
 import '../page/commission_center_page/certificates/certificate_page.dart';
 import '../page/commission_center_page/comment/comment_page.dart';
 import '../page/commission_center_page/personal_keeper_page/personal_keeper_page.dart';
+import '../page/commission_center_page/wallet_center/wallet_center_page.dart';
 import '../page/keeper_page/KeeperPage.dart';
 import '../page/login_page/phone_login_page.dart';
 import '../page/order_page/evaluation_page/evalutation_page.dart';
@@ -214,6 +215,8 @@ class Routes {
         return pageRoute(InviteMemberPage());
       case RoutePath.aiCustomerService:
         return pageRoute(AiCustomerServicePage());
+      case RoutePath.walletCenter:
+        return pageRoute(WalletCenterPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
