@@ -418,11 +418,11 @@ class _OrderChangePageState extends State<OrderChangePage> {
         }
       } else {
         if (isProduction) print("error: ${response.statusCode}");
-        showToast("error: ${response.statusCode}");
+        showToast("error: ${response.statusMessage}");
       }
     } catch (e) {
       if (isProduction) print("error: $e");
-      showToast("error: $e");
+      showToast("无法连接服务器");
     }
 
     return false;
