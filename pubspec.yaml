@@ -113,6 +113,12 @@ dependencies:
   # 腾讯云IM SDK
   tencent_cloud_chat_sdk: ^8.2.6325+4
 
+  #WebView
+  webview_flutter: ^4.0.0
+
+  flutter_inappwebview: ^6.1.5
+
+
   #通知栏
   flutter_local_notifications: ^18.0.1
   #支付宝支付插件
@@ -120,6 +126,7 @@ dependencies:
     git:
       url: "https://gitee.com/jlgithub/flutter-pay.git"
       ref: "IAP"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
