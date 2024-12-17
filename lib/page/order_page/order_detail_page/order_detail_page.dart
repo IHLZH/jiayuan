@@ -212,7 +212,30 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(20.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5.w),
+            spreadRadius: 0,
+            blurRadius: 2,
+            offset: Offset(1, -1),
+          ),
+        ],
+        border: Border.all(color: Colors.grey, width: 0.1.w),
+      ),
+      child: content,
+    );
+  }
+
+  //构建带边框的信息块(审核)
+  Widget _errorBlock(Widget content) {
+    return Container(
+      // height: 300,
+      margin: EdgeInsets.symmetric(horizontal: 10),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.redAccent,
+        borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5.w),
@@ -253,7 +276,20 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
               image: DecorationImage(
-                image: AssetImage('assets/images/imageTmp.jpg'),
+                image: AssetImage(switch(_order.serviceName){
+                  '日常保洁' => 'assets/images/type_1.jpg',
+                  '家电维修' => 'assets/images/type_2.jpg',
+                  '搬家搬厂' => 'assets/images/type_3.jpg',
+                  '收纳整理' => 'assets/images/type_4.jpg',
+                  '管道疏通' => 'assets/images/type_5.jpg',
+                  '维修拆装' => 'assets/images/type_6.jpg',
+                  '保姆月嫂' => 'assets/images/type_7.jpg',
+                  '居家养老' => 'assets/images/type_8.jpg',
+                  '居家托育' => 'assets/images/type_9.jpg',
+                  '专业养护' => 'assets/images/type_10.jpg',
+                  '家庭保健' => 'assets/images/type_11.jpg',
+                  _ => 'assets/images/imageTmp.jpg',
+                }),
                 // 替换成你的图片路径
                 fit: BoxFit.cover,
               ),
@@ -522,7 +558,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           ],
         ),
         SizedBox(height: 5),
-        Divider(),
+        // Divider(),
         SizedBox(height: 5),
         Container(
           child: Row(
@@ -534,6 +570,48 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   style: TextStyle(
                       fontSize: 17,
                       color: Colors.grey[600],
+                      fontWeight: FontWeight.bold),
+                  softWrap: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
+  // 未过审原因
+  Widget _buildOrderInfo5() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            SizedBox(width: 10),
+            Text(
+              "未过审原因:",
+              style: TextStyle(
+                  fontSize: 18,
+                  color: AppColors.backgroundColor,
+                  fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+        // SizedBox(height: 5),
+        Divider(color: AppColors.backgroundColor,),
+        // SizedBox(height: 5),
+        Container(
+          child: Row(
+            children: [
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  '1145141919810',
+                  style: TextStyle(
+                      fontSize: 17,
+                      color: AppColors.backgroundColor,
                       fontWeight: FontWeight.bold),
                   softWrap: true,
                 ),
@@ -587,6 +665,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               color: Colors.green,
               fontSize: 17.sp,
               fontWeight: FontWeight.bold)),
+      8 => Text("未通过审核",
+          style: TextStyle(
+              color: Colors.red,
+              fontSize: 17.sp,
+              fontWeight: FontWeight.bold)),
       _ => Text('未知状态',
           style: TextStyle(
               color: Colors.red, fontSize: 17.sp, fontWeight: FontWeight.bold)),
@@ -596,7 +679,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor6,
         appBar: AppBar(
           // 使 Container 包裹 AppBar 以实现渐变背景
           flexibleSpace: Container(
@@ -624,12 +707,16 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           ),
         ),
         body: Container(
-          color: AppColors.backgroundColor,
+          color: AppColors.backgroundColor5,
           padding: EdgeInsets.only(top: 10),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                if(_order.commissionStatus == 8)...[
+                  _errorBlock(_buildOrderInfo5()),
+                  SizedBox(height: 15),
+                ],
                 _buildInfoBlock(_buildOrderInfo1()),
                 SizedBox(height: 15),
                 _buildInfoBlock(_buildOrderInfo2()),
@@ -637,6 +724,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 _buildInfoBlock(_buildOrderInfo3()),
                 SizedBox(height: 15),
                 _buildInfoBlock(_buildOrderInfo4()),
+                SizedBox(height: 15),
               ],
             ),
           ),
@@ -645,6 +733,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           6 => null,
           2 => null,
           3 => null,
+          8 => null,
           _ => Container(
               height: 60,
               padding: EdgeInsets.only(top: 5, bottom: 5),

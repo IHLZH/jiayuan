@@ -247,7 +247,7 @@ class _OrderPageState extends State<OrderPage> {
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(color: Colors.grey, width: 0.1.w),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(20.0),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.1),
@@ -600,7 +600,7 @@ class _OrderPageState extends State<OrderPage> {
                 ),
                 child: Center(
                   child: Text(
-                    '订单类型',
+                    '订单状态',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
