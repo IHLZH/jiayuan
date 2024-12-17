@@ -57,20 +57,6 @@ class _StartPageState extends State<StartPage> {
     //初始化支付插件
     FlutterPay.initConfig(
       aliPayAppId: "9021000142642965",
-      iapLaunchCheckout: (result) async {
-        if (result.success == true) {
-          //iap支付成功
-          debugPrint("iap支付成功");
-          debugPrint(result.errorMsg);
-        } else {
-          //iap支付失败
-          debugPrint("iap支付失败");
-        }
-      },
-      wechatPayResult: (bool success) {
-        //wechat支付结果
-        debugPrint("微信支付结果: ${success == true ? "成功" : "失败"}");
-      },
     );
   }
 

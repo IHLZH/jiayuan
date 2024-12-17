@@ -8,7 +8,7 @@ class UrlPath {
 
   static const String testBaseUrl = "http://10.7.89.171:8080";
 
-  static const String yuwenBaseUrl = "http://192.168.205.44:8080";
+  static const String yuwenBaseUrl = "http://192.168.201.44:8080";
   //Token登录
   static const String loginAutoUrl = "/login/autoLogin";
 
