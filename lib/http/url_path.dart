@@ -1,14 +1,14 @@
 class UrlPath {
   static const String realBaseUrl = "http://192.168.3.32:9900/";
 
-  //static const String BaseUrl = "http://10.7.89.121:8080";
+  static const String BaseUrl = "http://10.7.89.121:8080";
   // static const String BaseUrl = "http://192.168.31.189:8080";
-   static const String BaseUrl = "http://www.shinesuning.top:8080";
+  // static const String BaseUrl = "http://www.shinesuning.top:8080";
   static const String wangBaseUrl = "http://10.7.89.154:8080";
 
   static const String testBaseUrl = "http://10.7.89.171:8080";
 
-  static const String yuwenBaseUrl = "http://192.168.201.44:8080";
+  static const String yuwenBaseUrl = "http://192.168.205.44:8080";
   //Token登录
   static const String loginAutoUrl = "/login/autoLogin";
 
@@ -150,5 +150,10 @@ class UrlPath {
   static const String getAiCommissionList = "/getCommission";
   //获取已完成订单
   static const String getOrderCompleted = "/order/view/byYearMonth";
+
+  //ai页获取家政员列表接口
+  static const String getAiKeeperList = "/getKeeper";
+
+  static const String uploadGroupAvatar = "/avatar/upload/groupAvatar";
 }
 

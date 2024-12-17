@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:jiayuan/page/ai_customer_service_page/ai_customer_service_vm.dart';
 import 'package:jiayuan/page/certified_page/cert/cert_certified_page.dart';
 import 'package:jiayuan/page/certified_page/keeper/keeper_certified_page.dart';
 import 'package:jiayuan/page/chat_page/conversation_page.dart';
@@ -18,6 +17,7 @@ import 'package:jiayuan/page/login_page/forget_password_check_code_page.dart';
 import 'package:jiayuan/page/login_page/forget_password_page.dart';
 import 'package:jiayuan/page/login_page/forget_password_submit_page.dart';
 import 'package:jiayuan/page/login_page/login_page.dart';
+import 'package:jiayuan/page/order_page/order_change_page/order_chage_page.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page.dart';
 import 'package:jiayuan/page/register_page/register_check_code_page.dart';
 import 'package:jiayuan/page/register_page/register_password_submit_page.dart';
@@ -30,7 +30,6 @@ import 'package:jiayuan/page/user_page/setting_page/change_email_page/check_emai
 import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
 import 'package:jiayuan/route/route_path.dart';
-import 'package:provider/provider.dart';
 
 import '../page/ai_customer_service_page/ai_customer_service_page.dart';
 import '../page/chat_page/chat/chat_page.dart';
@@ -119,6 +118,9 @@ class Routes {
       //订单详情页
       case RoutePath.orderDetailPage:
         return pageRoute(OrderDetailPage());
+      //订单信息修改页
+      case RoutePath.orderChangePage:
+        return pageRoute(OrderChangePage());
       //设置页
       case RoutePath.settingPage:
         return pageRoute(SettingPage());

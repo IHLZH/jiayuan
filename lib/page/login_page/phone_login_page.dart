@@ -7,6 +7,7 @@ import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/sp_utils.dart';
 import 'package:oktoast/oktoast.dart';
 
+import '../../common_ui/styles/app_colors.dart';
 import '../../http/dio_instance.dart';
 import '../../http/url_path.dart';
 import '../../im/im_chat_api.dart';
@@ -205,10 +206,10 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor2,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.backgroundColor2,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,

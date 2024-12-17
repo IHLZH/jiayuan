@@ -1,8 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:jiayuan/repository/model/message_comission.dart';
 import 'package:provider/provider.dart';
 
+// import 'package:keyboard_avoider/keyboard_avoider.dart';
+
 import '../../common_ui/styles/app_colors.dart';
+import '../../repository/model/message_keeper.dart';
 import '../../utils/constants.dart';
 import 'ai_customer_service_vm.dart';
 
@@ -17,6 +21,7 @@ class AiCustomerServicePage extends StatefulWidget {
 
 class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   AiCustomerServiceViewModel viewModel = AiCustomerServiceViewModel();
   bool isSending = false;
 
@@ -25,10 +30,14 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
     super.initState();
     viewModel = AiCustomerServiceViewModel();
     viewModel.loadCachedMessages();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 滚动到列表底部
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
   }
 
-  Widget _buildComissionMessageItem(
-      BuildContext context, Object obj) {
+  // 构建委托简要消息
+  Widget _buildComissionMessageItem(BuildContext context, Object obj) {
     MessageCommission commissionData;
     if (obj is Map<String, dynamic>) {
       commissionData = viewModel.parseCommission(obj);
@@ -104,72 +113,187 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
     );
   }
 
+  // 构建家政员简要消息
+  Widget _buildKeeperMessageItem(BuildContext context, Object obj) {
+    MessageKeeper keeperData;
+    if (obj is Map<String, dynamic>) {
+      keeperData = MessageKeeper.fromJson(obj);
+    } else {
+      keeperData = obj as MessageKeeper;
+    }
+
+    return GestureDetector(
+      onTap: () {
+        // 处理点击事件，例如跳转到详情页面
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey, width: 0.5),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: Offset(0, 0),
+            ),
+          ],
+        ),
+        padding: EdgeInsets.all(16),
+        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircleAvatar(
+                  backgroundImage:
+                      CachedNetworkImageProvider(keeperData.avatar),
+                  radius: 24,
+                ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        keeperData.realName,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      // Text(
+                      //   '用户ID: ${keeperData.userId}',
+                      //   style: TextStyle(
+                      //     color: Colors.grey,
+                      //     fontSize: 14,
+                      //   ),
+                      // ),
+                      Text(
+                        'Keeper ID: ${keeperData.keeperId}',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Text(
+                //   'Keeper ID: ${keeperData.keeperId}',
+                //   style: TextStyle(
+                //     color: Colors.grey,
+                //     fontSize: 14,
+                //   ),
+                // ),
+              ],
+            ),
+            SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '完成任务数: ${keeperData.completeSingularNumber}',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  '平均评分: ${keeperData.averageRating}',
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AiCustomerServiceViewModel>(context);
 
     return Scaffold(
-        backgroundColor: AppColors.backgroundColor3,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(45), // 设置高度
-          child: Container(
-            padding: EdgeInsets.only(top: 30),
-            decoration: BoxDecoration(
-              color: AppColors.backgroundColor3, // 设置背景颜色
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back_ios_new,
-                            color: AppColors.textColor2b), // 设置图标颜色
-                        onPressed: () {
-                          Navigator.of(context).pop(); // 返回上一页
-                        },
+      resizeToAvoidBottomInset: true,
+      backgroundColor: AppColors.backgroundColor3,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(45),
+        child: Container(
+          padding: EdgeInsets.only(top: 30),
+          decoration: BoxDecoration(
+            color: AppColors.backgroundColor3,
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios_new,
+                          color: AppColors.textColor2b),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    Text(
+                      'AI智能助手',
+                      style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
                       ),
-                      Text(
-                        'AI智能助手',
-                        style: TextStyle(
-                          color: AppColors.textColor2b, // 设置标题颜色
-                          fontSize: 20, // 设置标题字体大小
-                          fontWeight: FontWeight.w500, // 设置标题字体粗细
-                        ),
-                      ),
-                    ],
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete, color: AppColors.textColor2b),
-                    // 设置图标颜色
-                    onPressed: () async {
-                      await viewModel.clearMessages();
-                    },
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete, color: AppColors.textColor2b),
+                  onPressed: () async {
+                    await viewModel.clearMessages();
+                  },
+                ),
+              ],
             ),
           ),
         ),
-        body: Container(
+      ),
+      body: GestureDetector(
+        onTap: () {
+          // 点击空白处收起键盘
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              Expanded(
+              Container(
+                height: MediaQuery.of(context).size.height - 150,
                 child: ListView.builder(
+                  controller: _scrollController,
                   itemCount: viewModel.messages.length,
                   itemBuilder: (context, index) {
                     final message = viewModel.messages[index];
                     return Padding(
                       padding:
-                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
                       child: Align(
                         alignment: message.aiMessage.isSelf
                             ? Alignment.centerRight
                             : Alignment.centerLeft,
                         child: Container(
-                          padding: EdgeInsets.all(12.0),
+                          padding: EdgeInsets.all(10.0),
                           decoration: BoxDecoration(
                             color: message.aiMessage.isSelf
                                 ? Colors.blue
@@ -181,6 +305,7 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                                 ? CrossAxisAlignment.end
                                 : CrossAxisAlignment.start,
                             children: [
+                              // 使用 switch 语句处理不同类型的消息
                               switch (message.type) {
                                 '委托id' => ListView.builder(
                                     shrinkWrap: true,
@@ -188,6 +313,15 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                                     itemCount: message.data.length,
                                     itemBuilder: (context, index) {
                                       return _buildComissionMessageItem(
+                                          context, message.data[index]);
+                                    },
+                                  ),
+                                '家政员id' => ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: message.data.length,
+                                    itemBuilder: (context, index) {
+                                      return _buildKeeperMessageItem(
                                           context, message.data[index]);
                                     },
                                   ),
@@ -201,7 +335,6 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                                     ),
                                   ),
                               },
-                              SizedBox(height: 4.0),
                               Text(
                                 message.aiMessage.isSelf ? '用户' : 'AI',
                                 style: TextStyle(
@@ -275,6 +408,12 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                                   setState(() {
                                     isSending = false;
                                   });
+                                  // 发送消息后滚动到底部
+                                  _scrollController.animateTo(
+                                    _scrollController.position.maxScrollExtent,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.easeOut,
+                                  );
                                 }
                               },
                         style: TextButton.styleFrom(
@@ -300,6 +439,8 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

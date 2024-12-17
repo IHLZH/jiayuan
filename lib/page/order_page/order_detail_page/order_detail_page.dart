@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page_vm.dart';
 import 'package:jiayuan/repository/model/full_order.dart';
@@ -138,6 +139,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     }
   }
 
+  // 修改订单信息
+  Future<void> _changeOrderInfo() async {
+    // 在 OrderDetailPage 中调用
+    RouteUtils.pushForNamed(context, RoutePath.orderChangePage).then((updated) {
+      if (updated == true) {
+        _order = OrderDetailPageVm.nowOrder!;
+        setState(() {}); // 刷新页面显示
+      }
+    });
+  }
+
   // 构建图标按钮
   Widget _buildIconButton(IconData icon, String title, Color color) {
     return ElevatedButton.icon(
@@ -165,6 +177,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             _jumpToEvaluatePage();
           case '取消订单':
             _cancelOrder();
+          case '修改信息':
+            _changeOrderInfo();
         }
       },
     );
@@ -269,19 +283,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                           children: [
                             _buildOrderInfoPrefix('创建时间'),
                             _buildOrderInfo(
-                                safeSubstring(
-                                    _order.createTime.toString(), 0, 19),
+                                DateFormat('yyyy-MM-dd HH:mm:ss')
+                                    .format(_order.createTime!),
                                 Colors.blueAccent),
-                          ],
-                        ),
-                        Wrap(
-                          children: [
-                            _buildOrderInfoPrefix('预付金'),
-                            _buildOrderInfo(
-                                _order.downPayment == null
-                                    ? '未确定'
-                                    : '￥' + _order.downPayment.toString(),
-                                Colors.redAccent),
                           ],
                         ),
                       ],
@@ -334,6 +338,21 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             _buildOrderInfo(
                 _order.keeperName == null ? '未确认' : _order.keeperName!,
                 Colors.purple[600]!),
+            SizedBox(width: 10),
+          ],
+        ),
+        SizedBox(height: 10),
+        Row(
+          children: [
+            SizedBox(width: 10),
+            _buildOrderInfoPrefix('期望开始时间'),
+            Expanded(child: SizedBox()),
+            _buildOrderInfo(
+                _order.expectStartTime == null
+                    ? '未确认'
+                    : DateFormat('yyyy-MM-dd HH:mm')
+                        .format(_order.expectStartTime!),
+                Colors.grey[600]!),
             SizedBox(width: 10),
           ],
         ),
@@ -577,120 +596,133 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        // 使 Container 包裹 AppBar 以实现渐变背景
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColors.appColor,
-                AppColors.endDeepColor,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          // 使 Container 包裹 AppBar 以实现渐变背景
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.appColor,
+                  AppColors.endDeepColor,
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+            ),
+          ),
+          title: Text('订单详情',
+              style:
+                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          centerTitle: true,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+            onPressed: () {
+              RouteUtils.pop(context);
+            },
+          ),
+        ),
+        body: Container(
+          color: AppColors.backgroundColor,
+          padding: EdgeInsets.only(top: 10),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                _buildInfoBlock(_buildOrderInfo1()),
+                SizedBox(height: 15),
+                _buildInfoBlock(_buildOrderInfo2()),
+                SizedBox(height: 15),
+                _buildInfoBlock(_buildOrderInfo3()),
+                SizedBox(height: 15),
+                _buildInfoBlock(_buildOrderInfo4()),
               ],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
             ),
           ),
         ),
-        title: Text('订单详情',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () {
-            RouteUtils.pop(context);
-          },
-        ),
-      ),
-      body: Container(
-        color: AppColors.backgroundColor,
-        padding: EdgeInsets.only(top: 10),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _buildInfoBlock(_buildOrderInfo1()),
-              SizedBox(height: 15),
-              _buildInfoBlock(_buildOrderInfo2()),
-              SizedBox(height: 15),
-              _buildInfoBlock(_buildOrderInfo3()),
-              SizedBox(height: 15),
-              _buildInfoBlock(_buildOrderInfo4()),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        height: 60,
-        padding: EdgeInsets.only(top: 5, bottom: 5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(color: Colors.grey, width: 0.5),
-          ),
-        ),
-        child: SafeArea(
-          child: // 底部操作按钮
-              Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 10),
-                  child: SizedBox(),
+        bottomNavigationBar: switch (_order.commissionStatus) {
+          6 => null,
+          2 => null,
+          3 => null,
+          _ => Container(
+              height: 60,
+              padding: EdgeInsets.only(top: 5, bottom: 5),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  top: BorderSide(color: Colors.grey, width: 0.5),
                 ),
               ),
-
-              _buildIconButton(Icons.edit, '修改信息', Colors.green),
-              if (_order.commissionStatus == 0 ||
-                  _order.commissionStatus == 1 ||
-                  _order.commissionStatus == 4 ||
-                  _order.commissionStatus == 5 ||
-                  _order.commissionStatus == 7)
-                Expanded(child: SizedBox()),
-              switch (_order.commissionStatus) {
-                0 => Container(
-                    child: _buildIconButton(
-                        Icons.delete_forever_outlined, '取消订单', Colors.red),
-                  ),
-                1 => Container(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _buildIconButton(Icons.check_circle_outline, '同意',
-                            Colors.lightGreen),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        _buildIconButton(Icons.cancel, '不同意', Colors.red),
-                      ],
+              child: SafeArea(
+                child: // 底部操作按钮
+                    Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 10),
+                        child: SizedBox(),
+                      ),
                     ),
-                  ),
-                4 => Container(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _buildIconButton(
-                            Icons.payment, '去支付', AppColors.orangeBtnColor),
-                        SizedBox(
-                          width: 2,
+                    if (_order.commissionStatus == 0 ||
+                        _order.commissionStatus == 1) ...[
+                      _buildIconButton(Icons.edit, '修改信息', Colors.green),
+                    ],
+                    if (_order.commissionStatus == 0 ||
+                        _order.commissionStatus == 1 ||
+                        _order.commissionStatus == 4 ||
+                        _order.commissionStatus == 5 ||
+                        _order.commissionStatus == 7)
+                      Expanded(child: SizedBox()),
+                    switch (_order.commissionStatus) {
+                      0 => Container(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(width: 90),
+                              _buildIconButton(Icons.delete_forever_outlined,
+                                  '取消订单', Colors.red),
+                            ],
+                          ),
                         ),
-                        _buildIconButton(Icons.cancel, '不验收', Colors.red),
-                      ],
-                    ),
-                  ),
-                5 => _buildIconButton(
-                    Icons.rate_review_outlined, '去评价', AppColors.appColor),
-                7 => _buildIconButton(
-                    Icons.rate_review_outlined, '我的评价', AppColors.appColor),
-                _ => Container(),
-              },
-              Expanded(child: SizedBox()),
-            ],
-          ),
-        ),
-      ),
-    );
+                      1 => Container(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildIconButton(Icons.check_circle_outline, '同意',
+                                  Colors.lightGreen),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              _buildIconButton(Icons.cancel, '不同意', Colors.red),
+                            ],
+                          ),
+                        ),
+                      4 => Container(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildIconButton(Icons.payment, '去支付',
+                                  AppColors.orangeBtnColor),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              _buildIconButton(Icons.cancel, '不验收', Colors.red),
+                            ],
+                          ),
+                        ),
+                      5 => _buildIconButton(Icons.rate_review_outlined, '去评价',
+                          AppColors.appColor),
+                      7 => _buildIconButton(Icons.rate_review_outlined, '我的评价',
+                          AppColors.appColor),
+                      _ => Container(),
+                    },
+                    SizedBox(width: 15),
+                  ],
+                ),
+              ),
+            ),
+        });
   }
 }

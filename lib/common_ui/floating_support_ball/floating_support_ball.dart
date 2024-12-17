@@ -134,7 +134,7 @@ class _FloatingSupportBallState extends State<FloatingSupportBall> {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.7),
+                  color: Color.fromRGBO(60, 205, 200, 1).withOpacity(0.7),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
