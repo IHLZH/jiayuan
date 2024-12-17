@@ -9,6 +9,7 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
+import '../../../utils/global.dart';
 
 bool isProduction = Constants.IS_Production;
 
@@ -22,62 +23,6 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
-    String? lastSignalMessageID = null;
-
-    Future<void> _test() async {
-      // 获取当前日期
-      DateTime now = DateTime.now();
-
-      // 格式化日期为字符串，例如 "2024-11-20"
-      String formattedDate =
-          "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}-${now.hour.toString().padLeft(2, '0')}-${now.minute.toString().padLeft(2, '0')}-${now.second.toString().padLeft(2, '0')}";
-
-      String text = "🦌🦌🦌";
-      ImChatApi.getInstance().sendTextMessage('21', text);
-    }
-
-    Future<void> _receiveTest() async {
-      List<V2TimConversation?> conversationList =
-          await ImChatApi.getInstance().getConversationList('0', 20);
-      for (var item in conversationList) {
-        print(
-            "id: ${item?.conversationID} ==== groupID: ${item?.groupID} ==== groupType: ${item?.groupType} ==== 未读数: ${item?.unreadCount} ==== 展示名: ${item?.showName} ==== 对方ID: ${item?.userID}}");
-      }
-    }
-
-    Future<void> _receiveSignalTest() async {
-      V2TimConversation? conversation =
-          await ImChatApi.getInstance().getConversation("c2c_19");
-      print(
-          "id: ${conversation?.conversationID} ==== groupID: ${conversation?.groupID} ==== groupType: ${conversation?.groupType} ==== 未读数: ${conversation?.unreadCount} ==== 展示名: ${conversation?.showName} ==== 对方ID: ${conversation?.userID}}");
-    }
-
-    Future<void> _getSignalConversationMessage() async {
-      List<V2TimMessage>? messageList = await ImChatApi.getInstance()
-          .getHistorySignalMessageList('21', 100, lastSignalMessageID);
-
-      for (var item in messageList!) {
-        print(
-            "id: ${item.msgID} ==== 消息类型: ${item.elemType} ==== 消息内容: ${item.textElem?.text}");
-        lastSignalMessageID = item.msgID;
-      }
-    }
-
-    Future<void> _clearSignalMessage() async {
-      await ImChatApi.getInstance().clearSignalMessage('21');
-    }
-
-    Future<void> _searchUser() async {
-      await UserApi.instance.getSignalUser(1);
-    }
-
-    Future<void> _getFriendsList() async {
-      await ImChatApi.getInstance().getFriendList();
-    }
-
-    Future<void> _addMyFriend() async {
-      await ImChatApi.getInstance().addFriend('19', 'ikun');
-    }
 
     Future<void> _jumpToChangeEmailPage() async {
       RouteUtils.pushForNamed(context, RoutePath.changeEmailPage);
@@ -89,6 +34,10 @@ class _SettingPageState extends State<SettingPage> {
 
     Future<void> _jumpToChangePasswordPage() async {
       RouteUtils.pushForNamed(context, RoutePath.changePasswordPage);
+    }
+
+    Future<void> _jumpToBackendPage() async {
+      RouteUtils.pushForNamed(context, RoutePath.webViewPage, arguments: {'url': Constants.BACKEND_URL});
     }
 
     Widget _buildOption(IconData icon, String title) {
@@ -106,29 +55,8 @@ class _SettingPageState extends State<SettingPage> {
               case '修改密码':
                 _jumpToChangePasswordPage();
                 break;
-              case '发送给喜多郁代':
-                _test();
-                break;
-              case '拉取所有会话列表':
-                _receiveTest();
-                break;
-              case '拉取单聊会话':
-                _receiveSignalTest();
-                break;
-              case '拉取和喜多的单聊历史信息':
-                _getSignalConversationMessage();
-                break;
-              case '清空和喜多的聊天':
-                _clearSignalMessage();
-                break;
-              case '搜索用户':
-                _searchUser();
-                break;
-              case '获得好友列表':
-                _getFriendsList();
-                break;
-              case '添加好友':
-                _addMyFriend();
+              case '进入后台':
+                _jumpToBackendPage();
                 break;
               default:
                 break;
@@ -228,23 +156,10 @@ class _SettingPageState extends State<SettingPage> {
                         _buildOption(Icons.phone, '手机号码'),
                         _line(),
                         _buildOption(Icons.lock, '修改密码'),
-                        // _line(),
-                        // _buildOption(Icons.send_outlined, '发送给喜多郁代'),
-                        // _line(),
-                        // _buildOption(Icons.record_voice_over_outlined, '拉取所有会话列表'),
-                        // _line(),
-                        // _buildOption(Icons.record_voice_over_outlined, '拉取单聊会话'),
-                        // _line(),
-                        // _buildOption(
-                        //     Icons.record_voice_over_outlined, '拉取和喜多的单聊历史信息'),
-                        // _line(),
-                        // _buildOption(Icons.cleaning_services_rounded, '清空和喜多的聊天'),
-                        // _line(),
-                        // _buildOption(Icons.search, '搜索用户'),
-                        // _line(),
-                        // _buildOption(Icons.search, '获得好友列表'),
-                        // _line(),
-                        // _buildOption(Icons.person_add_alt, '添加好友'),
+                        if(Global.userInfo!.userId==1||Global.userInfo!.userId==19)...[
+                          _line(),
+                          _buildOption(Icons.web_stories, '进入后台'),
+                        ]
                       ],
                     ),
                   ),
