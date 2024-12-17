@@ -22,4 +22,8 @@ class Constants {
 
   //本地sqlite数据库
   static const String DB_NAME = "jiayuan.db";
+
+  //后台网址
+  // static const String BACKEND_URL = "http://10.7.89.161:3000";
+  static const String BACKEND_URL = "http://www.baidu.com";
 }
