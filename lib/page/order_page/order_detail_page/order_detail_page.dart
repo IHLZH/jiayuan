@@ -724,7 +724,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 _buildInfoBlock(_buildOrderInfo3()),
                 SizedBox(height: 15),
                 _buildInfoBlock(_buildOrderInfo4()),
-                SizedBox(height: 15),
+                SizedBox(height: 50),
               ],
             ),
           ),
