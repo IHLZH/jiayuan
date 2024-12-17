@@ -116,14 +116,22 @@ class UrlPath {
 
   static const String IdCardFrontAuthPath = "/keeper/identity/identityByPic";
 
-  //获取用户
+  //搜索用户
   static const String searchUser = "/searchFriends";
 
+  //获取家政员委托通过状态
   static const String getOrderByStatus = "/keeper/order";
 
+  //获取家政员数据(自己)
   static const String getKeeperDataByUserId = "/keeper/info";
+
+  //获取家政员ID
+  static const String getKeeperId = "/keeper/getKeeperId";
+
+  //轮播图
   static const String BannerPath = "/release/carousel";
 
+  //上传头像
    static const String keeperAvatarPath = "/keeper/upload/avatar";
    //上传证书
   static const String uploadCertificate = "/keeper/certificate/upload";
@@ -157,6 +165,7 @@ class UrlPath {
   //ai页获取家政员列表接口
   static const String getAiKeeperList = "/getKeeper";
 
+  //群聊头像上传
   static const String uploadGroupAvatar = "/avatar/upload/groupAvatar";
 }
 
