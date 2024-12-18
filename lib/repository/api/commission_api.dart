@@ -90,6 +90,30 @@ class CommissionApi {
     return commissionList;
   }
 
+  Future<CommissionData1> getCommissionById(Map<String, dynamic> param) async {
+
+    late CommissionData1 commissionData;
+
+    try {
+      final Response response = await DioInstance.instance()
+          .get(path: UrlPath.getCommissionById, param: param);
+
+      if (response.statusCode == 200) {
+        if(response.data['code'] == 200){
+          commissionData = CommissionData1.fromJson(response.data['data']);
+        }else{
+          showToast("请求失败 ${response.data['message']}");
+        }
+      } else {
+        showToast("网络错误，请检查网络连接");
+      }
+    } catch (e) {
+      print("网络错误error:" + e.toString());
+    }
+
+    return commissionData;
+  }
+
   //更改订单状态
   Future<bool> changeOrderStatus(Map<String, dynamic> param) async {
     try {

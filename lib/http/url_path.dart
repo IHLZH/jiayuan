@@ -165,6 +165,8 @@ class UrlPath {
   //ai页获取家政员列表接口
   static const String getAiKeeperList = "/getKeeper";
 
+  static const String getCommissionById = "/detailed_delegate";
+
   //群聊头像上传
   static const String uploadGroupAvatar = "/avatar/upload/groupAvatar";
 }

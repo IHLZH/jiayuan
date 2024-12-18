@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:jiayuan/repository/api/commission_api.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
+import 'package:jiayuan/sqlite/dbutil.dart';
 import 'package:jiayuan/utils/gaode_map/gaode_map.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../../utils/global.dart';
 
@@ -115,6 +117,11 @@ class CommissionViewModel with ChangeNotifier{
   Future<void> refreshLocation() async {
     await GaodeMap.instance.doSingleLocation();
     notifyListeners();
+  }
+
+  Future<void> addToHistory(CommissionData1 commission) async {
+    await Global.dbUtil?.db.insert("commission_browser_history", commission.toSqData(), conflictAlgorithm: ConflictAlgorithm.replace);
+    print("委托历史${commission.commissionId}记录插入成功");
   }
 }
 

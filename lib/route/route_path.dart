@@ -163,6 +163,8 @@ class RoutePath {
 
   static const String faq = "/faq";
 
+  static const String commissionHistory = "/commissionHistory";
+
   // Web页
   static const String webViewPage = "/webViewPage";
 }

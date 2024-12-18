@@ -52,11 +52,43 @@ class CreateTableSqls {
       )
   ''';
 
+  static final String createTableSql_commission_history = '''
+      CREATE TABLE IF NOT EXISTS commission_browser_history (
+      uid INTEGER,
+      userId INTEGER,
+      keeperId INTEGER,
+      commissionId INTEGER PRIMARY KEY,
+      commissionBudget DOUBLE,
+      commissionDescription TEXT,
+      province VARCHAR(255), 
+      city VARCHAR(255), 
+      county VARCHAR(255),
+      commissionAddress VARCHAR(255),
+      userName VARCHAR(255),
+      userAvatar VARCHAR(255),
+      typeId INTEGER,
+      typeName VARCHAR(255),
+      userPhoneNumber VARCHAR(255),
+      createTime VARCHAR(255),
+      updatedTime VARCHAR(255),
+      expectStartTime VARCHAR(255),
+      realStartTime VARCHAR(255),
+      endTime VARCHAR(255),
+      browerTime VARCHAR(255),
+      commissionStatus INTEGER,
+      distance DOUBLE,
+      isLong INTEGER,
+      days INTEGER,
+      specifyServiceTime INTEGER
+      )
+  ''';
+
   Map<String, String> getAllTables() {
     Map<String, String> map = Map<String, String>();
     map['search_history'] = createTableSql_search_history;
     map['tbl_user'] = createTableSql_tbl_user;
     map['browser_history'] = createTableSql_browser_history;
+    map['commission_history'] = createTableSql_commission_history;
     return map;
   }
 }

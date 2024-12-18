@@ -8,6 +8,7 @@ import 'package:jiayuan/page/chat_page/friend_list/friend_list.dart';
 import 'package:jiayuan/page/chat_page/group_info/group_info_page.dart';
 import 'package:jiayuan/page/chat_page/group_info/invite_member_page.dart';
 import 'package:jiayuan/page/commission_center_page/commission_center_page.dart';
+import 'package:jiayuan/page/commission_center_page/commission_history/commission_history_page.dart';
 import 'package:jiayuan/page/commission_center_page/order/order_page.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_page.dart';
@@ -237,6 +238,8 @@ class Routes {
         return pageRoute(WalletCenterPage());
       case RoutePath.faq:
         return pageRoute(FaqPage());
+      case RoutePath.commissionHistory:
+        return pageRoute(CommissionHistoryPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

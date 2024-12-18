@@ -178,6 +178,7 @@ class CommissionData1 {
   DateTime? _expectStartTime;
   DateTime? _realStartTime;
   DateTime? _endTime;
+  DateTime? _browerTime;
   String? _specifyServiceDuration;
   int? _commissionStatus;
   double? _distance;
@@ -249,6 +250,7 @@ CommissionData1 copyWith({
   DateTime get expectStartTime => _expectStartTime ?? DateTime(1999,1,1,0,0,0);
   DateTime? get realStartTime => _realStartTime;
   DateTime? get endTime => _endTime;
+  DateTime get browerTime => _browerTime ?? DateTime(1999,1,1,0,0,0);
   String get specifyServiceDuration => _specifyServiceDuration ?? "";
   int get commissionStatus => _commissionStatus ?? 0;
   double get distance => _distance ?? 0.0;
@@ -279,6 +281,59 @@ CommissionData1 copyWith({
     map['specifyServiceDuration'] = _specifyServiceDuration.toString();
     map['commissionStatus'] = _commissionStatus.toString();
     return map;
+  }
+
+  Map<String, dynamic> toSqData() {
+    final map = <String, dynamic>{};
+    map['uid'] = Global.userInfo?.userId;
+    map['commissionId'] = _commissionId;
+    map['userId'] = _userId;
+    map['commissionBudget'] = _commissionBudget;
+    map['commissionDescription'] = _commissionDescription;
+    map['province'] = _province;
+    map['city'] = _city;
+    map['county'] = _county;
+    map['commissionAddress'] = _commissionAddress;
+    map['userName'] = _userName;
+    map['userAvatar'] = _userAvatar;
+    map['typeId'] = _typeId;
+    map['typeName'] = _typeName;
+    map['userPhoneNumber'] = _userPhoneNumber;
+    map['createTime'] = _createTime.toString();
+    map['updatedTime'] = _updatedTime.toString();
+    map['expectStartTime'] = _expectStartTime.toString();
+    map['realStartTime'] = _realStartTime.toString();
+    map['endTime'] = _endTime.toString();
+    map['specifyServiceTime'] = _specifyServiceTime;
+    map['commissionStatus'] = _commissionStatus;
+    map['distance'] = _distance;
+    map['isLong'] = _isLong;
+    map['days'] = _days;
+    map['browerTime'] = DateTime.now().toString();
+    return map;
+  }
+
+  CommissionData1.fromSqData(dynamic json) {
+    _commissionId = json['commissionId'];
+    _userId = json['userId'];
+    _userName = json['userName'];
+    _userAvatar = json['userAvatar'];
+    _typeName = json['typeName'];
+    _commissionBudget = json['commissionBudget'].toDouble();
+    _commissionDescription = json['commissionDescription'];
+    _province = json['province'];
+    _city = json['city'];
+    _county = json['county'];
+    _commissionAddress = json['commissionAddress'];
+    _userPhoneNumber = json['userPhoneNumber'];
+    _createTime = DateTime.parse(json['createTime']);
+    _updatedTime = DateTime.parse(json['updatedTime']);
+    _expectStartTime = DateTime.parse(json['expectStartTime'] ?? "1999-01-01T01:00:00.000+00:00");
+    _realStartTime = DateTime.parse(json['realStartTime'] ?? "1999-01-01T01:00:00.000+00:00");
+    _endTime = DateTime.parse(json['endTime'] ?? "1999-01-01T01:00:00.000+00:00");
+    _specifyServiceDuration = json['specifyServiceDuration'];
+    _commissionStatus = json['commissionStatus'];
+    _browerTime = DateTime.parse(json['browerTime']);
   }
 
   //发布委托所需

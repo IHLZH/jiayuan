@@ -296,6 +296,7 @@ class _CommissionCenterState extends State<CommissionCenterPage> {
            else if(title == "我的收藏") RouteUtils.pushForNamed(context, RoutePath.myCollectionPage);
            else if(title == '用户评论') RouteUtils.pushForNamed(context, RoutePath.commentPage,arguments: Global.keeperInfo!.keeperId);
            else if(title == '收益中心') RouteUtils.pushForNamed(context, RoutePath.walletCenter);
+           else if(title == '浏览记录') RouteUtils.pushForNamed(context, RoutePath.commissionHistory);
         },
         splashColor: Colors.grey[300],
         highlightColor: Theme.of(context).primaryColor.withAlpha(30),

@@ -32,11 +32,7 @@ class _FriendInfoPageState extends State<FriendInfoPage>{
   }
 
   Future<void> _checkIsFriend() async {
-    Loading.showLoading();
     await _friendInfoVM.checkIsFriend();
-    setState(() {
-      Loading.dismissAll();
-    });
   }
 
   @override

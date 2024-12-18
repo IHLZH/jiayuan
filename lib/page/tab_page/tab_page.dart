@@ -62,7 +62,6 @@ class _TabPageState extends State<TabPage>{
   void initState() {
     super.initState();
     Global.dbUtil?.open();
-
     //初始化地图以及tabitem
     _initWithTimeout();
   }

@@ -217,13 +217,33 @@ class _ConversationPageState extends State<ConversationPage>{
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            conversation.showName ?? "",
-                            style: TextStyle(
-                                color: AppColors.textColor2b,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                conversation.showName ?? "",
+                                style: TextStyle(
+                                    color: AppColors.textColor2b,
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w500
+                                ),
+                              ),
+                              SizedBox(width: 5,),
+                              if(conversation.type == 2)
+                                Container(
+                                  padding: EdgeInsets.all(2.5),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: AppColors.appColor, width: 0.5),
+                                    borderRadius: BorderRadius.circular(4.r),
+                                    color: AppColors.endColor
+                                  ),
+                                  child: Text(
+                                      "群组",
+                                    style: TextStyle(
+                                      fontSize: 12.sp
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
                           Text(
                             conversation.lastMessage?.textElem?.text ?? "",
