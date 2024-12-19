@@ -135,17 +135,13 @@ class _UserPageState extends State<UserPage> {
 
     // 委托中心
     Future<void> _jumpToCommissionCenterPage() async {
-      if (isProduction)
-        RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
-      else {
-        switch (Global.userInfoNotifier.value!.userType) {
-          case 0:
-            showToast("请先成为家政员", duration: Duration(seconds: 1));
-            break;
-          case 1:
-            RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
-            break;
-        }
+      switch (Global.userInfoNotifier.value!.userType) {
+        case 0:
+          showToast("请先成为家政员", duration: Duration(seconds: 1));
+          break;
+        case 1:
+          RouteUtils.pushForNamed(context, RoutePath.commissionCenter);
+          break;
       }
     }
 
@@ -174,79 +170,6 @@ class _UserPageState extends State<UserPage> {
     Future<void> _jumpToComissionOrderPage() async {
       RouteUtils.pushForNamed(context, RoutePath.centerOrder);
     }
-
-    // 水平图标1.0
-    // Widget _buildOrderStatus(String title) {
-    //   IconData icon;
-    //   switch (title) {
-    //     case '待接取':
-    //       icon = Icons.pending_outlined;
-    //       break;
-    //     case '服务中':
-    //       icon = Icons.hourglass_empty;
-    //       break;
-    //     case '待支付':
-    //       icon = Icons.done_all_outlined;
-    //       break;
-    //     case '已完成':
-    //       icon = Icons.rate_review_outlined;
-    //       break;
-    //     default:
-    //       icon = Icons.circle;
-    //   }
-    //   // return Material(
-    //   //   color: Colors.transparent, // 确保背景透明
-    //   //   child: SafeArea(
-    //   //     child: InkWell(
-    //   //       onTap: () {},
-    //   //       splashColor: Theme.of(context).primaryColor.withAlpha(30),
-    //   //       highlightColor: Theme.of(context).primaryColor.withAlpha(30),
-    //   //       // 设置水波纹为圆形
-    //   //       customBorder: const CircleBorder(),
-    //   //       child: Column(
-    //   //         mainAxisAlignment: MainAxisAlignment.center,
-    //   //         children: [
-    //   //           Icon(icon, size: 35, color: Theme.of(context).primaryColor),
-    //   //           SizedBox(height: 8),
-    //   //           Text("$title", style: TextStyle(fontSize: 14)),
-    //   //         ],
-    //   //       ),
-    //   //     ),
-    //   //   ),
-    //   // );
-    //   return Material(
-    //     color: Colors.transparent,
-    //     child: SafeArea(
-    //       child: InkWell(
-    //         onTap: () {},
-    //         splashColor: Theme.of(context).primaryColor.withAlpha(30),
-    //         highlightColor: Theme.of(context).primaryColor.withAlpha(30),
-    //         customBorder: const CircleBorder(),
-    //         child: Column(
-    //           mainAxisAlignment: MainAxisAlignment.center,
-    //           children: [
-    //             ShaderMask(
-    //               shaderCallback: (Rect bounds) {
-    //                 return LinearGradient(
-    //                   begin: Alignment.topLeft,
-    //                   end: Alignment.bottomRight,
-    //                   colors: [
-    //                     Theme.of(context).primaryColor,
-    //                     AppColors.appColor,
-    //                     AppColors.endDeepColor,
-    //                   ],
-    //                 ).createShader(bounds);
-    //               },
-    //               child: Icon(icon, size: 35, color: Colors.white),
-    //             ),
-    //             SizedBox(height: 8),
-    //             Text("$title", style: TextStyle(fontSize: 14,color: Theme.of(context).primaryColor,fontWeight: FontWeight.bold)),
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //   );
-    // }
 
     // 标题
     Widget _buildSectionTitle(String title) {
@@ -341,35 +264,6 @@ class _UserPageState extends State<UserPage> {
       );
     }
 
-    // Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
-    //   return Material(
-    //     color: Colors.transparent,
-    //     child: InkWell(
-    //       onTap: () {
-    //         if (icon == Icons.logout && onCheck != null) {
-    //           _showLogoutDialog(context, onCheck);
-    //         } else {
-    //           // 其他选项的点击事件处理
-    //         }
-    //       },
-    //       // 水波纹颜色
-    //       splashColor: Colors.grey[300],
-    //       // 高亮颜色
-    //       highlightColor: Theme.of(context).primaryColor.withAlpha(30),
-    //       child: ListTile(
-    //         leading: Icon(icon,
-    //             color: icon == Icons.logout
-    //                 ? Colors.red
-    //                 : Theme.of(context).primaryColor),
-    //         title: Text(title,
-    //             style: TextStyle(
-    //                 color: icon == Icons.logout ? Colors.red : Colors.black)),
-    //         trailing: Icon(Icons.arrow_forward_ios, size: 16),
-    //       ),
-    //     ),
-    //   );
-    // }
-
     //点击导航栏2.0
     Widget _buildOption(IconData icon, String title, {VoidCallback? onCheck}) {
       return Material(
@@ -385,7 +279,7 @@ class _UserPageState extends State<UserPage> {
               // 其他选项的点击事件处理
             } else if (icon == Icons.history) {
               RouteUtils.pushForNamed(context, RoutePath.browseHistoryPage);
-            } else if(icon == Icons.help_outline){
+            } else if (icon == Icons.help_outline) {
               RouteUtils.pushForNamed(context, RoutePath.faq);
             }
           },
@@ -430,6 +324,43 @@ class _UserPageState extends State<UserPage> {
       );
     }
 
+    // 显示全屏图像的对话框方法
+    void _showFullImageDialog(BuildContext context, User? userInfo) {
+      showDialog(
+        context: context,
+        barrierDismissible: true, // 用户可以点击空白区域关闭对话框
+        builder: (BuildContext context) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            insetPadding: EdgeInsets.zero,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Hero(
+                  tag: 'avatar-${userInfo?.userAvatar}',
+                  child: Image(
+                    image: userInfo?.userAvatar != null && userInfo!.userAvatar != "默认头像"
+                        ? CachedNetworkImageProvider(userInfo!.userAvatar)
+                        : AssetImage('assets/images/ikun1.png'),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                Positioned(
+                  top: 16,
+                  right: 16,
+                  child: IconButton(
+                    icon: Icon(Icons.close, color: Colors.white),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: false,
@@ -467,27 +398,20 @@ class _UserPageState extends State<UserPage> {
                                 child: ValueListenableBuilder<User?>(
                                     valueListenable: Global.userInfoNotifier,
                                     builder: (context, userInfo, child) {
-                                      if (isProduction)
-                                        print(
-                                            "ValueListenableBuilder重建: ${userInfo?.userAvatar}"); // 调试信息
-                                      if (userInfo == null) {
-                                        return CircleAvatar(
-                                          radius: 40,
-                                          backgroundImage: AssetImage(
-                                              'assets/images/ikun1.png'),
+                                      return // 头像部分
+                                        GestureDetector(
+                                          onTap: () => _showFullImageDialog(context, userInfo),
+                                          child: Hero(
+                                            tag: 'avatar-${userInfo?.userAvatar}',
+                                            child: CircleAvatar(
+                                              radius: 40,
+                                              backgroundImage: userInfo?.userAvatar != null && userInfo!.userAvatar != "默认头像"
+                                                  ? CachedNetworkImageProvider(userInfo!.userAvatar)
+                                                  : AssetImage('assets/images/ikun1.png'),
+                                            ),
+                                          ),
                                         );
-                                      }
 
-                                      return CircleAvatar(
-                                          radius: 40,
-                                          backgroundImage: userInfo
-                                                          ?.userAvatar !=
-                                                      null &&
-                                                  userInfo.userAvatar != "默认头像"
-                                              ? CachedNetworkImageProvider(
-                                                  userInfo.userAvatar!)
-                                              : AssetImage(
-                                                  'assets/images/ikun1.png'));
                                     }),
                               ),
                               SizedBox(width: 16),
