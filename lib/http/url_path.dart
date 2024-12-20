@@ -169,5 +169,8 @@ class UrlPath {
 
   //群聊头像上传
   static const String uploadGroupAvatar = "/avatar/upload/groupAvatar";
+
+  // 获取未过审原因
+  static const String getRejectReason = "/order/reject/reason";
 }
 
