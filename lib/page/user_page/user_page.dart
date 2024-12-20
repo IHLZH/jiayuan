@@ -8,7 +8,6 @@ import 'package:jiayuan/utils/constants.dart';
 import 'package:jiayuan/utils/sp_utils.dart';
 import 'package:oktoast/oktoast.dart';
 
-import '../../common_ui/floating_support_ball/floating_support_ball.dart';
 import '../../http/dio_instance.dart';
 import '../../http/url_path.dart';
 import '../../im/im_chat_api.dart';
@@ -338,20 +337,36 @@ class _UserPageState extends State<UserPage> {
               alignment: Alignment.center,
               children: [
                 Hero(
-                  tag: 'avatar-${userInfo?.userAvatar}',
+                  tag: 'avatar-userAvatar',
                   child: Image(
-                    image: userInfo?.userAvatar != null && userInfo!.userAvatar != "默认头像"
+                    image: userInfo?.userAvatar != null &&
+                            userInfo!.userAvatar != "默认头像"
                         ? CachedNetworkImageProvider(userInfo!.userAvatar)
                         : AssetImage('assets/images/ikun1.png'),
                     fit: BoxFit.contain,
                   ),
                 ),
                 Positioned(
-                  top: 16,
-                  right: 16,
-                  child: IconButton(
-                    icon: Icon(Icons.close, color: Colors.white),
-                    onPressed: () => Navigator.of(context).pop(),
+                  right: 10,
+                  top: 10,
+                  child: Container(
+                    width: 35,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Center(
+                      child: IconButton(
+                        highlightColor: Colors.black.withOpacity(0.2),
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -399,19 +414,25 @@ class _UserPageState extends State<UserPage> {
                                     valueListenable: Global.userInfoNotifier,
                                     builder: (context, userInfo, child) {
                                       return // 头像部分
-                                        GestureDetector(
-                                          onTap: () => _showFullImageDialog(context, userInfo),
-                                          child: Hero(
-                                            tag: 'avatar-${userInfo?.userAvatar}',
-                                            child: CircleAvatar(
-                                              radius: 40,
-                                              backgroundImage: userInfo?.userAvatar != null && userInfo!.userAvatar != "默认头像"
-                                                  ? CachedNetworkImageProvider(userInfo!.userAvatar)
-                                                  : AssetImage('assets/images/ikun1.png'),
-                                            ),
+                                          GestureDetector(
+                                        onTap: () => _showFullImageDialog(
+                                            context, userInfo),
+                                        child: Hero(
+                                          tag: 'avatar-userAvatar',
+                                          child: CircleAvatar(
+                                            radius: 40,
+                                            backgroundImage: userInfo
+                                                            ?.userAvatar !=
+                                                        null &&
+                                                    userInfo!.userAvatar !=
+                                                        "默认头像"
+                                                ? CachedNetworkImageProvider(
+                                                    userInfo!.userAvatar)
+                                                : AssetImage(
+                                                    'assets/images/ikun1.png'),
                                           ),
-                                        );
-
+                                        ),
+                                      );
                                     }),
                               ),
                               SizedBox(width: 16),
