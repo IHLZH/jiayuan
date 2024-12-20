@@ -101,19 +101,25 @@ class AiCustomerServiceViewModel with ChangeNotifier {
         options: Options(headers: {"Authorization": Global.token}),
       );
 
+      // print("res: ${response}");
+
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
           if (response.data['message'] == '委托id' ||
-              response.data['message'] == '家政员id')
+              response.data['message'] == '家政员id') {
             messagesList = List<int>.from(response.data['data']);
 
-          //将List<int>转为逗号分隔的字符串
-          answer = response.data['message'];
-          // answer = messagesList.join(",");
+            //将List<int>转为逗号分隔的字符串
+            answer = response.data['message'];
+            // answer = messagesList.join(",");
 
-          if (isProduction)
-            print("============== answer: $answer ================");
-          if (isProduction) print("======== 回复： ${messagesList.join(',')}=============");
+            if (isProduction)
+              print("============== answer: $answer ================");
+            if (isProduction)
+              print("======== 回复： ${messagesList.join(',')}=============");
+          }else{
+            answer = response.data['message'];
+          }
         } else {
           showToast("error: ${response.data['message']}",
               duration: Duration(seconds: 1));
@@ -127,7 +133,7 @@ class AiCustomerServiceViewModel with ChangeNotifier {
 
     //获取委托信息组
     if (answer == '委托id') {
-      print("======== 进入查找 =========");
+      if (isProduction) print("======== 进入查找 =========");
       try {
         final response = await DioInstance.instance().get(
           path: UrlPath.getAiCommissionList,
@@ -204,6 +210,9 @@ class AiCustomerServiceViewModel with ChangeNotifier {
     } else {
       // 模拟接收回复
       // await Future.delayed(Duration(seconds: 2));
+
+      // print("============== answer: $answer=============");
+
       AiMessage aiResponse =
           AiMessage(isSelf: false, message: answer, sendTime: DateTime.now());
       FullAiMessage fullAiMessageAi =

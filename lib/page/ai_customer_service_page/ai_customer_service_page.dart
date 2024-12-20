@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:jiayuan/repository/api/commission_api.dart';
+import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/repository/model/message_comission.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +9,8 @@ import 'package:provider/provider.dart';
 
 import '../../common_ui/styles/app_colors.dart';
 import '../../repository/model/message_keeper.dart';
+import '../../route/route_path.dart';
+import '../../route/route_utils.dart';
 import '../../utils/constants.dart';
 import 'ai_customer_service_vm.dart';
 
@@ -45,8 +49,11 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
       commissionData = obj as MessageCommission;
     }
     return GestureDetector(
-      onTap: () {
-        // 处理点击事件，例如跳转到详情页面
+      onTap: () async {
+        // 处理点击事件，跳转到详情页面
+        CommissionData1 commissionData1 = await CommissionApi.instance.getCommissionById({'commissionId':commissionData.commissionId});
+
+        RouteUtils.pushForNamed(context, RoutePath.commissionDetail,arguments: commissionData1);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -124,7 +131,8 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
 
     return GestureDetector(
       onTap: () {
-        // 处理点击事件，例如跳转到详情页面
+        // 处理点击事件，跳转到详情页面
+        final res = RouteUtils.pushForNamed(context, RoutePath.KeeperPage,arguments: keeperData.keeperId);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -167,13 +175,6 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                         ),
                       ),
                       SizedBox(height: 4),
-                      // Text(
-                      //   '用户ID: ${keeperData.userId}',
-                      //   style: TextStyle(
-                      //     color: Colors.grey,
-                      //     fontSize: 14,
-                      //   ),
-                      // ),
                       Text(
                         'Keeper ID: ${keeperData.keeperId}',
                         style: TextStyle(
@@ -184,13 +185,6 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                     ],
                   ),
                 ),
-                // Text(
-                //   'Keeper ID: ${keeperData.keeperId}',
-                //   style: TextStyle(
-                //     color: Colors.grey,
-                //     fontSize: 14,
-                //   ),
-                // ),
               ],
             ),
             SizedBox(height: 12),
@@ -410,7 +404,7 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                                   });
                                   // 发送消息后滚动到底部
                                   _scrollController.animateTo(
-                                    _scrollController.position.maxScrollExtent,
+                                    _scrollController.position.maxScrollExtent + 100000,
                                     duration: Duration(milliseconds: 300),
                                     curve: Curves.easeOut,
                                   );
