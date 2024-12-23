@@ -758,8 +758,13 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             TextButton(
-                onPressed: (){_showServiceAgreementDialog(context);},
+                onPressed: () {
+                  _showServiceAgreementDialog(context);
+                },
                 style: ButtonStyle(
+                  minimumSize: MaterialStateProperty.all(Size(20, 20)),
+                  padding: MaterialStateProperty.all(
+                      EdgeInsets.symmetric(vertical: 5, horizontal: 2)),
                   overlayColor: MaterialStateProperty.resolveWith<Color?>(
                         (Set<MaterialState> states) {
                       if (states.contains(MaterialState.pressed)) {
@@ -774,19 +779,34 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(
                     color: _isAgreed
                         ? Theme.of(context).primaryColor
-                        : Colors.grey,
+                        : Colors.blue,
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
                 )),
             TextButton(
-                onPressed: () {_showPrivacyPolicyDialog(context);},
+                onPressed: () {
+                  _showPrivacyPolicyDialog(context);
+                },
+                style: ButtonStyle(
+                  minimumSize: MaterialStateProperty.all(Size(20, 20)),
+                  padding: MaterialStateProperty.all(
+                      EdgeInsets.symmetric(vertical: 5, horizontal: 2)),
+                  overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                        (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.pressed)) {
+                        return Colors.grey.withOpacity(0.12); // 设置水波纹颜色
+                      }
+                      return null; // 默认情况下不显示水波纹
+                    },
+                  ),
+                ),
                 child: Text(
                   "《隐私协议》",
                   style: TextStyle(
                     color: _isAgreed
                         ? Theme.of(context).primaryColor
-                        : Colors.grey,
+                        : Colors.blue,
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                   ),
