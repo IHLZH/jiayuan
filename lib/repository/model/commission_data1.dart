@@ -123,13 +123,14 @@ class CommissionData1 {
     _isLong = typeId > 6 ? true : false;
 
     DateTime currentTime = DateTime.now();
+    int currentYear = currentTime.year;
     int currentMonth = currentTime.month;
     int currentDay = currentTime.day;
 
     if(expectStartTime.month == currentMonth && expectStartTime.day == currentDay){
       _days = "今天";
     }else{
-      _days = ((expectStartTime.month - currentMonth) * 30 + (expectStartTime.day - currentDay)).toString() + "天后";
+      _days = "${expectStartTime.difference(currentTime).inDays}天后";
     }
   }
   
