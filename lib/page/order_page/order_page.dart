@@ -7,12 +7,15 @@ import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page_vm.dart';
+import 'package:jiayuan/repository/api/reject_reason_api.dart';
+import 'package:jiayuan/repository/model/HouseKeeper_data_detail.dart';
 import 'package:jiayuan/repository/model/full_order.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
 
+import '../../repository/api/keeper_api.dart';
 import '../../route/route_utils.dart';
 
 bool isProduction = Constants.IS_Production;
@@ -126,10 +129,31 @@ class _OrderPageState extends State<OrderPage> {
     }
   }
 
-  Future<void> _jumpToOrderDetailPage(int index) async {
-    //TODO:对于未通过的订单提前获取未通过原因
+  //获取未过审理由
+  Future<void> getRejectReason(int id) async {
+    OrderDetailPageVm.rejectReason = await RejectReasonApi().getRejectReason(id);
+  }
 
+  //获取家政员电话
+  Future<void> getKeeperPhone(int id) async {
+    HousekeeperDataDetail keeperData = await KeeperApi.instance.getKeeperDataDetail(id);
+
+    if(keeperData.contact!=null)OrderDetailPageVm.keeperPhone = keeperData.contact;
+  }
+
+  Future<void> _jumpToOrderDetailPage(int index) async {
     OrderDetailPageVm.nowOrder = _orderDataList[index];
+
+    OrderDetailPageVm.keeperPhone = "未确认";
+
+    if(_orderDataList[index].keeperId!=null){
+      await getKeeperPhone(_orderDataList[index].keeperId!);
+    }
+
+    if (_orderDataList[index].commissionStatus == 8) {
+      await getRejectReason(_orderDataList[index].commissionId!);
+    }
+
     await RouteUtils.pushForNamed(context, RoutePath.orderDetailPage);
     _refreshOrders();
   }
@@ -591,6 +615,7 @@ class _OrderPageState extends State<OrderPage> {
         ],
       ),
       endDrawer: Drawer(
+        backgroundColor: AppColors.backgroundColor5,
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[

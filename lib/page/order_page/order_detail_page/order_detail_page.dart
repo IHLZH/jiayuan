@@ -8,9 +8,11 @@ import 'package:jiayuan/repository/model/full_order.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
 import '../../../http/url_path.dart';
+import '../../../im/im_chat_api.dart';
 import '../../../route/route_utils.dart';
 import '../../../utils/global.dart';
 
@@ -150,6 +152,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     });
   }
 
+  // 跳转客服聊天
+  Future<void> _jumpToCustomerService(int userId) async {
+    V2TimConversation? conversation =
+    await ImChatApi.getInstance().getConversation("c2c_${userId}");
+    RouteUtils.pushForNamed(context, RoutePath.chatPage,
+        arguments: conversation);
+  }
+
   // 构建图标按钮
   Widget _buildIconButton(IconData icon, String title, Color color) {
     return ElevatedButton.icon(
@@ -276,7 +286,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
               image: DecorationImage(
-                image: AssetImage(switch(_order.serviceName){
+                image: AssetImage(switch (_order.serviceName) {
                   '日常保洁' => 'assets/images/type_1.jpg',
                   '家电维修' => 'assets/images/type_2.jpg',
                   '搬家搬厂' => 'assets/images/type_3.jpg',
@@ -487,7 +497,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               TextButton(
                 onPressed: () {
                   // 处理“联系家政员”点击事件
-                  print('联系家政员');
+                  if (_order.keeperId == null)
+                    showToast("还没有家政员接单", duration: Duration(seconds: 1));
+                  else{
+                    String phoneNumber = OrderDetailPageVm.keeperPhone!;
+
+                    if(phoneNumber!="未确认")OrderDetailPageVm.makePhoneCall(phoneNumber);
+                    else showToast("该家政员未绑定电话", duration: Duration(seconds: 1));
+                  }
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.transparent, // 设置背景透明
@@ -511,7 +528,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               TextButton(
                 onPressed: () {
                   // 处理“联系客服”点击事件
-                  print('联系客服');
+                  _jumpToCustomerService(Constants.KF_ID);
                 },
                 style: TextButton.styleFrom(
                   backgroundColor: Colors.transparent, // 设置背景透明
@@ -600,7 +617,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           ],
         ),
         // SizedBox(height: 5),
-        Divider(color: AppColors.backgroundColor,),
+        Divider(
+          color: AppColors.backgroundColor,
+        ),
         // SizedBox(height: 5),
         Container(
           child: Row(
@@ -608,7 +627,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  '1145141919810',
+                  OrderDetailPageVm.rejectReason!,
                   style: TextStyle(
                       fontSize: 17,
                       color: AppColors.backgroundColor,
@@ -667,9 +686,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               fontWeight: FontWeight.bold)),
       8 => Text("未通过审核",
           style: TextStyle(
-              color: Colors.red,
-              fontSize: 17.sp,
-              fontWeight: FontWeight.bold)),
+              color: Colors.red, fontSize: 17.sp, fontWeight: FontWeight.bold)),
       _ => Text('未知状态',
           style: TextStyle(
               color: Colors.red, fontSize: 17.sp, fontWeight: FontWeight.bold)),
@@ -713,7 +730,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                if(_order.commissionStatus == 8)...[
+                if (_order.commissionStatus == 8) ...[
                   _errorBlock(_buildOrderInfo5()),
                   SizedBox(height: 15),
                 ],

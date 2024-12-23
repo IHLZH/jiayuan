@@ -25,5 +25,8 @@ class Constants {
 
   //后台网址
   // static const String BACKEND_URL = "http://10.7.89.161:3000";
-  static const String BACKEND_URL = "http://www.baidu.com";
+  static const String BACKEND_URL = "http://62.234.165.111:3000";
+
+  //客服ID
+  static const int KF_ID = 19;
 }
