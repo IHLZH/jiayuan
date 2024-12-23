@@ -236,28 +236,33 @@ class _GroupInfoPageState extends State<GroupInfoPage>{
                                       ),
                                       itemCount: vm.groupMember.length,
                                       itemBuilder: (context, index){
-                                        return Container(
-                                          //padding: EdgeInsets.all(5),
-                                          child: Column(
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 18,
-                                                  backgroundColor: AppColors.backgroundColor3,
-                                                  backgroundImage:
-                                                  vm.groupMember[index] != null
-                                                      ? vm.groupMember[index]!.faceUrl != null ? CachedNetworkImageProvider(vm.groupMember[index]!.faceUrl!) : null
-                                                      : null
-                                              ),
-                                              Text(
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                vm.groupMember[index]!.friendRemark != "" ? vm.groupMember[index]!.friendRemark!: vm.groupMember[index]!.nickName!,
-                                                style: TextStyle(
-                                                    color: AppColors.textColor2b,
-                                                    fontSize: 12.sp
+                                        return InkWell(
+                                          onTap: (){
+                                            vm.gotoUserInfo(context, vm.groupMember[index]!.userID);
+                                          },
+                                          child: Container(
+                                            //padding: EdgeInsets.all(5),
+                                            child: Column(
+                                              children: [
+                                                CircleAvatar(
+                                                    radius: 18,
+                                                    backgroundColor: AppColors.backgroundColor3,
+                                                    backgroundImage:
+                                                    vm.groupMember[index] != null
+                                                        ? vm.groupMember[index]!.faceUrl != null ? CachedNetworkImageProvider(vm.groupMember[index]!.faceUrl!) : null
+                                                        : null
                                                 ),
-                                              ),
-                                            ],
+                                                Text(
+                                                  overflow: TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  vm.groupMember[index]!.friendRemark != "" ? vm.groupMember[index]!.friendRemark!: vm.groupMember[index]!.nickName!,
+                                                  style: TextStyle(
+                                                      color: AppColors.textColor2b,
+                                                      fontSize: 12.sp
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         );
                                       }
@@ -514,12 +519,12 @@ class _GroupInfoPageState extends State<GroupInfoPage>{
               ),
               SizedBox(height: 10,),
               Container(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: Expanded(
-                      child: AppInput(
-                        controller: _groupVm.groupNameController,
-                      )
-                  )
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Expanded(
+                    child: AppInput(
+                      controller: _groupVm.groupNameController,
+                    )
+                )
               ),
               SizedBox(height: 20,),
               Row(

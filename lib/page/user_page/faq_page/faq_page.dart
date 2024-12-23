@@ -55,12 +55,17 @@ class FaqPage extends StatelessWidget{
                             ),
                           ),
                         ),
-                        IconButton(
-                          color: Colors.transparent,
-                          onPressed: (){
-                          },
-                          icon: Icon(Icons.arrow_back_ios_new)
-                        ),
+                        TextButton(
+                            onPressed: (){
+
+                            },
+                            child: Text(
+                              "反馈",
+                              style: TextStyle(
+                                  color: Colors.red
+                              ),
+                            )
+                        )
                       ],
                     ),
                   )
