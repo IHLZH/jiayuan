@@ -34,26 +34,43 @@ class UserApi {
     String url = UrlPath.searchUser;
 
     try {
-      final response = await DioInstance.instance().get(path: url, param: {
-        "message": query,
-        "page": page,
-      }, options: Options(headers: {"Authorization": Global.token}));
+      final response = await DioInstance.instance().get(
+          path: url,
+          param: {
+            "message": query,
+            "page": page,
+          },
+          options: Options(headers: {"Authorization": Global.token}));
 
       if (response.statusCode == 200) {
         if (response.data["code"] == 200) {
           if (isProduction) {
             print("搜索用户成功");
             print(response);
+            print(response.data['message']);
             print(response.data['data']['items']);
           }
+          List<SearchUser> users;
 
-          List<SearchUser> users = (response.data['data']['items'] != null
-              ? (response.data['data']['items'] as List)
-                  .map((e) => SearchUser.fromJson(e))
-                  .toList()
-              : []);
+          if (response.data['message'] == '邮箱' ||
+              response.data['message'] == '手机号') {
+            users = (response.data['data'] != null
+                ? [SearchUser.fromJson(response.data['data'])]
+                : []);
+          } else {
+            users = (response.data['data']['items'] != null
+                ? (response.data['data']['items'] as List)
+                    .map((e) => SearchUser.fromJson(e))
+                    .toList()
+                : []);
+          }
 
-          return SearchUserResult(users, response.data['data']['total']);
+          return SearchUserResult(
+              users,
+              response.data['message'] == '邮箱' ||
+                      response.data['message'] == '手机号'
+                  ? users.length
+                  : response.data['data']['total']);
         } else {
           if (isProduction) print(response.data['message']);
           showToast(response.data['message'], duration: Duration(seconds: 1));
@@ -85,18 +102,18 @@ class UserApi {
         if (response.data["code"] == 200) {
           user = SearchUser.fromJson(response.data['data']);
 
-          if(isProduction){
+          if (isProduction) {
             print("获取用户信息成功");
             // print(response.data['data']);
             print(user);
           }
 
           return user;
-        }else{
+        } else {
           if (isProduction) print(response.data['message']);
           showToast(response.data['message'], duration: Duration(seconds: 1));
         }
-      }else{
+      } else {
         if (isProduction) print("无法连接服务器");
         showToast("无法连接服务器", duration: Duration(seconds: 1));
       }
