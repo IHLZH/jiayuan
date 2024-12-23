@@ -230,7 +230,7 @@ class _PhoneLoginPageState extends State<PhoneLoginPage> {
                     ),
                     TextSpan(
                       text:
-                          '1. 家缘软件（以下简称“本软件”）是由（公司全称）开发并提供的一款C2C家政委托软件，旨在为用户提供一个便捷、高效的家政服务交易平台。\n',
+                          '1. 家缘软件（以下简称“本软件”）是由软件学院22级家缘开发组开发并提供的一款C2C家政委托软件，旨在为用户提供一个便捷、高效的家政服务交易平台。\n',
                     ),
                     TextSpan(
                       text:
