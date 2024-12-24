@@ -33,7 +33,7 @@
 
 ## 应用展示
 
-**主页与委托发布（集成高德地图）**
+### 主页与委托发布（集成高德地图）
 
 <table>
     <tr>
@@ -45,7 +45,7 @@
 </table>
 
 
-**委托接取与委托搜索**
+### 委托接取与委托搜索
 
 <table>
     <tr>
@@ -56,7 +56,7 @@
 </table>
 
 
-**聊天相关页面（集成腾讯IM）**
+### 聊天相关页面（集成腾讯IM）
 
 <table>
     <tr>
@@ -72,7 +72,7 @@
 </table>
 
 
-**用户页面相关**
+### 用户页面相关
 
 <table>
     <tr>
@@ -83,8 +83,7 @@
 </table>
 
 
-
-**订单页面相关（集成支付宝沙盒）**
+### 订单页面相关（集成支付宝沙盒）
 
 <table>
     <tr>
@@ -100,8 +99,7 @@
 </table>
 
 
-
-**设置页面与移动端进入后台**
+### 设置页面与移动端进入后台
 
 <table>
     <tr>
@@ -115,7 +113,8 @@
     </tr>
 </table>
 
-**家政员相关页面**
+
+### 家政员相关页面
 
 <table>
     <tr>
@@ -129,6 +128,15 @@
     </tr>
 </table>
 
+
+### AI智能助手
+
+<table>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/ai/ai_keeper.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/ai/ai_order.png"/></td>
+    </tr>
+</table>
 
 
 ------

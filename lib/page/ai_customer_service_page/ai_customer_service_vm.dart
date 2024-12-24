@@ -101,7 +101,7 @@ class AiCustomerServiceViewModel with ChangeNotifier {
         options: Options(headers: {"Authorization": Global.token}),
       );
 
-      // print("res: ${response}");
+      if (isProduction) print("res: ${response}");
 
       if (response.statusCode == 200) {
         if (response.data['code'] == 200) {
@@ -123,6 +123,7 @@ class AiCustomerServiceViewModel with ChangeNotifier {
         } else {
           showToast("error: ${response.data['message']}",
               duration: Duration(seconds: 1));
+          answer = response.data['message'];
         }
       } else {
         if (isProduction) showToast("服务器连接失败", duration: Duration(seconds: 1));
