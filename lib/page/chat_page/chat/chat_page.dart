@@ -72,6 +72,36 @@ class _ChatPageState extends State<ChatPage>{
     return shouldShowTime;
   }
 
+  void _showPickerOptions(BuildContext context, int id) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: Icon(Icons.photo_library),
+                title: Text("从相册选择"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  //_uploadFromGallery(id);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.camera_alt),
+                title: Text("使用相机拍照"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  //_uploadFromCamera(id);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -197,6 +227,12 @@ class _ChatPageState extends State<ChatPage>{
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
+                          IconButton(
+                              onPressed: (){
+
+                              },
+                              icon: Icon(Icons.add)
+                          ),
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(

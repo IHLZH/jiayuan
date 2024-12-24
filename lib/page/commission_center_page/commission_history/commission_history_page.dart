@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/common_ui/styles/app_colors.dart';
 import 'package:jiayuan/page/commission_center_page/commission_history/commission_history_page_vm.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../../common_ui/buttons/red_button.dart';
+import '../../../common_ui/dialog/dialog_factory.dart';
 import '../../../repository/model/commission_data1.dart';
 import '../../../route/route_path.dart';
 import '../../../route/route_utils.dart';
@@ -58,25 +61,36 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage>{
                   padding: EdgeInsets.symmetric(horizontal: 5.sp),
                   height: 180.h,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Row(
+                        children: [
+                          IconButton(
+                              onPressed: (){
+                                RouteUtils.pop(context);
+                              },
+                              icon: Icon(Icons.arrow_back_ios_new)
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 10),
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            child: Text(
+                              "历史浏览",
+                              style: TextStyle(
+                                  color: AppColors.textColor2b,
+                                  fontSize: 22.sp,
+                                  fontWeight: FontWeight.w600
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       IconButton(
                           onPressed: (){
-                            RouteUtils.pop(context);
+                            _showClearHistory();
                           },
-                          icon: Icon(Icons.arrow_back_ios_new)
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 10),
-                        padding: EdgeInsets.symmetric(vertical: 8),
-                        child: Text(
-                          "历史浏览",
-                          style: TextStyle(
-                              color: AppColors.textColor2b,
-                              fontSize: 22.sp,
-                              fontWeight: FontWeight.w600
-                          ),
-                        ),
+                          icon: Icon(Icons.delete)
                       ),
                     ],
                   ),
@@ -232,6 +246,83 @@ class _CommissionHistoryPageState extends State<CommissionHistoryPage>{
           ),
         ),
       ),
+    );
+  }
+
+  void _showClearHistory(){
+    DialogFactory.instance.showParentDialog(
+        touchOutsideDismiss: true,
+        context: context,
+        child: Container(
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r)
+          ),
+          width: 200,
+          height: 180,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "清空历史记录",
+                    style: TextStyle(
+                        color: AppColors.textColor2b,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w500
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10,),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Wrap(
+                  children: [
+                    Text(
+                      "确认清空历史浏览记录？",
+                      style: TextStyle(
+                          fontSize: 18.sp,
+                          color: AppColors.textColor7d
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(height: 20,),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      onTap: (){
+                        RouteUtils.pop(context);
+                      },
+                      type: AppButtonType.minor,
+                      radius: 8.r,
+                      buttonText: "取消",
+                      buttonTextStyle: TextStyle(
+                          color: AppColors.textColor2b
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: AppButton(
+                        onTap: () async {
+                          await _commissionHistoryVM.clearCommissionHistory();
+                          RouteUtils.pop(context);
+                          showToast("操作成功！");
+                        },
+                        type: AppButtonType.main,
+                        radius: 8.r,
+                        buttonText: "删除",
+                      )
+                  )
+                ],
+              )
+            ],
+          ),
+        )
     );
   }
 }
