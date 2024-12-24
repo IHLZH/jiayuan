@@ -7,6 +7,7 @@ import 'package:jiayuan/common_ui/dialog/dialog_factory.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_vm.dart';
 import 'package:jiayuan/page/tab_page/tab_page_vm.dart';
+import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
@@ -36,6 +37,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
   Widget build(BuildContext context) {
 
     _commissionDetailViewModel.commissionData = ModalRoute.of(context)?.settings.arguments as CommissionData1;
+
 
     return ChangeNotifierProvider(
         create: (context){

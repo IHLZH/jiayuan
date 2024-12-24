@@ -384,6 +384,7 @@ class _CommissionTypePageState extends State<CommissionTypePage>{
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           onTap: (){
+            _commissionTypeViewModel.addToHistory(commission);
             RouteUtils.pushForNamed(
                 context,
                 RoutePath.commissionDetail,

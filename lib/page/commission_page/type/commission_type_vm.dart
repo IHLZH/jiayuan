@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:jiayuan/page/commission_page/commission_vm.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../../../repository/api/commission_api.dart';
 import '../../../repository/model/commission_data1.dart';
@@ -141,6 +142,11 @@ class CommissionTypeViewModel with ChangeNotifier{
       param["page"] = endPage;
       await loadingComission(param);
     }
+  }
+
+  Future<void> addToHistory(CommissionData1 commission) async {
+    await Global.dbUtil?.db.insert("commission_browser_history", commission.toSqData(), conflictAlgorithm: ConflictAlgorithm.replace);
+    print("委托历史${commission.commissionId}记录插入成功");
   }
 
 }

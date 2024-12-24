@@ -547,6 +547,7 @@ class _CommissionSearchPageState extends State<CommissionSearchPage> with Single
               borderRadius: BorderRadius.circular(16),
               child: InkWell(
                 onTap: (){
+                  _commissionSearchViewModel.addToHistory(commission);
                   RouteUtils.pushForNamed(
                       context,
                       RoutePath.commissionDetail,

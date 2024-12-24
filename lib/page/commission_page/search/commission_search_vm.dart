@@ -3,6 +3,7 @@ import 'package:jiayuan/repository/api/commission_api.dart';
 import 'package:jiayuan/repository/model/commission_data1.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:sqflite/sqflite.dart';
 
 class CommissionSearchViewModel with ChangeNotifier{
 
@@ -306,6 +307,11 @@ class CommissionSearchViewModel with ChangeNotifier{
     }else{
       print("历史搜索：" + searchMsg + " 插入失败");
     }
+  }
+
+  Future<void> addToHistory(CommissionData1 commission) async {
+    await Global.dbUtil?.db.insert("commission_browser_history", commission.toSqData(), conflictAlgorithm: ConflictAlgorithm.replace);
+    print("委托历史${commission.commissionId}记录插入成功");
   }
 
 }

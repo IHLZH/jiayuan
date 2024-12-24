@@ -3,10 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:jiayuan/page/chat_page/friend_list/friend_list_vm.dart';
+import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common_ui/buttons/red_button.dart';
 import '../../../common_ui/styles/app_colors.dart';
+import '../../../repository/model/HouseKeeper_data_detail.dart';
 import '../../../repository/model/commission_data1.dart';
 import '../../../route/route_utils.dart';
 import 'friend_list_vm.dart';
@@ -37,7 +40,12 @@ class _FriendListPageState extends State<FriendListPage>{
   @override
   Widget build(BuildContext context) {
 
-    _friendListVM.commissionData = ModalRoute.of(context)?.settings.arguments as CommissionData1;
+    if(ModalRoute.of(context)?.settings.arguments is CommissionData1){
+      _friendListVM.commissionData = ModalRoute.of(context)?.settings.arguments as CommissionData1;
+    }else if(ModalRoute.of(context)?.settings.arguments is HousekeeperDataDetail){
+      _friendListVM.keeperData = ModalRoute.of(context)?.settings.arguments as HousekeeperDataDetail;
+    }
+
 
     return ChangeNotifierProvider(
       create: (context){
@@ -142,7 +150,14 @@ class _FriendListPageState extends State<FriendListPage>{
                     type: AppButtonType.main,
                     buttonText: "分享",
                     onTap: () async {
-                      bool result = await _friendListVM.shareCommission(_friendListVM.selectedFriendIds.toList(), _friendListVM.selectedGroupIds.toList());
+                      bool result = false;
+                      if(_friendListVM.keeperData != null){
+                        result = await _friendListVM.shareKeeper();
+                      }else if(_friendListVM.commissionData != null){
+                        result = await _friendListVM.shareCommission();
+                      }else{
+                        showToast("操作失败，请稍后再试");
+                      }
                       if(result){
                         RouteUtils.pop(context);
                       }

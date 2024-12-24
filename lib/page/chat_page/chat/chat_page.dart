@@ -6,6 +6,7 @@ import 'package:jiayuan/common_ui/dialog/loading.dart';
 import 'package:jiayuan/common_ui/input/app_input.dart';
 import 'package:jiayuan/page/chat_page/chat/chat_page_vm.dart';
 import 'package:jiayuan/page/chat_page/group_info/group_info_page_vm.dart';
+import 'package:jiayuan/repository/model/HouseKeeper_data_detail.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/global.dart';
 import 'package:oktoast/oktoast.dart';
@@ -434,10 +435,11 @@ class _ChatPageState extends State<ChatPage>{
   }
 
   Widget checkIfCommission(String message) {
-    const prefix = "@CommissionData:";
+    const prefixCommission = "@CommissionData:";
+    const prefixKeeper = "@KeeperData:";
 
-    if(message.startsWith(prefix)){
-      message = message.substring(prefix.length);
+    if(message.startsWith(prefixCommission)){
+      message = message.substring(prefixCommission.length);
       return FutureBuilder(
           future: _chatViewModel.getCommissionDetail(int.parse(message)),
           builder: (context, snapshot){
@@ -448,6 +450,23 @@ class _ChatPageState extends State<ChatPage>{
               return Text('Error: ${snapshot.error}'); // 错误时的UI
             } else if (snapshot.hasData) {
               return CommissionCard(snapshot.data!);
+            } else {
+              return Text('No data'); // 默认状态
+            }
+          }
+      );
+    }else if(message.startsWith(prefixKeeper)){
+      message = message.substring(prefixKeeper.length);
+      return FutureBuilder(
+          future: _chatViewModel.getKeeperDetail(int.parse(message)),
+          builder: (context, snapshot){
+            // 根据snapshot的状态构建UI
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(); // 加载中的UI
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}'); // 错误时的UI
+            } else if (snapshot.hasData) {
+              return KeeperCard(snapshot.data!);
             } else {
               return Text('No data'); // 默认状态
             }
@@ -470,7 +489,6 @@ class _ChatPageState extends State<ChatPage>{
 
   Widget CommissionCard(CommissionData1 commission){
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: Material(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -582,6 +600,107 @@ class _ChatPageState extends State<ChatPage>{
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget KeeperCard(HousekeeperDataDetail housekeeper){
+    return Container(
+      //margin: EdgeInsets.only(left: 12, right: 12, bottom: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(10.0),
+        onTap: () async {
+          // //设置插入策略
+          // housekeeper.createdTime = DateTime.now();
+          // housekeeper.userId = Global.userInfo?.userId;
+          // await Global.dbUtil?.db.insert(
+          //     'browser_history', housekeeper.toMap(),
+          //     conflictAlgorithm: ConflictAlgorithm.replace);
+          RouteUtils.pushForNamed(context, RoutePath.KeeperPage,
+              arguments: housekeeper.keeperId);
+        },
+        child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(),
+            width: double.infinity,
+            child: Column(
+              children: [
+                Row(children: [
+                  Container(
+                    height: 70,
+                    width: 55,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: DecorationImage(
+                        image: NetworkImage(housekeeper.avatar!),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      child: Container(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(housekeeper.realName!,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black)),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text("工作经验：${housekeeper.workExperience}年",
+                                  style: TextStyle(
+                                      fontSize: 13, color: Colors.black)),
+                              Text(
+                                "服务评分：${housekeeper.rating}分",
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.black),
+                              ),
+                            ],
+                          )))
+                ]),
+                SizedBox(height: 5),
+                Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromRGBO(233, 247, 237, 1), // 起始颜色
+                        Color.fromRGBO(233, 247, 237, 0.3), // 结束颜色，透明度较低
+                      ],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 5),
+                      Text(
+                        "亮点: ",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(87, 191, 169, 1),
+                            fontSize: 12),
+                      ),
+                      Expanded(
+                          child: Text(
+                            " ${housekeeper.highlight}",
+                            style: TextStyle(color: Colors.black45, fontSize: 12),
+                          ))
+                    ],
+                  ),
+                ),
+              ],
+            )),
       ),
     );
   }
