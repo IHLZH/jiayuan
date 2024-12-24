@@ -78,13 +78,8 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "用户名: ${commissionData.username}",
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                ),
-                Text(
                   "委托id: ${commissionData.commissionId}",
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                  style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -163,7 +158,7 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                 ),
                 SizedBox(width: 12),
                 Expanded(
-                  child: Column(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -174,7 +169,7 @@ class _AiCustomerServicePageState extends State<AiCustomerServicePage> {
                           fontSize: 16,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      Expanded(child: SizedBox()),
                       Text(
                         'Keeper ID: ${keeperData.keeperId}',
                         style: TextStyle(

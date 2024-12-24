@@ -1,4 +1,7 @@
+import 'dart:ffi';
+
 import 'package:dio/dio.dart';
+import 'package:jiayuan/common_ui/floating_support_ball/floating_support_ball.dart';
 import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/repository/model/HouseKeeper_data_detail.dart';
 import 'package:jiayuan/repository/model/Housekeeper%20_data.dart';
@@ -58,6 +61,26 @@ class KeeperApi {
       housekeeperDataDetail = HousekeeperDataDetail();
     }
     return housekeeperDataDetail;
+  }
+
+  //TODO 根据家政员id获取userId
+  Future<int> getUserId(int keeperId) async {
+    String userId = "";
+    try {
+      final Response response = await DioInstance.instance().get(
+        path: UrlPath.keeperGetUserId,
+        param: {"keeperId": keeperId},
+        options: Options(headers: {"Authorization": Global.token}),
+      );
+      if (response.data['data'] != null) {
+        if(isProduction)print("$response");
+        userId = response.data['data'];
+        return int.parse(userId);
+      }
+    } catch (e) {
+     print("网络错误error:" + e.toString());
+    }
+    return -1;
   }
 
   //根据委托类型推荐

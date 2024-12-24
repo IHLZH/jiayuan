@@ -9,7 +9,13 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member_full_info.dart';
 
 import '../../../im/im_chat_api.dart';
+import '../../../repository/api/user_api.dart';
+import '../../../repository/model/searchUser.dart';
+import '../../../route/route_path.dart';
+import '../../../route/route_utils.dart';
+import '../../../utils/global.dart';
 import '../../../utils/image_utils.dart';
+import '../../search_user/user_info/user_info_vm.dart';
 
 class GroupInfoPageViewModel with ChangeNotifier{
 
@@ -117,6 +123,12 @@ class GroupInfoPageViewModel with ChangeNotifier{
       changingGroupAvatar = pickedFile;
       notifyListeners();
     }
+  }
+
+  //查看群友信息
+  Future<void> gotoUserInfo(BuildContext context, String userId) async {
+    SearchUser searchUser = await UserApi.instance.getSignalUser(int.parse(userId));
+    RouteUtils.pushForNamed(context, RoutePath.userInfoPage,  arguments: {"user": searchUser}) as String;
   }
 
   void clear(){

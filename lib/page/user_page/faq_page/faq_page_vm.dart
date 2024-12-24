@@ -15,6 +15,8 @@ class FaqViewModel with ChangeNotifier{
     Faq(question: "如何使用AI客服", answer: "点击屏幕右侧的悬浮球，弹出快捷菜单后选择“客服”图标，AI客服会提供实时解答，包括使用问题和功能咨询，帮助您快速解决问题。"),
     Faq(question: "如何查看收入", answer: "进入“服务中心”页面，找到“收益中心”模块，点击进入后可查看详细收入数据，包括历史收入记录和结算明细，方便您随时掌握收益情况。"),
   ];
+
+  String? evaluationContent;
 }
 
 class Faq{

@@ -70,7 +70,6 @@ class _WebViewPage extends State<WebViewPage> {
         backgroundColor: Colors.white,
         elevation: 0.0,
         toolbarHeight: 40.0,
-        title: Text("家缘后台管理"),
       ),
       body: Column(
         children: <Widget>[

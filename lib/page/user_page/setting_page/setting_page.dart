@@ -23,7 +23,6 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
-
     Future<void> _jumpToChangeEmailPage() async {
       RouteUtils.pushForNamed(context, RoutePath.changeEmailPage);
     }
@@ -37,7 +36,12 @@ class _SettingPageState extends State<SettingPage> {
     }
 
     Future<void> _jumpToBackendPage() async {
-      RouteUtils.pushForNamed(context, RoutePath.webViewPage, arguments: {'url': Constants.BACKEND_URL});
+      RouteUtils.pushForNamed(context, RoutePath.webViewPage,
+          arguments: {'url': Constants.BACKEND_URL});
+    }
+
+    Future<void> _jumpToAboutSoftwarePage() async {
+      RouteUtils.pushForNamed(context, RoutePath.aboutSoftwarePage);
     }
 
     Widget _buildOption(IconData icon, String title) {
@@ -57,6 +61,9 @@ class _SettingPageState extends State<SettingPage> {
                 break;
               case '进入后台':
                 _jumpToBackendPage();
+                break;
+              case '关于软件':
+                _jumpToAboutSoftwarePage();
                 break;
               default:
                 break;
@@ -125,10 +132,10 @@ class _SettingPageState extends State<SettingPage> {
         ),
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          color: AppColors.backgroundColor5,
-        ),
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            color: AppColors.backgroundColor5,
+          ),
           child: SafeArea(
             child: SingleChildScrollView(
               padding: EdgeInsets.only(top: 10.r),
@@ -156,10 +163,13 @@ class _SettingPageState extends State<SettingPage> {
                         _buildOption(Icons.phone, '手机号码'),
                         _line(),
                         _buildOption(Icons.lock, '修改密码'),
-                        if(Global.userInfo!.userId==1||Global.userInfo!.userId==19)...[
+                        if (Global.userInfo!.userId == 1 ||
+                            Global.userInfo!.userId == 19) ...[
                           _line(),
                           _buildOption(Icons.web_stories, '进入后台'),
-                        ]
+                        ],
+                        _line(),
+                        _buildOption(Icons.info_outlined, '关于软件'),
                       ],
                     ),
                   ),
