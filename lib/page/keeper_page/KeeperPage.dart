@@ -251,6 +251,7 @@ class _KeeperpageState extends State<Keeperpage>
                     dotType: BannerDotType.none,
                     bannerData: vm.keeperData?.keeperImages,
                     height: 280.h,
+                    isNetworkImage: true,
                   ),
                   Positioned(
                     top: 260.h, // 调整这个值来控制重叠程度

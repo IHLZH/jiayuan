@@ -420,6 +420,7 @@ class _HomePageState extends State<HomePage>
       selector: (context, homeViewModel) => homeViewModel.bannerData,
       builder: (context, bannerData, child) {
         return BannerWidget(
+          isNetworkImage: false,
           dotType: BannerDotType.circle,
           bannerData: bannerData,
           height: 160,
