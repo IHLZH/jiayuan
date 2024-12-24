@@ -18,6 +18,9 @@
 - [x] 家政员认证与家政员中心
 - [x] 聊天功能（单聊、群聊）、推送通知
 - [x] 查找用户、添加好友、好友\群聊查看
+- [x] 悬浮球快捷方式
+- [x] 常见问题展示与反馈
+- [x] 关于软件
 
 ------
 
@@ -30,7 +33,7 @@
 
 ## 应用展示
 
-**主页与委托发布**
+**主页与委托发布（集成高德地图）**
 
 <table>
     <tr>
@@ -41,6 +44,7 @@
     </tr>
 </table>
 
+
 **委托接取与委托搜索**
 
 <table>
@@ -50,7 +54,9 @@
         <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/commission/search_commission.png"/></td>
     </tr>
 </table>
-**聊天相关页面**
+
+
+**聊天相关页面（集成腾讯IM）**
 
 <table>
     <tr>
@@ -65,23 +71,63 @@
     </tr>
 </table>
 
-**用户页面**
+
+**用户页面相关**
+
+<table>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/user/user_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/user/keeper_collection.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/user/faq_page.png"/></td>
+    </tr>
+</table>
 
 
 
-**订单页面**
+**订单页面相关（集成支付宝沙盒）**
+
+<table>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/order_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/status_1.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/status_8.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/status_5.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/evaluate_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/pay.png"/></td>
+    </tr>
+</table>
 
 
 
-**设置页面**
+**设置页面与移动端进入后台**
 
-
+<table>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/setting/setting_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/setting/password_change.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/setting/email_change_page.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/setting/backend_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/setting/backend_2.png"/></td>
+    </tr>
+</table>
 
 **家政员相关页面**
 
-
-
-**登录、注册页面**
+<table>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/keeper/keeper_center.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/keeper/keeper_order.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/keeper/earnings.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/keeper/certificate_page1.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/keeper/certificate_page2.png"/></td>
+    </tr>
+</table>
 
 
 
@@ -89,7 +135,7 @@
 
 ## Log
 
-- 开发中
+- 2024-12-24
 
 
 
