@@ -26,11 +26,12 @@ class _FriendListPageState extends State<FriendListPage>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    _initFriendList();
+    _initList();
   }
 
-  Future<void> _initFriendList() async {
+  Future<void> _initList() async {
     await _friendListVM.getFriendList();
+    await _friendListVM.getGroupList();
   }
 
   @override
@@ -90,66 +91,40 @@ class _FriendListPageState extends State<FriendListPage>{
                 )
             )
         ),
-        body: Consumer<ShareFriendListViewModel>(
-            builder: (context, vm, child){
-              return ListView(
-                children: vm.friendList.map((friend) {
-                  return Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    color: AppColors.backgroundColor6
-                                )
-                            )
-                        ),
-                        child: CheckboxListTile(
-                          controlAffinity: ListTileControlAffinity.leading,
-                          checkboxShape: CircleBorder(
-                            side: BorderSide(
-                              color: AppColors.backgroundColor3,
-                            ),
-                          ),
-                          checkColor: Colors.white,
-                          activeColor: AppColors.appColor,
-                          title: Container(
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    backgroundColor: AppColors.backgroundColor3,
-                                    backgroundImage: friend.userProfile?.faceUrl != null ? CachedNetworkImageProvider(friend.userProfile!.faceUrl!) : null,
-                                  ),
-                                  SizedBox(width: 10,),
-                                  Text(
-                                    friend.friendRemark ?? friend.userProfile!.nickName!,
-                                    style: TextStyle(
-                                        color: AppColors.textColor2b,
-                                        fontSize: 16.sp,
-                                        fontWeight: FontWeight.w400
-                                    ),
-                                  )
-                                ],
-                              )
-                          ),
-                          value: vm.selectedFriendIds.contains(friend.userID),
-                          onChanged: (bool? isSelected) {
-                            setState(() {
-                              if (isSelected == true) {
-                                vm.selectedFriendIds.add(friend.userID);
-                              } else {
-                                vm.selectedFriendIds.remove(friend.userID);
-                              }
-                            });
-                          },
-                        ),
-                      )
-                  );
-                }).toList(),
-              );
-            }
+        body: DefaultTabController(
+          length: 2,
+          child: Column(
+            children: [
+              Container(
+                color: Colors.white,
+                child: TabBar(
+                  labelColor: AppColors.appColor,
+                  unselectedLabelColor: Colors.grey,
+                  indicatorColor: AppColors.appColor,
+                  tabs: [
+                    Tab(text: "好友"),
+                    Tab(text: "群组"),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    Consumer<ShareFriendListViewModel>(
+                      builder: (context, vm, child) {
+                        return friendList();
+                      },
+                    ),
+                    Consumer<ShareFriendListViewModel>(
+                      builder: (context, vm, child) {
+                        return groupList();
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         bottomNavigationBar: Container(
             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -167,7 +142,7 @@ class _FriendListPageState extends State<FriendListPage>{
                     type: AppButtonType.main,
                     buttonText: "分享",
                     onTap: () async {
-                      bool result = await _friendListVM.shareCommission(_friendListVM.selectedFriendIds.toList());
+                      bool result = await _friendListVM.shareCommission(_friendListVM.selectedFriendIds.toList(), _friendListVM.selectedGroupIds.toList());
                       if(result){
                         RouteUtils.pop(context);
                       }
@@ -178,6 +153,126 @@ class _FriendListPageState extends State<FriendListPage>{
             )
         ),
       ),
+    );
+  }
+
+  Widget friendList(){
+    return ListView(
+      children: _friendListVM.friendList.map((friend) {
+        return Container(
+            decoration: BoxDecoration(
+                color: Colors.white
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                          color: AppColors.backgroundColor6
+                      )
+                  )
+              ),
+              child: CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.leading,
+                checkboxShape: CircleBorder(
+                  side: BorderSide(
+                    color: AppColors.backgroundColor3,
+                  ),
+                ),
+                checkColor: Colors.white,
+                activeColor: AppColors.appColor,
+                title: Container(
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: AppColors.backgroundColor3,
+                          backgroundImage: friend.userProfile?.faceUrl != null ? CachedNetworkImageProvider(friend.userProfile!.faceUrl!) : null,
+                        ),
+                        SizedBox(width: 10,),
+                        Text(
+                          friend.friendRemark ?? friend.userProfile!.nickName!,
+                          style: TextStyle(
+                              color: AppColors.textColor2b,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400
+                          ),
+                        )
+                      ],
+                    )
+                ),
+                value: _friendListVM.selectedFriendIds.contains(friend.userID),
+                onChanged: (bool? isSelected) {
+                  setState(() {
+                    if (isSelected == true) {
+                      _friendListVM.selectedFriendIds.add(friend.userID);
+                    } else {
+                      _friendListVM.selectedFriendIds.remove(friend.userID);
+                    }
+                  });
+                },
+              ),
+            )
+        );
+      }).toList(),
+    );
+  }
+
+  Widget groupList(){
+    return ListView(
+      children: _friendListVM.groupList.map((group) {
+        return Container(
+            decoration: BoxDecoration(
+                color: Colors.white
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                          color: AppColors.backgroundColor6
+                      )
+                  )
+              ),
+              child: CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.leading,
+                checkboxShape: CircleBorder(
+                  side: BorderSide(
+                    color: AppColors.backgroundColor3,
+                  ),
+                ),
+                checkColor: Colors.white,
+                activeColor: AppColors.appColor,
+                title: Container(
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: AppColors.backgroundColor3,
+                          backgroundImage: group.faceUrl != null ? CachedNetworkImageProvider(group.faceUrl!) : null,
+                        ),
+                        SizedBox(width: 10,),
+                        Text(
+                          group.groupName ?? "",
+                          style: TextStyle(
+                              color: AppColors.textColor2b,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400
+                          ),
+                        )
+                      ],
+                    )
+                ),
+                value: _friendListVM.selectedGroupIds.contains(group.groupID),
+                onChanged: (bool? isSelected) {
+                  setState(() {
+                    if (isSelected == true) {
+                      _friendListVM.selectedGroupIds.add(group.groupID);
+                    } else {
+                      _friendListVM.selectedGroupIds.remove(group.groupID);
+                    }
+                  });
+                },
+              ),
+            )
+        );
+      }).toList(),
     );
   }
 }
