@@ -17,6 +17,7 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
+import '../../../repository/model/commission_data1.dart';
 import '../../../route/route_utils.dart';
 
 class ChatPage extends StatefulWidget{
@@ -322,17 +323,7 @@ class _ChatPageState extends State<ChatPage>{
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(8.r)
                                 ),
-                                child: Wrap(
-                                  children: [
-                                    Text(
-                                      message.textElem?.text ?? "",
-                                      style: TextStyle(
-                                        color: AppColors.textColor2b,
-                                        fontSize: 16.sp,
-                                      ),
-                                    ),
-                                  ],
-                                )
+                                child: checkIfCommission(message.textElem?.text ?? "")
                             )
                           ],
                         )
@@ -404,17 +395,7 @@ class _ChatPageState extends State<ChatPage>{
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(8.r)
                                 ),
-                                child: Wrap(
-                                  children: [
-                                    Text(
-                                      message.textElem?.text ?? "",
-                                      style: TextStyle(
-                                        color: AppColors.textColor2b,
-                                        fontSize: 16.sp,
-                                      ),
-                                    ),
-                                  ],
-                                )
+                                child: checkIfCommission(message.textElem?.text ?? "")
                             )
                           ],
                         )
@@ -449,6 +430,159 @@ class _ChatPageState extends State<ChatPage>{
           ),
         ],
       )
+    );
+  }
+
+  Widget checkIfCommission(String message) {
+    const prefix = "@CommissionData:";
+
+    if(message.startsWith(prefix)){
+      message = message.substring(prefix.length);
+      return FutureBuilder(
+          future: _chatViewModel.getCommissionDetail(int.parse(message)),
+          builder: (context, snapshot){
+            // 根据snapshot的状态构建UI
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(); // 加载中的UI
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}'); // 错误时的UI
+            } else if (snapshot.hasData) {
+              return CommissionCard(snapshot.data!);
+            } else {
+              return Text('No data'); // 默认状态
+            }
+          }
+      );
+    }else{
+      return Wrap(
+        children: [
+          Text(
+            message ?? "",
+            style: TextStyle(
+              color: AppColors.textColor2b,
+              fontSize: 16.sp,
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget CommissionCard(CommissionData1 commission){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        child: InkWell(
+          onTap: () async {
+            CommissionData1 commissionDetail = await _chatViewModel.getCommissionDetail(commission.commissionId);
+            RouteUtils.pushForNamed(
+                context,
+                RoutePath.commissionDetail,
+                arguments: commissionDetail
+            );
+          },
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: EdgeInsets.all(10),
+            height: 125.h,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          commission.commissionBudget.toString(),
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w600
+                          ),
+                        ),
+                        Text(
+                          "元",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                          color: AppColors.endColor,
+                          borderRadius: BorderRadius.circular(16.r)
+                      ),
+                      child: Text(
+                        commission.typeName,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 5.w,),
+                    Expanded(
+                        child: Text(
+                          "内容：" + (commission.commissionDescription ?? "家政员招募中~"),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
+                          style: TextStyle(
+                              color: AppColors.textColor2b,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w500
+                          ),
+                        )
+                    )
+                  ],
+                ),
+
+                Row(
+                  children: [
+                    Icon(Icons.location_on_outlined),
+                    SizedBox(width: 5.w,),
+                    Text(
+                      commission.county ?? "",
+                      style: TextStyle(
+                          color: AppColors.textColor2b,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500
+                      ),
+                    ),
+                    SizedBox(width: 5.w,),
+                    Expanded(
+                      child: Text(
+                        commission.commissionAddress ?? "",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis, // 超出部分用省略号表示
+                        style: TextStyle(
+                            color: AppColors.textColor2b,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
