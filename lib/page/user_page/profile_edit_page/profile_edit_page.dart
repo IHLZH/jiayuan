@@ -285,7 +285,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     end: Alignment.bottomRight,
                     colors: [
                       Colors.white,
-                      Colors.white70,
+                      Colors.white
                     ],
                   ).createShader(bounds);
                 },
