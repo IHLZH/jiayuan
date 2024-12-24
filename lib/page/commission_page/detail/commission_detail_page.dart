@@ -74,6 +74,7 @@ class _CommissionDetailPageState extends State<CommissionDetailPage>{
                               IconButton(
                                 icon: Icon(Icons.share),
                                 onPressed: () {
+                                  RouteUtils.pushForNamed(context, RoutePath.shareCommissionPage,arguments: vm.commissionData);
                                 },
                               ),
                             ],

@@ -11,6 +11,7 @@ import 'package:jiayuan/page/commission_center_page/commission_center_page.dart'
 import 'package:jiayuan/page/commission_center_page/commission_history/commission_history_page.dart';
 import 'package:jiayuan/page/commission_center_page/order/order_page.dart';
 import 'package:jiayuan/page/commission_page/detail/commission_detail_page.dart';
+import 'package:jiayuan/page/commission_page/detail/firend_list_page.dart';
 import 'package:jiayuan/page/commission_page/search/commission_search_page.dart';
 import 'package:jiayuan/page/home_page/housekeepingScreening%20_page.dart';
 import 'package:jiayuan/page/login_page/email_login_page.dart';
@@ -248,6 +249,8 @@ class Routes {
         return pageRoute(CommissionHistoryPage());
       case RoutePath.feedbackPage:
         return pageRoute(FeedBackPage());
+      case RoutePath.shareCommissionPage:
+        return pageRoute(FriendListPage(), settings: settings);
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(

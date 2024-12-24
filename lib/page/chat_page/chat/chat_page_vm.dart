@@ -17,7 +17,9 @@ import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_info_result.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_group_member_info.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_message.dart';
 
+import '../../../repository/api/commission_api.dart';
 import '../../../repository/api/user_api.dart';
+import '../../../repository/model/commission_data1.dart';
 import '../../../repository/model/searchUser.dart';
 import '../../search_user/user_info/user_info_vm.dart';
 
@@ -187,6 +189,15 @@ class ChatPageViewModel with ChangeNotifier{
       UserInfoViewModel.isChatJumpTo = true;
     }
     RouteUtils.pushForNamed(context, RoutePath.userInfoPage,  arguments: {"user": searchUser}) as String;
+  }
+
+  Future<CommissionData1> getCommissionDetail(int commissionId) async {
+    CommissionData1 commissionData = await CommissionApi.instance.getCommissionById({
+      "commissionId" : commissionId,
+      "lng" : Global.locationInfo?.longitude ?? "",
+      "lat" : Global.locationInfo?.latitude ?? "",
+    });
+    return commissionData;
   }
 
   void initScorllListener(){

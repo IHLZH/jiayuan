@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper_view/flutter_swiper_view.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import '../styles/app_colors.dart';
 
@@ -26,7 +25,10 @@ class BannerWidget extends StatefulWidget {
       this.bannerRadius,
       this.height,
       this.margin,
-      this.onIndexChanged});
+      this.onIndexChanged,
+      required this.isNetworkImage});
+
+  final bool isNetworkImage;
 
   //banner数据列表
   final List<String?>? bannerData;
@@ -63,42 +65,45 @@ class _BannerWidgetState extends State<BannerWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: double.infinity,
-        height: widget.height ?? 181.h,
-        margin: widget.margin,
-        child: Swiper(
-          indicatorLayout: PageIndicatorLayout.NONE,
-          autoplayDelay: 5000,
-          duration: 800,
-          autoplay: true,
-          scale: 0.9,
-          onIndexChanged: widget.onIndexChanged,
-          pagination: widget.dotType == BannerDotType.none ? null : _pagination(),
-          autoplayDisableOnInteraction: false,
-          onTap: (int index) {
-            widget.bannerClick?.call(index);
-          },
-          itemBuilder: (BuildContext context, int index) {
-            // widget.onIndexChanged?.call(index);
-            return ClipRRect(
-                borderRadius: widget.dotType == BannerDotType.circle
-                    ? BorderRadius.all(Radius.circular(15.r))
-                    : BorderRadius.zero,
-                child:
-                Image.asset(widget.bannerData?[index] ?? "",fit: BoxFit.fill,)
-                // CachedNetworkImage(
-                //     fit: BoxFit.fill,
-                //     placeholder: (context, url) {
-                //       return const Center(
-                //         //圆形进度条指示器
-                //         child: CircularPr\ogressIndicator(color: AppColors.redBtnColor),
-                //       );
-                //     },
-                //     imageUrl: widget.bannerData?[index] ?? "")
-            );
-          },
-          itemCount: widget.bannerData?.length ?? 0,
-        ),
+      width: double.infinity,
+      height: widget.height ?? 181.h,
+      margin: widget.margin,
+      child: Swiper(
+        indicatorLayout: PageIndicatorLayout.NONE,
+        autoplayDelay: 5000,
+        duration: 800,
+        autoplay: true,
+        scale: 0.9,
+        onIndexChanged: widget.onIndexChanged,
+        pagination: widget.dotType == BannerDotType.none ? null : _pagination(),
+        autoplayDisableOnInteraction: false,
+        onTap: (int index) {
+          widget.bannerClick?.call(index);
+        },
+        itemBuilder: (BuildContext context, int index) {
+          // widget.onIndexChanged?.call(index);
+          return ClipRRect(
+              borderRadius: widget.dotType == BannerDotType.circle
+                  ? BorderRadius.all(Radius.circular(15.r))
+                  : BorderRadius.zero,
+              child: widget.isNetworkImage
+                  ? CachedNetworkImage(
+                      fit: BoxFit.fill,
+                      placeholder: (context, url) {
+                        return const Center(
+                          //圆形进度条指示器
+                          child: CircularProgressIndicator(
+                              color: AppColors.redBtnColor),
+                        );
+                      },
+                      imageUrl: widget.bannerData?[index] ?? "")
+                  : Image.asset(
+                      widget.bannerData?[index] ?? "",
+                      fit: BoxFit.fill,
+                    ));
+        },
+        itemCount: widget.bannerData?.length ?? 0,
+      ),
     );
   }
 
@@ -126,4 +131,3 @@ class _BannerWidgetState extends State<BannerWidget> {
     }
   }
 }
-

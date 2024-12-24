@@ -37,7 +37,7 @@ class _StartPageState extends State<StartPage> {
     NotificationHelper.getInstance().initialize();
 
     // 初始化CookieJar
-   DioInstance.instance().changeBaseUrl(UrlPath.BaseUrl);
+   DioInstance.instance().changeBaseUrl(UrlPath.testBaseUrl);
 
     //初始化sqlite数据库
     _initDB();
