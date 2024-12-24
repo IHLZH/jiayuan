@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pay/flutter_pay.dart';
+import 'package:flutter_pay/model/ali_pay_result.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:jiayuan/http/dio_instance.dart';
@@ -179,6 +181,87 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     }
   }
 
+  //创建订单
+  Future<int> createOrder() async {
+    String url = UrlPath.createOrderUrl;
+    try {
+      final response = await DioInstance.instance().post(
+        path: url,
+        queryParameters: {
+          'userId': _order.userId,
+          'housekeeperId': _order.keeperId,
+          'amount': _order.commissionBudget,
+          'commissionId': _order.commissionId,
+        },
+      );
+      if (response.statusCode == 200) {
+        return response.data['id'];
+      } else {
+        showToast("网络请求常", duration: const Duration(seconds: 1));
+        return -1;
+      }
+    } catch (e) {
+      showToast("服务器异常", duration: const Duration(seconds: 1));
+      return -1;
+    }
+  }
+
+  //获取orderStr
+  Future<String> getOrderInfo(int orderId) async {
+    String url = UrlPath.getOrderStr;
+    try {
+      final response = await DioInstance.instance().get(
+        path: url,
+        param: {
+          'orderId': orderId,
+        },
+      );
+      if(isProduction)print('获取到的orderStr数据${response.data}');
+      if (response.statusCode == 200) {
+        return response.data;
+      } else {
+        showToast("服务器异常", duration: const Duration(seconds: 1));
+        return "";
+      }
+    } catch (e) {
+      // 处理错误
+      if (isProduction) print('Error: $e');
+      showToast("服务器异常", duration: const Duration(seconds: 1));
+      return "";
+    }
+  }
+
+  //支付
+  Future<AliPayResult> payWithAliPay(String payInfo, {bool? isSandbox}) {
+    return FlutterPay.payWithAliPay(payInfo, isSandbox: isSandbox);
+  }
+
+  Future<void> _payOrder() async {
+    int orderId = await createOrder();
+    if (orderId == -1) {
+      showToast('订单创建失败');
+      return;
+    }
+    String orderStr = await getOrderInfo(orderId);
+    if (orderStr == "") {
+      showToast('获取orderStr失败');
+      return;
+    }
+    AliPayResult aliPayResult = await payWithAliPay(orderStr, isSandbox: true);
+    if (aliPayResult.resultStatus == "9000") {
+      showToast("支付成功", duration: const Duration(seconds: 1));
+
+      //  EasyLoading.showProgress();
+
+      //刷新界面
+    } else {
+      if(isProduction)print(
+          "支付失败 ${aliPayResult.result} + ${aliPayResult.resultStatus} + ${aliPayResult.memo}");
+      //支付失败
+      showToast("支付失败", duration: const Duration(seconds: 1));
+    }
+  }
+
   // 构建图标按钮
   Widget _buildIconButton(IconData icon, String title, Color color) {
     return ElevatedButton.icon(
@@ -208,6 +291,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             _cancelOrder();
           case '修改信息':
             _changeOrderInfo();
+          case '去支付':
+            _payOrder();
         }
       },
     );
