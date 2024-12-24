@@ -172,5 +172,8 @@ class UrlPath {
 
   // 获取未过审原因
   static const String getRejectReason = "/order/reject/reason";
+
+  // 获取家政员用户id
+  static const String keeperGetUserId = "/keeper/getUserId";
 }
 
