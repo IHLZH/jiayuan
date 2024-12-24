@@ -48,6 +48,7 @@ import '../page/tab_page/tab_page.dart';
 import '../page/user_page/browser_history_page/browser_history_page.dart';
 import '../page/user_page/keeper_collection/keeper_collection.dart';
 import '../page/user_page/profile_edit_page/profile_edit_page.dart';
+import '../page/user_page/setting_page/about_software_page/about_software_page.dart';
 import '../page/user_page/setting_page/change_password_page/change_password_page.dart';
 import '../page/user_page/setting_page/change_password_page/password_check_page.dart';
 import '../page/user_page/setting_page/change_password_page/reset_password_page.dart';
@@ -234,6 +235,9 @@ class Routes {
             print("============= title ==========$webTitle");
           },
         ));
+        //关于软件页
+      case RoutePath.aboutSoftwarePage:
+        return pageRoute(AboutSoftwarePage());
       case RoutePath.walletCenter:
         return pageRoute(WalletCenterPage());
       case RoutePath.faq:

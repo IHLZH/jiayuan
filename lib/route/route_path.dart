@@ -167,4 +167,7 @@ class RoutePath {
 
   // Web页
   static const String webViewPage = "/webViewPage";
+
+  // 关于软件页
+  static const String aboutSoftwarePage = "/aboutSoftwarePage";
 }
