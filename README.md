@@ -4,6 +4,8 @@
 
 提示：本项目仅作学习研究只用，部分图片资源来自网络，请勿将这些资源用于商业项目。
 
+-------
+
 ## 功能
 
 - [x] 登录、注册、忘记密码、邮箱\手机号绑定、注销
@@ -17,11 +19,73 @@
 - [x] 聊天功能（单聊、群聊）、推送通知
 - [x] 查找用户、添加好友、好友\群聊查看
 
+------
+
 ## 界面
 
 - [x] Android版适配
-
 - [x] IOS版适配
+
+------
+
+## 应用展示
+
+**主页与委托发布**
+
+<table>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/home/home_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/home/commission_chose.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/commission/send_commission.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/commission/map.png"/></td>
+    </tr>
+</table>
+
+**委托接取与委托搜索**
+
+<table>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/commission/commission_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/commission/commission_detail.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/commission/search_commission.png"/></td>
+    </tr>
+</table>
+**聊天相关页面**
+
+<table>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/conversation_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/chat_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/group_info_page.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/friend_list_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/search_user_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/user_info.png"/></td>
+    </tr>
+</table>
+
+**用户页面**
+
+
+
+**订单页面**
+
+
+
+**设置页面**
+
+
+
+**家政员相关页面**
+
+
+
+**登录、注册页面**
+
+
+
+------
 
 ## Log
 
