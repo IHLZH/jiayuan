@@ -57,7 +57,7 @@ class FaqPage extends StatelessWidget{
                         ),
                         TextButton(
                             onPressed: (){
-
+                              RouteUtils.pushForNamed(context, RoutePath.feedbackPage);
                             },
                             child: Text(
                               "反馈",

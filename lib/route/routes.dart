@@ -26,12 +26,14 @@ import 'package:jiayuan/page/search_user/user_info/user_info_page.dart';
 import 'package:jiayuan/page/search_user/user_search_page.dart';
 import 'package:jiayuan/page/start_page.dart';
 import 'package:jiayuan/page/user_page/faq_page/faq_page.dart';
+import 'package:jiayuan/page/user_page/faq_page/feedback_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/change_email_page/bind_email_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/change_email_page/change_email_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/change_email_page/check_email_page.dart';
 import 'package:jiayuan/page/user_page/setting_page/setting_page.dart';
 import 'package:jiayuan/repository/model/searchUser.dart';
 import 'package:jiayuan/route/route_path.dart';
+import 'package:jiayuan/route/route_utils.dart';
 
 import '../page/ai_customer_service_page/ai_customer_service_page.dart';
 import '../page/chat_page/chat/chat_page.dart';
@@ -244,6 +246,8 @@ class Routes {
         return pageRoute(FaqPage());
       case RoutePath.commissionHistory:
         return pageRoute(CommissionHistoryPage());
+      case RoutePath.feedbackPage:
+        return pageRoute(FeedBackPage());
     }
     return MaterialPageRoute(
         builder: (context) => Scaffold(
