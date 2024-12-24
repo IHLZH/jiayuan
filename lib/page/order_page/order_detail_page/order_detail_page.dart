@@ -4,15 +4,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:jiayuan/http/dio_instance.dart';
 import 'package:jiayuan/page/order_page/order_detail_page/order_detail_page_vm.dart';
+import 'package:jiayuan/repository/api/keeper_api.dart';
 import 'package:jiayuan/repository/model/full_order.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/utils/constants.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
+import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
 
 import '../../../common_ui/styles/app_colors.dart';
 import '../../../http/url_path.dart';
 import '../../../im/im_chat_api.dart';
+import '../../../repository/model/HouseKeeper_data_detail.dart';
 import '../../../route/route_utils.dart';
 import '../../../utils/global.dart';
 
@@ -155,9 +160,23 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   // 跳转客服聊天
   Future<void> _jumpToCustomerService(int userId) async {
     V2TimConversation? conversation =
-    await ImChatApi.getInstance().getConversation("c2c_${userId}");
+        await ImChatApi.getInstance().getConversation("c2c_${userId}");
     RouteUtils.pushForNamed(context, RoutePath.chatPage,
         arguments: conversation);
+  }
+
+  Future<void> _jumpToKeeperChatPage(int id) async {
+    int userId = -1;
+
+    userId = await KeeperApi.instance.getUserId(id);
+
+    if (userId != -1) {
+      V2TimConversation? conversation =
+          await ImChatApi.getInstance().getConversation("c2c_${userId}");
+
+      RouteUtils.pushForNamed(context, RoutePath.chatPage,
+          arguments: conversation);
+    }
   }
 
   // 构建图标按钮
@@ -381,9 +400,16 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             SizedBox(width: 10),
             _buildOrderInfoPrefix('接单家政员'),
             Expanded(child: SizedBox()),
-            _buildOrderInfo(
-                _order.keeperName == null ? '未确认' : _order.keeperName!,
-                Colors.purple[600]!),
+            GestureDetector(
+              onTap: () {
+                if (_order.keeperId != null) {
+                  _jumpToKeeperChatPage(_order.keeperId!);
+                }
+              },
+              child: _buildOrderInfo(
+                  _order.keeperName == null ? '未确认' : _order.keeperName!,
+                  Colors.purple[600]!),
+            ),
             SizedBox(width: 10),
           ],
         ),
@@ -499,11 +525,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   // 处理“联系家政员”点击事件
                   if (_order.keeperId == null)
                     showToast("还没有家政员接单", duration: Duration(seconds: 1));
-                  else{
+                  else {
                     String phoneNumber = OrderDetailPageVm.keeperPhone!;
 
-                    if(phoneNumber!="未确认")OrderDetailPageVm.makePhoneCall(phoneNumber);
-                    else showToast("该家政员未绑定电话", duration: Duration(seconds: 1));
+                    if (phoneNumber != "未确认")
+                      OrderDetailPageVm.makePhoneCall(phoneNumber);
+                    else
+                      showToast("该家政员未绑定电话", duration: Duration(seconds: 1));
                   }
                 },
                 style: TextButton.styleFrom(
