@@ -4,6 +4,8 @@ import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/page/chat_page/conversation_page.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
 import 'package:jiayuan/page/chat_page/group_info/group_info_page_vm.dart';
+import 'package:jiayuan/repository/api/keeper_api.dart';
+import 'package:jiayuan/repository/model/HouseKeeper_data_detail.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/global.dart';
@@ -198,6 +200,11 @@ class ChatPageViewModel with ChangeNotifier{
       "lat" : Global.locationInfo?.latitude ?? "",
     });
     return commissionData;
+  }
+
+  Future<HousekeeperDataDetail> getKeeperDetail(int keeperId) async {
+    HousekeeperDataDetail keeperDetail = await KeeperApi.instance.getKeeperDataDetail(keeperId);
+    return keeperDetail;
   }
 
   void initScorllListener(){

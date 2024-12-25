@@ -53,7 +53,9 @@ class _KeeperpageState extends State<Keeperpage>
                 elevation: 0,
                 actions: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      RouteUtils.pushForNamed(context, RoutePath.shareCommissionPage, arguments: vm.keeperData);
+                    },
                     icon: Icon(
                       Icons.share,
                       color: Colors.white,
@@ -90,7 +92,9 @@ class _KeeperpageState extends State<Keeperpage>
                       elevation: 0,
                       actions: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            RouteUtils.pushForNamed(context, RoutePath.shareCommissionPage, arguments: vm.keeperData);
+                          },
                           icon: Icon(
                             Icons.share,
                             color: Colors.white,
