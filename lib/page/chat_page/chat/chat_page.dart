@@ -74,33 +74,71 @@ class _ChatPageState extends State<ChatPage>{
     return shouldShowTime;
   }
 
-  void _showPickerOptions(BuildContext context, int id) {
+  void _showPickerOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return SafeArea(
           child: Wrap(
             children: [
-              ListTile(
-                leading: Icon(Icons.photo_library),
-                title: Text("从相册选择"),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  //_uploadFromGallery(id);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.camera_alt),
-                title: Text("使用相机拍照"),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  //_uploadFromCamera(id);
-                },
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  addOptions(Icons.add_a_photo, "拍摄照片", 0),
+                  addOptions(Icons.photo, "发送图片", 1),
+                  addOptions(Icons.person, "发送个人名片", 2),
+                ],
+              )
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget addOptions(IconData icon, String text, int id){
+    return InkWell(
+      onTap: () async {
+        switch(id){
+          case 0:
+            if(_chatViewModel.conversation!.type == 1){
+              await _chatViewModel.sendSingCameraImage();
+            }else{
+              await _chatViewModel.sendGroupCameraImage();
+            }
+            RouteUtils.pop(context);
+            break;
+          case 1:
+            if(_chatViewModel.conversation!.type == 1){
+              await _chatViewModel.sendSingGalleryImage();
+            }else{
+              await _chatViewModel.sendGroupGalleryImage();
+            }
+            RouteUtils.pop(context);
+            break;
+          case 2:
+            await _chatViewModel.sendSelfCard();
+            RouteUtils.pop(context);
+            break;
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              size: 30,
+            ),
+            Text(
+              text,
+              style: TextStyle(
+                  color: AppColors.textColor2b
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -219,10 +257,10 @@ class _ChatPageState extends State<ChatPage>{
                       margin: EdgeInsets.only(bottom: keyboardHeight),
                       decoration: BoxDecoration(
                         border: Border(
-                          top: BorderSide(
-                            color: const Color(0xffd3d3d3),
-                            width: 0.5
-                          )
+                            top: BorderSide(
+                                color: const Color(0xffd3d3d3),
+                                width: 0.5
+                            )
                         ),
                         color: AppColors.backgroundColor5,
                       ),
@@ -231,24 +269,24 @@ class _ChatPageState extends State<ChatPage>{
                         children: [
                           IconButton(
                               onPressed: (){
-
+                                _showPickerOptions(context);
                               },
                               icon: Icon(Icons.add)
                           ),
                           Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
+                              child: Container(
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(4),
                                   color: Colors.white,
-                              ),
-                              child: TextField(
-                                controller: _chatViewModel.textController,
-                                maxLines: null,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none
                                 ),
-                              ),
-                            )
+                                child: TextField(
+                                  controller: _chatViewModel.textController,
+                                  maxLines: null,
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none
+                                  ),
+                                ),
+                              )
                           ),
                           Container(
                             margin: EdgeInsets.symmetric(horizontal: 5),
@@ -259,9 +297,9 @@ class _ChatPageState extends State<ChatPage>{
                             child: TextButton(
                                 onPressed: (){
                                   if(_chatViewModel.conversation!.type! == 1){
-                                    _chatViewModel.sendSingMessage();
+                                    _chatViewModel.sendSingMessage(_chatViewModel.textController.text);
                                   }else{
-                                    _chatViewModel.sendGroupMessage();
+                                    _chatViewModel.sendGroupMessage(_chatViewModel.textController.text);
                                   }
                                   _chatViewModel.textController.clear();
                                 },
@@ -437,6 +475,7 @@ class _ChatPageState extends State<ChatPage>{
   Widget checkIfCommission(String message) {
     const prefixCommission = "@CommissionData:";
     const prefixKeeper = "@KeeperData:";
+    const prefixImage = "@Image:";
 
     if(message.startsWith(prefixCommission)){
       message = message.substring(prefixCommission.length);
@@ -445,7 +484,7 @@ class _ChatPageState extends State<ChatPage>{
           builder: (context, snapshot){
             // 根据snapshot的状态构建UI
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // 加载中的UI
+              return Container(); // 加载中的UI
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}'); // 错误时的UI
             } else if (snapshot.hasData) {
@@ -462,7 +501,7 @@ class _ChatPageState extends State<ChatPage>{
           builder: (context, snapshot){
             // 根据snapshot的状态构建UI
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // 加载中的UI
+              return Container(); // 加载中的UI
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}'); // 错误时的UI
             } else if (snapshot.hasData) {
@@ -471,6 +510,18 @@ class _ChatPageState extends State<ChatPage>{
               return Text('No data'); // 默认状态
             }
           }
+      );
+    }else if(message.startsWith(prefixImage)){
+      message = message.substring(prefixImage.length);
+      return FittedBox(
+        fit: BoxFit.contain,
+        child: Image(
+          image: CachedNetworkImageProvider(
+            message,
+            maxHeight: 300,
+            maxWidth: 150
+          ),
+        ),
       );
     }else{
       return Wrap(
