@@ -122,7 +122,7 @@ class CommissionTypeViewModel with ChangeNotifier{
 
   Future<void> refreshComission(Map<String, dynamic> param) async {
     List<CommissionData1> commissionData = await CommissionApi.instance.getCommission(param);
-    if(!commissionData.isEmpty && commissionData.length >= 3){
+    if(!commissionData.isEmpty){
       this.commissionDataList = commissionData;
     }else{
       if(startPage == 1)return;

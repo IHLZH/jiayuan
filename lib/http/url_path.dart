@@ -1,9 +1,9 @@
 class UrlPath {
   static const String realBaseUrl = "http://192.168.3.32:9900/";
 
-  static const String BaseUrl = "http://10.7.89.121:8080";
+  //static const String BaseUrl = "http://10.7.89.121:8080";
   // static const String BaseUrl = "http://192.168.31.189:8080";
-  // static const String BaseUrl = "http://www.shinesuning.top:8080";
+  static const String BaseUrl = "http://www.shinesuning.top:8080";
   static const String wangBaseUrl = "http://10.7.89.154:8080";
 
   static const String testBaseUrl = "http://10.7.89.68:8080";

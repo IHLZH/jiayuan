@@ -36,7 +36,7 @@ class DioInstance {
         sendTimeout: sendTimeout ?? _defaultTimeout,
         responseType: responseType,
         contentType: contentType);
-    // _dio.interceptors.add(TokenInterceptor());
+     _dio.interceptors.add(TokenInterceptor());
     // _dio.interceptors.add(PrintLogInterceptor());
     // _dio.interceptors.add(RspInterceptor());
 
