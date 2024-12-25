@@ -485,6 +485,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             SizedBox(width: 10),
             _buildOrderInfoPrefix('接单家政员'),
             Expanded(child: SizedBox()),
+            Icon(Icons.person,color: Colors.blue,),
             GestureDetector(
               onTap: () {
                 if (_order.keeperId != null) {
@@ -493,7 +494,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               },
               child: _buildOrderInfo(
                   _order.keeperName == null ? '未确认' : _order.keeperName!,
-                  Colors.purple[600]!),
+                  Colors.blue),
             ),
             SizedBox(width: 10),
           ],
