@@ -409,7 +409,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               ),
             ),
           ),
-          SizedBox(width: 10),
+          SizedBox(width: 30),
           SafeArea(
             child: Container(
                 width: 140,
@@ -429,9 +429,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 Colors.grey[600]!),
                           ],
                         ),
+                        SizedBox(height: 10),
+                        _buildOrderInfoPrefix('创建时间'),
+                        SizedBox(height: 5),
                         Wrap(
                           children: [
-                            _buildOrderInfoPrefix('创建时间'),
                             _buildOrderInfo(
                                 DateFormat('yyyy-MM-dd HH:mm:ss')
                                     .format(_order.createTime!),
