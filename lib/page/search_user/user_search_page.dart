@@ -134,7 +134,10 @@ class _UserSearchPageState extends State<UserSearchPage> {
                               margin: EdgeInsets.zero,
                               elevation: 0,
                               child: Container(
-                                color: Colors.white,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.2))),
+                                ),
                                 child: ListTile(
                                   contentPadding: EdgeInsets.only(
                                       left: 16, right: 16, top: 8, bottom: 8),
@@ -162,7 +165,7 @@ class _UserSearchPageState extends State<UserSearchPage> {
                                         searchUser.email ?? "无邮箱",
                                         style: TextStyle(color: Colors.grey[600]),
                                       ),
-                                      Divider(),
+                                      // Divider(),
                                     ],
                                   ),
                                   onTap: () {

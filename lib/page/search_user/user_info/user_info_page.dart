@@ -161,15 +161,11 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         if (widget.user.userType == 1) ...[
                           const SizedBox(width: 8),
                           _buildActionButton(
-                            icon: Icons.info,
+                            icon: Icons.house,
                             label: '家政员',
-                            color: Colors.orange,
+                            color: Colors.redAccent,
                             onPressed: () {
-                              // TODO: 实现家政员信息功能
                               _jumpToKeeperInfoPage();
-                              // ScaffoldMessenger.of(context).showSnackBar(
-                              //   SnackBar(content: Text('家政员信息功能开发中')),
-                              // );
                             },
                           ),
                           const Expanded(child: SizedBox()),
@@ -252,17 +248,18 @@ class _UserInfoPageState extends State<UserInfoPage> {
   }) {
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        backgroundColor: color,
+        backgroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: color),
         ),
       ),
       onPressed: onPressed,
-      icon: Icon(icon, color: Colors.white, size: 18),
+      icon: Icon(icon, color: color, size: 18),
       label: Text(
         label,
-        style: const TextStyle(fontSize: 14, color: Colors.white),
+        style: TextStyle(fontSize: 14, color: color),
       ),
     );
   }
