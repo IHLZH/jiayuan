@@ -146,7 +146,7 @@
 
 ## Log
 
-- 2024-12-24
+- [软件apk](https://codeup.aliyun.com/6708806c1c80af57f902d17f/aip-semester5-2022/family-bond/jiayuan_mobile/blob/master/apk/jiayuan.apk)
 
 
 
