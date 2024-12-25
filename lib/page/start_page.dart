@@ -73,7 +73,11 @@ class _StartPageState extends State<StartPage> {
 
   void _jumpToLogin() {
     // 如果Token不存活 跳转到登录界面
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () async {
+      Global.token = "";
+      //持久化
+      await SpUtils.saveString("token", Global.token!);
+
       RouteUtils.pushNamedAndRemoveUntil(context, RoutePath.loginPage);
     });
   }
