@@ -97,7 +97,7 @@ class AiCustomerServiceViewModel with ChangeNotifier {
       // 发送消息到后端
       final response = await DioInstance.instance().get(
         path: url,
-        param: {'message': message, 'username': Global.userInfo?.userName},
+        param: {'message': message},
         options: Options(headers: {"Authorization": Global.token}),
       );
 
