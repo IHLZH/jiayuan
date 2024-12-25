@@ -135,10 +135,11 @@
 
 <table>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/ai/ai_keeper.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/ai/ai_order.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/ai/ai_keeper_new.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/ai/ai_order_new.png"/></td>
     </tr>
 </table>
+
 
 
 ------
