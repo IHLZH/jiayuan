@@ -409,7 +409,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               ),
             ),
           ),
-          SizedBox(width: 30),
+          SizedBox(width: 25),
           SafeArea(
             child: Container(
                 width: 140,
