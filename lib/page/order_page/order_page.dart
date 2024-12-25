@@ -604,7 +604,7 @@ class _OrderPageState extends State<OrderPage> {
             builder: (BuildContext context) {
               return widget.status == -1
                   ? IconButton(
-                      icon: Icon(Icons.menu, color: Colors.black),
+                      icon: Icon(Icons.filter_alt_outlined, color: Colors.black),
                       onPressed: () {
                         Scaffold.of(context).openEndDrawer();
                       },
