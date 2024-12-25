@@ -145,7 +145,7 @@ class ChatPageViewModel with ChangeNotifier{
             "userId" : Global.userInfo?.userId
           });
       for(String url in images){
-        await sendSingMessage("@Image:${url}");
+        if(url != "")await sendSingMessage("@Image:${url}");
       }
     }
   }
@@ -161,7 +161,7 @@ class ChatPageViewModel with ChangeNotifier{
             "userId" : Global.userInfo?.userId
           });
       for(String url in images){
-        await sendGroupMessage("@Image:${url}");
+        if(url != "")await sendGroupMessage("@Image:${url}");
       }
     }
   }
@@ -176,7 +176,7 @@ class ChatPageViewModel with ChangeNotifier{
             "userId" : Global.userInfo?.userId
           });
       for(String url in images){
-        await sendSingMessage("@Image:${url}");
+        if(url != "")await sendSingMessage("@Image:${url}");
       }
     }
   }
@@ -191,7 +191,19 @@ class ChatPageViewModel with ChangeNotifier{
             "userId" : Global.userInfo?.userId
           });
       for(String url in images){
-        await sendGroupMessage("@Image:${url}");
+        if(url != "")await sendGroupMessage("@Image:${url}");
+      }
+    }
+  }
+
+  Future<void> sendGroupSelfCard() async {
+    if(conversation != null){
+      if(Global.keeperInfo != null){
+        await ImChatApi.getInstance().sendGroupTextMessage(conversation!.groupID!, "@KeeperData:${Global.keeperInfo?.keeperId}");
+        await refreshChatMessage();
+        showToast("发送成功");
+      }else{
+        showToast("家政员信息获取错误，也许您尚未认证");
       }
     }
   }
@@ -199,7 +211,7 @@ class ChatPageViewModel with ChangeNotifier{
   Future<void> sendSelfCard() async {
     if(conversation != null){
       if(Global.keeperInfo != null){
-        await ImChatApi.getInstance().sendGroupTextMessage(conversation!.groupID!, "@KeeperData:${Global.keeperInfo?.keeperId}");
+        await ImChatApi.getInstance().sendTextMessage(conversation!.userID!, "@KeeperData:${Global.keeperInfo?.keeperId}");
         await refreshChatMessage();
         showToast("发送成功");
       }else{

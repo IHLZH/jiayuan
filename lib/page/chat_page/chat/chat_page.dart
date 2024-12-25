@@ -117,7 +117,11 @@ class _ChatPageState extends State<ChatPage>{
             RouteUtils.pop(context);
             break;
           case 2:
-            await _chatViewModel.sendSelfCard();
+            if(_chatViewModel.conversation!.type == 1){
+              await _chatViewModel.sendSelfCard();
+            }else{
+              await _chatViewModel.sendGroupSelfCard();
+            }
             RouteUtils.pop(context);
             break;
         }
@@ -513,16 +517,18 @@ class _ChatPageState extends State<ChatPage>{
       );
     }else if(message.startsWith(prefixImage)){
       message = message.substring(prefixImage.length);
-      return FittedBox(
-        fit: BoxFit.contain,
-        child: Image(
-          image: CachedNetworkImageProvider(
-            message,
-            maxHeight: 300,
-            maxWidth: 150
+      if(message != "")
+        return FittedBox(
+          fit: BoxFit.contain,
+          child: Image(
+            image: CachedNetworkImageProvider(
+              message,
+              maxHeight: 300,
+              maxWidth: 150
+            ),
           ),
-        ),
-      );
+        );
+      return Container();
     }else{
       return Wrap(
         children: [
