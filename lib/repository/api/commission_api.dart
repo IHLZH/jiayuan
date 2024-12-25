@@ -96,7 +96,7 @@ class CommissionApi {
 
     try {
       final Response response = await DioInstance.instance()
-          .get(path: UrlPath.getCommissionById, param: param);
+          .get(path: UrlPath.getCommissionById, param: param, options: Options(headers: {"Authorization": Global.token}));
 
       if (response.statusCode == 200) {
         if(response.data['code'] == 200){

@@ -109,9 +109,7 @@ class AiCustomerServiceViewModel with ChangeNotifier {
               response.data['message'] == '家政员id') {
             messagesList = List<int>.from(response.data['data']);
 
-            //将List<int>转为逗号分隔的字符串
             answer = response.data['message'];
-            // answer = messagesList.join(",");
 
             if (isProduction)
               print("============== answer: $answer ================");
