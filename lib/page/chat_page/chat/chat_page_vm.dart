@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:jiayuan/http/url_path.dart';
 import 'package:jiayuan/im/im_chat_api.dart';
 import 'package:jiayuan/page/chat_page/conversation_page.dart';
 import 'package:jiayuan/page/chat_page/conversation_page_vm.dart';
 import 'package:jiayuan/page/chat_page/group_info/group_info_page_vm.dart';
 import 'package:jiayuan/repository/api/keeper_api.dart';
+import 'package:jiayuan/repository/api/uploadImage_api.dart';
 import 'package:jiayuan/repository/model/HouseKeeper_data_detail.dart';
 import 'package:jiayuan/route/route_path.dart';
 import 'package:jiayuan/route/route_utils.dart';
 import 'package:jiayuan/utils/global.dart';
+import 'package:jiayuan/utils/image_utils.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:tencent_cloud_chat_sdk/models/v2_tim_conversation.dart';
@@ -44,6 +47,8 @@ class ChatPageViewModel with ChangeNotifier{
   bool hasMoreData = true;
 
   bool isLoading = false;
+
+  bool showImagePicker = false;
 
   //获取消息列表
   Future<void> getChatMessage() async {
@@ -113,19 +118,93 @@ class ChatPageViewModel with ChangeNotifier{
   }
 
   //发送单聊消息
-  Future<void> sendSingMessage() async {
+  Future<void> sendSingMessage(String text) async {
     if(conversation != null){
-      await ImChatApi.getInstance().sendTextMessage(conversation!.userID!, textController.text);
+      await ImChatApi.getInstance().sendTextMessage(conversation!.userID!, text);
       //更新lastMessageId
       await refreshChatMessage();
     }
   }
 
   //发送群聊消息
-  Future<void> sendGroupMessage() async {
+  Future<void> sendGroupMessage(String text) async {
     if(conversation != null){
-      await ImChatApi.getInstance().sendGroupTextMessage(conversation!.groupID!, textController.text);
+      await ImChatApi.getInstance().sendGroupTextMessage(conversation!.groupID!, text);
       await refreshChatMessage();
+    }
+  }
+
+  //发送拍摄图片
+  Future<void> sendSingCameraImage() async {
+    final picker = await ImageUtils.getCameraImage();
+    if(picker != null){
+      List<String> images = await UploadImageApi.instance.uploadMultipleImages(
+          [picker],
+          UrlPath.uploadWorkPicture,
+          queryParameters: {
+            "userId" : Global.userInfo?.userId
+          });
+      for(String url in images){
+        await sendSingMessage("@Image:${url}");
+      }
+    }
+  }
+
+  //发送拍摄图片
+  Future<void> sendGroupCameraImage() async {
+    final picker = await ImageUtils.getCameraImage();
+    if(picker != null){
+      List<String> images = await UploadImageApi.instance.uploadMultipleImages(
+          [picker],
+          UrlPath.uploadWorkPicture,
+          queryParameters: {
+            "userId" : Global.userInfo?.userId
+          });
+      for(String url in images){
+        await sendGroupMessage("@Image:${url}");
+      }
+    }
+  }
+
+  Future<void> sendSingGalleryImage() async {
+    final picker = await ImageUtils.getImage();
+    if(picker != null){
+      List<String> images = await UploadImageApi.instance.uploadMultipleImages(
+          [picker],
+          UrlPath.uploadWorkPicture,
+          queryParameters: {
+            "userId" : Global.userInfo?.userId
+          });
+      for(String url in images){
+        await sendSingMessage("@Image:${url}");
+      }
+    }
+  }
+
+  Future<void> sendGroupGalleryImage() async {
+    final picker = await ImageUtils.getImage();
+    if(picker != null){
+      List<String> images = await UploadImageApi.instance.uploadMultipleImages(
+          [picker],
+          UrlPath.uploadWorkPicture,
+          queryParameters: {
+            "userId" : Global.userInfo?.userId
+          });
+      for(String url in images){
+        await sendGroupMessage("@Image:${url}");
+      }
+    }
+  }
+
+  Future<void> sendSelfCard() async {
+    if(conversation != null){
+      if(Global.keeperInfo != null){
+        await ImChatApi.getInstance().sendGroupTextMessage(conversation!.groupID!, "@KeeperData:${Global.keeperInfo?.keeperId}");
+        await refreshChatMessage();
+        showToast("发送成功");
+      }else{
+        showToast("家政员信息获取错误，也许您尚未认证");
+      }
     }
   }
 
