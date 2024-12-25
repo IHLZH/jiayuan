@@ -66,10 +66,11 @@
     </tr>
     <tr>
         <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/friend_list_page.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/search_user_page.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/user_info.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/search_user_new.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/user_info_new.png"/></td>
     </tr>
 </table>
+
 
 
 ### 用户页面相关
