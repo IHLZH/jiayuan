@@ -863,6 +863,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           6 => null,
           2 => null,
           3 => null,
+          7 => null,
           8 => null,
           _ => Container(
               height: 60,
@@ -933,8 +934,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         ),
                       5 => _buildIconButton(Icons.rate_review_outlined, '去评价',
                           AppColors.appColor),
-                      7 => _buildIconButton(Icons.rate_review_outlined, '我的评价',
-                          AppColors.appColor),
+                      // 7 => _buildIconButton(Icons.rate_review_outlined, '我的评价',
+                      //     AppColors.appColor),
                       _ => Container(),
                     },
                     SizedBox(width: 8),
