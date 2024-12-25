@@ -87,7 +87,7 @@
 
 <table>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/order_page.png"/></td>
+        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/order_page_new.png"/></td>
         <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/status_1.png"/></td>
         <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/status_8.png"/></td>
     </tr>
@@ -97,6 +97,7 @@
         <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/pay.png"/></td>
     </tr>
 </table>
+
 
 
 ### 设置页面与移动端进入后台
