@@ -61,8 +61,8 @@ class _UserSearchPageState extends State<UserSearchPage> {
                         child: TextField(
                           style: TextStyle(
                               color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18),
+                              // fontWeight: FontWeight.bold,
+                              fontSize: 16),
                           controller: _searchController,
                           decoration: InputDecoration(
                             hintText: "输入(昵称/邮箱/手机号)",
