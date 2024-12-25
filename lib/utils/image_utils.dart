@@ -1,4 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -94,5 +97,55 @@ class ImageUtils {
     } else {
       return await file.readAsBytes();
     }
+  }
+
+  // 显示全屏图像的对话框方法
+  void _showFullImageDialog(BuildContext context, String url) {
+    showDialog(
+      context: context,
+      barrierDismissible: true, // 用户可以点击空白区域关闭对话框
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          insetPadding: EdgeInsets.zero,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Hero(
+                tag: 'avatar-userAvatar',
+                child: Image(
+                  image: CachedNetworkImageProvider(url),
+                  fit: BoxFit.contain,
+                ),
+              ),
+              Positioned(
+                right: 10,
+                top: 10,
+                child: Container(
+                  width: 35,
+                  height: 35,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Center(
+                    child: IconButton(
+                      highlightColor: Colors.black.withOpacity(0.2),
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
