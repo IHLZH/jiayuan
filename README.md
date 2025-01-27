@@ -37,10 +37,10 @@
 
 <table>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/home/home_page.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/home/commission_chose.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/commission/send_commission.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/commission/map.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/home/home_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/home/commission_chose.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/commission/send_commission.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/commission/map.png"/></td>
     </tr>
 </table>
 
@@ -49,9 +49,9 @@
 
 <table>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/commission/commission_page.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/commission/commission_detail.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/commission/search_commission.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/commission/commission_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/commission/commission_detail.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/commission/search_commission.png"/></td>
     </tr>
 </table>
 
@@ -60,14 +60,14 @@
 
 <table>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/conversation_page.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/chat_page.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/group_info_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/chat/conversation_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/chat/chat_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/chat/group_info_page.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/friend_list_page.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/search_user_new.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/chat/user_info_new.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/chat/friend_list_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/chat/search_user_new.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/chat/user_info_new.png"/></td>
     </tr>
 </table>
 
@@ -77,9 +77,9 @@
 
 <table>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/user/user_page.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/user/keeper_collection.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/user/faq_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/user/user_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/user/keeper_collection.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/user/faq_page.png"/></td>
     </tr>
 </table>
 
@@ -88,14 +88,14 @@
 
 <table>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/order_page_new.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/status_1.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/status_8.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/order/order_page_new.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/order/status_1.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/order/status_8.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/status_5.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/evaluate_page.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/order/pay.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/order/status_5.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/order/evaluate_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/order/pay.png"/></td>
     </tr>
 </table>
 
@@ -105,13 +105,13 @@
 
 <table>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/setting/setting_page.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/setting/password_change.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/setting/email_change_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/setting/setting_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/setting/password_change.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/setting/email_change_page.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/setting/backend_page.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/setting/backend_2.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/setting/backend_page.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/setting/backend_2.png"/></td>
     </tr>
 </table>
 
@@ -120,13 +120,13 @@
 
 <table>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/keeper/keeper_center.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/keeper/keeper_order.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/keeper/earnings.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/keeper/keeper_center.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/keeper/keeper_order.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/keeper/earnings.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/keeper/certificate_page1.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/keeper/certificate_page2.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/keeper/certificate_page1.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/keeper/certificate_page2.png"/></td>
     </tr>
 </table>
 
@@ -135,8 +135,8 @@
 
 <table>
     <tr>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/ai/ai_keeper_new.png"/></td>
-        <td><img src="https://gitee.com/xu-jinglei0320/jiayuan_image/raw/master/app_image/ai/ai_order_new.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/ai/ai_keeper_new.png"/></td>
+        <td><img src="https://github.com/ikunhuaji/jiayuan_image/raw/master/app_image/ai/ai_order_new.png"/></td>
     </tr>
 </table>
 
@@ -146,7 +146,7 @@
 
 ## Log
 
-- [软件apk](https://codeup.aliyun.com/6708806c1c80af57f902d17f/aip-semester5-2022/family-bond/jiayuan_mobile/blob/master/apk/jiayuan.apk)
+- [软件apk](https://github.com/IHLZH/JiaYuan/blob/master/apk/jiayuan.apk)
 
 
 
