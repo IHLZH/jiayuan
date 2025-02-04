@@ -146,7 +146,7 @@
 
 ## Log
 
-- [软件apk](https://github.com/IHLZH/JiaYuan/blob/master/apk/jiayuan.apk)
+- [软件apk](https://github.com/IHLZH/JiaYuan/blob/master/apk/jiayuan.apk)(服务器当前已关闭)
 
 
 
